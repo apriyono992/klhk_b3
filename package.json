@@ -5,10 +5,12 @@
       "api"
     ],
     "scripts": {
-      "dev": "concurrently \"yarn dev:web\" \"yarn dev:api\" \"yarn db:migrate\"",
-      "dev:frontend": "yarn workspace web start",
-      "dev:backend": "yarn workspace api start:dev",
-      "db:migrate": "yarn workspace orm migrate"
+      "dev:web": "cd web && npm start",
+      "dev:api": "cd api && nest start",
+      "dev": "concurrently \"yarn dev:web\" \"yarn dev:api\"",
+      "db:start": "docker-compose up -d",
+      "db:migrate": "yarn prisma migrate dev",
+      "db:up": "yarn db:start && yarn db:migrate"
     },
     "devDependencies": {
       "concurrently": "^7.0.0"

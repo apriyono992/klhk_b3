@@ -10,7 +10,6 @@ import { JwtAuthGuard } from '../utils/authGuard';
 export class RolesController {
   constructor(
     private readonly rolesService: RolesService,
-    private readonly jwtProvider: JwtProvider,
     ) {}
 
   @Post('assign')
