@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+// schema.prisma
+
+model CasbinRule {
+  id    Int     @id @default(autoincrement())
+  ptype String?
+  v0    String?
+  v1    String?
+  v2    String?
+  v3    String?
+  v4    String?
+  v5    String?
+
+  @@index([ptype, v0, v1, v2, v3, v4, v5])
+}
+
+model UserRole {
+  id       Int    @id @default(autoincrement())
+  userId   String // The user's ID
+  role     String // The assigned role name
+  scope    String? // The scope: specific userId or "*" for all
+}

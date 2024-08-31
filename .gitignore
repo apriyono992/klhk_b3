@@ -10,13 +10,6 @@ yarn-error.log*
 build/
 dist/
 
-# Prisma specific files
-prisma/
-.env
-
-# Environment variables
-*.env
-
 # Production build output
 build/
 
