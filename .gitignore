@@ -2,6 +2,9 @@
 node_modules/
 postgres_data/
 
+#database
+postgres_data/
+
 # Logs
 npm-debug.log*
 yarn-debug.log*

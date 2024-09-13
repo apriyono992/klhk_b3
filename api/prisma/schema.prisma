@@ -13,7 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 // schema.prisma
 
 model CasbinRule {
@@ -30,8 +29,178 @@ model CasbinRule {
 }
 
 model UserRole {
-  id       Int    @id @default(autoincrement())
-  userId   String // The user's ID
-  role     String // The assigned role name
-  scope    String? // The scope: specific userId or "*" for all
+  id     Int     @id @default(autoincrement())
+  userId String // The user's ID
+  role   String // The assigned role name
+  scope  String? // The scope: specific userId or "*" for all
+}
+
+// Enum untuk menentukan tipe kategori
+enum CategoryType {
+  NEWS
+  ARTICLE
+  INFO
+  DOCUMENT
+  EVENT
+  ATTACHMENT
+}
+
+enum Status {
+  DRAFT
+  PUBLISHED
+  INACTIVE
+  DELETED
+}
+
+model Category {
+  id        String            @id @default(uuid())
+  name      String
+  slug      String            @unique
+  type      CategoryType
+  author    String
+  status    Status            @default(DRAFT)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  news      News[]            @relation("NewsCategories")
+  articles  Article[]         @relation("ArticleCategories")
+  infos     Info[]            @relation("InfoCategories")
+  documents CompanyDocument[] @relation("DocumentCategories")
+  events    Event[]           @relation("EventCategories")
+
+  @@unique([name, type]) // Composite unique constraint
+}
+
+model Photo {
+  id         String           @id @default(uuid())
+  url        String
+  author     String
+  status     Status           @default(DRAFT)
+  news       News?            @relation(fields: [newsId], references: [id])
+  newsId     String?
+  article    Article?         @relation(fields: [articleId], references: [id])
+  articleId  String?
+  info       Info?            @relation(fields: [infoId], references: [id])
+  infoId     String?
+  document   CompanyDocument? @relation(fields: [documentId], references: [id])
+  documentId String?
+  event      Event?           @relation(fields: [eventId], references: [id])
+  eventId    String?
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @default(now())
+}
+
+model News {
+  id          String     @id @default(uuid())
+  title       String
+  slug        String     @unique
+  content     String?
+  description String? // TinyMCE HTML content
+  views       Int        @default(0)
+  author      String
+  status      Status     @default(DRAFT)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  createdById String
+  categories  Category[] @relation("NewsCategories")
+  photos      Photo[]
+}
+
+model Event {
+  id        String    @id @default(uuid())
+  title     String
+  slug        String     @unique
+  description String
+  startDate DateTime
+  endDate   DateTime
+  latitude  Float
+  longitude Float
+  city      String?
+  province  String?
+  country   String?
+  createdById String
+  author    String
+  status    Status @default(DRAFT)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  categories Category[] @relation("EventCategories")
+  photos      Photo[]
+  attachments Attachment[]
+}
+
+model Article {
+  id          String     @id @default(uuid())
+  title       String
+  slug        String     @unique
+  content     String
+  description String? // TinyMCE HTML content
+  views       Int        @default(0)
+  author      String
+  status      Status     @default(DRAFT)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  createdById String
+  categories  Category[] @relation("ArticleCategories")
+  photos      Photo[]
+}
+
+model Info {
+  id          String     @id @default(uuid())
+  title       String
+  createdById String
+  slug        String     @unique
+  description String?
+  views       Int        @default(0)
+  author      String
+  status      Status     @default(DRAFT)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  categories  Category[] @relation("InfoCategories")
+  photos      Photo[]
+}
+
+model CompanyDocument {
+  id          String       @id @default(uuid())
+  title       String
+  slug        String       @unique
+  documentUrl String
+  description String? // TinyMCE HTML content
+  author      String
+  status      Status       @default(DRAFT)
+  views       Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  createdById String
+  categories  Category[]   @relation("DocumentCategories")
+  photos      Photo[]
+  attachments Attachment[]
+}
+
+model Attachment {
+  id                String          @id @default(uuid())
+  documentUrl       String // URL of the uploaded document
+  documentPath      String // Path to the document in the filesystem
+  companyDocument   CompanyDocument? @relation(fields: [companyDocumentId], references: [id])
+  event             Event? @relation(fields: [eventId], references: [id])
+  author            String
+  status            Status          @default(DRAFT)
+  companyDocumentId String?
+  eventId           String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+}
+
+model SearchMetric {
+  id          String   @id @default(uuid())
+  userId      String?  // nullable if anonymous search
+  keyword     String?  // search keyword
+  categoryName String[]  // Category name instead of ID
+  type        CategoryType  // NEWS, ARTICLE, EVENT, etc.
+  timestamp   DateTime @default(now())
+}
+
+model ContentViewLog {
+  id           String   @id @default(uuid())
+  contentId    String   // ID of the content being viewed
+  contentType  String   // Can be 'news', 'article', 'info', or 'companyDocument'
+  viewedAt     DateTime @default(now())  // Timestamp when the content is viewed
 }

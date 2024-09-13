@@ -5,7 +5,7 @@ services:
     image: postgres:15-alpine
     container_name: postgres
     environment:
-      POSTGRES_USER: sib3
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: sib3
     volumes:
