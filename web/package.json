@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@heroicons/react": "^2.1.5",
+    "@nextui-org/react": "^2.4.6",
+    "framer-motion": "^11.5.0",
+    "leaflet": "^1.9.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-leaflet": "^4.2.1",
+    "react-router-dom": "^6.26.1",
+    "react-scripts": "5.0.1",
     "tailwind-merge": "1.14.0"
   },
   "scripts": {
@@ -30,18 +39,19 @@
     ]
   },
   "devDependencies": {
+    "@eslint/js": "^9.9.0",
     "@nextui-org/react": "^2.4.6",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
     "autoprefixer": "^10.4.20",
     "daisyui": "^4.12.10",
+    "eslint": "^9.9.0",
+    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.9",
     "framer-motion": "^11.5.4",
-    "postcss": "^8.4.45",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-scripts": "5.0.1",
-    "tailwindcss": "^3.4.10",
-    "web-vitals": "^2.1.4"
+    "globals": "^15.9.0",
+    "postcss": "^8.4.44",
+    "tailwindcss": "^3.4.10"
   }
 }
