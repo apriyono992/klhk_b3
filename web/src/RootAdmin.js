@@ -1,11 +1,10 @@
-import { Outlet } from "react-router-dom";
 import Sidebar from "./components/fragments/admin/Sidebar";
 import React from "react";
 import Header from "./components/fragments/admin/Header";
 import Footer from "./components/fragments/admin/Footer";
 
 
-export default function RootAdmin() {
+export default function RootAdmin({ children }) {
     return (
         <div className="drawer lg:drawer-open">
             <input id="my-drawer" type="checkbox" className="drawer-toggle" />
@@ -14,7 +13,7 @@ export default function RootAdmin() {
                     <Header />
 
                     <div className="w-full flex-1 p-5">
-                        <Outlet/>
+                        { children }
                     </div>
 
                     <Footer />

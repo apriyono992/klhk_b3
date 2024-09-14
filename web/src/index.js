@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider} from "react-router-dom";
 import DashboardPage from './pages/admin/DashboardPage';
-import {NextUIProvider} from '@nextui-org/react'
-import "./index.css";
-import RootAdmin from './RootAdmin';
+import './index.css';
+import {NextUIProvider} from "@nextui-org/react";
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const route = createBrowserRouter([
@@ -14,13 +13,7 @@ const route = createBrowserRouter([
   },
   {
     path: "/admin/dashboard",
-    element: <RootAdmin/>,
-    children: [
-      {
-        path: "/admin/dashboard",
-        element: <DashboardPage />,
-      },
-    ],
+    element: <DashboardPage />,
   },
 ])
 
