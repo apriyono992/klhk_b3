@@ -19,10 +19,8 @@ export default function RootAdmin({ children }) {
                     <Footer />
                 </div>
             </div>
-            <div className="z-50 drawer-side">
-                <label htmlFor="my-drawer" className="drawer-overlay"></label>
-                <Sidebar/>
-            </div>
+            
+            <Sidebar/>
         </div>
     )
 };

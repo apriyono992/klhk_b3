@@ -1,5 +1,4 @@
 import { useState } from "react";
-import logo from '../../../assets/images/logo.png'
 import { 
     SunIcon, 
     MoonIcon, 
@@ -20,17 +19,14 @@ export default function Header() {
     const [theme, setTheme] = useState(true);
 
     return (
-        <div className="navbar bg-white px-5 border-b border-slate-100 shadow-md">
-            <div className="flex-1 gap-2">
+        <header className="navbar bg-white px-5 border-b border-slate-100 shadow-md">
+            <div className="flex-1 gap-4">
                 <label htmlFor="my-drawer" className="flex lg:hidden ring-2 ring-primary rounded-xl p-2 cursor-pointer">
                     <Bars3BottomLeftIcon className="size-5 stroke-primary" />
                 </label>
-                <div className="flex mr-2">
-                    <Avatar src={logo} size="lg" />
-                </div>
                 <div className="hidden md:flex flex-col items-start">
-                    <span className="uppercase font-medium">Direktorat Jendral Pengelolaan Sampah, Limbah, dan B3</span>
                     <span className="uppercase font-bold text-primary">Kementrian Lingkungan Hidup dan Kehutanan</span>
+                    <span className="uppercase font-medium">Direktorat Jendral Pengelolaan Sampah, Limbah, dan B3</span>
                 </div>
                 <div className="flex md:hidden flex-col items-start">
                     <span className="uppercase font-medium">Dirjen PPKL</span>
@@ -52,6 +48,6 @@ export default function Header() {
                     </DropdownMenu>
                 </Dropdown>
             </div>
-        </div>
+        </header>
     )
 }

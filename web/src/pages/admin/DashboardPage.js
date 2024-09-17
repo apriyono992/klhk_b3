@@ -1,6 +1,7 @@
 import React from "react";
 import { 
   ChartBarIcon,
+  HomeIcon,
   TableCellsIcon,
   ViewfinderCircleIcon,
 } from '@heroicons/react/24/outline';
@@ -20,18 +21,14 @@ export default function DashboardPage() {
   return (
         <RootAdmin>
             <Card className="border border-primary rounded-md">
-                <CardBody className="px-5">
+                <CardBody className="flex flex-row justify-between px-5">
                     <h3 className="font-bold text-2xl tracking-normal text-primary">Dashboard</h3>
-                    <Breadcrumbs size="md" className="pt-2">
-                        <BreadcrumbItem>Home</BreadcrumbItem>
-                        <BreadcrumbItem>Music</BreadcrumbItem>
-                        <BreadcrumbItem>Artist</BreadcrumbItem>
-                        <BreadcrumbItem>Album</BreadcrumbItem>
-                        <BreadcrumbItem>Song</BreadcrumbItem>
+                    <Breadcrumbs size="lg" className="pt-2">
+                        <BreadcrumbItem startContent={<HomeIcon className="size-5" />}></BreadcrumbItem>
                     </Breadcrumbs>
                 </CardBody>
             </Card>
-            <Tabs className="pt-10" color="primary" radius="sm" size="lg" variant="bordered">
+            <Tabs className="pt-5" color="primary" radius="sm" size="lg" variant="bordered">
                 <Tab key="overview" title={
                     <div className="flex items-center space-x-2">
                       <ChartBarIcon className="size-5"/>
