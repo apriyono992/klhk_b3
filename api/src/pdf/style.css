@@ -1,0 +1,129 @@
+/* styles.css */
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-bottom: 2px solid black;
+    width: 100%;
+    position: relative;
+}
+
+.header img {
+    width: 100px;
+    height: auto;
+    margin-right: 15px;
+}
+
+.header-text {
+    text-align: center;
+}
+
+.header-text h1 {
+    font-size: 18px;
+    margin: 0;
+    font-weight: bold;
+}
+
+.header-text p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.header-text .address {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.content {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 20px;
+}
+
+.content p {
+    margin: 10px 0;
+}
+
+ul.list {
+    list-style: none;
+    padding-left: 0;
+}
+
+ul.list li {
+    margin-bottom: 10px;
+}
+
+ul.list li ul {
+    margin-top: 5px;
+    margin-left: 30px;
+}
+
+ul.list li::before {
+    content: "";
+    display: inline-block;
+    width: 0;
+}
+
+.tembusan {
+    margin-left: 20px;
+}
+
+.tembusan li {
+    margin-bottom: 5px;
+}
+
+.content ol, .content ul {
+    margin-left: 25px;
+}
+
+.content strong {
+    font-size: 16px;
+}
+
+.lampiran {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 20px;
+}
+
+.lampiran p, .lampiran ol {
+    margin: 10px 0;
+}
+
+.lampiran ol.kewajiban {
+    list-style-type: lower-alpha;
+    margin-left: 30px;
+}
+
+.lampiran table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.lampiran table, th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}
+
+.lampiran th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.lampiran ol {
+    margin-left: 30px;
+    list-style-type: decimal;
+}
+
+.lampiran ol li {
+    margin-bottom: 10px;
+}
+
+strong {
+    font-weight: bold;
+}

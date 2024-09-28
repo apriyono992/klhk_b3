@@ -85,6 +85,8 @@ model Photo {
   documentId String?
   event      Event?           @relation(fields: [eventId], references: [id])
   eventId    String?
+  mercury        MercuryMonitoring? @relation(fields: [mercuryId], references: [id]) // New relation
+  mercuryId      String?          // Foreign key for MercuryMonitoring
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @default(now())
 }
@@ -203,4 +205,171 @@ model ContentViewLog {
   contentId    String   // ID of the content being viewed
   contentType  String   // Can be 'news', 'article', 'info', or 'companyDocument'
   viewedAt     DateTime @default(now())  // Timestamp when the content is viewed
+}
+
+model MercuryMonitoring {
+  id                    String   @id @default(uuid())
+
+  jenisSampelId          String?  // Foreign key for the sample type 'Jenis Sampel'
+  jenisSampel            JenisSample? @relation("JenisSampelRelation", fields: [jenisSampelId], references: [id])
+
+  bakuMutuLingkunganId   String?  // Foreign key for the sample type 'Baku Mutu Lingkungan'
+  bakuMutuLingkungan     JenisSample? @relation("BakuMutuLingkunganRelation", fields: [bakuMutuLingkunganId], references: [id])
+
+  tahunPengambilan       DateTime  // Sample collection date
+  hasilKadar             String   @db.VarChar(10) // Mercury content result
+  satuan                 String   @db.VarChar(10)
+  tingkatKadar           String   @db.VarChar(50) // Mercury level compared to BML
+  konsentrasi            String   @db.VarChar(50) // Mercury concentration
+
+  peskLocationId         String?   @unique  // Ensure one-to-one relation with unique key
+  peskLocation           Location? @relation("PeskLocation", fields: [peskLocationId], references: [id])
+
+  warehouseLocationId    String?   @unique  // Ensure one-to-one relation with unique key
+  warehouseLocation      Location? @relation("WarehouseLocation", fields: [warehouseLocationId], references: [id])
+
+  photos                 Photo[]
+
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}
+
+model JenisSample {
+  id                      String   @id @default(uuid())
+  code                    String
+  deskripsi               String
+  typeId                  String   // Foreign key to JenisSampel
+  jenisSampelType        JenisSampleType @relation(fields: [typeId], references: [id])
+
+  mercuryJenisSampel       MercuryMonitoring[] @relation("JenisSampelRelation")
+  mercuryBakuMutuLingkungan MercuryMonitoring[] @relation("BakuMutuLingkunganRelation")
+
+  @@unique([code, typeId])  // Ensure uniqueness for code and type combination
+}
+model Location {
+  id              String   @id @default(uuid())
+  latitude        Float
+  longitude       Float
+  description     String?  @db.VarChar(255)
+
+  // Relations for the hierarchical structure
+  provinceId      String?  // Foreign key to Province
+  province        Province? @relation(fields: [provinceId], references: [id])
+
+  regencyId       String?
+  regency         Regencies? @relation(fields: [regencyId], references: [id])
+
+  districtId      String?
+  district        Districts? @relation(fields: [districtId], references: [id])
+
+  villageId       String?
+  village         Village? @relation(fields: [villageId], references: [id])
+
+  mercuryPesk     MercuryMonitoring? @relation("PeskLocation")
+  mercuryWarehouse MercuryMonitoring? @relation("WarehouseLocation")
+}
+
+model JenisSampleType {
+  id          String   @id @default(uuid())
+  type        String   @unique
+  deskripsi   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  JenisSample JenisSample[]
+}
+
+model Province {
+  id        String       @id @default(uuid()) @db.Char(2) // Province ID (2 characters)
+  name      String       @db.VarChar(255) // Province name
+  regencies Regencies[]  // Relation to regencies
+  
+  @@map("reg_provinces") // Maps to the existing table "reg_provinces"
+  Location Location[]
+}
+
+model Regencies {
+  id          String     @id @default(uuid())
+  name        String     @db.VarChar(255) // Regency name
+  provinceId  String     @db.Char(250) // Foreign key to Province
+  province    Province   @relation(fields: [provinceId], references: [id]) // Relation to Province
+  districts   Districts[]  // Relation to villages
+  
+  @@map("reg_regencies") // Maps to the existing table "reg_regencies"
+  Location Location[]
+}
+
+model Districts {
+  id          String     @id @default(uuid())
+  name        String     @db.VarChar(255) // Village name
+  regencyId   String     @db.Char(250) // Foreign key to Regencies
+  regency     Regencies  @relation(fields: [regencyId], references: [id]) // Relation to Regencies
+  villages    Village[]  // Relation to villages
+
+
+  @@map("reg_districts") // Maps to the existing table "req_districts"
+  Location Location[]
+}
+
+model Village {
+  id         String     @id @default(uuid())
+  name       String     @db.VarChar(255) // Village name
+  districtId  String     @db.Char(250) // Foreign key to Regencies
+  district    Districts  @relation(fields: [districtId], references: [id]) // Relation to Regencies
+  
+  @@map("reg_village") // Maps to the existing table "reg_villages"
+  Location Location[]
+}
+
+model Company {
+  id                 String    @id @default(uuid())
+  name               String
+  penanggungJawab    String
+  alamatKantor       String
+  telpKantor         String
+  faxKantor          String?    // Optional fax number
+  emailKantor        String?    // Optional email address
+  npwp               String?    // Optional NPWP (Tax ID)
+  nomorInduk         String?    // Optional Nomor Induk (Registration Number)
+  kodeDBKlh          String?    // Optional Kode DB KLH
+  alamatPool         String[]   // Array of optional pool addresses
+  bidangUsaha        String?    // Optional business sector
+  vehicles           Vehicle[] // A company can have multiple vehicles (optional)
+  surat              SuratRekomendasiB3[] // A company can have multiple SuratRekomendasiB3 (optional)
+}
+
+model Vehicle {
+  id                 String    @id @default(uuid())
+  noPolisi           String
+  modelKendaraan     String
+  tahunPembuatan     Int
+  nomorRangka        String
+  nomorMesin         String
+  kepemilikan        String
+  companyId          String
+  company            Company   @relation(fields: [companyId], references: [id])
+  surat              SuratOnVehicle[] // Many-to-many relation with SuratRekomendasiB3
+}
+
+model SuratRekomendasiB3 {
+  id                        String    @id @default(uuid())
+  tipe                      Int       // Tipe surat as integer (handled by application enum)
+  kodePermohonanRekomendasi  String    // Kode permohonan rekomendasi
+  nomorSurat                String    // Nomor surat
+  status                    String    // Status surat ('PENDING', 'DRAFT', 'VALID', 'REJECTED')
+  tanggalSurat            DateTime?  // Tanggal surat
+  tanggalMulai              DateTime
+  tanggalBerakhir           DateTime? // Optional end date
+  companyId                 String    // Foreign key for Company
+  company                   Company   @relation(fields: [companyId], references: [id])
+  vehicles                  SuratOnVehicle[] // Many-to-many relation with Vehicle
+}
+
+model SuratOnVehicle {
+  suratId    String
+  vehicleId  String
+  surat      SuratRekomendasiB3   @relation(fields: [suratId], references: [id])
+  vehicle    Vehicle   @relation(fields: [vehicleId], references: [id])
+
+  @@id([suratId, vehicleId]) // Composite primary key for Surat and Vehicle relation
 }

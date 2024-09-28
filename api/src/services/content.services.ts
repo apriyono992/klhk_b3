@@ -13,6 +13,7 @@ import { CreateEventDto } from 'src/models/createEventDto';
 import { SearchEventDto } from 'src/models/searchEventDto';
 import axios from 'axios';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { UploadResult } from 'src/models/uploadResult';
 
 
 @Injectable()
@@ -277,57 +278,57 @@ export class ContentService {
   }
 
   async getNewsBySlug(slug: string) {
-    const news = await this.prisma.news.findUnique({ where: { slug, status: Status.PUBLISHED } });
+    const news = await this.prisma.news.findUnique({ where: { slug, status: Status.PUBLISHED }, include: { categories: true, photos: true } });
     if (!news) {
       throw new NotFoundException(`News with slug ${slug} not found`);
     }
     // Log the view event in the log table
     await this.logViewEvent(news.id, CategoryType.NEWS);
-    return news;
+    return { ...news, photoUrls: news.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) };
   }
 
   async getArticleBySlug(slug: string) {
-    const article = await this.prisma.article.findUnique({ where: { slug, status: Status.PUBLISHED } });
+    const article = await this.prisma.article.findUnique({ where: { slug, status: Status.PUBLISHED }, include: { categories: true, photos: true } });
     if (!article) {
       throw new NotFoundException(`Article with slug ${slug} not found`);
     }
     
     // Log the view event in the log table
     await this.logViewEvent(article.id, CategoryType.ARTICLE);
-    return article;
+    return { ...article, photoUrls: article.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) };
   }
 
   async getInfoBySlug(slug: string) {
-    const info = await this.prisma.info.findUnique({ where: { slug, status: Status.PUBLISHED } });
+    const info = await this.prisma.info.findUnique({ where: { slug, status: Status.PUBLISHED }, include: { categories: true, photos: true } });
     if (!info) {
       throw new NotFoundException(`Info with slug ${slug} not found`);
     }
     
     // Log the view event in the log table
     await this.logViewEvent(info.id, CategoryType.INFO);
-    return info;
+    return { ...info, photoUrls: info.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) };
   }
 
   async getCompanyDocumentBySlug(slug: string) {
-    const document = await this.prisma.companyDocument.findUnique({ where: { slug, status: Status.PUBLISHED } });
+    const document = await this.prisma.companyDocument.findUnique({ where: { slug, status: Status.PUBLISHED }, include: { categories: true, attachments: true } });
     if (!document) {
       throw new NotFoundException(`Company document with slug ${slug} not found`);
     }
     
     // Log the view event in the log table
     await this.logViewEvent(document.id, CategoryType.DOCUMENT);
-    return document;
+    return { ...document, attachmentsUrl: document.attachments.map(attachment => ({ fileUrl: attachment.documentUrl, filePath: attachment.documentPath })) };
   }
 
   async getEventBySlug(slug: string) {
-    const event = await this.prisma.event.findUnique({ where: { slug, status: Status.PUBLISHED } });
+    const event = await this.prisma.event.findUnique({ where: { slug, status: Status.PUBLISHED }, include: { categories: true, attachments: true, photos: true } });
     if (!event) {
       throw new NotFoundException(`Event with slug ${slug} not found`);
     }
     
     // Log the view event in the log table
     await this.logViewEvent(event.id, CategoryType.EVENT);
-    return event;
+    return { ...event, attachments: event.attachments.map(attachment => `${process.env.API_BASE_URL}/${attachment.documentPath}`), photoUrls: event.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) };
   }
 
   async searchContent(params: SearchContentDto) {
@@ -387,6 +388,8 @@ export class ContentService {
                 createdAt: true,
                 updatedAt: true,
                 description: true,
+                photos: true,
+                categories: true,
             },
             skip,
             take: limit,
@@ -403,7 +406,9 @@ export class ContentService {
                 slug: true,
                 createdAt: true,
                 updatedAt: true,
-                description: true,
+                description: true,             
+                photos: true,
+                categories: true,
             },
             skip,
             take: limit,
@@ -420,7 +425,9 @@ export class ContentService {
                 slug: true,
                 createdAt: true,
                 updatedAt: true,
-                description: true,
+                description: true,      
+                photos: true,
+                categories: true,
             },
             skip,
             take: limit,
@@ -438,6 +445,8 @@ export class ContentService {
                 createdAt: true,
                 updatedAt: true,
                 description: true,
+                photos: true,
+                categories: true,
             },
             skip,
             take: limit,
@@ -455,6 +464,9 @@ export class ContentService {
               createdAt: true,
               updatedAt: true,
               description: true,
+              photos: true,
+              attachments:true,
+              categories: true,
           },
           skip,
           take: limit,
@@ -470,11 +482,13 @@ export class ContentService {
     const totalEvents = type && type !== 'EVENT' ? 0 : await this.prisma.event.count({ where: baseConditions as Prisma.EventWhereInput });
 
     return {
-        news: newsResults,
-        articles: articleResults,
-        infos: infoResults,
-        documents: documentResults,
-        event: eventResults,
+        news: newsResults.map(news => ({ ...news, photoUrls: news.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) })),
+        articles: articleResults.map(article => ({ ...article, photoUrls: article.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) })),
+        infos: infoResults.map(info => ({ ...info, photoUrls: info.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) })),
+        documents: documentResults.map(document => ({ ...document, attachmentsUrl: document.attachments.map(attachment => `${process.env.API_BASE_URL}/${attachment.documentPath}`) })),
+        event: eventResults.map(event => ({ ...event, 
+          attachmentsUrl: event.attachments.map(attachment => `${process.env.API_BASE_URL}/${attachment.documentPath}`), 
+          photoUrls: event.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) })),
         pagination: {
             page,
             limit,
@@ -519,6 +533,7 @@ export class ContentService {
   
     const news = await this.prisma.news.findMany({
       where,
+      include: { photos: true, categories: true },
       orderBy: { [sortBy]: sortOrder },
       skip: (page - 1) * limit,
       take: limit,
@@ -530,7 +545,7 @@ export class ContentService {
       total,
       page,
       limit,
-      data: news,
+      data: news.map(news => ({ ...news, photoUrls: news.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) })),
     };
   }
   
@@ -565,6 +580,7 @@ export class ContentService {
 
     const articles = await this.prisma.article.findMany({
       where,
+      include: { photos: true, categories: true },
       orderBy: { [sortBy]: sortOrder },
       skip: (page - 1) * limit,
       take: limit,
@@ -576,7 +592,7 @@ export class ContentService {
       total,
       page,
       limit,
-      data: articles,
+      data: articles.map(article => ({ ...article, photoUrls: article.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) })),
     };
   }
   
@@ -610,6 +626,7 @@ export class ContentService {
   
     const info = await this.prisma.info.findMany({
       where,
+      include: { photos: true, categories: true },
       orderBy: { [sortBy]: sortOrder },
       skip: (page - 1) * limit,
       take: limit,
@@ -621,7 +638,7 @@ export class ContentService {
       total,
       page,
       limit,
-      data: info,
+      data: info.map(info => ({ ...info, photoUrls: info.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) })),
     };
   }  
 
@@ -656,6 +673,7 @@ export class ContentService {
   
     const documents = await this.prisma.companyDocument.findMany({
       where,
+      include: { attachments: true, categories: true },
       orderBy: { [sortBy]: sortOrder },
       skip: (page - 1) * limit,
       take: limit,
@@ -667,7 +685,7 @@ export class ContentService {
       total,
       page,
       limit,
-      data: documents,
+      data: documents.map(document => ({ ...document, attachmentsUrl: document.attachments.map(attachment => `${process.env.API_BASE_URL}/${attachment.documentPath}`) })),
     };
   }  
 
@@ -700,6 +718,7 @@ export class ContentService {
 
     const events = await this.prisma.event.findMany({
       where,
+      include: { categories: true, attachments: true, photos: true },
       orderBy: { [sortBy]: sortOrder },
       skip: (page - 1) * limit,
       take: limit,
@@ -711,7 +730,9 @@ export class ContentService {
       total,
       page,
       limit,
-      data: events,
+      data: events.map(event => ({ ...event, 
+        attachmentsUrl: event.attachments.map(attachment => `${process.env.API_BASE_URL}/${attachment.documentPath}`), 
+        photoUrls: event.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) })),
     };
   }
 

@@ -3,6 +3,7 @@ import { PaginationDto } from './paginationDto';
 import { CategoryType, Status } from '@prisma/client';
 import { Transform, Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ValidateEndDate, ValidateStartDate } from 'src/validators/startDateEndDate.validator';
 
 export class SearchContentDto extends PaginationDto{
   @IsOptional()
@@ -33,11 +34,21 @@ export class SearchContentDto extends PaginationDto{
   @IsEnum(CategoryType)
   type?: CategoryType;
 
+  @ApiPropertyOptional({
+    description: 'The start date of the event. Should be earlier than the end date.',
+    example: '2024-09-01T00:00:00Z',
+  })
   @IsOptional()
   @IsDateString()
+  @ValidateStartDate('endDate')
   startDate?: string;
 
+  @ApiPropertyOptional({
+    description: 'The end date of the event',
+    example: '2024-09-02T00:00:00Z',
+  })
   @IsOptional()
-  @IsDateString()
+  @IsDateString() 
+  @ValidateEndDate('startDate')
   endDate?: string;
 }

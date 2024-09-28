@@ -7,13 +7,12 @@ import { EnforcerProvider } from '../provider/casbin.provider';
 import { PermissionUtil } from '../utils/permission';
 import { Enforcer } from 'casbin';
 import { CategoriesValidationPipe } from '../validators/category.pipe';
-import { StartDateBeforeEndDateConstraint } from 'src/validators/startDateEndDate.validator';
 import { ContentReportController } from 'src/controller/content-report.controller';
 import { ContentReportService } from 'src/services/content-report.services';
 
 @Module({
   controllers: [ContentController, ContentReportController],
-  providers: [ ContentService,ContentReportService, PrismaService, JwtProvider, EnforcerProvider, PermissionUtil, Enforcer, CategoriesValidationPipe,StartDateBeforeEndDateConstraint  ],
+  providers: [ ContentService,ContentReportService, PrismaService, JwtProvider, EnforcerProvider, PermissionUtil, Enforcer, CategoriesValidationPipe  ],
   exports: [JwtProvider, EnforcerProvider, PermissionUtil, Enforcer, CategoriesValidationPipe],
 })
 export class ContentModule {}

@@ -2,7 +2,7 @@ import { IsOptional, IsString, IsDateString, ValidateNested, ArrayNotEmpty, IsAr
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import { PaginationDto } from './paginationDto';
-import { ValidateStartDateBeforeEndDate } from '../validators/startDateEndDate.validator';
+import { ValidateEndDate, ValidateStartDate } from 'src/validators/startDateEndDate.validator';
 
 export class SearchEventDto extends PaginationDto {
   @ApiPropertyOptional({
@@ -35,9 +35,7 @@ export class SearchEventDto extends PaginationDto {
   })
   @IsOptional()
   @IsDateString()
-  @ValidateStartDateBeforeEndDate('endDate', {
-    message: 'Start date must be earlier than or equal to the end date',
-  })
+  @ValidateStartDate('endDate')
   startDate?: string;
 
   @ApiPropertyOptional({
@@ -45,6 +43,7 @@ export class SearchEventDto extends PaginationDto {
     example: '2024-09-02T00:00:00Z',
   })
   @IsOptional()
-  @IsDateString()
+  @IsDateString() 
+  @ValidateEndDate('startDate')
   endDate?: string;
 }

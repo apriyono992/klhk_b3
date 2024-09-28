@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UploadedFile, UploadedFiles, Param, Get, Query, ValidationPipe, UsePipes, BadRequestException } from '@nestjs/common';
+import { Controller, Post, Body, UploadedFile, UploadedFiles, Param, Get, Query, ValidationPipe, UsePipes, BadRequestException, UseInterceptors } from '@nestjs/common';
 import { ContentService } from '../services/content.services';
 import { CreateNewsDto } from '../models/CreateNewsDto';
 import { CreateArticleDto } from '../models/createArticleDto';
@@ -14,11 +14,20 @@ import * as path from 'path';
 import { CreateEventDto } from 'src/models/createEventDto';
 import { SearchEventDto } from 'src/models/searchEventDto';
 import { CategoryType, Status } from '@prisma/client';
+import { UploadResult } from 'src/models/uploadResult';
+import { IsPhotoValidFile } from 'src/validators/photoFileType.validator';
+import { uploadPhotoFilesToDisk } from 'src/utils/uploadPhotoFileToDisk';
+import { uploadFilesToDisk } from 'src/utils/uploadDocumentFileToDisk';
+import { IsDocumentValidFile } from 'src/validators/documentFileType.validator';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Content')
 @Controller('content')
 export class ContentController {
-  constructor(private readonly contentService: ContentService) {}
+  constructor(
+    private readonly isPhotoValidFile: IsPhotoValidFile,
+    private readonly isDocumentValidFile: IsDocumentValidFile,
+    private readonly contentService: ContentService) {}
 
   @Post('category')
   @ApiOperation({ summary: 'Create a new category' })
@@ -30,10 +39,10 @@ export class ContentController {
   @ApiOperation({ summary: 'Create a news article' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: CreateNewsDto })
-  @UploadPhotos()
+  @UseInterceptors(FilesInterceptor('attachments')) 
   async createNews(
-    @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) createNewsDto: CreateNewsDto,
-    @UploadedFiles() attachments: Express.Multer.File[] | Express.Multer.File
+    @UploadedFiles() attachments: Express.Multer.File[],
+    @Body() createNewsDto: CreateNewsDto,
   ) {
     return this.handlePhotosUpload(createNewsDto, attachments, (dto, attachmentsData) => 
       this.contentService.createNews({ ...dto, attachments: attachmentsData })
@@ -44,10 +53,10 @@ export class ContentController {
   @ApiOperation({ summary: 'Create an article' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: CreateArticleDto })
-  @UploadPhotos()
+  @UseInterceptors(FilesInterceptor('attachments')) 
   async createArticle(
-    @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) createArticleDto: CreateArticleDto,
-    @UploadedFiles() attachments: Express.Multer.File[] | Express.Multer.File
+    @Body() createArticleDto: CreateArticleDto,
+    @UploadedFiles() attachments: Express.Multer.File[]
   ) {
     return this.handlePhotosUpload(createArticleDto, attachments, (dto, attachmentsData) => 
       this.contentService.createArticle({ ...dto, attachments: attachmentsData })
@@ -58,10 +67,10 @@ export class ContentController {
   @ApiOperation({ summary: 'Create an informational post' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: CreateInfoDto })
-  @UploadPhotos()
+  @UseInterceptors(FilesInterceptor('attachments')) 
   async createInfo(
-    @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) createInfoDto: CreateInfoDto,
-    @UploadedFiles() attachments: Express.Multer.File[] | Express.Multer.File
+    @Body() createInfoDto: CreateInfoDto,
+    @UploadedFiles() attachments: Express.Multer.File[]
   ) {
     return this.handlePhotosUpload(createInfoDto, attachments, (dto, attachmentsData) => 
       this.contentService.createInfo({ ...dto, attachments: attachmentsData })
@@ -72,11 +81,10 @@ export class ContentController {
   @ApiOperation({ summary: 'Create a company document' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: CreateCompanyDocumentDto })
-  @UploadFiles()
+  @UseInterceptors(FilesInterceptor('attachments')) 
   async createCompanyDocument(
-    @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) createCompanyDocumentDto: CreateCompanyDocumentDto,
-    @UploadedFile() attachments: Express.Multer.File[] | Express.Multer.File
-  ) {
+    @Body() createCompanyDocumentDto: CreateCompanyDocumentDto,
+    @UploadedFile() attachments: Express.Multer.File[] ) {
     return this.handleDocumentsUpload(createCompanyDocumentDto, attachments, (dto, attachmentsData) => 
       this.contentService.createCompanyDocument({ ...dto, attachments: attachmentsData })
     );
@@ -85,13 +93,13 @@ export class ContentController {
   @Post('event')
   @ApiOperation({ summary: 'Create a new event with geolocation' })
   @ApiConsumes('multipart/form-data')
-  @UploadFiles('documents')
-  @UploadPhotos('photos')
+  @UseInterceptors(FilesInterceptor('documents')) 
+  @UseInterceptors(FilesInterceptor('photos')) 
   @ApiBody({ type: CreateEventDto })
   async createEvent(
     @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) createEventDto: CreateEventDto,
-    @UploadedFile() documents: Express.Multer.File[] | Express.Multer.File,
-    @UploadedFile() photos: Express.Multer.File[] | Express.Multer.File
+    @UploadedFile() documents: Express.Multer.File[],
+    @UploadedFile() photos: Express.Multer.File[]
   ) {
     return this.handleUploadPhotosAndDocument(createEventDto, documents,  photos , ( dto, documentsData, photosData) => 
       this.contentService.createEvent({ ...dto, photos: photosData, documents: documentsData })
@@ -187,10 +195,18 @@ export class ContentController {
     return this.contentService.searchCompanyDocuments(searchContentDto);
   }
 
-  private async handlePhotosUpload(dto: any, attachments: Express.Multer.File[] | Express.Multer.File, serviceMethod: (dto: any, attachmentsData: any) => Promise<any>) {
-    const filesArray = Array.isArray(attachments) ? attachments : attachments ? [attachments] : [];
+  private async handlePhotosUpload(dto: any, attachments: Express.Multer.File[], serviceMethod: (dto: any, attachmentsData: any) => Promise<any>) {
 
-    const attachmentData = filesArray.map(file => ({
+    // 1. Handle the uploaded photos
+    let uploadedFiles: UploadResult[] = [];
+
+    this.isPhotoValidFile.validateAndThrow(attachments);
+
+    if (attachments && attachments.length > 0) {
+      // Handle file saving using your utility function
+      uploadedFiles = uploadPhotoFilesToDisk(attachments);
+    }
+    const attachmentData = uploadedFiles.map(file => ({
       fileUrl: `${process.env.BASE_URL}/uploads/photos/${file.filename}`,
       filePath: `/uploads/photos/${file.filename}`,
     }));
@@ -200,15 +216,23 @@ export class ContentController {
       return await serviceMethod(dto, attachmentData);
     } catch (error) {
       // On failure, delete the uploaded files
-      this.handlePhotosFileDeletion(filesArray);
+      this.handlePhotosFileDeletion(attachments);
       throw error; // Re-throw to be handled by NestJS
     }
   }
 
-  private async handleDocumentsUpload(dto: any, attachments: Express.Multer.File[] | Express.Multer.File, serviceMethod: (dto: any, attachmentsData: any) => Promise<any>) {
-    const filesArray = Array.isArray(attachments) ? attachments : attachments ? [attachments] : [];
+  private async handleDocumentsUpload(dto: any, attachments: Express.Multer.File[], serviceMethod: (dto: any, attachmentsData: any) => Promise<any>) {
+    // 1. Handle the uploaded photos
+    let uploadedFiles: UploadResult[] = [];
 
-    const attachmentData = filesArray.map(file => ({
+    this.isDocumentValidFile.validateAndThrow(attachments);
+
+    if (attachments && attachments.length > 0) {
+      // Handle file saving using your utility function
+      uploadedFiles = uploadFilesToDisk(attachments);
+    }
+
+    const attachmentData = uploadedFiles.map(file => ({
       fileUrl: `${process.env.BASE_URL}/uploads/documents/${file.filename}`,
       filePath: `/uploads/documents/${file.filename}`,
     }));
@@ -218,21 +242,35 @@ export class ContentController {
       return await serviceMethod(dto, attachmentData);
     } catch (error) {
       // On failure, delete the uploaded files
-      this.handleDocumentsFileDeletion(filesArray);
+      this.handleDocumentsFileDeletion(attachments);
       throw error; // Re-throw to be handled by NestJS
     }
   }
 
-  private async handleUploadPhotosAndDocument(dto: any, documents: Express.Multer.File[] | Express.Multer.File, photos: Express.Multer.File[] | Express.Multer.File, serviceMethod: (dto: any, documents: any, photos: any) => Promise<any>) {
-    const documentsArray = Array.isArray(documents) ? documents : documents ? [documents] : [];
-    const photosArray = Array.isArray(photos) ? photos : photos ? [photos] : [];
+  private async handleUploadPhotosAndDocument(dto: any, documents: Express.Multer.File[], photos: Express.Multer.File[], serviceMethod: (dto: any, documents: any, photos: any) => Promise<any>) {
+    // 1. Handle the uploaded photos
+    let uploadedDocumentFiles: UploadResult[] = [];
+    let uploadPhotoFile: UploadResult[] = [];
 
-    const photosData = photosArray.map(file => ({
+    this.isPhotoValidFile.validateAndThrow(photos);
+    this.isDocumentValidFile.validateAndThrow(documents);
+
+    if (documents && documents.length > 0) {
+      // Handle file saving using your utility function
+      uploadedDocumentFiles = uploadPhotoFilesToDisk(documents);
+    }
+
+    if (photos && photos.length > 0) {
+      // Handle file saving using your utility function
+      uploadPhotoFile = uploadPhotoFilesToDisk(photos);
+    }
+
+    const photosData = uploadPhotoFile.map(file => ({
       fileUrl: `${process.env.BASE_URL}/uploads/photos/${file.filename}`,
       filePath: `/uploads/photos/${file.filename}`,
     }));
 
-    const documentsData = documentsArray.map(file => ({
+    const documentsData = uploadedDocumentFiles.map(file => ({
       fileUrl: `${process.env.BASE_URL}/uploads/documents/${file.filename}`,
       filePath: `/uploads/documents/${file.filename}`,
     }));
@@ -241,9 +279,6 @@ export class ContentController {
       // If DTO validation passes, continue to service call
       return await serviceMethod(dto, documentsData, photosData);
     } catch (error) {
-      // On failure, delete the uploaded files
-      this.handleDocumentsFileDeletion(documentsArray);
-      this.handlePhotosFileDeletion(photosArray);
       throw error; // Re-throw to be handled by NestJS
     }
   }

@@ -6,7 +6,11 @@
     "deleteOutDir": true,
     "assets": [
       "**/*.env",
-      "**/*.conf"
+      "**/*.conf",
+      "seed/*.json",
+      "**/*.html",
+      "**/*.css",
+      "pdf/*"
     ]
   }
 }

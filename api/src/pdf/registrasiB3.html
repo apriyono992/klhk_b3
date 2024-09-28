@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrasi B3 PDF</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
+
+        body {
+            font-family: 'Times New Roman', serif;
+            font-size: 9.5pt;
+            margin: 0;
+            padding: 0;
+            line-height: 1.2;
+        }
+
+        /* General Styles */
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid black;
+            margin-top: 0;
+        }
+
+        .logo-container {
+            margin-right: 10px;
+        }
+
+        .header img {
+            width: 60px;
+            height: auto;
+        }
+
+        .header-text h1, h2 {
+            font-size: 11pt;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .header-text p {
+            margin: 0;
+            font-size: 9pt;
+        }
+
+        .details {
+            margin-top: 10px;
+            border-collapse: collapse;
+            width: 100%;
+            page-break-inside: avoid;
+        }
+
+        .details td {
+            padding: 1px 0;
+            vertical-align: top;
+        }
+
+        .details td:first-child {
+            width: 20%;
+        }
+
+        .details td:nth-child(2) {
+            width: 2%;
+        }
+
+        .details td:nth-child(3) {
+            width: 58%;
+        }
+
+        .details td:nth-child(4) {
+            width: 20%;
+            text-align: right;
+        }
+
+        .content {
+            margin-top: 10px;
+            page-break-inside: avoid;
+        }
+
+        .content p {
+            text-align: justify;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+
+        .list-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .list-table td {
+            padding: 2px 5px;
+            vertical-align: top;
+            word-wrap: break-word;
+            line-height: 1.3;
+        }
+
+        .list-table td:first-child {
+            width: 3%;
+        }
+
+        .list-table td:nth-child(2) {
+            width: 3%;
+        }
+
+        .list-table td:nth-child(3) {
+            width: 40%;
+        }
+
+        .list-table td:nth-child(4) {
+            width: 2%;
+        }
+
+        .list-table td:nth-child(5) {
+            width: 52%;
+        }
+
+        /* Signature Section */
+        .signature {
+            margin-top: 30px;
+            text-align: right;
+            page-break-inside: avoid;
+        }
+
+        .signature-space {
+            height: 40px;
+        }
+
+        .tembusan {
+            margin-top: 20px;
+            padding-left: 20px;
+            font-size: 9pt;
+            line-height: 1.1;
+        }
+
+        .tembusan p {
+            margin-bottom: 5px;
+        }
+
+        .tembusan ol {
+            padding-left: 20px;
+        }
+
+        .tembusan li {
+            font-size: 9pt;
+            line-height: 1.3;
+        }
+
+        /* Second Page Styles */
+        .second-page {
+            page-break-before: always; /* This ensures the second page starts on a new page */
+        }
+
+        .header-table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+            border-bottom: 1px solid black;
+        }
+
+        .header-table td {
+            padding: 1px 0;
+            font-size: 10pt;
+        }
+
+        .header-table td:first-child {
+            width: 20%;
+        }
+
+        .header-table td:nth-child(2) {
+            width: 3%;
+        }
+
+        .header-table td:nth-child(3) {
+            width: 77%;
+        }
+
+        .table-container {
+            width: 100%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .table-container, .table-container th, .table-container td {
+            border: 1px solid black;
+        }
+
+        .table-container th, .table-container td {
+            padding: 5px;
+            text-align: left;
+            vertical-align: top;
+            font-size: 9pt;
+        }
+
+        .table-container th {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- First Page Content -->
+    <div class="header">
+        <div class="logo-container">
+            <img src="<%= base64Image %>" alt="Logo KLHK">
+        </div>
+        <div class="header-text">
+            <h1>KEMENTERIAN LINGKUNGAN HIDUP DAN KEHUTANAN</h1>
+            <h2>DIREKTORAT JENDERAL PENGELOLAAN SAMPAH, LIMBAH DAN BAHAN BERBAHAYA DAN BERACUN</h2>
+            <p>Jalan D.I Panjaitan Kav.24, Kebon Nanas, Jakarta 13410, Telp. (021) 85905639 Fax: (021) 85905679<br>
+            Indonesia - Kotak Pos 7777 JAT 13410</p>
+        </div>
+    </div>
+
+    <div class="details">
+        <table>
+            <tr>
+                <td>Nomor</td>
+                <td>:</td>
+                <td>S.2494/PB3/PP/PLB.4.4/8/09/2024</td>
+                <td>September 2024</td>
+            </tr>
+            <tr>
+                <td>Sifat</td>
+                <td>:</td>
+                <td>Biasa</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Lampiran</td>
+                <td>:</td>
+                <td>1 (Satu) berkas</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Hal</td>
+                <td>:</td>
+                <td>Surat Keterangan Registrasi</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Bahan Berbahaya dan Beracun (B3)</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="content">
+        <p>Yth. Direktur Jenderal Bea dan Cukai<br>Kementerian Keuangan<br>di<br>Jakarta</p>
+
+        <p>Berdasarkan Ketentuan Pasal 6 ayat (1) Peraturan Pemerintah Nomor 74 Tahun 2001 Tentang Pengelolaan Bahan Berbahaya dan Beracun (B3), yang mengatur kewajiban registrasi B3 oleh penghasil dan atau pengimpor, maka bersama ini diberikan keterangan registrasi B3, sebagai berikut:</p>
+
+        <table class="list-table">
+            <tr>
+                <td>1.</td>
+                <td colspan="4"><strong>Keterangan Perusahaan</strong></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>a.</td>
+                <td>Nama Perusahaan</td>
+                <td>:</td>
+                <td>PT. PYRAMIDA KIMIA SEMESTA</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>b.</td>
+                <td>Alamat Kantor Pusat</td>
+                <td>:</td>
+                <td>Ruko Boulevard Taman Tekno Blok E Nomor 9-11, Setu. Bsd Sektor XI RT/RW 000/000 Setu 15314</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>c.</td>
+                <td>Nomor Telepon/Fax</td>
+                <td>:</td>
+                <td>0812758028050 / -</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>d.</td>
+                <td>NPWP</td>
+                <td>:</td>
+                <td>65.252.112.1-411.000</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>e.</td>
+                <td>Nomor Induk Berusaha</td>
+                <td>:</td>
+                <td>2084020029614</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>f.</td>
+                <td>Kode DB-KLH</td>
+                <td>:</td>
+                <td>T2370</td>
+            </tr>
+
+            <tr>
+                <td>2.</td>
+                <td colspan="4"><strong>Bahan dan Nomor Registrasi</strong></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>a.</td>
+                <td>Negara Asal</td>
+                <td>:</td>
+                <td>Terlampir</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>b.</td>
+                <td>Nama Bahan Kimia dan Nomor Registrasi</td>
+                <td>:</td>
+                <td>Terlampir</td>
+            </tr>
+
+            <tr>
+                <td>3.</td>
+                <td colspan="4"><strong>Perusahaan diwajibkan menyusun dan menyampaikan laporan realisasi impor bahan berbahaya dan beracun setiap 6 (enam) bulan sekali (per Juli dan Desember) kepada Kementerian Lingkungan Hidup dan Kehutanan, dengan tembusan Gubernur Banten.</strong></td>
+            </tr>
+
+            <tr>
+                <td>4.</td>
+                <td colspan="4"><strong>Surat Keterangan ini berlaku seumur hidup.</strong></td>
+            </tr>
+        </table>
+
+        <p>Demikian disampaikan, atas perhatian dan kerjasamanya diucapkan terima kasih.</p>
+    </div>
+
+    <!-- First Page Signature -->
+    <div class="signature">
+        <p>Direktur,</p>
+        <div class="signature-space"></div>
+        <p>Sugasri<br>NIP: 19690827 199803 1 001</p>
+    </div>
+
+    <!-- Second Page Content -->
+    <div class="second-page">
+        <table class="header-table">
+            <tr>
+                <td>Lampiran</td>
+                <td>:</td>
+                <td>Surat Keterangan Registrasi Bahan Berbahaya dan Beracun</td>
+            </tr>
+            <tr>
+                <td>Nomor</td>
+                <td>:</td>
+                <td>S.2494/PB3/PP/PLB.4.4/8/09/2024</td>
+            </tr>
+            <tr>
+                <td>Tanggal</td>
+                <td>:</td>
+                <td>September 2024</td>
+            </tr>
+        </table>
+
+        <h3 style="text-align: center; margin-bottom: 0;">DAFTAR BAHAN BERBAHAYA DAN BERACUN</h3>
+        <h3 style="text-align: center; margin-top: 2px;">PT. PYRAMIDA KIMIA SEMESTA</h3>
+
+        <table class="table-container">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Hs Code</th>
+                    <th>Nama Dagang</th>
+                    <th>Nama Bahan Kimia</th>
+                    <th>Negara Asal</th>
+                    <th>Pelabuhan Bongkar</th>
+                    <th>Nomor Registrasi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>29031200</td>
+                    <td>Methylene Chloride</td>
+                    <td>Metilen Klorida</td>
+                    <td>China</td>
+                    <td>Balikpapan, Banjarmasin, Belawan, Dumai, Kijang, Makassar, Pontianak, Samarinda, Tanjung Emas, Tanjung Perak, Tanjung Priok, Tanjung Pura</td>
+                    <td>2024.09.75-09-2.86.05.6</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Second Page Signature -->
+        <div class="signature">
+            <p>Direktur,</p>
+            <div class="signature-space"></div>
+            <p>Sugasri<br>NIP: 19690827 199803 1 001</p>
+        </div>
+    </div>
+
+</body>
+</html>

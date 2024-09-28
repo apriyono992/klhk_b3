@@ -1,9 +1,14 @@
 # Node modules
 node_modules/
-postgres_data/
 
 #database
 postgres_data/
+
+#document
+documents/
+
+#photo
+photos/
 
 # Logs
 npm-debug.log*

@@ -18,11 +18,9 @@ export class CreateNewsDto {
   @ApiProperty({
     example: 'This is the content of the news article...',
     description: 'The content of the news article',
-    maxLength: 64,
   })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(64)
   content: string;
 
   @ApiProperty({

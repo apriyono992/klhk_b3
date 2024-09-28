@@ -1,9 +1,16 @@
-import { NestFactory } from '@nestjs/core';
+import { ModuleRef, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify';
 import { ValidationPipe } from '@nestjs/common';
-import { AllExceptionsFilter } from './utils/response.filter';
+import { AllExceptionsFilter, ValidationFilter } from './utils/response.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-
+import { PrismaService } from './services/prisma.services';
+import { PrismaInit } from './utils/prismaInit';
+import { CustomValidationPipe } from './utils/customValidationPipe';
+import { useContainer } from 'class-validator';
+import multipart from '@fastify/multipart';
+import { MercuryModule } from './module/mercuryMonitoring.module';
+import { ValidatorsModule } from './module/validators.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
@@ -11,13 +18,22 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     transform: true,
+    forbidNonWhitelisted: true,
   }));
-  
+
   // Global Filters
   app.useGlobalFilters(new AllExceptionsFilter());
   
+  app.useGlobalFilters(new ValidationFilter());
+  
+  // Use the custom validation pipe globally
+  app.useGlobalPipes(new CustomValidationPipe(app.get(ModuleRef)));
+  
   // Global Prefix
   app.setGlobalPrefix('api');
+
+  //define useContainer in main.ts file
+  useContainer(app.select(ValidatorsModule), { fallbackOnErrors: true });
 
   // Swagger Setup
   const config = new DocumentBuilder()

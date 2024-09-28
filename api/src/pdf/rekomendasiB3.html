@@ -1,0 +1,366 @@
+<!-- templates/pdf/rekomendasiB3.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Document</title>
+        <style>
+            /* General Page Settings */
+    @page {
+        size: A4;
+        margin: 10mm/* Default margin for the rest of the page */
+    }
+
+    body {
+        font-family: 'Times New Roman', serif;
+        font-size: 11pt;
+        line-height: 1.4;
+        margin: 0;
+        padding: 0;
+    }
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 5px 0; /* Tightened the padding */
+        border-bottom: 1px solid black;
+        width: 100%;
+        margin-top: 5px !important;
+        margin-bottom: 5px !important;
+    }
+
+    .header img {
+        width: 70px; /* Reduced logo size */
+        height: auto;
+        margin-right: 10px; /* Reduced margin */
+    }
+
+    .header-text {
+        text-align: center;
+    }
+
+    .header-text h1 {
+        font-size: 11pt;
+        margin: 0;
+        font-weight: bold;
+    }
+
+    .header-text h2 {
+        font-size: 12pt;
+        margin: 0;
+        font-weight: bold;
+    }
+
+    .header-text p {
+        margin: 0;
+        font-size: 10pt; /* Reduced font size for address */
+    }
+
+    .header-text .address {
+        font-size: 10pt;
+        margin-top: 3px; /* Tighter spacing below the address */
+    }
+
+    .header-info table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .header-info td {
+        padding: 2px 0; /* Reduced padding for compact spacing */
+        vertical-align: top;
+        font-size: 10pt; /* Smaller font size */
+        line-height: 1.2; /* Tighter line spacing */
+    }
+
+    .header-info td:first-child {
+        width: 20%; /* Width for the first column */
+    }
+
+    .header-info div {
+        margin-bottom: 20px; /* Space between this section and the next content */
+    }
+
+    .header-info table td {
+        border: none; /* Ensure there are no borders */
+    }
+
+    .header-info div {
+        text-align: right; /* Ensure the date is aligned to the right */
+    }
+
+    .details-table table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .details-table td {
+        padding: 1px 0; /* Reduced padding for tighter spacing */
+        vertical-align: top;
+        font-size: 10pt; /* Smaller font size */
+        line-height: 1.2; /* Tighter line spacing */
+    }
+
+    .details-table td:first-child {
+        width: 30%; /* Adjusted width of the first column */
+        text-align: left;
+    }
+
+    .details-table td:nth-child(2) {
+        width: 70%; /* Adjusted width of the second column */
+        text-align: left; /* Ensure the text aligns properly */
+    }
+
+    .details-table ol {
+        margin: 0;
+        padding-left: 20px; /* Indentation for the nested list */
+        list-style-type: decimal; /* Ordered list style */
+    }
+
+    .content {
+        margin: 10px 15px; /* Default content margin */
+        font-size: 10pt; /* Smaller font size */
+        line-height: 1.4;
+    }
+
+    .content p {
+        margin-top: 5px; /* Adds a small space between paragraphs */
+        margin-bottom: 5px; /* Ensures consistent spacing below paragraphs */
+        line-height: 1.5; /* Adjusts the line height for readability */
+    }
+
+    table {
+        border-collapse: collapse; /* Ensures no borders are visible */
+        width: 100%;
+    }
+
+    td {
+        padding: 5px 0; /* Adjust padding to make the text compact */
+        vertical-align: top; /* Align text to the top */
+    }
+
+    td:first-child {
+        width: 20%; /* Width for the first column */
+    }
+
+    div.content {
+        margin-bottom: 20px; /* Space between this section and the next content */
+    }
+
+    div.content table td {
+        border: none; /* Remove borders */
+    }
+
+    div.content p {
+        margin: 0;
+        line-height: 1.6; /* Ensure proper line spacing */
+    }
+
+    ul.no-bullets {
+        list-style-type: none; /* Remove bullets */
+        padding-left: 0;
+    }
+
+    ul.nested-list {
+        list-style-type: none; /* Remove bullets from nested lists */
+        padding-left: 20px; /* Add some indentation for the nested list */
+    }
+
+    ul.no-bullets li {
+        margin-bottom: 10px; /* Space between list items */
+    }
+
+    ul.nested-list li {
+        margin-bottom: 5px; /* Slightly less space between nested list items */
+    }
+
+    .signature {
+        page-break-inside: avoid; /* Prevent page break within the signature block */
+        margin-top: 10px; /* Space above the signature */
+        text-align: right; /* Align the text to the right */
+        width: 100%; /* Ensure it occupies the full width */
+    }
+
+    .signature p {
+        margin: 0;
+        line-height: 1.4; /* Adjusted line height for proper spacing */
+        font-family: 'Times New Roman', serif;
+    }
+
+    .signature .signature-space {
+        height: 75px; /* Adjust this to create space for the signature */
+    }
+
+    .tembusan {
+        padding-left: 20px; /* Keep indentation for list items */
+        margin-top: 0;
+        margin-bottom: 0;
+        line-height: 1.2; /* Reduce line height for tighter spacing */
+        font-size: 10pt; /* Ensure consistent font size */
+    }
+
+    .tembusan li {
+        margin-bottom: 3px; /* Reduce space between list items */
+    }
+
+    .content ol, .content ul {
+        margin-left: 20px;
+    }
+
+    .content strong {
+        font-size: 10pt;
+    }
+
+    .lampiran {
+        font-size: 10pt; /* Smaller font size */
+        line-height: 1.4;
+        margin: 10px 15px;
+    }
+
+    .lampiran-header {
+        page-break-inside: avoid;
+        text-align: left;
+        border-bottom: 1px solid black; /* Adds a bottom border */
+        padding-bottom: 5px; /* Reduced space below the border */
+        margin-bottom: 10px; /* Reduced margin after the border */
+    }
+
+    .compact-table {
+        width: 100%;
+        border-collapse: collapse; /* No visible borders */
+    }
+
+    .compact-table td {
+        padding: 2px 0; /* Reduced padding for tighter spacing */
+        border: none;
+        font-size: 10pt; /* Smaller font size for compactness */
+        vertical-align: top; /* Align text at the top */
+        line-height: 1.2; /* Tighter line height */
+    }
+
+    .compact-table td:first-child {
+        width: 20%; /* First column width */
+        font-weight: bold; /* Bold for the first column */
+    }
+
+    .compact-table td:nth-child(2) {
+        width: 80%; /* Second column width */
+    }
+
+    .section-kewajiban {
+        font-size: 10pt; /* Set all fonts to 10pt */
+        margin-bottom: 20px;
+    }
+
+    .no-border-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 10px;
+    }
+
+    .no-border-table td {
+        border: none;
+        padding: 2px 0;
+        vertical-align: top;
+        line-height: 1.2;
+    }
+
+    /* Apply consistent width for the first column in all tables */
+    .same-width {
+        width: 13% !important; /* Ensure all columns for Nomor, Tanggal, PERTAMA have the same width */
+        vertical-align: top !important; /* Align text at the top */
+    }
+
+
+    /* Adjust alignment and compact spacing for the list */
+    .align-list {
+        margin: 0;
+        list-style-position: outside;
+    }
+
+    .align-list li {
+        margin-bottom: 2px; /* Further reduce space between list items */
+        line-height: 1.1; /* Reduce line height for compact spacing */
+    }
+
+    .kewajiban {
+        list-style-type: lower-alpha;
+    }
+
+    .kewajiban li {
+        margin-bottom: 5px;
+    }
+
+    .lampiran p, .lampiran ol {
+        margin: 5px 0;
+    }
+
+    .lampiran ol.kewajiban {
+        list-style-type: lower-alpha;
+    }
+
+    .lampiran table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 5px;
+    }
+
+    .lampiran table, th, td {
+        border: 1px solid black;
+        padding: 6px;
+        text-align: left;
+    }
+
+    .lampiran th {
+        background-color: #f0f0f0;
+        font-weight: bold;
+    }
+
+    .lampiran ol {
+        margin-left: 20px;
+        list-style-type: decimal;
+    }
+
+    .lampiran ol li {
+        margin-bottom: 5px;
+    }
+
+    strong {
+        font-weight: bold;
+    }
+
+    /* Footer Settings */
+    .footer {
+        position: fixed;
+        bottom: 10mm;
+        text-align: center;
+        width: 100%;
+        font-size: 10pt;
+        color: #555;
+    }
+
+    /* Default content spacing */
+    .content {
+        margin-top: 5mm;
+    }
+    </style>
+</head>
+<body>
+
+    <!-- Include Header -->
+    <%- include('header.html') %>
+
+    <!-- Include First Content -->
+    <%- include('firstPageRekomendasi.html') %>
+
+    <!-- Page Break for PDF -->
+    <div style="page-break-after: always;"></div>
+
+    <!-- Include Lampiran Content -->
+    <%- include('lampiranPageRekomendasi.html') %>
+
+</body>
+</html>
