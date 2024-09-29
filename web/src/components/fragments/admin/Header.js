@@ -11,12 +11,23 @@ import {
     DropdownTrigger, 
     DropdownMenu, 
     DropdownItem, 
-    Avatar,
     Button,
+    User,
 } from "@nextui-org/react";
+import useAuth from "../../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie'
 
 export default function Header() {
     const [theme, setTheme] = useState(true);
+    const { data, isLoading } = useAuth()
+    const navigate = useNavigate();
+
+    function handleLogout() {
+        Cookies.remove('accessToken')
+        Cookies.remove('refreshToken')
+        return navigate("/login")
+    }
 
     return (
         <header className="navbar bg-white px-5 border-b border-slate-100 shadow-md">
@@ -40,11 +51,20 @@ export default function Header() {
                 
                 <Dropdown placement="bottom-start">
                     <DropdownTrigger>
-                        <Avatar as="button" src="https://i.pravatar.cc/150?u=a042581f4e29026024d"/>
+                        <User
+                            as="button"
+                            avatarProps={{
+                                isBordered: true,
+                                src: `${data?.image}`,
+                            }}
+                            className="transition-transform"
+                            description={ isLoading ? 'Loading...' : `${data?.email}` }
+                            name={ isLoading ? 'Loading...' : `${data?.firstName} ${data?.lastName}`}
+                        />
                     </DropdownTrigger>
                     <DropdownMenu variant="faded">
                         <DropdownItem key="settings" startContent={<UserIcon className="size-4" />}>Profile</DropdownItem>
-                        <DropdownItem key="logout" startContent={<ArrowLeftStartOnRectangleIcon className="size-4" />}>Log Out</DropdownItem>
+                        <DropdownItem key="logout" startContent={<ArrowLeftStartOnRectangleIcon className="size-4" />}><button onClick={handleLogout}>Logout</button></DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
             </div>

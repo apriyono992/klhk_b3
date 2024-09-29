@@ -4,7 +4,7 @@ import logo from '../../assets/images/logo.png';
 import { EnvelopeIcon, EyeIcon, EyeSlashIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
-export default function PasswordReset() {
+export default function PasswordResetPage() {
     const [isVisible, setIsVisible] = useState(false);
 
     const toggleVisibility = () => setIsVisible(!isVisible);
