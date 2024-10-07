@@ -4,7 +4,8 @@ import {
     MoonIcon, 
     UserIcon, 
     Bars3BottomLeftIcon,
-    ArrowLeftStartOnRectangleIcon
+    ArrowLeftStartOnRectangleIcon,
+    HomeIcon
 } from '@heroicons/react/24/outline';
 import { 
     Dropdown, 
@@ -13,42 +14,42 @@ import {
     DropdownItem, 
     Button,
     User,
+    Breadcrumbs,
+    BreadcrumbItem,
 } from "@nextui-org/react";
 import useAuth from "../../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie'
 
-export default function Header() {
+export default function Header({ onOpenSidebar }) {
     const [theme, setTheme] = useState(true);
     const { data, isLoading } = useAuth()
     const navigate = useNavigate();
+    const location = useLocation();
 
     function handleLogout() {
         Cookies.remove('accessToken')
         Cookies.remove('refreshToken')
-        return navigate("/login")
+        return navigate("/masuk")
     }
 
+
     return (
-        <header className="navbar bg-white px-5 border-b border-slate-100 shadow-md">
-            <div className="flex-1 gap-4">
-                <label htmlFor="my-drawer" className="flex lg:hidden ring-2 ring-primary rounded-xl p-2 cursor-pointer">
-                    <Bars3BottomLeftIcon className="size-5 stroke-primary" />
-                </label>
-                <div className="hidden md:flex flex-col items-start">
-                    <span className="uppercase font-bold text-primary">Kementrian Lingkungan Hidup dan Kehutanan</span>
-                    <span className="uppercase font-medium">Direktorat Jendral Pengelolaan Sampah, Limbah, dan B3</span>
+        <nav className="w-full fixed top-0 z-40 lg:pl-72 bg-default">
+            <div className="flex items-center justify-between px-5 py-4">
+                <div className="flex items-center justify-start gap-5">
+                    <Button onPress={ onOpenSidebar } isIconOnly color="primary" variant="flat" className="lg:hidden">
+                        <Bars3BottomLeftIcon className="size-5" />
+                    </Button>    
+                    <Breadcrumbs className="capitalize">
+                        <BreadcrumbItem><HomeIcon className="size-4 mb-0.5" /></BreadcrumbItem>
+                        {
+                            location.pathname.split('/').filter(path => path !== '' && path !== 'admin').map((path) => (
+                                <BreadcrumbItem key={path}>{path.replace('-', ' ')}</BreadcrumbItem>
+                            ))
+                        }
+                    </Breadcrumbs>
                 </div>
-                <div className="flex md:hidden flex-col items-start">
-                    <span className="uppercase font-medium">Dirjen PPKL</span>
-                    <span className="uppercase font-bold text-primary">MENLHK</span>
-                </div>
-            </div>
-            <div className="flex items-center gap-2">
-                <Button onClick={() => setTheme(!theme)} isIconOnly className="bg-default rounded-full">
-                    { theme ? <SunIcon className="size-6" /> : <MoonIcon className="size-5" /> }
-                </Button>
-                
                 <Dropdown placement="bottom-start">
                     <DropdownTrigger>
                         <User
@@ -57,7 +58,7 @@ export default function Header() {
                                 isBordered: true,
                                 src: `${data?.image}`,
                             }}
-                            className="transition-transform"
+                            
                             description={ isLoading ? 'Loading...' : `${data?.email}` }
                             name={ isLoading ? 'Loading...' : `${data?.firstName} ${data?.lastName}`}
                         />
@@ -66,8 +67,8 @@ export default function Header() {
                         <DropdownItem key="settings" startContent={<UserIcon className="size-4" />}>Profile</DropdownItem>
                         <DropdownItem key="logout" startContent={<ArrowLeftStartOnRectangleIcon className="size-4" />}><button onClick={handleLogout}>Logout</button></DropdownItem>
                     </DropdownMenu>
-                </Dropdown>
+                </Dropdown>  
             </div>
-        </header>
+        </nav>
     )
 }

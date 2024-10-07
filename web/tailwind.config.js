@@ -81,7 +81,6 @@ module.exports = {
         dark: {},
       }
     }),
-    require('daisyui'),
   ],
 }
 
