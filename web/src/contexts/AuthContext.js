@@ -1,12 +1,13 @@
 import { createContext } from "react";
 import { fetchUserLogin } from "../services/api";
 import useSWR from 'swr';
-import { Outlet } from "react-router-dom";
+import Cookies from 'js-cookie'
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 export const AuthContext = createContext();
 
 export default function AuthProvider() {
-
+    const location = useLocation()
     const fetcher = (...args) => fetchUserLogin(...args)
     const { data, isLoading, error } = useSWR('/auth/me', fetcher)
     
@@ -17,7 +18,11 @@ export default function AuthProvider() {
 
     return (
         <AuthContext.Provider value={{ data, isLoading }}>
-            <Outlet/>
+            {
+                !Cookies.get('accessToken') 
+                    ? <Navigate to="/masuk" state={{ from: location }} replace />
+                    : <Outlet/>
+            }
         </AuthContext.Provider>
     )
 }

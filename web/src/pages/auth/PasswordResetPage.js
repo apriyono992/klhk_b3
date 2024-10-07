@@ -1,5 +1,5 @@
 import { Button, Input } from "@nextui-org/react";
-import RootAuth from "../../RootAuth";
+import RootAuth from "../../components/layouts/RootAuth";
 import logo from '../../assets/images/logo.png';
 import { EnvelopeIcon, EyeIcon, EyeSlashIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";

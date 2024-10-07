@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import RootAuth from "../../RootAuth";
+import RootAuth from "../../components/layouts/RootAuth";
 import { Button, Input } from "@nextui-org/react";
 import { ArrowLeftIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 import logo from '../../assets/images/logo.png';
@@ -19,7 +19,7 @@ export default function RequestPasswordResetPage() {
                 </form>
                 <div className="mt-4 flex items-center gap-1 justify-center text-primary hover:underline">
                     <ArrowLeftIcon className="size-4"/>
-                    <Link to="/login" className="">Kembali ke halaman login</Link>
+                    <Link to="/masuk" className="">Kembali ke halaman login</Link>
                 </div>
             </div>
         </RootAuth>

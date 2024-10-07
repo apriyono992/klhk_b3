@@ -1,5 +1,5 @@
 import { PhoneIcon, EnvelopeIcon, MapPinIcon } from "@heroicons/react/24/outline";
-import banner from './assets/banner/bg-auth.png';
+import banner from '../../assets/banner/bg-auth.png';
 
 export default function RootAuth({ children }) {
     return (

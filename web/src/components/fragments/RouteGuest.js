@@ -3,6 +3,7 @@ import Cookies from 'js-cookie'
 
 export default function RouteGuest() {
     const location = useLocation()
-    if (Cookies.get('accessToken')) return (<Navigate to="/admin/dashboard" state={{ from: location }} replace />);
+    if (Cookies.get('accessToken')) return (<Navigate to="/admin/dasbor" state={{ from: location }} replace />);
     return (<Outlet/>);
 }
+

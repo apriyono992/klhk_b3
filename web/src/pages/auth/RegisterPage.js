@@ -1,7 +1,7 @@
 import { Button, Input, Select, SelectItem, Textarea } from '@nextui-org/react';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/images/logo.png';
-import RootAuth from '../../RootAuth';
+import RootAuth from '../../components/layouts/RootAuth';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 
@@ -18,7 +18,7 @@ export default function RegisterPage() {
                     <h3 className="font-bold text-2xl mt-5">Daftarkan Akun Disini</h3>
                     <div className="mt-4 flex items-center gap-1 justify-center lg:justify-start text-base">
                         <span className="text-center">Sudah Punya Akun?</span>
-                        <Link to="/login" className="text-primary hover:underline">Login Disini</Link>
+                        <Link to="/masuk" className="text-primary hover:underline">Login Disini</Link>
                     </div>
                 </div>
                 <form className="pt-10 font-medium">
