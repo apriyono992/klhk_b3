@@ -71,3 +71,11 @@ async function refreshToken(refreshToken) {
 export async function fetchUserLogin(url) {
     return await axiosInstanceAuth.get(url).then(res => res.data)
 }
+
+export async function fetchRecomendation(url) {
+    return await axiosInstanceAuth.get(url).then(res => res.data)
+}
+
+export async function fetchRegistration(url) {
+    return await axiosInstanceAuth.get(url).then(res => res.data)
+}

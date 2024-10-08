@@ -17,6 +17,12 @@ import {
   Tabs, 
   Tab,
   CardHeader,
+  Table,
+  TableHeader,
+  TableBody,
+  TableCell,
+  TableRow,
+  TableColumn,
 } from "@nextui-org/react";
 import RootAdmin from "../../components/layouts/RootAdmin";
 
@@ -115,7 +121,35 @@ const data = [
                 }>
                     <Card className="rounded-md">
                         <CardBody>
-                            Konten Tabel Data B3 
+                        <Table>
+                            <TableHeader>
+                                <TableColumn>Bahan B3</TableColumn>
+                                <TableColumn>Impor (/ton)</TableColumn>
+                                <TableColumn>Ekspor (/ton)</TableColumn>
+                            </TableHeader>
+                            <TableBody>
+                                <TableRow key="1">
+                                    <TableCell>Argon Compressed</TableCell>
+                                    <TableCell>1.000</TableCell>
+                                    <TableCell>700</TableCell>
+                                </TableRow>
+                                <TableRow key="2">
+                                    <TableCell>Nitrogen</TableCell>
+                                    <TableCell>800</TableCell>
+                                    <TableCell>1.500</TableCell>
+                                </TableRow>
+                                <TableRow key="3">
+                                    <TableCell>Thinner</TableCell>
+                                    <TableCell>966</TableCell>
+                                    <TableCell>562</TableCell>
+                                </TableRow>
+                                <TableRow key="4">
+                                    <TableCell>Loctite MR 5009</TableCell>
+                                    <TableCell>953</TableCell>
+                                    <TableCell>1685</TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
                         </CardBody>
                     </Card>  
                 </Tab>
