@@ -27,6 +27,7 @@ import { IsDocumentValidFile } from './validators/documentFileType.validator';
 import { ValidatorsModule } from './module/validators.module';
 import { PdfController } from './controller/pdf.controller';
 import { PDfModule } from './module/pdf.module';
+import { DataMasterModule } from './module/dataMaster.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { PDfModule } from './module/pdf.module';
       serveRoot: '/uploads/documents',  // Serve the files from this URL
     }),
     PDfModule,
+    DataMasterModule
   ],
   controllers: [AppController],
   providers: [

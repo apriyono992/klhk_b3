@@ -9,6 +9,9 @@ import { IsRegencyValid } from 'src/validators/regency.validator';
 import { IsDistrictValid } from 'src/validators/district.validator';
 import { IsVillageValid } from 'src/validators/village.validator';
 import { PrismaService } from 'src/services/prisma.services';
+import { IsPejabatExists } from 'src/validators/dataPejabat.validator';
+import { IsBahanB3Exists } from 'src/validators/dataBahanB3.validator';
+import { IsTembusanExists } from 'src/validators/dataTembusan.validator';
 
 @Global()  // This makes the module global
 @Module({
@@ -33,7 +36,10 @@ import { PrismaService } from 'src/services/prisma.services';
     IsProvinceExists,
     IsRegencyValid,
     IsDistrictValid,
-    IsVillageValid
+    IsVillageValid,
+    IsPejabatExists,
+    IsBahanB3Exists,
+    IsTembusanExists
   ],
   exports: [
     IsPhotoValidFile,
@@ -45,7 +51,10 @@ import { PrismaService } from 'src/services/prisma.services';
     IsProvinceExists,
     IsRegencyValid,
     IsDistrictValid,
-    IsVillageValid
+    IsVillageValid,
+    IsPejabatExists,
+    IsBahanB3Exists,
+    IsTembusanExists
 ], 
 })
 export class ValidatorsModule {}

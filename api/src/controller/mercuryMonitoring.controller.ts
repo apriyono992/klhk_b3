@@ -54,7 +54,6 @@ export class MercuryMonitoringController {
     @Query() filterDto: MercuryMonitoringFilterDto,
   ) {
     try {
-
       // Call service to get filtered results
       return await this.mercuryMonitoringService.getFilteredMercuryMonitoring(filterDto);
     } catch (error) {

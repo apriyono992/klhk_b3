@@ -373,3 +373,36 @@ model SuratOnVehicle {
 
   @@id([suratId, vehicleId]) // Composite primary key for Surat and Vehicle relation
 }
+
+model DataBahanB3 {
+  id            String @id @default(uuid())
+  casNumber     String @db.Citext
+  namaBahanKimia String 
+  namaDagang    String @db.Citext
+  tipeBahan     String  // Store enum as string
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  @@unique([casNumber, namaDagang])  // Compound unique constraint
+}
+
+
+model DataPejabat {
+  id      String @id @default(uuid())
+  nip     String @unique @db.Citext  // Case-insensitive unique constraint
+  nama    String
+  jabatan String
+  status  String  // Store enum as string
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+model DataTembusan {
+  id    String @id @default(uuid())
+  nama  String @unique @db.Citext  // Case-insensitive unique constraint
+  tipe  String  // Store enum as string
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  
+}
+
