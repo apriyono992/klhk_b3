@@ -1,7 +1,8 @@
-import { IsEnum, IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';  // Import Swagger decorator
 import { PejabatStatus } from './enums/statusPejabat';
-import { IsPejabatExist } from 'src/validators/dataPejabat.validator';
+import { IsPejabatNipExist } from 'src/validators/dataPejabat.validator';
+import { IsApplicationExists } from 'src/validators/isApplicationIdExists.validatior';
 
 export class CreateDataPejabatDto {
   @ApiProperty({
@@ -9,7 +10,7 @@ export class CreateDataPejabatDto {
     example: '123456789',  // Example value
   })
   @IsString()
-  @IsPejabatExist()
+  @IsPejabatNipExist()
   nip: string;
 
   @ApiProperty({
@@ -25,6 +26,15 @@ export class CreateDataPejabatDto {
   })
   @IsString()
   jabatan: string;
+
+  @ApiProperty({
+    description: 'The application Id of the pejabat will assign to it.',
+    example: '12313123123',  // Example value
+  })
+  @IsOptional()
+  @IsString()
+  @IsApplicationExists()
+  applicationId: string;
 
   @ApiProperty({
     description: 'The status of the pejabat (e.g., PLT, PLH, AKTIF).',

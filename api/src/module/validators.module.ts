@@ -9,9 +9,13 @@ import { IsRegencyValid } from 'src/validators/regency.validator';
 import { IsDistrictValid } from 'src/validators/district.validator';
 import { IsVillageValid } from 'src/validators/village.validator';
 import { PrismaService } from 'src/services/prisma.services';
-import { IsPejabatExists } from 'src/validators/dataPejabat.validator';
-import { IsBahanB3Exists } from 'src/validators/dataBahanB3.validator';
-import { IsTembusanExists } from 'src/validators/dataTembusan.validator';
+import { IsPejabatExists, PejabatIdExistsConstraint, PejabatUsedConstraint } from 'src/validators/dataPejabat.validator';
+import { IsBahanB3Exists, IsDataBahanB3Exist, IsDataBahanB3Exists } from 'src/validators/dataBahanB3.validator';
+import { IsTembusanExists, TembusanIdExistsConstraint } from 'src/validators/dataTembusan.validator';
+import { ApplicationExistsConstraint } from 'src/validators/isApplicationIdExists.validatior';
+import { CompanyExistsConstraint } from 'src/validators/isCompanyExists.validator';
+import { VehicleExistsConstraint } from 'src/validators/isVehicleExists.validator';
+import { DraftSuratExistsConstraint } from 'src/validators/isDraftSuratExists.validator';
 
 @Global()  // This makes the module global
 @Module({
@@ -39,6 +43,15 @@ import { IsTembusanExists } from 'src/validators/dataTembusan.validator';
     IsVillageValid,
     IsPejabatExists,
     IsBahanB3Exists,
+    IsDataBahanB3Exists,
+    IsTembusanExists,
+    ApplicationExistsConstraint,
+    CompanyExistsConstraint,
+    VehicleExistsConstraint,
+    DraftSuratExistsConstraint,
+    PejabatIdExistsConstraint,
+    PejabatUsedConstraint,
+    TembusanIdExistsConstraint,
     IsTembusanExists
   ],
   exports: [
@@ -54,7 +67,15 @@ import { IsTembusanExists } from 'src/validators/dataTembusan.validator';
     IsVillageValid,
     IsPejabatExists,
     IsBahanB3Exists,
+    IsTembusanExists,
+    ApplicationExistsConstraint,
+    CompanyExistsConstraint,
+    VehicleExistsConstraint,
+    DraftSuratExistsConstraint,
+    PejabatIdExistsConstraint,
+    PejabatUsedConstraint,
+    TembusanIdExistsConstraint,
     IsTembusanExists
-], 
+  ],
 })
 export class ValidatorsModule {}

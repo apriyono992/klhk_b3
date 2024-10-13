@@ -91,11 +91,29 @@ export class DataMasterService {
   async createDataPejabat(data: CreateDataPejabatDto) {
     try {
       return await this.prisma.$transaction(async (prisma) => {
-        const existingPejabat = await prisma.dataPejabat.findUnique({
-          where: { nip: data.nip },
+        // Cari draftSurat berdasarkan applicationId
+        const draftSurat = await prisma.draftSurat.findUnique({
+          where: { applicationId: data.applicationId },
         });
 
-        return prisma.dataPejabat.create({ data });
+        // Validasi jika draftSurat tidak ditemukan
+        if (!draftSurat) {
+          throw new BadRequestException('Draft Surat not found for the provided Application ID.');
+        }
+
+        // Buat Data Pejabat dengan data yang disediakan
+        return prisma.dataPejabat.create({
+          data: {
+            nip: data.nip,
+            nama: data.nama,
+            jabatan: data.jabatan,
+            status: data.status,
+            // Hubungkan pejabat ke draftSurat
+            DraftSurat: {
+              connect: { id: draftSurat.id }
+            }
+          },
+        });
       });
     } catch (error) {
       console.error('Transaction failed:', error);
@@ -163,6 +181,16 @@ export class DataMasterService {
   async createDataTembusan(data: CreateDataTembusanDto) {
     try {
       return await this.prisma.$transaction(async (prisma) => {
+        // Cari DraftSurat berdasarkan applicationId
+        const draftSurat = await prisma.draftSurat.findUnique({
+          where: { applicationId: data.applicationId },
+        });
+
+        // Validasi jika draftSurat tidak ditemukan
+        if (!draftSurat) {
+          throw new BadRequestException('Draft Surat not found for the provided Application ID.');
+        }
+        
         const existingTembusan = await prisma.dataTembusan.findUnique({
           where: { nama: data.nama },
         });
@@ -171,7 +199,16 @@ export class DataMasterService {
           throw new BadRequestException('Tembusan with this name already exists');
         }
 
-        return prisma.dataTembusan.create({ data });
+        // Buat Data Tembusan dan hubungkan dengan DraftSurat
+        return prisma.dataTembusan.create({
+          data: {
+            nama: data.nama,
+            tipe: data.tipe,
+            DraftSurat: {
+              connect: { id: draftSurat.id } // Hubungkan dengan draftSurat
+            }
+          },
+        });
       });
     } catch (error) {
       console.error('Transaction failed:', error);

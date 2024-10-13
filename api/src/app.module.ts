@@ -13,21 +13,16 @@ import { CategoriesValidationPipe } from './validators/category.pipe';
 import { MercuryModule } from './module/mercuryMonitoring.module';
 import { SeedModule } from './module/seed.module';
 import { LocationModule } from './module/location.module';
-import { IsBakuMutuLingkunganExists } from './validators/bakuMutu.validator';
-import { IsJenisSampelExists } from './validators/jenisSample.validator';
-import { IsProvinceExists } from './validators/province.validator';
-import { IsRegencyValid } from './validators/regency.validator';
-import { IsDistrictValid } from './validators/district.validator';
-import { IsVillageValid } from './validators/village.validator';
-import { EndDateConstraint, StartDateConstraint } from './validators/startDateEndDate.validator';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { IsPhotoValidFile } from './validators/photoFileType.validator';
-import { IsDocumentValidFile } from './validators/documentFileType.validator';
 import { ValidatorsModule } from './module/validators.module';
-import { PdfController } from './controller/pdf.controller';
 import { PDfModule } from './module/pdf.module';
 import { DataMasterModule } from './module/dataMaster.module';
+import { CompanyModule } from './module/company.module';
+import { VehicleModule } from './module/vehicle.module';
+import { BahanB3Module } from './module/bahanB3.module';
+import { DocumentModule } from './module/document.module';
+import { PermohonanRekomendasiB3Module } from './module/permohonanRekom.module';
 
 @Module({
   imports: [
@@ -47,7 +42,12 @@ import { DataMasterModule } from './module/dataMaster.module';
       serveRoot: '/uploads/documents',  // Serve the files from this URL
     }),
     PDfModule,
-    DataMasterModule
+    DataMasterModule,
+    CompanyModule,
+    VehicleModule,
+    BahanB3Module,
+    DocumentModule,
+    PermohonanRekomendasiB3Module,
   ],
   controllers: [AppController],
   providers: [

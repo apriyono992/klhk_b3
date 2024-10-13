@@ -1,0 +1,21 @@
+export enum TipeDokumen { 
+  SDS_OR_LDK = 'Safety Data Sheet (SDS) / Lembar Data Keselamatan (LDK)',
+  SOP_BONGKAR_MUAT = 'SOP Bongkar Muat',
+  SOP_TANGGAP_DARURAT = 'SOP Tanggap Darurat',
+  STNK_KIR = 'STNK / KIR',
+  FOTO_KENDARAAN = 'Foto Kendaraan',
+  FOTO_SOP = 'Foto SOP Bongkar Muat / Tanggap Darurat / SDS / LDK B3',
+  FOTO_KEGIATAN_BONGKAR_MUAT = 'Foto Kegiatan Bongkar Muat',
+  FOTO_KEMASAN_B3 = 'Foto Kemasan B3',
+  FOTO_ALAT_PELINDUNG_DIRI = 'Foto Alat Pelindung Diri',
+  BUKTI_PELATIHAN = 'Bukti Pelatihan',
+  SURAT_KETERANGAN_HASIL_PENGUJIAN_TANGKI_UKUR = 'Surat Keterangan Hasil Pengujian Tangki Ukur',
+  SURAT_KETERANGAN_BEJANA_TEKAN = 'Surat Keterangan Bejana Tekan',
+  IT_IP_PREKURSOR = 'Surat Keterangan IT/IP Prekursor atau Surat Pernyataan',
+  INFORMASI_KETERSEDIAAN_ALAT_KOMUNIKASI = 'Informasi Ketersediaan Alat Komunikasi pada Kendaraan Pengangkut B3',
+  INFORMASI_PEMELIHARAAN_KENDARAAN = 'Informasi Pemeliharaan Kendaraan Pengangkut B3',
+  INFORMASI_PENCUCIAN_TANGKI = 'Informasi tentang Pencucian Tangki dan Pengelolaan Limbah B3 yang Dihasilkan',
+  SURAT_REKOMENDASI_B3_SEBELUMNYA = 'Copy Surat Rekomendasi Pengangkutan B3 Sebelumnya',
+  SK_DIRJEN_PERHUBUNGAN_DARAT = 'Copy SK Dirjen Perhubungan Darat tentang Izin Pengangkutan',
+  Other = 'OTHER'
+}

@@ -1,11 +1,10 @@
 <div class="content" style="max-width: 100%; margin: 0 auto;">
     <div class="header-info">
-        <!-- Header Information (Nomor, Sifat, Lampiran, Hal) -->
         <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
             <table style="width: 70%; border-collapse: collapse; border: none;">
                 <tr>
                     <td style="width: 20%; vertical-align: top;">Nomor</td>
-                    <td style="vertical-align: top;">: S.744/PSLB3-PB3/PTB3/PLB.1/12/2023</td>
+                    <td style="vertical-align: top;">: <%= draftSurat?.nomorSurat ? draftSurat.nomorSurat : '-' %></td>
                 </tr>
                 <tr>
                     <td style="vertical-align: top;">Sifat</td>
@@ -28,56 +27,58 @@
                     <td style="vertical-align: top;">(Penambahan Kendaraan)</td>
                 </tr>
             </table>
-    
-            <!-- Date on the right -->
+
             <div style="text-align: right; width: 30%; white-space: nowrap;">
-                1 Desember 2023
+                <%= draftSurat?.tanggalSurat ? draftSurat.tanggalSurat.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-' %>
             </div>
         </div>
     </div>
-    
 
-    <!-- Main Content -->
     <p>Yth. Direktur Jenderal Perhubungan Darat<br>
     Kementerian Perhubungan RI<br>
     di<br>
     Jakarta</p>
 
-    <p>Memperhatikan surat PT. Cipta Krida Bahari, Nomor: 053/CKB.BP/ISJ/K/2023 tanggal 25 Oktober 2023 perihal Permohonan Rekomendasi Pengangkutan B3 (Penambahan Kendaraan), serta merujuk pada pasal 13 Peraturan Pemerintah Republik Indonesia Nomor 74 Tahun 2001 tentang Pengelolaan Bahan Berbahaya dan Beracun, maka bersama ini kami sampaikan kepada:</p>
+    <p>Memperhatikan surat <%= company?.name ? company.name : 'Perusahaan tidak terdaftar' %>, Nomor: 053/CKB.BP/ISJ/K/2023 tanggal 25 Oktober 2023 perihal Permohonan Rekomendasi Pengangkutan B3 (Penambahan Kendaraan), serta merujuk pada pasal 13 Peraturan Pemerintah Republik Indonesia Nomor 74 Tahun 2001 tentang Pengelolaan Bahan Berbahaya dan Beracun, maka bersama ini kami sampaikan kepada:</p>
 
     <div class="details-table" style="width: 100%;">
         <table style="width: 100%;">
             <tr>
                 <td style="width: 30%;">a. Nama Perusahaan</td>
-                <td>: PT. Cipta Krida Bahari</td>
+                <td>: <%= company?.name ? company.name : '-' %></td>
             </tr>
             <tr>
                 <td>b. Nama Penanggung Jawab</td>
-                <td>: Imam Sjafei (Direktur Utama)</td>
+                <td>: <%= identitasPemohon?.namaPemohon ? identitasPemohon.namaPemohon : '-' %> (<%= identitasPemohon?.jabatan ? identitasPemohon.jabatan : '-' %>)</td>
             </tr>
             <tr>
                 <td>c. Alamat Kantor</td>
-                <td>: Gedung TMT 1 Lantai 7 Suite 701 Jl. Cilandak KKO No 1, RT/RW 001/005, Cilandak Timur, Pasar Minggu, Jakarta Selatan</td>
+                <td>: <%= company?.alamatKantor ? company.alamatKantor : '-' %></td>
             </tr>
             <tr>
                 <td>d. Nomor Telp Kantor</td>
-                <td>: (021) 29976777-88</td>
+                <td>: <%= company?.telpKantor ? company.telpKantor : '-' %></td>
             </tr>
             <tr>
                 <td>e. Alamat dan No Telp Pool</td>
-                <td>: <ol style="margin: 0; padding-left: 20px;">
-                        <li>Jl. Raya Cakung Cilincing Pal II Blok A1, Kelurahan Sukapura, Kecamatan Cilincing, Jakarta Utara, (021) 29454545, (021) 29454546</li>
-                        <li>Jl. Mulawarman RT.53 No.24, Balikpapan, Kalimantan Timur, (0542) 7587515, (0542) 7587505</li>
-                        <li>Jl. Tambak Osowilangon 81D Blok 7K, Central Osowilangon Business Park, Surabaya, (031) 98541000, (031) 7497776(8656)</li>
-                    </ol>
+                <td>: 
+                    <% if (company?.alamatPool && company.alamatPool.length) { %>
+                        <ol style="margin: 0; padding-left: 20px;">
+                            <% company.alamatPool.forEach(function(pool) { %>
+                                <li><%= pool ? pool : '-' %></li>
+                            <% }); %>
+                        </ol>
+                    <% } else { %>
+                        <span>-</span>
+                    <% } %>
                 </td>
             </tr>
             <tr>
                 <td>f. Bidang Usaha</td>
-                <td>: Jasa Logistik dan Transportasi</td>
+                <td>: <%= company?.bidangUsaha ? company.bidangUsaha : '-' %></td>
             </tr>
         </table>
-    </div>    
+    </div>
 
     <p>Direkomendasikan untuk dapat diberikan Izin Pengangkutan Bahan Berbahaya dan Beracun (B3) yaitu perpanjangan untuk mengangkut jenis B3 sebagaimana Lampiran butir KETIGA sesuai dengan persyaratan teknis terlampir. Persyaratan sebagaimana dimaksud agar dimasukkan dalam persyaratan izin yang akan diterbitkan.</p>
 
@@ -88,19 +89,24 @@
     <!-- Signature Section -->
     <div class="signature">
         <p>a.n. Direktur Jenderal,<br>
-        Plh. Direktur Pengelolaan B3</p>
+            <%= pejabat?.jabatan ? pejabat.jabatan : '-' %></p>
         
-        <div class="signature-space"></div> <!-- Space for the signature -->
+        <div class="signature-space"></div>
     
-        <p>Ir. Yun Insiani, M.Sc<br>
-        NIP: 19610308 198601 2 001</p>
+        <p><%= pejabat?.namaPejabat ? pejabat.namaPejabat : '-' %><br>
+        NIP: <%= pejabat?.nip ? pejabat.nip : '-' %></p>
     </div>
     
     <div style="page-break-inside: avoid;">
         <p>Tembusan:</p>
         <ol class="tembusan">
-            <li>Direktur Jenderal PSLB3 (sebagai laporan)</li>
-            <li>Direktur Utama PT. Cipta Krida Bahari</li>
+            <% if (tembusan && tembusan.length) { %>
+                <% tembusan.forEach(function(tembus) { %>
+                    <li><%= tembus?.nama ? tembus.nama : '-' %></li>
+                <% }); %>
+            <% } else { %>
+                <li>-</li>
+            <% } %>
         </ol>
     </div>
 </div>

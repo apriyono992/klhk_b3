@@ -37,4 +37,33 @@ export class IsTembusanExists implements ValidatorConstraintInterface {
     return `Tembusan with name ${args.value} is already exist`;
   }
 }
+
+@Injectable()
+@ValidatorConstraint({ async: true })
+export class TembusanIdExistsConstraint implements ValidatorConstraintInterface {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async validate(tembusanId: any, args: ValidationArguments) {
+    // Check if DataTembusan exists in the database
+    const tembusan = await this.prisma.dataTembusan.findUnique({ where: { id: tembusanId } });
+    return !!tembusan; // Return true if DataTembusan exists, otherwise false
+  }
+
+  defaultMessage(args: ValidationArguments) {
+    const index = (args.object as any)[args.property].indexOf(args.value);
+    return `Tembusan at index ${index} does not exist`; // Custom error message with index
+  }
+}
+
+export function IsTembusanIdExists(validationOptions?: ValidationOptions) {
+  return function (object: Object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: TembusanIdExistsConstraint,
+    });
+  };
+}
   

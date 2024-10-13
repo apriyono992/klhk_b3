@@ -7,11 +7,11 @@
             </tr>
             <tr>
                 <td class="same-width">Nomor</td>
-                <td>: S.744/PSLB3-PB3/PTB3/PLB.1/12/2023</td>
+                <td>: <%= draftSurat && draftSurat.nomorSurat ? draftSurat.nomorSurat : '-' %></td>
             </tr>
             <tr>
                 <td class="same-width">Tanggal</td>
-                <td>: 1 Desember 2023</td>
+                <td>: <%= draftSurat && draftSurat.tanggalSurat ? draftSurat.tanggalSurat.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-' %></td>
             </tr>
         </table>
     </div>    
@@ -23,7 +23,7 @@
         <table class="no-border-table" style="border-collapse: collapse; border: none; width: 100%;">
             <tr>
                 <td class="same-width" style="vertical-align: top;"><strong>PERTAMA</strong></td>
-                <td style="vertical-align: top; text-align: justify;">: PT. Cipta Krida Bahari sebagai Penanggungjawab Pengangkutan B3 wajib memenuhi ketentuan bagi pengangkut bahan berbahaya dan beracun sesuai dengan:</td>
+                <td style="vertical-align: top; text-align: justify;">: <%= company && company.name ? company.name : '-' %> sebagai Penanggungjawab Pengangkutan B3 wajib memenuhi ketentuan bagi pengangkut bahan berbahaya dan beracun sesuai dengan:</td>
             </tr>
             <tr>
                 <td class="same-width" style="vertical-align: top;"></td>
@@ -61,22 +61,20 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>KT 8110 ZU</td>
-                    <td>Hino/Bak Besi Terbuka</td>
-                    <td>2021</td>
-                    <td>MJEFG8JS1MJB 13102</td>
-                    <td>J08EUG80165</td>
-                    <td>PT Cipta Krida Bahari</td>
-                </tr>
-                <tr>
-                    <td>KT 8107 ZU</td>
-                    <td>Hino/Bak Besi Terbuka</td>
-                    <td>2021</td>
-                    <td>MJEFG8JS1MJB 13106</td>
-                    <td>J08EUG80184</td>
-                    <td>PT Cipta Krida Bahari</td>
-                </tr>
+                <% if (vehicles && vehicles.length) { %>
+                    <% vehicles.forEach(function(vehicle) { %>
+                        <tr>
+                            <td><%= vehicle && vehicle.noPolisi ? vehicle.noPolisi : '-' %></td>
+                            <td><%= vehicle && vehicle.modelKendaraan ? vehicle.modelKendaraan : '-' %></td>
+                            <td><%= vehicle && vehicle.tahunPembuatan ? vehicle.tahunPembuatan : '-' %></td>
+                            <td><%= vehicle && vehicle.nomorRangka ? vehicle.nomorRangka : '-' %></td>
+                            <td><%= vehicle && vehicle.nomorMesin ? vehicle.nomorMesin : '-' %></td>
+                            <td><%= vehicle && vehicle.kepemilikan ? vehicle.kepemilikan : '-' %></td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr><td colspan="6">-</td></tr>
+                <% } %>
                 <!-- More vehicle rows... -->
             </tbody>
         </table>
@@ -104,24 +102,21 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>GLACELF SUPRA</td>
-                    <td>Monoethylene glycol / 107-21-1</td>
-                    <td>Iritasi, Karsinogenik</td>
-                    <td>Cair</td>
-                    <td>Drum</td>
-                    <td>Antibeku, Pendingin</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Methyl Bromide</td>
-                    <td>Bromomethane / 74-83-9</td>
-                    <td>Beracun, Korosif, Iritasi</td>
-                    <td>Gas</td>
-                    <td>Tabung</td>
-                    <td>Bahan Campuran Chemical</td>
-                </tr>
+                <% if (b3Substances && b3Substances.length) { %>
+                    <% b3Substances.forEach(function(b3, index) { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= b3 && b3.dataBahanB3 && b3.dataBahanB3.namaDagang ? b3.dataBahanB3.namaDagang : '-' %></td>
+                            <td><%= b3 && b3.dataBahanB3 && b3.dataBahanB3.namaBahanKimia ? b3.dataBahanB3.namaBahanKimia : '-' %> / <%= b3 && b3.dataBahanB3 && b3.dataBahanB3.casNumber ? b3.dataBahanB3.casNumber : '-' %></td>
+                            <td><%= b3 && b3.karakteristikB3 ? b3.karakteristikB3 : '-' %></td>
+                            <td><%= b3 && b3.fasaB3 ? b3.fasaB3 : '-' %></td>
+                            <td><%= b3 && b3.jenisKemasan ? b3.jenisKemasan : '-' %></td>
+                            <td><%= b3 && b3.tujuanPenggunaan ? b3.tujuanPenggunaan : '-' %></td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr><td colspan="7">-</td></tr>
+                <% } %>
                 <!-- More B3 rows... -->
             </tbody>
         </table>
@@ -168,13 +163,13 @@
     </div>
 
     <!-- Signature Section -->
-    <div class="signature" style="text-align: right; margin-top: 20px;">
+    <div class="signature">
         <p>a.n. Direktur Jenderal,<br>
-        Plh. Direktur Pengelolaan B3</p>
+            <%= pejabat && pejabat.jabatan ? pejabat.jabatan : '-' %></p>
         
         <div class="signature-space" style="height: 50px;"></div> <!-- Space for the signature -->
-    
-        <p>Ir. Yun Insiani, M.Sc<br>
-        NIP: 19610308 198601 2 001</p>
+
+        <p><%= pejabat && pejabat.namaPejabat ? pejabat.namaPejabat : '-' %><br>
+        NIP: <%= pejabat && pejabat.nip ? pejabat.nip : '-' %></p>
     </div>
 </div>

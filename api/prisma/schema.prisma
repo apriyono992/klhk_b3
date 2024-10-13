@@ -322,56 +322,172 @@ model Village {
 }
 
 model Company {
-  id                 String    @id @default(uuid())
-  name               String
+  id                 String                 @id @default(uuid())
+  name               String                 @unique  // Name should be unique
   penanggungJawab    String
   alamatKantor       String
   telpKantor         String
-  faxKantor          String?    // Optional fax number
-  emailKantor        String?    // Optional email address
-  npwp               String?    // Optional NPWP (Tax ID)
-  nomorInduk         String?    // Optional Nomor Induk (Registration Number)
-  kodeDBKlh          String?    // Optional Kode DB KLH
-  alamatPool         String[]   // Array of optional pool addresses
-  bidangUsaha        String?    // Optional business sector
-  vehicles           Vehicle[] // A company can have multiple vehicles (optional)
-  surat              SuratRekomendasiB3[] // A company can have multiple SuratRekomendasiB3 (optional)
+  faxKantor          String?                // Optional fax number
+  emailKantor        String?                // Optional email address
+  npwp               String?                @unique // Optional NPWP (Tax ID)
+  nomorInduk         String?                @unique // Optional Nomor Induk (Registration Number)
+  kodeDBKlh          String?                @unique // Optional Kode DB KLH
+  alamatPool         String[]               // Array of optional pool addresses
+  bidangUsaha        String?                // Optional business sector
+  vehicles           Vehicle[]              // One-to-many relationship: A company can have multiple vehicles
+  applications       Application[]          // One-to-many: A company can submit multiple applications
+
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+
+  IdentitasApplication IdentitasApplication[]
 }
 
 model Vehicle {
-  id                 String    @id @default(uuid())
-  noPolisi           String
+  id                 String               @id @default(uuid())
+  noPolisi           String               @unique 
   modelKendaraan     String
   tahunPembuatan     Int
   nomorRangka        String
   nomorMesin         String
   kepemilikan        String
   companyId          String
-  company            Company   @relation(fields: [companyId], references: [id])
-  surat              SuratOnVehicle[] // Many-to-many relation with SuratRekomendasiB3
+  company            Company              @relation(fields: [companyId], references: [id])
+  applications       ApplicationOnVehicle[] // Many-to-many relation with Application
+
+  deletedAt          DateTime?             // Soft delete flag (NULL = active)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
 }
 
-model SuratRekomendasiB3 {
-  id                        String    @id @default(uuid())
-  tipe                      Int       // Tipe surat as integer (handled by application enum)
-  kodePermohonanRekomendasi  String    // Kode permohonan rekomendasi
-  nomorSurat                String    // Nomor surat
-  status                    String    // Status surat ('PENDING', 'DRAFT', 'VALID', 'REJECTED')
-  tanggalSurat            DateTime?  // Tanggal surat
-  tanggalMulai              DateTime
-  tanggalBerakhir           DateTime? // Optional end date
-  companyId                 String    // Foreign key for Company
-  company                   Company   @relation(fields: [companyId], references: [id])
-  vehicles                  SuratOnVehicle[] // Many-to-many relation with Vehicle
+model IdentitasApplication {
+  id              String     @id @default(uuid())
+  namaPemohon     String
+  jabatan         String
+  alamatDomisili  String
+  teleponFax      String
+  email           String
+  npwp            String?     // Tambahkan NPWP jika diperlukan
+  ktp             String?     // Tambahkan KTP jika diperlukan
+  application     Application[] // One-to-many relationship with Application
+  company         Company      @relation(fields: [companyId], references: [id])
+  companyId       String       // Foreign key to connect with Company
+
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
 }
 
-model SuratOnVehicle {
-  suratId    String
-  vehicleId  String
-  surat      SuratRekomendasiB3   @relation(fields: [suratId], references: [id])
-  vehicle    Vehicle   @relation(fields: [vehicleId], references: [id])
+model Application {
+  id                        String                 @id @default(uuid())
+  kodePermohonan            String                 @unique // Unique application code
+  status                    String                 // Current status of the application
+  tipeSurat                 String                 // Type of surat
+  tanggalPengajuan          DateTime               // Date when the application was submitted
+  tanggalDisetujui          DateTime?              // Optional date for approval
+  tanggalBerakhir           DateTime?              // Optional expiration date
+  companyId                 String                 // Foreign key for Company
+  company                   Company                @relation(fields: [companyId], references: [id])
+  identitasPemohonId        String?                // Foreign key for IdentitasPemohon
+  identitasPemohon          IdentitasApplication?  @relation(fields: [identitasPemohonId], references: [id])
+  vehicles                  ApplicationOnVehicle[] // Many-to-many relation with vehicles
+  documents                 DocumentRekomendasiB3[] // One-to-many relation for uploaded documents
+  requiredDocumentsStatus   Json                   // JSON field to track the status of required document types
+  draftSurat                DraftSurat?            // Relation to DraftSurat (one-to-one)
+  finalSurat                FinalSurat?            // Relation to FinalSurat (one-to-one)
+  b3Substances              B3Substance[]          // One-to-many relation for B3 substances
+  deletedAt                 DateTime?              // Soft delete flag (NULL = active)
+  createdAt                 DateTime               @default(now())
+  updatedAt                 DateTime               @updatedAt
+  statusHistory             ApplicationStatusHistory[] // Relation to status history
+}
 
-  @@id([suratId, vehicleId]) // Composite primary key for Surat and Vehicle relation
+model ApplicationStatusHistory {
+  id                 String    @id @default(uuid())
+  applicationId      String    // Foreign key for Application
+  application        Application @relation(fields: [applicationId], references: [id])
+  oldStatus          String?    // Enum or string to track the old status
+  newStatus          String     // Enum or string to track the new status
+  changedAt          DateTime   @default(now()) // Timestamp of the status change
+  changedBy          String?    // Optional field to track the user who changed the status
+}
+
+model ApplicationOnVehicle {
+  applicationId    String
+  vehicleId        String
+  application      Application   @relation(fields: [applicationId], references: [id])
+  vehicle          Vehicle       @relation(fields: [vehicleId], references: [id])
+
+  @@id([applicationId, vehicleId]) // Composite primary key for Application and Vehicle relation
+}
+
+model B3Substance {
+  id                        String                 @id @default(uuid())
+  dataBahanB3Id              String                 // Foreign key for DataBahanB3
+  dataBahanB3                DataBahanB3            @relation(fields: [dataBahanB3Id], references: [id])
+  b3pp74                     Boolean                // Whether it is listed in B3 PP 74/2001
+  b3DiluarList               Boolean                // Whether it is outside the list of B3 PP 74/2001
+  karakteristikB3            String                 // Characteristics of the B3 (e.g., korosif, mudah menyala)
+  fasaB3                     String                 // Phase of the B3 (e.g., cair, padat)
+  jenisKemasan               String                 // Packaging type (e.g., tangki berlapis)
+  asalMuat                   String                 // Origin of the B3 (e.g., PT Sulfindo Adi Usaha)
+  tujuanBongkar              String                 // Destination of the B3 (e.g., PT Brataco chemical Lampung)
+  tujuanPenggunaan           String                 // Purpose of the B3 (e.g., Mengatur PH air Limbah Industri)
+  applicationId              String                 // Foreign key to the Application model
+  application                Application            @relation(fields: [applicationId], references: [id])
+
+  createdAt                  DateTime               @default(now())
+  updatedAt                  DateTime               @updatedAt
+}
+
+model DocumentRekomendasiB3 {
+  id              String             @id @default(uuid())
+  fileName        String             // Original file name
+  documentType    String             // Type of the document (e.g., Surat Rekomendasi B3)
+  fileUrl         String             // URL for the uploaded document
+  isValid         Boolean?           // To mark if the document is valid after admin validation
+  validationNotes String?            // Admin notes on the document validation
+  applicationId   String             // Foreign key for Application
+  application     Application        @relation(fields: [applicationId], references: [id])
+  isArchived      Boolean            @default(false) // Archive old document version
+
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+}
+
+model DraftSurat {
+  id                 String                 @id @default(uuid())
+  nomorSurat         String?                // Nullable
+  tanggalSurat       DateTime?              // Nullable
+  tipeSurat          String                 // NOT NULL, wajib diisi
+  kodeDBKlh          String?                // Nullable
+  tembusan           DataTembusan[]         // Many-to-many relation, nullable (optional relation)
+  pejabatId          String?                // Nullable, foreign key for Pejabat
+  pejabat            DataPejabat?           @relation(fields: [pejabatId], references: [id])  // Nullable relation
+  applicationId      String                 @unique  // Foreign key for Application (one-to-one relation)
+  application        Application            @relation(fields: [applicationId], references: [id])
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+}
+
+model FinalSurat {
+  id                 String                 @id @default(uuid())
+  nomorSurat         String                 // Unique surat number
+  tanggalSurat       DateTime               // Date when the final surat was created
+  
+  // Many-to-many relation with DataTembusan (implicit join table will be created)
+  tembusan           DataTembusan[]         
+
+  pejabatId          String                 // Foreign key for Pejabat
+  pejabat            DataPejabat            @relation(fields: [pejabatId], references: [id])
+  
+  applicationId      String                 @unique  // Foreign key for Application (one-to-one relation)
+  application        Application            @relation(fields: [applicationId], references: [id])
+  
+  signedByDirector   Boolean                @default(false)  // Whether the surat has been signed by the director
+  signatureUrl       String?                // URL to the director's signature image
+
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
 }
 
 model DataBahanB3 {
@@ -380,29 +496,37 @@ model DataBahanB3 {
   namaBahanKimia String 
   namaDagang    String @db.Citext
   tipeBahan     String  // Store enum as string
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   @@unique([casNumber, namaDagang])  // Compound unique constraint
+
+  B3Substance   B3Substance[]        // One-to-many relation with B3Substance
 }
 
-
 model DataPejabat {
-  id      String @id @default(uuid())
-  nip     String @unique @db.Citext  // Case-insensitive unique constraint
-  nama    String
-  jabatan String
-  status  String  // Store enum as string
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
+  id            String @id @default(uuid())
+  nip           String @unique @db.Citext  // Case-insensitive unique constraint
+  nama          String
+  jabatan       String
+  status        String  // Store enum as string
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // One-to-many relations with DraftSurat and FinalSurat
+  DraftSurat    DraftSurat[]
+  FinalSurat    FinalSurat[]
 }
 
 model DataTembusan {
-  id    String @id @default(uuid())
-  nama  String @unique @db.Citext  // Case-insensitive unique constraint
-  tipe  String  // Store enum as string
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
+  id            String @id @default(uuid())
+  nama          String @unique @db.Citext  // Case-insensitive unique constraint
+  tipe          String  // Store enum as string
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
   
+  // Implicit many-to-many relations with DraftSurat and FinalSurat
+  DraftSurat    DraftSurat[]
+  FinalSurat    FinalSurat[]
 }
 
