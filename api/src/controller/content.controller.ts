@@ -8,7 +8,7 @@ import { CreateCategoryDto } from '../models/createCategoyDto';
 import { SearchContentDto } from '../models/searchCotentDto';
 import { UploadPhotos } from '../utils/uploadPhotos';
 import { UploadFiles } from '../utils/uploadFiles';
-import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import * as fs from 'fs';
 import * as path from 'path';
 import { CreateEventDto } from 'src/models/createEventDto';
@@ -31,6 +31,19 @@ export class ContentController {
 
   @Post('category')
   @ApiOperation({ summary: 'Create a new category' })
+  @ApiResponse({
+    status: 201,
+    description: 'Category created successfully',
+    schema: {
+      example: {
+        id: 'category123',
+        name: 'Technology',
+        description: 'Category for tech-related content',
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T10:00:00Z',
+      },
+    },
+  })
   createCategory(@Body() createCategoryDto: CreateCategoryDto) {
     return this.contentService.createCategory(createCategoryDto);
   }
@@ -39,7 +52,26 @@ export class ContentController {
   @ApiOperation({ summary: 'Create a news article' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: CreateNewsDto })
-  @UseInterceptors(FilesInterceptor('attachments')) 
+  @ApiResponse({
+    status: 201,
+    description: 'News article created successfully',
+    schema: {
+      example: {
+        id: 'news123',
+        title: 'New Environmental Policies Announced',
+        content: 'Detailed article about new policies...',
+        attachments: [
+          {
+            fileUrl: 'http://localhost:3000/uploads/photos/image1.jpg',
+            filePath: '/uploads/photos/image1.jpg',
+          },
+        ],
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T10:00:00Z',
+      },
+    },
+  })
+  @UseInterceptors(FilesInterceptor('attachments'))
   async createNews(
     @UploadedFiles() attachments: Express.Multer.File[],
     @Body() createNewsDto: CreateNewsDto,
@@ -53,6 +85,25 @@ export class ContentController {
   @ApiOperation({ summary: 'Create an article' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: CreateArticleDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Article created successfully',
+    schema: {
+      example: {
+        id: 'article123',
+        title: 'Understanding Climate Change',
+        content: 'This article explains the effects of climate change...',
+        attachments: [
+          {
+            fileUrl: 'http://localhost:3000/uploads/photos/image2.jpg',
+            filePath: '/uploads/photos/image2.jpg',
+          },
+        ],
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T10:00:00Z',
+      },
+    },
+  })
   @UseInterceptors(FilesInterceptor('attachments')) 
   async createArticle(
     @Body() createArticleDto: CreateArticleDto,
@@ -67,7 +118,26 @@ export class ContentController {
   @ApiOperation({ summary: 'Create an informational post' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: CreateInfoDto })
-  @UseInterceptors(FilesInterceptor('attachments')) 
+  @ApiResponse({
+    status: 201,
+    description: 'Informational post created successfully',
+    schema: {
+      example: {
+        id: 'info123',
+        title: 'Water Conservation Tips',
+        content: 'This post provides tips on conserving water...',
+        attachments: [
+          {
+            fileUrl: 'http://localhost:3000/uploads/photos/image3.jpg',
+            filePath: '/uploads/photos/image3.jpg',
+          },
+        ],
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T10:00:00Z',
+      },
+    },
+  })
+  @UseInterceptors(FilesInterceptor('attachments'))
   async createInfo(
     @Body() createInfoDto: CreateInfoDto,
     @UploadedFiles() attachments: Express.Multer.File[]
@@ -81,7 +151,26 @@ export class ContentController {
   @ApiOperation({ summary: 'Create a company document' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: CreateCompanyDocumentDto })
-  @UseInterceptors(FilesInterceptor('attachments')) 
+  @ApiResponse({
+    status: 201,
+    description: 'Company document created successfully',
+    schema: {
+      example: {
+        id: 'document123',
+        title: 'Annual Report 2024',
+        content: 'The company\'s annual report for 2024...',
+        attachments: [
+          {
+            fileUrl: 'http://localhost:3000/uploads/documents/report.pdf',
+            filePath: '/uploads/documents/report.pdf',
+          },
+        ],
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T10:00:00Z',
+      },
+    },
+  })
+  @UseInterceptors(FilesInterceptor('attachments'))
   async createCompanyDocument(
     @Body() createCompanyDocumentDto: CreateCompanyDocumentDto,
     @UploadedFile() attachments: Express.Multer.File[] ) {
@@ -93,9 +182,35 @@ export class ContentController {
   @Post('event')
   @ApiOperation({ summary: 'Create a new event with geolocation' })
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FilesInterceptor('documents')) 
-  @UseInterceptors(FilesInterceptor('photos')) 
   @ApiBody({ type: CreateEventDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Event created successfully',
+    schema: {
+      example: {
+        id: 'event123',
+        title: 'Tech Conference 2024',
+        description: 'A tech conference featuring the latest innovations...',
+        location: 'Jakarta',
+        photos: [
+          {
+            fileUrl: 'http://localhost:3000/uploads/photos/event_image.jpg',
+            filePath: '/uploads/photos/event_image.jpg',
+          },
+        ],
+        documents: [
+          {
+            fileUrl: 'http://localhost:3000/uploads/documents/event_agenda.pdf',
+            filePath: '/uploads/documents/event_agenda.pdf',
+          },
+        ],
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T10:00:00Z',
+      },
+    },
+  })
+  @UseInterceptors(FilesInterceptor('documents'))
+  @UseInterceptors(FilesInterceptor('photos'))
   async createEvent(
     @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) createEventDto: CreateEventDto,
     @UploadedFile() documents: Express.Multer.File[],
@@ -108,24 +223,76 @@ export class ContentController {
 
   @Get('news/:slug')
   @ApiOperation({ summary: 'Get news by slug' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the news article by slug',
+    schema: {
+      example: {
+        id: 'news123',
+        title: 'New Environmental Policies Announced',
+        content: 'Detailed article about new policies...',
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T10:00:00Z',
+      },
+    },
+  })
   getNewsBySlug(@Param('slug') slug: string) {
     return this.contentService.getNewsBySlug(slug);
   }
 
   @Get('article/:slug')
   @ApiOperation({ summary: 'Get article by slug' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the article by slug',
+    schema: {
+      example: {
+        id: 'article123',
+        title: 'Understanding Climate Change',
+        content: 'This article explains the effects of climate change...',
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T10:00:00Z',
+      },
+    },
+  })
   getArticleBySlug(@Param('slug') slug: string) {
     return this.contentService.getArticleBySlug(slug);
   }
 
   @Get('info/:slug')
   @ApiOperation({ summary: 'Get info by slug' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the informational post by slug',
+    schema: {
+      example: {
+        id: 'info123',
+        title: 'Water Conservation Tips',
+        content: 'This post provides tips on conserving water...',
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T10:00:00Z',
+      },
+    },
+  })
   getInfoBySlug(@Param('slug') slug: string) {
     return this.contentService.getInfoBySlug(slug);
   }
 
   @Get('document/:slug')
   @ApiOperation({ summary: 'Get company document by slug' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the company document by slug',
+    schema: {
+      example: {
+        id: 'document123',
+        title: 'Annual Report 2024',
+        content: 'The company\'s annual report for 2024...',
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T10:00:00Z',
+      },
+    },
+  })
   getCompanyDocumentBySlug(@Param('slug') slug: string) {
     return this.contentService.getCompanyDocumentBySlug(slug);
   }
@@ -134,13 +301,40 @@ export class ContentController {
   @ApiOperation({ summary: 'Search content' })
   @ApiQuery({ name: 'name', required: false })
   @ApiQuery({ name: 'categoryId', required: false })
-  @ApiQuery({ name: 'categoryName', required: false})
+  @ApiQuery({ name: 'categoryName', required: false })
   @ApiQuery({ name: 'type', required: false, enum: CategoryType })
   @ApiQuery({ name: 'status', required: false, enum: Status })
   @ApiQuery({ name: 'startDate', required: false })
   @ApiQuery({ name: 'endDate', required: false })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns search results for content',
+    schema: {
+      example: {
+        total: 100,
+        page: 1,
+        limit: 10,
+        content: [
+          {
+            id: 'news123',
+            title: 'New Environmental Policies Announced',
+            category: 'Environment',
+            createdAt: '2024-10-19T10:00:00Z',
+            updatedAt: '2024-10-19T10:00:00Z',
+          },
+          {
+            id: 'article123',
+            title: 'Understanding Climate Change',
+            category: 'Science',
+            createdAt: '2024-10-19T10:00:00Z',
+            updatedAt: '2024-10-19T10:00:00Z',
+          },
+        ],
+      },
+    },
+  })
   searchContent(@Query() searchContentDto: SearchContentDto) {
     return this.contentService.searchContent(searchContentDto);
   }
@@ -151,6 +345,26 @@ export class ContentController {
   @ApiQuery({ name: 'categoryName', required: false, description: 'Comma-separated category names' })
   @ApiQuery({ name: 'startDate', required: false, description: 'The start date of the event' })
   @ApiQuery({ name: 'endDate', required: false, description: 'The end date of the event' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns search results for events',
+    schema: {
+      example: {
+        total: 50,
+        page: 1,
+        limit: 10,
+        events: [
+          {
+            id: 'event123',
+            title: 'Tech Conference 2024',
+            category: 'Technology',
+            createdAt: '2024-10-19T10:00:00Z',
+            updatedAt: '2024-10-19T10:00:00Z',
+          },
+        ],
+      },
+    },
+  })
   async searchEvents(@Query(new ValidationPipe({ transform: true })) searchEventDto: SearchEventDto) {
     return this.contentService.searchEvents(searchEventDto);
   }
@@ -161,6 +375,26 @@ export class ContentController {
   @ApiQuery({ name: 'categoryName', required: false, description: 'Comma-separated category names' })
   @ApiQuery({ name: 'startDate', required: false, description: 'The start date of the article' })
   @ApiQuery({ name: 'endDate', required: false, description: 'The end date of the article' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns search results for articles',
+    schema: {
+      example: {
+        total: 75,
+        page: 1,
+        limit: 10,
+        articles: [
+          {
+            id: 'article123',
+            title: 'Understanding Climate Change',
+            category: 'Environment',
+            createdAt: '2024-10-19T10:00:00Z',
+            updatedAt: '2024-10-19T10:00:00Z',
+          },
+        ],
+      },
+    },
+  })
   async searchArticles(@Query(new ValidationPipe({ transform: true })) searchContentDto: SearchContentDto) {
     return this.contentService.searchArticles(searchContentDto);
   }
@@ -171,6 +405,26 @@ export class ContentController {
   @ApiQuery({ name: 'categoryName', required: false, description: 'Comma-separated category names' })
   @ApiQuery({ name: 'startDate', required: false, description: 'The start date of the news' })
   @ApiQuery({ name: 'endDate', required: false, description: 'The end date of the news' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns search results for news',
+    schema: {
+      example: {
+        total: 80,
+        page: 1,
+        limit: 10,
+        news: [
+          {
+            id: 'news123',
+            title: 'New Environmental Policies Announced',
+            category: 'Government',
+            createdAt: '2024-10-19T10:00:00Z',
+            updatedAt: '2024-10-19T10:00:00Z',
+          },
+        ],
+      },
+    },
+  })
   async searchNews(@Query(new ValidationPipe({ transform: true })) searchContentDto: SearchContentDto) {
     return this.contentService.searchNews(searchContentDto);
   }
@@ -181,6 +435,26 @@ export class ContentController {
   @ApiQuery({ name: 'categoryName', required: false, description: 'Comma-separated category names' })
   @ApiQuery({ name: 'startDate', required: false, description: 'The start date of the info' })
   @ApiQuery({ name: 'endDate', required: false, description: 'The end date of the info' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns search results for info',
+    schema: {
+      example: {
+        total: 60,
+        page: 1,
+        limit: 10,
+        info: [
+          {
+            id: 'info123',
+            title: 'Water Conservation Tips',
+            category: 'Environment',
+            createdAt: '2024-10-19T10:00:00Z',
+            updatedAt: '2024-10-19T10:00:00Z',
+          },
+        ],
+      },
+    },
+  })
   async searchInfo(@Query(new ValidationPipe({ transform: true })) searchContentDto: SearchContentDto) {
     return this.contentService.searchInfo(searchContentDto);
   }
@@ -191,6 +465,26 @@ export class ContentController {
   @ApiQuery({ name: 'categoryName', required: false, description: 'Comma-separated category names' })
   @ApiQuery({ name: 'startDate', required: false, description: 'The start date of the document' })
   @ApiQuery({ name: 'endDate', required: false, description: 'The end date of the document' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns search results for company documents',
+    schema: {
+      example: {
+        total: 40,
+        page: 1,
+        limit: 10,
+        documents: [
+          {
+            id: 'document123',
+            title: 'Annual Report 2024',
+            category: 'Finance',
+            createdAt: '2024-10-19T10:00:00Z',
+            updatedAt: '2024-10-19T10:00:00Z',
+          },
+        ],
+      },
+    },
+  })
   async searchCompanyDocuments(@Query(new ValidationPipe({ transform: true })) searchContentDto: SearchContentDto) {
     return this.contentService.searchCompanyDocuments(searchContentDto);
   }

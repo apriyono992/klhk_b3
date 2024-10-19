@@ -26,7 +26,40 @@ export class MercuryMonitoringController {
     description: 'Create Mercury Monitoring Data',
     type: CreateMercuryMonitoringDto,
   })
-  @ApiResponse({ status: 201, description: 'Record created successfully.' })
+  @ApiResponse({
+    status: 201,
+    description: 'Record created successfully.',
+    schema: {
+      example: {
+        success: true,
+        data: {
+          mercuryMonitoring: {
+            id: 'monitoring123',
+            jenisSampelId: 'sample123',
+            tahunPengambilan: 2024,
+            hasilKadar: 2.5,
+            satuan: 'mg/L',
+            peskLocationId: 'location123',
+            warehouseLocationId: 'location456',
+          },
+          locations: {
+            peskLocation: {
+              province: 'Province A',
+              regency: 'Regency A',
+              district: 'District A',
+              village: 'Village A',
+            },
+            warehouseLocation: {
+              province: 'Province B',
+              regency: 'Regency B',
+              district: 'District B',
+              village: 'Village B',
+            },
+          },
+        },
+      },
+    },
+  })
   @ApiResponse({ status: 400, description: 'Bad request or validation failed.' })
   @ApiResponse({ status: 404, description: 'Sample or Baku Mutu not found.' })
   @UseInterceptors(FilesInterceptor('photos'))  // Handle the file uploads from the 'photos' field
@@ -50,6 +83,37 @@ export class MercuryMonitoringController {
 
   @Get('search-mercury-monitoring')
   @ApiOperation({ summary: 'Get mercury monitoring data with filters' })
+  @ApiResponse({
+    status: 200,
+    description: 'Filtered mercury monitoring data retrieved successfully.',
+    schema: {
+      example: [
+        {
+          id: 'monitoring123',
+          tahunPengambilan: 2024,
+          hasilKadar: 2.5,
+          satuan: 'mg/L',
+          peskLocation: {
+            province: 'Province A',
+            regency: 'Regency A',
+            district: 'District A',
+            village: 'Village A',
+          },
+          warehouseLocation: {
+            province: 'Province B',
+            regency: 'Regency B',
+            district: 'District B',
+            village: 'Village B',
+          },
+          photoUrls: [
+            'https://api.example.com/uploads/photos/photo1.jpg',
+            'https://api.example.com/uploads/photos/photo2.jpg',
+          ],
+        },
+      ],
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Bad request or invalid filters.' })
   async getFilteredMercuryMonitoring(
     @Query() filterDto: MercuryMonitoringFilterDto,
   ) {
@@ -65,6 +129,35 @@ export class MercuryMonitoringController {
    @Get(':id')
    @ApiOperation({ summary: 'Get mercury monitoring by ID' })
    @ApiParam({ name: 'id', description: 'Mercury Monitoring ID' })
+   @ApiResponse({
+     status: 200,
+     description: 'Mercury monitoring data retrieved successfully.',
+     schema: {
+       example: {
+         id: 'monitoring123',
+         tahunPengambilan: 2024,
+         hasilKadar: 2.5,
+         satuan: 'mg/L',
+         peskLocation: {
+           province: 'Province A',
+           regency: 'Regency A',
+           district: 'District A',
+           village: 'Village A',
+         },
+         warehouseLocation: {
+           province: 'Province B',
+           regency: 'Regency B',
+           district: 'District B',
+           village: 'Village B',
+         },
+         photoUrls: [
+           'https://api.example.com/uploads/photos/photo1.jpg',
+           'https://api.example.com/uploads/photos/photo2.jpg',
+         ],
+       },
+     },
+   })
+   @ApiResponse({ status: 404, description: 'Mercury Monitoring not found.' })
    async getMercuryMonitoringById(@Param('id') id: string) {
      const result = await this.mercuryMonitoringService.getMercuryMonitoringById(id);
      if (!result) {

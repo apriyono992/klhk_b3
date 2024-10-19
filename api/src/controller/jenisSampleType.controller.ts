@@ -13,7 +13,19 @@ export class JenisSampleTypeController {
   // Create a new JenisSampleType
   @Post()
   @ApiOperation({ summary: 'Create a new sample type' })
-  @ApiResponse({ status: 201, description: 'The sample type has been successfully created.' })
+  @ApiResponse({
+    status: 201,
+    description: 'The sample type has been successfully created.',
+    schema: {
+      example: {
+        id: 'type123',
+        type: 'Water',
+        deskripsi: 'Type for water samples',
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T10:00:00Z',
+      },
+    },
+  })
   @ApiResponse({ status: 400, description: 'Bad Request: Type already exists.' })
   async create(@Body() createJenisSampleTypeDto: CreateJenisSampleTypeDto) {
     return await this.jenisSampleTypeService.create(createJenisSampleTypeDto);
@@ -22,7 +34,19 @@ export class JenisSampleTypeController {
   // Update an existing JenisSampleType by ID
   @Put(':id')
   @ApiOperation({ summary: 'Update an existing sample type' })
-  @ApiResponse({ status: 200, description: 'The sample type has been successfully updated.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The sample type has been successfully updated.',
+    schema: {
+      example: {
+        id: 'type123',
+        type: 'Soil',
+        deskripsi: 'Updated description for soil samples',
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T11:00:00Z',
+      },
+    },
+  })
   @ApiResponse({ status: 400, description: 'Bad Request: Type already exists.' })
   @ApiResponse({ status: 404, description: 'Not Found: The sample type does not exist.' })
   async update(
@@ -35,7 +59,15 @@ export class JenisSampleTypeController {
   // Delete a JenisSampleType by ID
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a sample type by ID' })
-  @ApiResponse({ status: 200, description: 'The sample type has been successfully deleted.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The sample type has been successfully deleted.',
+    schema: {
+      example: {
+        message: 'Sample type deleted successfully.',
+      },
+    },
+  })
   @ApiResponse({ status: 404, description: 'Not Found: The sample type does not exist.' })
   async delete(@Param('id') id: string) {
     return await this.jenisSampleTypeService.delete(id);

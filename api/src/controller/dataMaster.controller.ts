@@ -8,7 +8,6 @@ import { SearchDataPejabatDto } from 'src/models/searchDataPejabatDto';
 import { SearchDataTembusanDto } from 'src/models/seatchDataTembusanDto';
 import { DataMasterService } from 'src/services/dataMaster.services';
 
-
 @ApiTags('Data Master')
 @Controller('data-master')
 export class DataMasterController {
@@ -19,7 +18,19 @@ export class DataMasterController {
   // ============================================
   @Post('bahan-b3')
   @ApiOperation({ summary: 'Create Data Bahan B3' })
-  @ApiResponse({ status: 201, description: 'Data Bahan B3 successfully created.' })
+  @ApiResponse({
+    status: 201,
+    description: 'Data Bahan B3 successfully created.',
+    schema: {
+      example: {
+        id: 'bahan123',
+        casNumber: '123-45-6',
+        namaDagang: 'Bahan Kimia A',
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T10:00:00Z',
+      },
+    },
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   async createDataBahanB3(@Body() createDataBahanB3Dto: CreateDataBahanB3Dto) {
     return this.dataMasterService.createDataBahanB3(createDataBahanB3Dto);
@@ -27,7 +38,19 @@ export class DataMasterController {
 
   @Put('bahan-b3/:id')
   @ApiOperation({ summary: 'Update Data Bahan B3' })
-  @ApiResponse({ status: 200, description: 'Data Bahan B3 successfully updated.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Data Bahan B3 successfully updated.',
+    schema: {
+      example: {
+        id: 'bahan123',
+        casNumber: '123-45-6',
+        namaDagang: 'Bahan Kimia A',
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T11:00:00Z',
+      },
+    },
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   async updateDataBahanB3(@Param('id') id: string, @Body() updateDataBahanB3Dto: CreateDataBahanB3Dto) {
     return this.dataMasterService.updateDataBahanB3(id, updateDataBahanB3Dto);
@@ -35,26 +58,63 @@ export class DataMasterController {
 
   @Delete('bahan-b3/:id')
   @ApiOperation({ summary: 'Delete Data Bahan B3' })
-  @ApiResponse({ status: 200, description: 'Data Bahan B3 successfully deleted.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Data Bahan B3 successfully deleted.',
+    schema: {
+      example: {
+        message: 'Data Bahan B3 deleted successfully.',
+      },
+    },
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   @HttpCode(HttpStatus.OK)
   async deleteDataBahanB3(@Param('id') id: string) {
     return this.dataMasterService.deleteDataBahanB3(id);
   }
 
-  // Search Data Pejabat
   @Get('bahan-b3')
   @ApiOperation({ summary: 'Search Data Bahan B3' })
-  @ApiResponse({ status: 200, description: 'Successful search operation.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful search operation.',
+    schema: {
+      example: {
+        total: 100,
+        page: 1,
+        limit: 10,
+        data: [
+          {
+            id: 'bahan123',
+            casNumber: '123-45-6',
+            namaDagang: 'Bahan Kimia A',
+            createdAt: '2024-10-19T10:00:00Z',
+            updatedAt: '2024-10-19T11:00:00Z',
+          },
+        ],
+      },
+    },
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   async searchDataBahanB3(@Query() query: SearchDataBahanB3Dto) {
     return this.dataMasterService.searchDataBahanB3(query);
   }
 
-  // Get Single Data Pejabat by ID
   @Get('bahan-b3/:id')
-  @ApiOperation({ summary: 'Get Data Pejabat by ID' })
-  @ApiResponse({ status: 200, description: 'Successful retrieval of data.' })
+  @ApiOperation({ summary: 'Get Data Bahan B3 by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful retrieval of data.',
+    schema: {
+      example: {
+        id: 'bahan123',
+        casNumber: '123-45-6',
+        namaDagang: 'Bahan Kimia A',
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T11:00:00Z',
+      },
+    },
+  })
   @ApiResponse({ status: 404, description: 'Data not found.' })
   async getDataBahanB3ById(@Param('id') id: string) {
     return this.dataMasterService.getDataBahanB3ById(id);
@@ -65,7 +125,19 @@ export class DataMasterController {
   // ============================================
   @Post('pejabat')
   @ApiOperation({ summary: 'Create Data Pejabat' })
-  @ApiResponse({ status: 201, description: 'Data Pejabat successfully created.' })
+  @ApiResponse({
+    status: 201,
+    description: 'Data Pejabat successfully created.',
+    schema: {
+      example: {
+        id: 'pejabat123',
+        nip: '198745678901234',
+        nama: 'John Doe',
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T11:00:00Z',
+      },
+    },
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   async createDataPejabat(@Body() createDataPejabatDto: CreateDataPejabatDto) {
     return this.dataMasterService.createDataPejabat(createDataPejabatDto);
@@ -73,7 +145,19 @@ export class DataMasterController {
 
   @Put('pejabat/:id')
   @ApiOperation({ summary: 'Update Data Pejabat' })
-  @ApiResponse({ status: 200, description: 'Data Pejabat successfully updated.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Data Pejabat successfully updated.',
+    schema: {
+      example: {
+        id: 'pejabat123',
+        nip: '198745678901234',
+        nama: 'John Doe',
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T11:00:00Z',
+      },
+    },
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   async updateDataPejabat(@Param('id') id: string, @Body() updateDataPejabatDto: CreateDataPejabatDto) {
     return this.dataMasterService.updateDataPejabat(id, updateDataPejabatDto);
@@ -81,37 +165,86 @@ export class DataMasterController {
 
   @Delete('pejabat/:id')
   @ApiOperation({ summary: 'Delete Data Pejabat' })
-  @ApiResponse({ status: 200, description: 'Data Pejabat successfully deleted.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Data Pejabat successfully deleted.',
+    schema: {
+      example: {
+        message: 'Data Pejabat deleted successfully.',
+      },
+    },
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   @HttpCode(HttpStatus.OK)
   async deleteDataPejabat(@Param('id') id: string) {
     return this.dataMasterService.deleteDataPejabat(id);
   }
 
-   // Search Data Pejabat
-   @Get('pejabat')
-   @ApiOperation({ summary: 'Search Data Pejabat' })
-   @ApiResponse({ status: 200, description: 'Successful search operation.' })
-   @ApiResponse({ status: 400, description: 'Bad Request.' })
-   async searchDataPejabat(@Query() query: SearchDataPejabatDto) {
-     return this.dataMasterService.searchDataPejabat(query);
-   }
- 
-   // Get Single Data Pejabat by ID
-   @Get('pejabat/:id')
-   @ApiOperation({ summary: 'Get Data Pejabat by ID' })
-   @ApiResponse({ status: 200, description: 'Successful retrieval of data.' })
-   @ApiResponse({ status: 404, description: 'Data not found.' })
-   async getDataPejabatById(@Param('id') id: string) {
-     return this.dataMasterService.getDataPejabatById(id);
-   }
+  @Get('pejabat')
+  @ApiOperation({ summary: 'Search Data Pejabat' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful search operation.',
+    schema: {
+      example: {
+        total: 50,
+        page: 1,
+        limit: 10,
+        data: [
+          {
+            id: 'pejabat123',
+            nip: '198745678901234',
+            nama: 'John Doe',
+            createdAt: '2024-10-19T10:00:00Z',
+            updatedAt: '2024-10-19T11:00:00Z',
+          },
+        ],
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request.' })
+  async searchDataPejabat(@Query() query: SearchDataPejabatDto) {
+    return this.dataMasterService.searchDataPejabat(query);
+  }
+
+  @Get('pejabat/:id')
+  @ApiOperation({ summary: 'Get Data Pejabat by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful retrieval of data.',
+    schema: {
+      example: {
+        id: 'pejabat123',
+        nip: '198745678901234',
+        nama: 'John Doe',
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T11:00:00Z',
+      },
+    },
+  })
+  @ApiResponse({ status: 404, description: 'Data not found.' })
+  async getDataPejabatById(@Param('id') id: string) {
+    return this.dataMasterService.getDataPejabatById(id);
+  }
 
   // ============================================
   // Data Tembusan Endpoints
   // ============================================
   @Post('tembusan')
   @ApiOperation({ summary: 'Create Data Tembusan' })
-  @ApiResponse({ status: 201, description: 'Data Tembusan successfully created.' })
+  @ApiResponse({
+    status: 201,
+    description: 'Data Tembusan successfully created.',
+    schema: {
+      example: {
+        id: 'tembusan123',
+        nama: 'Tembusan A',
+        tipe: 'Internal',
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T11:00:00Z',
+      },
+    },
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   async createDataTembusan(@Body() createDataTembusanDto: CreateDataTembusanDto) {
     return this.dataMasterService.createDataTembusan(createDataTembusanDto);
@@ -119,7 +252,19 @@ export class DataMasterController {
 
   @Put('tembusan/:id')
   @ApiOperation({ summary: 'Update Data Tembusan' })
-  @ApiResponse({ status: 200, description: 'Data Tembusan successfully updated.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Data Tembusan successfully updated.',
+    schema: {
+      example: {
+        id: 'tembusan123',
+        nama: 'Tembusan A',
+        tipe: 'Internal',
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T11:00:00Z',
+      },
+    },
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   async updateDataTembusan(@Param('id') id: string, @Body() updateDataTembusanDto: CreateDataTembusanDto) {
     return this.dataMasterService.updateDataTembusan(id, updateDataTembusanDto);
@@ -127,28 +272,65 @@ export class DataMasterController {
 
   @Delete('tembusan/:id')
   @ApiOperation({ summary: 'Delete Data Tembusan' })
-  @ApiResponse({ status: 200, description: 'Data Tembusan successfully deleted.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Data Tembusan successfully deleted.',
+    schema: {
+      example: {
+        message: 'Data Tembusan deleted successfully.',
+      },
+    },
+  })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
   @HttpCode(HttpStatus.OK)
   async deleteDataTembusan(@Param('id') id: string) {
     return this.dataMasterService.deleteDataTembusan(id);
   }
 
-   // Search Data Tembusan
-   @Get('tembusan')
-   @ApiOperation({ summary: 'Search Data Tembusan' })
-   @ApiResponse({ status: 200, description: 'Successful search operation.' })
-   @ApiResponse({ status: 400, description: 'Bad Request.' })
-   async searchDataTembusan(@Query() query: SearchDataTembusanDto) {
-     return this.dataMasterService.searchDataTembusan(query);
-   }
- 
-   // Get Single Data Tembusan by ID
-   @Get('tembusan/:id')
-   @ApiOperation({ summary: 'Get Data Tembusan by ID' })
-   @ApiResponse({ status: 200, description: 'Successful retrieval of data.' })
-   @ApiResponse({ status: 404, description: 'Data not found.' })
-   async getDataTembusanById(@Param('id') id: string) {
-     return this.dataMasterService.getDataTembusanById(id);
-   }
+  @Get('tembusan')
+  @ApiOperation({ summary: 'Search Data Tembusan' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful search operation.',
+    schema: {
+      example: {
+        total: 20,
+        page: 1,
+        limit: 10,
+        data: [
+          {
+            id: 'tembusan123',
+            nama: 'Tembusan A',
+            tipe: 'Internal',
+            createdAt: '2024-10-19T10:00:00Z',
+            updatedAt: '2024-10-19T11:00:00Z',
+          },
+        ],
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request.' })
+  async searchDataTembusan(@Query() query: SearchDataTembusanDto) {
+    return this.dataMasterService.searchDataTembusan(query);
+  }
+
+  @Get('tembusan/:id')
+  @ApiOperation({ summary: 'Get Data Tembusan by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful retrieval of data.',
+    schema: {
+      example: {
+        id: 'tembusan123',
+        nama: 'Tembusan A',
+        tipe: 'Internal',
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T11:00:00Z',
+      },
+    },
+  })
+  @ApiResponse({ status: 404, description: 'Data not found.' })
+  async getDataTembusanById(@Param('id') id: string) {
+    return this.dataMasterService.getDataTembusanById(id);
+  }
 }

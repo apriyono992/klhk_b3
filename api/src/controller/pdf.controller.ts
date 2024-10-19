@@ -11,6 +11,7 @@ export class PdfController {
   @Get('generateRekomendasiB3/:applicationId')
   @ApiOperation({ summary: 'Generate a PDF document with header, first content, and lampiran sections' })
   @ApiResponse({ status: 200, description: 'PDF generated successfully.' })
+  @ApiResponse({ status: 404, description: 'Application not found.' })
   @ApiResponse({ status: 500, description: 'Internal server error.' })
   async generatePdf(@Param('applicationId') applicationId: string, @Res() res: Response) {
     const pdfBuffer = await this.pdfService.generateRekomendasiB3Pdf(applicationId);
@@ -25,7 +26,7 @@ export class PdfController {
   }  
   
   @Get('generateRegistrasiB3')
-  @ApiOperation({ summary: 'Generate a PDF document with header, first content, and lampiran sections' })
+  @ApiOperation({ summary: 'Generate a PDF document for Registrasi B3' })
   @ApiResponse({ status: 200, description: 'PDF generated successfully.' })
   @ApiResponse({ status: 500, description: 'Internal server error.' })
   async generateRegistrasiB3(@Res() res: Response) {

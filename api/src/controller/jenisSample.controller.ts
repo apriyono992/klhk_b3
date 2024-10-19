@@ -13,7 +13,19 @@ export class JenisSampleController {
   // Create a new JenisSample
   @Post()
   @ApiOperation({ summary: 'Create a new sample with a type and description' })
-  @ApiResponse({ status: 201, description: 'Sample created successfully.' })
+  @ApiResponse({
+    status: 201,
+    description: 'Sample created successfully.',
+    schema: {
+      example: {
+        id: 'sample123',
+        type: 'Water',
+        description: 'Sample of water for environmental testing',
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T10:00:00Z',
+      },
+    },
+  })
   @ApiResponse({ status: 400, description: 'Bad request or conflict.' })
   async create(@Body() createJenisSampleDto: CreateJenisSampleTypeDto) {
     return await this.jenisSampleService.create(createJenisSampleDto);
@@ -22,7 +34,19 @@ export class JenisSampleController {
   // Update the description of an existing JenisSample by ID
   @Put(':id')
   @ApiOperation({ summary: 'Update the description of a sample by ID' })
-  @ApiResponse({ status: 200, description: 'Sample description updated successfully.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Sample description updated successfully.',
+    schema: {
+      example: {
+        id: 'sample123',
+        type: 'Soil',
+        description: 'Updated description of the soil sample',
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T11:00:00Z',
+      },
+    },
+  })
   @ApiResponse({ status: 404, description: 'Sample not found.' })
   async updateDeskripsi(
     @Param('id') id: string,

@@ -2,7 +2,7 @@ import { Controller, Post, Put, Delete, Get, Param, Body, Query } from '@nestjs/
 import { CreateB3PermohonanRekomDto } from 'src/models/createB3PermohonanRekomDto';
 import { UpdateB3PermohonanRekomDto } from 'src/models/updateB3PermohonanRekomDto';
 import { SearchBahanB3PermohonanRekomDto } from 'src/models/searchBahanB3PermohonanRekomDto';
-import { ApiTags, ApiOperation, ApiBody, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBody, ApiParam, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { BahanB3Service } from 'src/services/bahanB3.services';
 
 @ApiTags('B3Substance')
@@ -13,6 +13,27 @@ export class BahanB3Controller {
   @Post()
   @ApiOperation({ summary: 'Create a new B3Substance' })
   @ApiBody({ type: CreateB3PermohonanRekomDto })
+  @ApiResponse({
+    status: 201,
+    description: 'B3Substance added successfully to the application',
+    schema: {
+      example: {
+        message: 'B3Substance added successfully to the application',
+        b3Substance: {
+          id: '123456',
+          applicationId: 'app123',
+          karakteristikB3: 'Corrosive',
+          fasaB3: 'Solid',
+          jenisKemasan: 'Drum',
+          asalMuat: 'Jakarta',
+          tujuanBongkar: 'Surabaya',
+          tujuanPenggunaan: 'Industrial',
+          createdAt: '2024-10-19T10:00:00Z',
+          updatedAt: '2024-10-19T10:00:00Z',
+        },
+      },
+    },
+  })
   async createB3Substance(@Body() createB3SubstanceDto: CreateB3PermohonanRekomDto) {
     return this.bahanB3Service.createB3Substance(createB3SubstanceDto);
   }
@@ -20,13 +41,43 @@ export class BahanB3Controller {
   @Put()
   @ApiOperation({ summary: 'Update an existing B3Substance' })
   @ApiBody({ type: UpdateB3PermohonanRekomDto })
-  async updateB3Substance( @Body() updateB3SubstanceDto: UpdateB3PermohonanRekomDto) {
-    return this.bahanB3Service.updateB3Substance( updateB3SubstanceDto);
+  @ApiResponse({
+    status: 200,
+    description: 'B3Substance updated successfully',
+    schema: {
+      example: {
+        message: 'B3Substance updated successfully',
+        b3Substance: {
+          id: '123456',
+          applicationId: 'app123',
+          karakteristikB3: 'Flammable',
+          fasaB3: 'Liquid',
+          jenisKemasan: 'Canister',
+          asalMuat: 'Bandung',
+          tujuanBongkar: 'Medan',
+          tujuanPenggunaan: 'Research',
+          createdAt: '2024-10-19T10:00:00Z',
+          updatedAt: '2024-10-20T10:00:00Z',
+        },
+      },
+    },
+  })
+  async updateB3Substance(@Body() updateB3SubstanceDto: UpdateB3PermohonanRekomDto) {
+    return this.bahanB3Service.updateB3Substance(updateB3SubstanceDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a B3Substance' })
   @ApiParam({ name: 'id', description: 'ID of the B3Substance to delete' })
+  @ApiResponse({
+    status: 200,
+    description: 'B3Substance deleted successfully',
+    schema: {
+      example: {
+        message: 'B3Substance deleted successfully',
+      },
+    },
+  })
   async deleteB3Substance(@Param('id') id: string) {
     return this.bahanB3Service.deleteB3Substance(id);
   }
@@ -34,6 +85,24 @@ export class BahanB3Controller {
   @Get(':id')
   @ApiOperation({ summary: 'Get a single B3Substance by ID' })
   @ApiParam({ name: 'id', description: 'ID of the B3Substance to retrieve' })
+  @ApiResponse({
+    status: 200,
+    description: 'Details of the B3Substance',
+    schema: {
+      example: {
+        id: '123456',
+        applicationId: 'app123',
+        karakteristikB3: 'Toxic',
+        fasaB3: 'Gas',
+        jenisKemasan: 'Cylinder',
+        asalMuat: 'Semarang',
+        tujuanBongkar: 'Makassar',
+        tujuanPenggunaan: 'Medical',
+        createdAt: '2024-10-19T10:00:00Z',
+        updatedAt: '2024-10-19T10:00:00Z',
+      },
+    },
+  })
   async getB3SubstanceById(@Param('id') id: string) {
     return this.bahanB3Service.getB3SubstanceById(id);
   }
@@ -53,6 +122,32 @@ export class BahanB3Controller {
   @ApiQuery({ name: 'b3pp74', description: 'Filter by whether the B3 is listed in PP 74/2001', required: false, type: Boolean })
   @ApiQuery({ name: 'b3DiluarList', description: 'Filter by whether the B3 is outside the list of PP 74/2001', required: false, type: Boolean })
   @ApiQuery({ name: 'applicationId', description: 'Filter by application ID', required: false, type: String })
+  @ApiResponse({
+    status: 200,
+    description: 'Search results with pagination',
+    schema: {
+      example: {
+        total: 5,
+        page: 1,
+        limit: 10,
+        b3Substances: [
+          {
+            id: '123456',
+            applicationId: 'app123',
+            karakteristikB3: 'Corrosive',
+            fasaB3: 'Solid',
+            jenisKemasan: 'Drum',
+            asalMuat: 'Jakarta',
+            tujuanBongkar: 'Surabaya',
+            tujuanPenggunaan: 'Industrial',
+            createdAt: '2024-10-19T10:00:00Z',
+            updatedAt: '2024-10-19T10:00:00Z',
+          },
+          // Additional substance data...
+        ],
+      },
+    },
+  })
   async searchB3Substances(@Query() searchDto: SearchBahanB3PermohonanRekomDto) {
     return this.bahanB3Service.searchB3Substances(searchDto);
   }

@@ -14,15 +14,66 @@ export class PermohonanRekomendasiB3Controller {
 
   @Post()
   @ApiOperation({ summary: 'Create initial application and Identitas Pemohon for a company' })
-  async createInitialApplication(
-    @Body() createIdentitasPemohonDto: CreateIdentitasPemohonDto,
-  ) {
+  @ApiResponse({
+    status: 201,
+    description: 'Application and Identitas Pemohon created successfully.',
+    content: {
+      'application/json': {
+        example: {
+          message: 'Application and Identitas Pemohon created successfully',
+          application: {
+            id: 'app123',
+            status: 'DraftPermohonan',
+            tipeSurat: 'SURAT_A',
+            kodePermohonan: 'B3-2024-001',
+            companyId: 'company001',
+            tanggalPengajuan: '2024-10-19T12:00:00.000Z',
+            identitasPemohonId: 'pemohon001',
+            requiredDocumentsStatus: {
+              SDS_OR_LDK: false,
+              Other: false,
+            },
+          },
+          identitasPemohon: {
+            id: 'pemohon001',
+            namaPemohon: 'John Doe',
+            alamatDomisili: 'Jakarta',
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid data for Identitas Pemohon or application.',
+  })
+  async createInitialApplication(@Body() createIdentitasPemohonDto: CreateIdentitasPemohonDto) {
     return this.permohonanService.createInitialApplicationWithPemohon(createIdentitasPemohonDto);
   }
 
   @Get('search')
   @ApiOperation({ summary: 'Search applications based on multiple filters with pagination' })
-  @ApiResponse({ status: 200, description: 'List of applications matching the criteria' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of applications matching the criteria.',
+    content: {
+      'application/json': {
+        example: {
+          data: [
+            {
+              id: 'app123',
+              kodePermohonan: 'B3-2024-001',
+              companyId: 'company001',
+              status: 'DraftPermohonan',
+            },
+          ],
+          page: 1,
+          limit: 10,
+          total: 1,
+        },
+      },
+    },
+  })
   @ApiResponse({ status: 400, description: 'Invalid query parameters' })
   async searchApplications(@Query() searchDto: SearchApplicationDto) {
     if (!searchDto.page || !searchDto.limit) {
@@ -33,7 +84,6 @@ export class PermohonanRekomendasiB3Controller {
     return applications;
   }
 
-  // Endpoint to get a single application by ID
   @Get(':applicationId')
   @ApiOperation({ summary: 'Get a single application by its ID' })
   @ApiParam({
@@ -44,6 +94,22 @@ export class PermohonanRekomendasiB3Controller {
   @ApiResponse({
     status: 200,
     description: 'The application details',
+    content: {
+      'application/json': {
+        example: {
+          id: 'app123',
+          kodePermohonan: 'B3-2024-001',
+          status: 'DraftPermohonan',
+          companyId: 'company001',
+          identitasPemohon: {
+            namaPemohon: 'John Doe',
+            alamatDomisili: 'Jakarta',
+          },
+          documents: [],
+          vehicles: [],
+        },
+      },
+    },
   })
   @ApiResponse({
     status: 404,
@@ -53,13 +119,36 @@ export class PermohonanRekomendasiB3Controller {
     return this.permohonanService.getApplicationById(applicationId);
   }
 
-  // Endpoint to update application status
   @Patch('status')
   @ApiOperation({ summary: 'Update the status of an application' })
-  @ApiBody({ type: UpdateApplicationStatusDto })
+  @ApiBody({
+    type: UpdateApplicationStatusDto,
+    examples: {
+      example1: {
+        summary: 'Valid request',
+        value: {
+          applicationId: 'app123',
+          status: 'ValidasiPemohonanSelesai',
+          userId: 'user123',
+        },
+      },
+    },
+  })
   @ApiResponse({
     status: 200,
     description: 'The application status was successfully updated',
+    content: {
+      'application/json': {
+        example: {
+          message: 'Application status updated to ValidasiPemohonanSelesai',
+          application: {
+            id: 'app123',
+            status: 'ValidasiPemohonanSelesai',
+            updatedAt: '2024-10-19T12:30:00.000Z',
+          },
+        },
+      },
+    },
   })
   @ApiResponse({
     status: 400,
@@ -69,30 +158,75 @@ export class PermohonanRekomendasiB3Controller {
     return this.permohonanService.updateApplicationStatus(data);
   }
 
-  // Endpoint to retrieve the status history of an application
   @Get('status-history/:applicationId')
   @ApiOperation({ summary: 'Get the status history of an application' })
-  async getApplicationStatusHistory(
-    @Param('applicationId') applicationId: string,
-  ) {
+  @ApiResponse({
+    status: 200,
+    description: 'The status history of the application',
+    content: {
+      'application/json': {
+        example: {
+          history: [
+            {
+              applicationId: 'app123',
+              oldStatus: null,
+              newStatus: 'DraftPermohonan',
+              changedAt: '2024-10-19T12:00:00.000Z',
+            },
+            {
+              applicationId: 'app123',
+              oldStatus: 'DraftPermohonan',
+              newStatus: 'ValidasiPemohonanSelesai',
+              changedAt: '2024-10-19T12:30:00.000Z',
+            },
+          ],
+        },
+      },
+    },
+  })
+  async getApplicationStatusHistory(@Param('applicationId') applicationId: string) {
     if (!applicationId) {
       throw new BadRequestException('Application ID is required.');
     }
 
     return this.permohonanService.getApplicationStatusHistory(applicationId);
   }
-  
-  
+
   @Patch('draft-surat')
   @ApiOperation({ summary: 'Update DraftSurat by ID' })
   @ApiParam({ name: 'id', description: 'ID of the DraftSurat' })
-  @ApiBody({ type: DraftSuratDto })
-  @ApiResponse({ status: 200, description: 'Successfully updated the DraftSurat' })
+  @ApiBody({
+    type: DraftSuratDto,
+    examples: {
+      example1: {
+        summary: 'Valid request',
+        value: {
+          draftId: 'draft123',
+          pejabatId: 'pejabat001',
+          kodeDBKlh: '123-XYZ',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully updated the DraftSurat',
+    content: {
+      'application/json': {
+        example: {
+          message: 'Successfully updated the DraftSurat',
+          data: {
+            id: 'draft123',
+            pejabatId: 'pejabat001',
+            kodeDBKlh: '123-XYZ',
+            nomorSurat: null,
+          },
+        },
+      },
+    },
+  })
   @ApiResponse({ status: 404, description: 'DraftSurat not found' })
-  async updateDraftSurat(
-    @Body() updateData: DraftSuratDto
-  ) {
-    // Call the service method to update the DraftSurat
+  async updateDraftSurat(@Body() updateData: DraftSuratDto) {
     const updatedDraftSurat = await this.permohonanService.updateDraftSurat(updateData);
     return {
       message: 'Successfully updated the DraftSurat',
