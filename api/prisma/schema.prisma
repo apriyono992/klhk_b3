@@ -342,6 +342,10 @@ model Company {
 
   IdentitasApplication IdentitasApplication[]
   notifikasi          Notifikasi[]
+
+  PerusahaanTujuanBongkar PerusahaanTujuanBongkar[]
+
+  PerusahaanAsalMuat PerusahaanAsalMuat[]
 }
 
 model Vehicle {
@@ -359,6 +363,8 @@ model Vehicle {
   deletedAt          DateTime?             // Soft delete flag (NULL = active)
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
+
+  PelaporanPengangkutan PelaporanPengangkutan[]
 }
 
 model IdentitasApplication {
@@ -401,6 +407,8 @@ model Application {
   createdAt                 DateTime               @default(now())
   updatedAt                 DateTime               @updatedAt
   statusHistory             ApplicationStatusHistory[] // Relation to status history
+
+  PelaporanPengangkutan PelaporanPengangkutan[]
 }
 
 model ApplicationStatusHistory {
@@ -441,6 +449,8 @@ model B3Substance {
   createdAt                  DateTime               @default(now())
   updatedAt                  DateTime               @updatedAt
 
+
+  PengangkutanDetail PengangkutanDetail[]
 }
 
 model DocumentRekomendasiB3 {
@@ -750,4 +760,64 @@ model LocationDetails {
 
   createdAt                  DateTime               @default(now())
   updatedAt                  DateTime               @default(now())
+}
+
+model PelaporanPengangkutan {
+  id                      String                 @id @default(uuid())
+  applicationId           String                 // Foreign key to Application (permohonan)
+  application             Application            @relation(fields: [applicationId], references: [id])
+  vehicleId               String                 // Foreign key to Vehicle
+  vehicle                 Vehicle                @relation(fields: [vehicleId], references: [id]) // Relation to track reports per vehicle
+  bulan                   Int                    // Month of the report (1 for January, 2 for February, etc.)
+  tahun                   Int                    // Year of the report
+  pengangkutanDetails     PengangkutanDetail[]   // One-to-many relation to PengangkutanDetail
+  isDraft                 Boolean                @default(true)  // Report is a draft until finalized
+  createdAt               DateTime               @default(now())
+  updatedAt               DateTime               @updatedAt
+
+  @@unique([vehicleId, bulan, tahun]) // Ensures each vehicle is reported only once per month and year
+}
+
+model PengangkutanDetail {
+  id                      String                 @id @default(uuid())
+  pelaporanPengangkutanId String                 // Foreign key to PelaporanPengangkutan
+  pelaporanPengangkutan   PelaporanPengangkutan  @relation(fields: [pelaporanPengangkutanId], references: [id])
+  b3SubstanceId           String                 // Foreign key to B3Substance
+  b3Substance             B3Substance            @relation(fields: [b3SubstanceId], references: [id]) // Relation to B3Substance to get name, CAS number, etc.
+  jumlahB3                Float                  // Amount of B3 transported (kg)
+  perusahaanAsalMuat      PerusahaanAsalMuat[]   // One-to-many relation to PerusahaanAsalMuat
+  perusahaanTujuanBongkar PerusahaanTujuanBongkar[]  // One-to-many relation to PerusahaanTujuanBongkar
+  createdAt               DateTime               @default(now())
+  updatedAt               DateTime               @updatedAt
+
+  @@unique([b3SubstanceId, pelaporanPengangkutanId]) // Ensures each B3 substance is reported only once per month and year
+}
+
+model PerusahaanAsalMuat {
+  id                      String                 @id @default(uuid())
+  companyId               String                 // Foreign key to Company
+  company                 Company                @relation(fields: [companyId], references: [id])
+  pengangkutanDetailId    String                 // Foreign key to PengangkutanDetail
+  pengangkutanDetail      PengangkutanDetail     @relation(fields: [pengangkutanDetailId], references: [id])
+  namaPerusahaan          String                 // Name of the loading company
+  alamat                  String                 // Loading origin address
+  latitude                Float                  // Loading origin latitude
+  longitude               Float                  // Loading origin longitude
+  locationType            String                 // Type of location: Gudang or Pelabuhan
+  createdAt               DateTime               @default(now())
+  updatedAt               DateTime               @updatedAt
+}
+
+model PerusahaanTujuanBongkar {
+  id                      String                 @id @default(uuid())
+  companyId               String                 // Foreign key to Company
+  company                 Company                @relation(fields: [companyId], references: [id])
+  pengangkutanDetailId    String                 // Foreign key to PengangkutanDetail
+  pengangkutanDetail      PengangkutanDetail     @relation(fields: [pengangkutanDetailId], references: [id])
+  namaPerusahaan          String                 // Name of the unloading company
+  alamat                  String                 // Unloading destination address
+  latitude                Float                  // Unloading destination latitude
+  longitude               Float                  // Unloading destination longitude
+  createdAt               DateTime               @default(now())
+  updatedAt               DateTime               @updatedAt
 }
