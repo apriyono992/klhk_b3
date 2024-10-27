@@ -11,6 +11,7 @@ import { DraftSuratDto } from 'src/models/draftSuratDto';
 import { AddTembusanToDraftSkDto } from 'src/models/addTembusanToDraftSkDto';
 import { AddPejabatToDraftSkDto } from 'src/models/addPejabatToDraftSkDto';
 import { UpdateApplicationStatusDto } from 'src/models/updateApplicationStatusDto';
+import { JenisPermohonan } from 'src/models/enums/jenisPermohonan';
 
 @Injectable()
 export class PermohonanRekomendasiB3Service {
@@ -66,6 +67,7 @@ export class PermohonanRekomendasiB3Service {
         application = await this.prisma.application.create({
           data: {
             status: StatusPermohonan.DraftPermohonan,
+            jenisPermohonan: JenisPermohonan.REKOMENDASI_B3,
             tipeSurat: createDto.tipeSurat,
             kodePermohonan,
             tanggalPengajuan: new Date(),

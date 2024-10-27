@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surat Persetujuan Import Non ECHA</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.5;
+        }
+        .header, .footer {
+            text-align: center;
+            font-size: 12px;
+        }
+        .content {
+            margin: 20px;
+        }
+        .content p {
+            margin-bottom: 10px;
+        }
+        .content .date {
+            text-align: right;
+        }
+        .signature {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <p><strong>KEMENTERIAN LINGKUNGAN HIDUP DAN KEHUTANAN</strong></p>
+        <p><strong>DIREKTORAT JENDERAL PENGELOLAAN SAMPAH, LIMBAH DAN BAHAN BERBAHAYA DAN BERACUN</strong></p>
+        <p>Gedung Manggala Wanabakti Blok 4 Lantai 5 – Jl. Gatot Subroto, Jakarta 10270</p>
+        <p>Telp. 021-5704501/04 Ext. 4112, Fax. 021-57902750; Indonesia – Kotak Pos 6505</p>
+    </div>
+
+    <div class="content">
+        <p class="date">{{tanggalSurat}}</p>
+        <p>Nomor: {{nomorSurat}}</p>
+        <p>Sifat: {{sifatSurat}}</p>
+        <p>Lampiran: 1 (satu) berkas</p>
+        <p>Hal: Surat Pemberitahuan Persetujuan Notifikasi</p>
+        <p>Yth. Direktur {{companyName}}</p>
+        <p>di Tempat</p>
+
+        <p>1. Memperhatikan:</p>
+        <ul>
+            <li>{{customPoint1}}</li> <!-- Customizable Point 1 (e.g., Notifikasi via email) -->
+            <li>Surat Pemberitahuan Konfirmasi Kebenaran Impor Bahan Berbahaya dan Beracun dari Kementerian Lingkungan Hidup dan Kehutanan, Nomor: {{nomorKonfirmasi}}, tanggal {{tanggalKonfirmasi}};</li>
+            <li>Surat Jawaban Konfirmasi Kebenaran Impor dari {{companyName}}, Nomor: {{nomorJawaban}}, tanggal {{tanggalJawaban}} tentang Konfirmasi Kebenaran Impor B3;</li>
+        </ul>
+
+        <p>2. Surat Explicit Consent for Exporting Severely Restricted Chemicals to Indonesia Nomor {{nomorExplicitConsent}}, tanggal {{tanggalExplicitConsent}};</p>
+
+        <p>3. Berdasarkan rujukan di atas, maka disampaikan bahwa prosedur notifikasi untuk impor bahan kimia {{namaKimia}} atau {{namaDagang}} (Reference Number {{referenceNumber}}) dari {{negaraAsal}}, telah selesai. Persetujuan notifikasi ini berlaku sampai dengan tanggal {{validUntil}}.</p>
+
+        <p>4. Selanjutnya, agar Saudara melakukan Registrasi Bahan Berbahaya dan Beracun (B3) yang dimaksud ke Kementerian Lingkungan Hidup dan Kehutanan sesegera mungkin.</p>
+
+        <p>Atas perhatian dan kerjasama yang baik diucapkan terima kasih.</p>
+
+        <div class="signature">
+            <p>a.n Direktur Jenderal,</p>
+            <p>Direktur Pengelolaan B3</p>
+            <br><br><br>
+            <p>{{pejabatName}}</p>
+            <p>NIP. {{pejabatNIP}}</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Tembusan:</p>
+        <ul>
+            {{#tembusanList}}
+            <li>{{this}}</li>
+            {{/tembusanList}}
+        </ul>
+    </div>
+</body>
+</html>

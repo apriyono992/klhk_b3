@@ -1,7 +1,9 @@
-import { IsString, IsBoolean, IsNotEmpty, IsOptional, Validate } from 'class-validator';
+import { IsString, IsBoolean, IsNotEmpty, Validate, IsArray, ArrayNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDataBahanB3Exists } from 'src/validators/dataBahanB3.validator';
+import { LocationDetailsDto } from './locationDetailsDto';
 
+// Updated DTO for creating a B3Substance
 export class CreateB3PermohonanRekomDto {
   @ApiProperty({ description: 'Foreign key for DataBahanB3' })
   @Validate(IsDataBahanB3Exists)
@@ -34,15 +36,23 @@ export class CreateB3PermohonanRekomDto {
   @IsNotEmpty()
   jenisKemasan: string;
 
-  @ApiProperty({ description: 'Origin of the B3' })
-  @IsString()
-  @IsNotEmpty()
-  asalMuat: string;
+  // New: Array of origin locations (asalMuat)
+  @ApiProperty({
+    description: 'Array of origin locations (asalMuat)',
+    type: [LocationDetailsDto],
+  })
+  @IsArray()
+  @ArrayNotEmpty()
+  asalMuat: LocationDetailsDto[];
 
-  @ApiProperty({ description: 'Destination of the B3' })
-  @IsString()
-  @IsNotEmpty()
-  tujuanBongkar: string;
+  // New: Array of destination locations (tujuanBongkar)
+  @ApiProperty({
+    description: 'Array of destination locations (tujuanBongkar)',
+    type: [LocationDetailsDto],
+  })
+  @IsArray()
+  @ArrayNotEmpty()
+  tujuanBongkar: LocationDetailsDto[];
 
   @ApiProperty({ description: 'Purpose of the B3' })
   @IsString()

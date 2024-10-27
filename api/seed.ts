@@ -1,0 +1,771 @@
+import { PrismaClient } from '@prisma/client';
+import { TipeDokumen } from 'src/models/enums/TipeDokumen';
+const prisma = new PrismaClient();
+
+
+function getRandomPejabat(pejabatList) {
+  return pejabatList[Math.floor(Math.random() * pejabatList.length)].id;
+}
+
+function getRandomTembusan(tembusanList, count = 3) {
+  // Shuffle the list and pick `count` random tembusan
+  const shuffled = tembusanList.sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, count).map(t => ({ id: t.id }));
+}
+
+function generateUniqueSlug(title) {
+  const timestamp = Date.now(); // Generate a unique timestamp
+  return `${title.toLowerCase().replace(/\s+/g, '-')}-${timestamp}`;
+}
+
+async function main() {
+  // Seed Multiple DataBahanB3
+  const dataBahanB3 = await prisma.dataBahanB3.createMany({
+    data: [
+      { casNumber: '7439-97-6', namaBahanKimia: 'Mercury', namaDagang: 'Quicksilver', tipeBahan: 'Toxic Metal' },
+      { casNumber: '7440-02-0', namaBahanKimia: 'Nickel', namaDagang: 'Nickel Metal', tipeBahan: 'Metal' },
+      { casNumber: '7440-22-4', namaBahanKimia: 'Silver', namaDagang: 'Argentum', tipeBahan: 'Metal' },
+      { casNumber: '7440-66-6', namaBahanKimia: 'Zinc', namaDagang: 'Zinc Metal', tipeBahan: 'Metal' },
+      { casNumber: '7440-61-1', namaBahanKimia: 'Uranium', namaDagang: 'Uraninite', tipeBahan: 'Radioactive Metal' },
+      { casNumber: '7440-31-5', namaBahanKimia: 'Tin', namaDagang: 'Stannum', tipeBahan: 'Metal' },
+      { casNumber: '7782-49-2', namaBahanKimia: 'Selenium', namaDagang: 'Selenium', tipeBahan: 'Non-metal' },
+      { casNumber: '7440-36-0', namaBahanKimia: 'Antimony', namaDagang: 'Stibium', tipeBahan: 'Metalloid' },
+      { casNumber: '7440-38-2', namaBahanKimia: 'Arsenic', namaDagang: 'Arsenic', tipeBahan: 'Metalloid' },
+      { casNumber: '7440-50-8', namaBahanKimia: 'Copper', namaDagang: 'Cuprum', tipeBahan: 'Metal' },
+    ],
+    skipDuplicates: true,
+  });
+
+  // Seed Multiple DataPejabat
+  const dataPejabat = await prisma.dataPejabat.createMany({
+    data: [
+      { nip: '1234567890', nama: 'Dr. John Doe', jabatan: 'Director of Environmental Safety', status: 'ACTIVE' },
+      { nip: '2345678901', nama: 'Jane Smith', jabatan: 'Deputy Director', status: 'ACTIVE' },
+      { nip: '3456789012', nama: 'Alice Johnson', jabatan: 'Chief of Compliance', status: 'INACTIVE' },
+      { nip: '4567890123', nama: 'Bob Brown', jabatan: 'Head of Inspection', status: 'ACTIVE' },
+      { nip: '5678901234', nama: 'Charlie Davis', jabatan: 'Head of Research', status: 'ACTIVE' },
+      { nip: '6789012345', nama: 'Diana Evans', jabatan: 'Environmental Analyst', status: 'ACTIVE' },
+      { nip: '7890123456', nama: 'Eve Foster', jabatan: 'Legal Advisor', status: 'ACTIVE' },
+      { nip: '8901234567', nama: 'Frank Green', jabatan: 'Technical Lead', status: 'INACTIVE' },
+      { nip: '9012345678', nama: 'Grace Harris', jabatan: 'Environmental Scientist', status: 'ACTIVE' },
+      { nip: '0123456789', nama: 'Henry Irwin', jabatan: 'Chief Engineer', status: 'ACTIVE' },
+    ],
+    skipDuplicates: true,
+  });
+
+  // Seed Multiple DataTembusan
+  const dataTembusan = await prisma.dataTembusan.createMany({
+    data: [
+      { nama: 'Ministry of Environmental Affairs', tipe: 'Government' },
+      { nama: 'Ministry of Industry', tipe: 'Government' },
+      { nama: 'Ministry of Health', tipe: 'Government' },
+      { nama: 'Environmental Protection Agency', tipe: 'Government' },
+      { nama: 'National Chemical Safety Board', tipe: 'Government' },
+      { nama: 'Environmental NGO', tipe: 'NGO' },
+      { nama: 'Greenpeace', tipe: 'NGO' },
+      { nama: 'WWF', tipe: 'NGO' },
+      { nama: 'Bureau of Industrial Safety', tipe: 'Government' },
+      { nama: 'Department of Public Health', tipe: 'Government' },
+    ],
+    skipDuplicates: true,
+  });
+  
+  // Seed User Roles
+  await prisma.userRole.createMany({
+    data: [
+      { userId: 'user1', role: 'ADMIN', scope: '*' },
+      { userId: 'user2', role: 'USER', scope: '*' },
+    ],
+  });
+
+  // Seed Categories
+  await prisma.category.createMany({
+    data: [
+      {
+        name: 'News',
+        slug: 'news',
+        type: 'NEWS',
+        author: 'admin',
+        status: 'PUBLISHED',
+      },
+      {
+        name: 'Article',
+        slug: 'article',
+        type: 'ARTICLE',
+        author: 'admin',
+        status: 'PUBLISHED',
+      },
+      {
+        name: 'Info',
+        slug: 'info',
+        type: 'INFO',
+        author: 'admin',
+        status: 'PUBLISHED',
+      },
+      {
+        name: 'Document',
+        slug: 'document',
+        type: 'DOCUMENT',
+        author: 'admin',
+        status: 'PUBLISHED',
+      },
+      {
+        name: 'Event',
+        slug: 'event',
+        type: 'EVENT',
+        author: 'admin',
+        status: 'PUBLISHED',
+      },
+      {
+        name: 'Attachment',
+        slug: 'attachment',
+        type: 'ATTACHMENT',
+        author: 'admin',
+        status: 'PUBLISHED',
+      },
+    ],
+    skipDuplicates: true,
+  });
+
+   // Seed News
+   const newsTitle = 'AI Technology Advancements';
+   const newsSlug = generateUniqueSlug(newsTitle);
+ 
+   await prisma.news.create({
+     data: {
+       title: newsTitle,
+       slug: newsSlug, // Ensure unique slug
+       content: 'This article discusses the latest in AI technology...',
+       description: 'A detailed exploration of AI advancements',
+       views: 100,
+       author: 'user1',
+       status: 'PUBLISHED',
+       createdById: 'user1',
+       categories: { connect: [{ slug: 'news' }] }, // Connect by id
+     },
+   });
+
+   // Seed Articles
+   const articleTitle = 'The Future of Quantum Computing';
+   const articleSlug = generateUniqueSlug(articleTitle);
+ 
+   await prisma.article.create({
+     data: {
+       title: articleTitle,
+       slug: articleSlug,
+       content: 'Quantum computing is revolutionizing...',
+       description: 'An article on quantum computing breakthroughs',
+       views: 200,
+       author: 'user2',
+       status: 'PUBLISHED',
+       createdById: 'user2',
+       categories: { connect: [{ slug: 'article'}] }, // Connect by id
+     },
+   });
+ 
+
+   // Seed Info
+   const infoTitle = 'Climate Change Impact';
+   const infoSlug = generateUniqueSlug(infoTitle);
+ 
+   await prisma.info.create({
+     data: {
+       title: infoTitle,
+       slug: infoSlug,
+       description: 'A report on the impact of climate change...',
+       views: 150,
+       author: 'user1',
+       status: 'DRAFT',
+       createdById: 'user1',
+       categories: { connect: [{ slug: 'info' }] }, // Connect by id
+     },
+   });
+
+   // Seed Events
+   const eventTitle = 'Global Environmental Summit';
+   const eventSlug = generateUniqueSlug(eventTitle);
+ 
+   await prisma.event.create({
+     data: {
+       title: eventTitle,
+       slug: eventSlug,
+       description: 'A summit focusing on global environmental issues...',
+       startDate: new Date('2024-12-01T10:00:00Z'),
+       endDate: new Date('2024-12-02T18:00:00Z'),
+       latitude: 40.7128,
+       longitude: -74.0060,
+       city: 'New York',
+       province: 'NY',
+       country: 'USA',
+       author: 'user1',
+       createdById: 'user1',
+       status: 'PUBLISHED',
+       categories: { connect: [{ slug: 'event' }] }, // Connect by id
+     },
+   });
+
+  // Seed Photos
+  await prisma.photo.create({
+    data: {
+      url: 'https://example.com/photo.jpg',
+      author: 'user1',
+      status: 'PUBLISHED',
+    },
+  });
+  let jenisSampleType;
+  let jenisSample;
+  try{
+      // Seed JenisSampleType
+       jenisSampleType = await prisma.jenisSampleType.create({
+        data: {
+          type: 'Air Quality',
+          deskripsi: 'Samples for air quality monitoring',
+        },
+      });
+
+      // Seed JenisSample
+      jenisSample = await prisma.jenisSample.create({
+        data: {
+          code: 'JSP001',
+          deskripsi: 'Air sample taken from the environment',
+          typeId: jenisSampleType.id, // Connect with JenisSampleType
+        },
+      });
+
+  }catch(error){
+    console.log(error);
+  }
+
+  const jenisample = await prisma.jenisSample.findMany();
+
+  // Seed MercuryMonitoring with relation to JenisSample and Location
+  await prisma.mercuryMonitoring.create({
+    data: {
+      tahunPengambilan: new Date('2023-01-01'),
+      hasilKadar: '0.05',
+      satuan: 'mg/L',
+      tingkatKadar: 'Below Threshold',
+      konsentrasi: 'Low',
+      jenisSampel: { connect: { id: getRandomPejabat(jenisample) } },
+      photos: {
+        create: [
+          {
+            url: 'https://example.com/photo.jpg',
+            author: 'user1',
+            status: 'PUBLISHED',
+          },
+        ],
+      },
+      peskLocation: {
+        create: {
+          latitude: 40.7128,
+          longitude: -74.0060,
+          description: 'Sample taken from New York City',
+        },
+      },
+      warehouseLocation: {
+        create: {
+          latitude: 41.8781,
+          longitude: -87.6298,
+          description: 'Stored in a Chicago warehouse',
+        },
+      },
+    },
+  });
+
+  // Seed Search Metric
+  await prisma.searchMetric.create({
+    data: {
+      userId: 'user1',
+      keyword: 'environmental impact',
+      categoryName: ['Science', 'Technology'],
+      type: 'NEWS',
+      timestamp: new Date(),
+    },
+  });
+
+  // Seed Content View Log
+  await prisma.contentViewLog.create({
+    data: {
+      contentId: 'news1',
+      contentType: 'news',
+      viewedAt: new Date(),
+    },
+  });
+
+  try{
+    
+  // Seed Location and other hierarchical models (Province, Regency, District, Village)
+  await prisma.province.create({
+    data: {
+      id: '00',
+      name: 'New York',
+    },
+  });
+
+  await prisma.regencies.create({
+    data: {
+      id: '001',
+      name: 'Manhattan',
+      provinceId: '00',
+    },
+  });
+
+  await prisma.districts.create({
+    data: {
+      id: '0011',
+      name: 'Midtown',
+      regencyId: '001',
+    },
+  });
+
+  await prisma.village.create({
+    data: {
+      id: '00111',
+      name: 'Village 1',
+      districtId: '0011',
+    },
+  });
+
+  }catch(error){
+    console.log(error);
+  }
+  
+  const provinces = await prisma.province.findMany();
+  const regencies = await prisma.regencies.findMany();
+  const districts = await prisma.districts.findMany();
+  const villages = await prisma.village.findMany();
+  await prisma.location.create({
+    data: {
+      latitude: 40.7128,
+      longitude: -74.0060,
+      description: 'Location in New York City',
+      province: { connect: { id: getRandomPejabat(provinces) } },
+      regency: { connect: { id: getRandomPejabat(regencies) } },
+      district: { connect: { id: getRandomPejabat(districts) } },
+      village: { connect: { id: getRandomPejabat(villages) } },
+    },
+  });
+  try{
+    const company = await prisma.company.create({
+      data: {
+        name: 'TechCorp',
+        penanggungJawab: 'John Doe',
+        alamatKantor: '123 Tech Street',
+        telpKantor: '1234567890',
+        faxKantor: '0987654321',
+        emailKantor: 'contact@techcorp.com',
+        npwp: '123456789012345',
+        nomorInduk: '56789',
+        kodeDBKlh: 'DB123',
+        alamatPool: ['Pool 1', 'Pool 2'],
+        bidangUsaha: 'Technology',
+      },
+    });
+  
+    
+  }
+  catch(error){
+
+  }
+  // Seed Company
+  const companies = await prisma.company.findMany();
+  const company = companies[0];
+  try{
+    // Seed Vehicle
+  const vehicle1 = await prisma.vehicle.create({
+    data: {
+      noPolisi: '123XYZ',
+      modelKendaraan: 'Model S',
+      tahunPembuatan: 2020,
+      nomorRangka: 'ABC123',
+      nomorMesin: 'XYZ789',
+      kepemilikan: 'Owned',
+      company: { connect: { id: company.id } }, // Connect to the company
+    },
+  });
+
+  const vehicle2 = await prisma.vehicle.create({
+    data: {
+      noPolisi: '456ABC',
+      modelKendaraan: 'Model X',
+      tahunPembuatan: 2021,
+      nomorRangka: 'DEF456',
+      nomorMesin: 'UVW123',
+      kepemilikan: 'Owned',
+      company: { connect: { id: company.id } }, // Connect to the company
+    },
+    
+  });
+
+  // Seed IdentitasApplication
+  const identitasApplication = await prisma.identitasApplication.create({
+    data: {
+      namaPemohon: 'Jane Doe',
+      jabatan: 'Manager',
+      alamatDomisili: '456 Manager Lane',
+      teleponFax: '0987654321',
+      email: 'jane.doe@techcorp.com',
+      npwp: '987654321098765',
+      company: { connect: { id: company.id } }, // Connect to the company
+    },
+  });
+
+
+
+  // Seed Application
+  const application = await prisma.application.create({
+    data: {
+      kodePermohonan: 'APP123',
+      status: 'PENDING',
+      jenisPermohonan: 'Import',
+      tipeSurat: 'Surat A',
+      tanggalPengajuan: new Date(),
+      company: { connect: { id: company.id } }, // Connect to the company
+      identitasPemohon: { connect: { id: identitasApplication.id } }, // Connect to the IdentitasApplication
+      requiredDocumentsStatus: {}, // JSON field
+    },
+  });
+
+  }
+  catch(error){
+
+  }
+// Fetch vehicles for the specific company
+const vehicles = await prisma.vehicle.findMany({
+  where: {
+    companyId: company.id, // Filter by the companyId
+  },
+});
+
+  // Fetch applications for the specific company
+  const applications = await prisma.application.findMany({
+    where: {
+      companyId: company.id, // Filter by the companyId
+    },
+  });
+  const application = applications[0];
+  // Seed ApplicationOnVehicle (Many-to-many relationship between Application and Vehicles)
+  try{
+    await prisma.applicationOnVehicle.createMany({
+      data: [
+        {
+          applicationId: application.id, // Link the application
+          vehicleId: getRandomPejabat(vehicles),// Link vehicle 1
+        },
+        {
+          applicationId: application.id, // Link the same application
+          vehicleId: getRandomPejabat(vehicles), // Link vehicle 2
+        },
+      ],
+    });
+  }catch(error){
+  }
+
+  try{
+         // Seed `DocumentRekomendasiB3` for each document type
+  const documentData = [
+    { fileName: 'sds_or_ldk.pdf', documentType: TipeDokumen.SDS_OR_LDK, fileUrl: 'https://example.com/sds_or_ldk.pdf' },
+    { fileName: 'sop_bongkar_muat.pdf', documentType: TipeDokumen.SOP_BONGKAR_MUAT, fileUrl: 'https://example.com/sop_bongkar_muat.pdf' },
+    { fileName: 'sop_tanggap_darurat.pdf', documentType: TipeDokumen.SOP_TANGGAP_DARURAT, fileUrl: 'https://example.com/sop_tanggap_darurat.pdf' },
+    { fileName: 'stnk_kir.pdf', documentType: TipeDokumen.STNK_KIR, fileUrl: 'https://example.com/stnk_kir.pdf' },
+    { fileName: 'foto_kendaraan.jpg', documentType: TipeDokumen.FOTO_KENDARAAN, fileUrl: 'https://example.com/foto_kendaraan.jpg' },
+    { fileName: 'foto_sop.jpg', documentType: TipeDokumen.FOTO_SOP, fileUrl: 'https://example.com/foto_sop.jpg' },
+    { fileName: 'foto_kegiatan_bongkar_muat.jpg', documentType: TipeDokumen.FOTO_KEGIATAN_BONGKAR_MUAT, fileUrl: 'https://example.com/foto_kegiatan_bongkar_muat.jpg' },
+    { fileName: 'foto_kemasan_b3.jpg', documentType: TipeDokumen.FOTO_KEMASAN_B3, fileUrl: 'https://example.com/foto_kemasan_b3.jpg' },
+    { fileName: 'foto_alat_pelindung_diri.jpg', documentType: TipeDokumen.FOTO_ALAT_PELINDUNG_DIRI, fileUrl: 'https://example.com/foto_alat_pelindung_diri.jpg' },
+    { fileName: 'bukti_pelatihan.pdf', documentType: TipeDokumen.BUKTI_PELATIHAN, fileUrl: 'https://example.com/bukti_pelatihan.pdf' },
+    { fileName: 'hasil_pengujian_tangki_ukur.pdf', documentType: TipeDokumen.SURAT_KETERANGAN_HASIL_PENGUJIAN_TANGKI_UKUR, fileUrl: 'https://example.com/hasil_pengujian_tangki_ukur.pdf' },
+    { fileName: 'bejana_tekan.pdf', documentType: TipeDokumen.SURAT_KETERANGAN_BEJANA_TEKAN, fileUrl: 'https://example.com/bejana_tekan.pdf' },
+    { fileName: 'it_ip_prekursor.pdf', documentType: TipeDokumen.IT_IP_PREKURSOR, fileUrl: 'https://example.com/it_ip_prekursor.pdf' },
+    { fileName: 'alat_komunikasi.pdf', documentType: TipeDokumen.INFORMASI_KETERSEDIAAN_ALAT_KOMUNIKASI, fileUrl: 'https://example.com/alat_komunikasi.pdf' },
+    { fileName: 'pemeliharaan_kendaraan.pdf', documentType: TipeDokumen.INFORMASI_PEMELIHARAAN_KENDARAAN, fileUrl: 'https://example.com/pemeliharaan_kendaraan.pdf' },
+    { fileName: 'pencucian_tangki.pdf', documentType: TipeDokumen.INFORMASI_PENCUCIAN_TANGKI, fileUrl: 'https://example.com/pencucian_tangki.pdf' },
+    { fileName: 'surat_rekomendasi_sebelumnya.pdf', documentType: TipeDokumen.SURAT_REKOMENDASI_B3_SEBELUMNYA, fileUrl: 'https://example.com/surat_rekomendasi_sebelumnya.pdf' },
+    { fileName: 'sk_dirjen_perhubungan_darat.pdf', documentType: TipeDokumen.SK_DIRJEN_PERHUBUNGAN_DARAT, fileUrl: 'https://example.com/sk_dirjen_perhubungan_darat.pdf' },
+    { fileName: 'other_document.pdf', documentType: TipeDokumen.Other, fileUrl: 'https://example.com/other_document.pdf' },
+  ];
+
+  // Iterate over each document entry and seed it into the database
+  for (const document of documentData) {
+    await prisma.documentRekomendasiB3.create({
+      data: {
+        fileName: document.fileName,
+        documentType: document.documentType,
+        fileUrl: document.fileUrl,
+        applicationId: application.id, // Ensure the Application ID is valid
+        isValid: false,
+        validationNotes: 'Auto-validation',
+      },
+    });
+  }
+
+  }catch(error){
+  }
+
+  // Fetch all Pejabat and Tembusan
+  const allPejabat = await prisma.dataPejabat.findMany();
+  const allTembusan = await prisma.dataTembusan.findMany();
+  const allDataBahanB3 = await prisma.dataBahanB3.findMany();
+
+  // Seed B3Substance and related multiple LocationDetails
+  const b3Substance = await prisma.b3Substance.create({
+    data: {
+      dataBahanB3:  { connect: { id: getRandomPejabat(allDataBahanB3) } }, // Random Pejabat
+      b3pp74: true,
+      b3DiluarList: false,
+      karakteristikB3: 'Corrosive',
+      fasaB3: 'Liquid',
+      jenisKemasan: 'Steel Drum',
+      tujuanPenggunaan: 'PH control for industrial wastewater',
+      application: { connect: { id: application.id } }, // Connect to the Application
+
+      // Seed Multiple AsalMuat Locations
+      asalMuatLocations: {
+        create: [
+          {
+            name: 'PT Sulfindo Adi Usaha',
+            alamat: 'Jl. Raya Merak KM 117, Banten, Indonesia',
+            latitude: -6.0247,
+            longitude: 106.0157,
+            
+            locationType: 'asalMuat',
+          },
+          {
+            name: 'PT Kimia Indonesia',
+            alamat: 'Jl. Kimia Raya No. 22, Jakarta, Indonesia',
+            latitude: -6.1751,
+            longitude: 106.8650,
+            locationType: 'asalMuat',
+          },
+          {
+            name: 'PT Petrokimia',
+            alamat: 'Jl. Gresik, Jawa Timur, Indonesia',
+            latitude: -7.1553,
+            longitude: 112.6558,
+            locationType: 'asalMuat',
+          },
+          {
+            name: 'PT Industri Kimia',
+            alamat: 'Jl. Industri No. 45, Surabaya, Indonesia',
+            latitude: -7.2575,
+            longitude: 112.7521,
+            locationType: 'asalMuat',
+          },
+        ],
+      },
+
+      // Seed Multiple TujuanBongkar Locations
+      tujuanBongkarLocations: {
+        create: [
+          {
+            name: 'PT Brataco Chemical Lampung',
+            alamat: 'Jl. Soekarno Hatta KM 5, Lampung, Indonesia',
+            latitude: -5.4296,
+            longitude: 105.2615,
+            locationType: 'tujuanBongkar',
+          },
+          {
+            name: 'PT ABC Chemicals',
+            alamat: 'Jl. Pabrik Kimia No. 10, Medan, Indonesia',
+            latitude: 3.5952,
+            longitude: 98.6722,
+            locationType: 'tujuanBongkar',
+          },
+          {
+            name: 'PT XYZ Chemicals',
+            alamat: 'Jl. Industri No. 15, Semarang, Indonesia',
+            latitude: -6.9667,
+            longitude: 110.4167,
+            locationType: 'tujuanBongkar',
+          },
+          {
+            name: 'PT PQR Chemicals',
+            alamat: 'Jl. Raya Industri, Makassar, Indonesia',
+            latitude: -5.1354,
+            longitude: 119.4238,
+            locationType: 'tujuanBongkar',
+          },
+        ],
+      },
+    },
+  });
+
+  // Seed ApplicationStatusHistory
+  await prisma.applicationStatusHistory.create({
+    data: {
+      application: { connect: { id: application.id } }, // Connect to the Application
+      oldStatus: 'DRAFT',
+      newStatus: 'PENDING',
+      changedAt: new Date(),
+      changedBy: 'admin',
+    },
+    });
+
+  // Seed Notifikasi
+  const notifikasi = await prisma.notifikasi.create({
+    data: {
+      company: { connect: { name: 'TechCorp' } },
+      status: 'RECEIVED',
+      notes: 'Initial submission received',
+      tanggalDiterima: new Date(),
+      referenceNumber: 'EU12345',
+      negaraAsal: 'Germany',
+    },
+  });
+
+  // Seed NotifikasiStatusHistory
+  await prisma.notifikasiStatusHistory.create({
+    data: {
+      notifikasiId: notifikasi.id,
+      oldStatus: 'RECEIVED',
+      newStatus: 'PROCESSED',
+      tanggalPerubahan: new Date(),
+      changedBy: 'admin',
+      notes: 'Processing started',
+    },
+  });
+
+  // Seed DraftSurat
+  const draftSurat = await prisma.draftSurat.create({
+    data: {
+      nomorSurat: 'DS-001',
+      tanggalSurat: new Date(),
+      tipeSurat: 'Kebenaran Import',
+      kodeDBKlh: 'KLH-001',
+      pejabatId: getRandomPejabat(allPejabat), // Random Pejabat
+      applicationId: application.id,
+      tembusan:  {connect: getRandomTembusan(allTembusan, 3)}, // Multiple Tembusan
+    },
+  });
+
+  // Seed FinalSurat
+  const finalSurat = await prisma.finalSurat.create({
+    data: {
+      nomorSurat: 'FS-001',
+      tanggalSurat: new Date(),
+      pejabatId: getRandomPejabat(allPejabat), // Random Pejabat
+      applicationId: application.id,
+      signedByDirector: true,
+      signatureUrl: 'https://example.com/signature.png',
+      tembusan: {connect: getRandomTembusan(allTembusan, 3)}, // Multiple Tembusan
+    },
+  });
+
+  // Seed BaseSuratNotifikasi
+  const baseSurat = await prisma.baseSuratNotfikasi.create({
+    data: {
+      nomorSurat: 'BS-001',
+      tanggalSurat: new Date(),
+      tipeSurat: 'Kebenaran Import',
+      pejabatId: getRandomPejabat(allPejabat), // Random Pejabat
+      notifikasiId: notifikasi.id,
+      tembusan: {connect: getRandomTembusan(allTembusan, 3)}, // Multiple Tembusan
+    },
+  });
+
+  // Seed PersetujuanImport
+  await prisma.persetujuanImport.create({
+    data: {
+      baseSuratId: baseSurat.id, // Foreign key to BaseSuratNotifikasi
+      validitasSurat: new Date(),
+      point1: 'Approved for import',
+    },
+  });
+
+  // Seed KebenaranImport
+  await prisma.kebenaranImport.create({
+    data: {
+      baseSuratId: baseSurat.id, // Foreign key to BaseSuratNotifikasi
+      tanggalMaksimalPengiriman: new Date('2024-12-31'),
+      point1: 'Approved for shipment',
+    },
+  });
+
+  // Seed ExplicitConsent
+  const explicitConsent = await prisma.explicitConsent.create({
+    data: {
+      baseSuratId: baseSurat.id, // Foreign key to BaseSuratNotifikasi
+      validitasSurat: new Date(),
+      jenisExplicitConsent: 'Non Echa',
+      namaExporter: 'Exporter GmbH',
+      tujuanImport: 'PT Importer',
+    },
+  });
+
+  // Seed PDFHeader
+  const pdfHeader = await prisma.pDFHeader.create({
+    data: {
+      header: 'Ministry of Environment',
+      subHeader: 'Environmental Protection Agency',
+      alamatHeader: '123 Green Street, City, Country',
+      telp: '1234567890',
+      fax: '0987654321',
+      kotakPos: 'PO Box 123',
+    },
+  });
+
+  // Seed ExplicitConsentDetails with all sections
+  await prisma.explicitConsentDetails.create({
+    data: {
+      explicitConsentId: explicitConsent.id, // Foreign key to ExplicitConsent
+
+      // Section 1A - Chemical Identity (Substance)
+      nameOfChemicalSubstance: 'Mercury',
+      casNumberSubstance: '7439-97-6',
+
+      // Section 1B - Chemical Identity (Preparation)
+      nameOfPreparation: 'Mercury Solution',
+      nameOfChemicalInPreparation: 'Mercury',
+      concentrationInPreparation: '20%',
+      casNumberPreparation: '7439-97-6',
+
+      // Section 2 - Response to the Request for Explicit Consent
+      consentToImport: true,
+
+      // Section 3 - Use Categories
+      useCategoryPesticide: false,
+      useCategoryIndustrial: true,
+
+      // Section 4 - Wider Consent for Preparations
+      consentForOtherPreparations: true,
+      allowedConcentrations: '20%',
+      consentForPureSubstance: true,
+
+      // Section 5 - Restrictions/Conditions
+      hasRestrictions: true,
+      restrictionDetails: 'Restricted to industrial use only',
+
+      // Section 6 - Time Limit
+      isTimeLimited: true,
+      timeLimitDetails: new Date('2025-12-31'),
+
+      // Section 7 - Same Treatment for Domestic and Imported Chemicals
+      sameTreatment: false,
+      differentTreatmentDetails: 'Imported chemicals require additional checks',
+
+      // Section 8 - Any Other Relevant Information
+      otherRelevantInformation: 'Handle with care due to high toxicity.',
+
+      // Section 9 - Name and Address of Importing DNA
+      dnaInstitutionName: 'Department of Environmental Protection',
+      dnaInstitutionAddress: '123 Green Street, City, Country',
+      dnaContactName: 'Dr. John Doe',
+      dnaTelephone: '1234567890',
+      dnaTelefax: '0987654321',
+      dnaEmail: 'contact@dep.gov',
+      dnaDate: new Date(),
+    },
+  });
+
+  console.log('Database seeded successfully!');
+}
+
+main()
+  .catch(e => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

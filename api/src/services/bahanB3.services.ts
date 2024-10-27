@@ -10,16 +10,56 @@ import { Prisma } from '@prisma/client';
 export class BahanB3Service {
   constructor(private readonly prisma: PrismaService) {}
 
-  // Add a new B3Substance to an application
+  // Add a new B3Substance and related LocationDetails as one transaction
   async createB3Substance(createB3SubstanceDto: CreateB3PermohonanRekomDto) {
-    const newB3Substance = await this.prisma.b3Substance.create({
-      data: createB3SubstanceDto,
+    const { asalMuat, tujuanBongkar, ...b3SubstanceData } = createB3SubstanceDto;
+  
+    // Begin transaction
+    const transaction = await this.prisma.$transaction(async (prisma) => {
+      // Create the B3Substance with relations using connect
+      const newB3Substance = await prisma.b3Substance.create({
+        data: {
+          ...b3SubstanceData,
+        },
+      });
+  
+      // Prepare asalMuat locations data
+      const asalMuatLocations = asalMuat.map((location) => ({
+        name: location.name,
+        alamat: location.alamat,
+        longitude: location.longitude,
+        latitude: location.latitude,
+        b3SubstanceIdAsalMuat: newB3Substance.id,
+        locationType: 'ASAL_MUAT',
+      }));
+  
+      // Prepare tujuanBongkar locations data
+      const tujuanBongkarLocations = tujuanBongkar.map((location) => ({
+        name: location.name,
+        alamat: location.alamat,
+        longitude: location.longitude,
+        latitude: location.latitude,
+        b3SubstanceIdTujuanBongkar: newB3Substance.id,
+        locationType: 'TUJUAN_BONGKAR',
+      }));
+  
+      // Insert all locations for asalMuat and tujuanBongkar in one go
+      await prisma.locationDetails.createMany({
+        data: [
+          ...asalMuatLocations.map(location => ({ ...location, b3SubstanceIdTujuanBongkar: null })),
+          ...tujuanBongkarLocations.map(location => ({ ...location, b3SubstanceIdAsalMuat: null }))
+        ],
+      });
+  
+      return newB3Substance; // Return the newly created B3Substance
     });
+  
     return {
       message: 'B3Substance added successfully to the application',
-      b3Substance: newB3Substance,
     };
   }
+  
+
 
   // Edit an existing B3Substance
   async updateB3Substance(updateB3SubstanceDto: UpdateB3PermohonanRekomDto) {

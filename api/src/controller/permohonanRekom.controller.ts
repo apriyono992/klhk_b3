@@ -100,13 +100,96 @@ export class PermohonanRekomendasiB3Controller {
           id: 'app123',
           kodePermohonan: 'B3-2024-001',
           status: 'DraftPermohonan',
-          companyId: 'company001',
-          identitasPemohon: {
-            namaPemohon: 'John Doe',
-            alamatDomisili: 'Jakarta',
+          jenisPermohonan: 'Import B3',
+          tipeSurat: 'Surat Permohonan',
+          tanggalPengajuan: '2024-01-10T12:00:00.000Z',
+          tanggalDisetujui: null,
+          tanggalBerakhir: null,
+          company: {
+            id: 'company001',
+            name: 'PT. Example Company',
+            penanggungJawab: 'Jane Doe',
+            alamatKantor: 'Jl. Sudirman No.1, Jakarta',
+            telpKantor: '021123456',
+            emailKantor: 'info@example.com',
+            npwp: '123456789',
+            nomorInduk: '654321',
+            bidangUsaha: 'Chemical Importer',
+            vehicles: [
+              {
+                id: 'vehicle001',
+                noPolisi: 'B1234XYZ',
+                modelKendaraan: 'Toyota Hilux',
+                tahunPembuatan: 2020,
+                nomorRangka: 'ABC123456789',
+                nomorMesin: 'XYZ987654321',
+              },
+            ],
           },
-          documents: [],
-          vehicles: [],
+          identitasPemohon: {
+            id: 'pemohon001',
+            namaPemohon: 'John Doe',
+            jabatan: 'Manager',
+            alamatDomisili: 'Jl. Kebon Jeruk No.2, Jakarta',
+            teleponFax: '021987654',
+            email: 'johndoe@example.com',
+          },
+          vehicles: [
+            {
+              vehicleId: 'vehicle001',
+              applicationId: 'app123',
+              vehicle: {
+                noPolisi: 'B1234XYZ',
+                modelKendaraan: 'Toyota Hilux',
+              },
+            },
+          ],
+          documents: [
+            {
+              id: 'doc001',
+              fileName: 'sop_b3.pdf',
+              documentType: 'SOP_B3',
+              fileUrl: 'https://example.com/docs/sop_b3.pdf',
+              isValid: true,
+              validationNotes: 'Approved by admin',
+            },
+          ],
+          draftSurat: {
+            id: 'draft001',
+            nomorSurat: null,
+            tanggalSurat: null,
+            tipeSurat: 'Surat Rekomendasi',
+            pejabat: {
+              id: 'pejabat001',
+              nama: 'Pejabat A',
+            },
+            tembusan: [
+              {
+                id: 'tembusan001',
+                nama: 'Tembusan A',
+              },
+            ],
+          },
+          b3Substances: [
+            {
+              id: 'b3substance001',
+              dataBahanB3Id: 'bahan001',
+              karakteristikB3: 'Korosif',
+              fasaB3: 'Cair',
+              asalMuat: 'PT. Sulfindo Adi Usaha',
+              tujuanBongkar: 'PT. Brataco Chemical Lampung',
+              tujuanPenggunaan: 'Mengatur PH air limbah industri',
+            },
+          ],
+          statusHistory: [
+            {
+              id: 'history001',
+              oldStatus: null,
+              newStatus: 'DraftPermohonan',
+              changedAt: '2024-01-10T12:00:00.000Z',
+              changedBy: 'admin001',
+            },
+          ],
         },
       },
     },
@@ -194,7 +277,6 @@ export class PermohonanRekomendasiB3Controller {
 
   @Patch('draft-surat')
   @ApiOperation({ summary: 'Update DraftSurat by ID' })
-  @ApiParam({ name: 'id', description: 'ID of the DraftSurat' })
   @ApiBody({
     type: DraftSuratDto,
     examples: {
@@ -204,6 +286,10 @@ export class PermohonanRekomendasiB3Controller {
           draftId: 'draft123',
           pejabatId: 'pejabat001',
           kodeDBKlh: '123-XYZ',
+          nomorSurat: 'B3/4567',
+          tipeSurat: 'Surat Rekomendasi',
+          tanggalSurat: '2024-01-15T00:00:00.000Z',
+          tembusanIds: ['tembusan001', 'tembusan002'],
         },
       },
     },
@@ -219,7 +305,19 @@ export class PermohonanRekomendasiB3Controller {
             id: 'draft123',
             pejabatId: 'pejabat001',
             kodeDBKlh: '123-XYZ',
-            nomorSurat: null,
+            nomorSurat: 'B3/4567',
+            tipeSurat: 'Surat Rekomendasi',
+            tanggalSurat: '2024-01-15T00:00:00.000Z',
+            tembusan: [
+              {
+                id: 'tembusan001',
+                nama: 'Tembusan A',
+              },
+              {
+                id: 'tembusan002',
+                nama: 'Tembusan B',
+              },
+            ],
           },
         },
       },

@@ -341,6 +341,7 @@ model Company {
   updatedAt          DateTime               @updatedAt
 
   IdentitasApplication IdentitasApplication[]
+  notifikasi          Notifikasi[]
 }
 
 model Vehicle {
@@ -381,6 +382,7 @@ model Application {
   id                        String                 @id @default(uuid())
   kodePermohonan            String                 @unique // Unique application code
   status                    String                 // Current status of the application
+  jenisPermohonan           String                 // Type of application
   tipeSurat                 String                 // Type of surat
   tanggalPengajuan          DateTime               // Date when the application was submitted
   tanggalDisetujui          DateTime?              // Optional date for approval
@@ -429,14 +431,16 @@ model B3Substance {
   karakteristikB3            String                 // Characteristics of the B3 (e.g., korosif, mudah menyala)
   fasaB3                     String                 // Phase of the B3 (e.g., cair, padat)
   jenisKemasan               String                 // Packaging type (e.g., tangki berlapis)
-  asalMuat                   String                 // Origin of the B3 (e.g., PT Sulfindo Adi Usaha)
-  tujuanBongkar              String                 // Destination of the B3 (e.g., PT Brataco chemical Lampung)
+  // Fixed separate one-to-many relationships with relation names
+  asalMuatLocations          LocationDetails[]      @relation("AsalMuatRelation") // One-to-many for asalMuat
+  tujuanBongkarLocations     LocationDetails[]      @relation("TujuanBongkarRelation") // One-to-many for tujuanBongkar
   tujuanPenggunaan           String                 // Purpose of the B3 (e.g., Mengatur PH air Limbah Industri)
   applicationId              String                 // Foreign key to the Application model
   application                Application            @relation(fields: [applicationId], references: [id])
 
   createdAt                  DateTime               @default(now())
   updatedAt                  DateTime               @updatedAt
+
 }
 
 model DocumentRekomendasiB3 {
@@ -463,8 +467,8 @@ model DraftSurat {
   tembusan           DataTembusan[]         // Many-to-many relation, nullable (optional relation)
   pejabatId          String?                // Nullable, foreign key for Pejabat
   pejabat            DataPejabat?           @relation(fields: [pejabatId], references: [id])  // Nullable relation
-  applicationId      String                 @unique  // Foreign key for Application (one-to-one relation)
-  application        Application            @relation(fields: [applicationId], references: [id])
+  applicationId      String?                 @unique  // Foreign key for Application (one-to-one relation)
+  application        Application?            @relation(fields: [applicationId], references: [id])
   createdAt          DateTime               @default(now())
   updatedAt          DateTime               @updatedAt
 }
@@ -502,6 +506,8 @@ model DataBahanB3 {
   @@unique([casNumber, namaDagang])  // Compound unique constraint
 
   B3Substance   B3Substance[]        // One-to-many relation with B3Substance
+  Notifikasi Notifikasi[]
+  BaseSuratNotfikasi BaseSuratNotfikasi[]
 }
 
 model DataPejabat {
@@ -516,6 +522,7 @@ model DataPejabat {
   // One-to-many relations with DraftSurat and FinalSurat
   DraftSurat    DraftSurat[]
   FinalSurat    FinalSurat[]
+  DraftSuratNotifikasi    BaseSuratNotfikasi[]
 }
 
 model DataTembusan {
@@ -528,5 +535,219 @@ model DataTembusan {
   // Implicit many-to-many relations with DraftSurat and FinalSurat
   DraftSurat    DraftSurat[]
   FinalSurat    FinalSurat[]
+  DraftSuratNotifikasi    BaseSuratNotfikasi[]
 }
 
+model Notifikasi{
+  id                        String @id @default(uuid())
+  companyId                 String                 // Foreign key for Company
+  company                   Company                @relation(fields: [companyId], references: [id])
+  status                    String
+  notes                     String?                // Optional notes for the notifikasi
+  tanggalDiterima           DateTime               // Date when the notifikasi was received
+  tanggalSelesai            DateTime?               // Date when the notifikasi was done
+  tanggalPerubahan          DateTime   @default(now()) // Timestamp of the status change
+  referenceNumber           String?               // EU reference number for the chemical
+  negaraAsal                String?               // Country of origin for the chemical
+  dataBahanB3Id             String?               // Foreign key for DataBahanB3
+  dataBahanB3               DataBahanB3?          @relation(fields: [dataBahanB3Id], references: [id])
+  statusHistory             NotifikasiStatusHistory[] // Relation to status history
+  draftSuratNotifikasiId    BaseSuratNotfikasi[]                // Foreign key for DraftSuratNotifikasi
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+  exceedsThreshold          Boolean @default(false) // New field to track if the process exceeds 30 days
+}
+
+model NotifikasiStatusHistory {
+  id                 String     @id @default(uuid())
+  notifikasiId      String      // Foreign key for Application
+  notifikasi        Notifikasi  @relation(fields: [notifikasiId], references: [id])
+  notes             String?     // Optional notes for the status change
+  oldStatus          String?    // Enum or string to track the old status
+  tanggalPerubahan DateTime   @default(now()) // Timestamp of the status change
+  newStatus          String     // Enum or string to track the new status
+  changedAt          DateTime   @default(now()) // Timestamp of the status change
+  changedBy          String?    // Optional field to track the user who changed the status
+}
+
+model BaseSuratNotfikasi {
+  id                 String       @id @default(uuid())
+  nomorSurat         String?      // Nomor surat for either type
+  tanggalSurat       DateTime?    // Tanggal surat
+  tipeSurat          String       // Could be 'Kebenaran Import' or 'Persetujuan Import' or 'Explicit Consent'
+  kodeDBKlh          String?      // Kode DBKLH, if applicable
+  sifatSurat         String?      // Sifat surat, e.g., 'Biasa'
+  emailPenerima      String?      // Email penerima
+  tanggalPengiriman  DateTime?    // Tanggal pengiriman
+  pejabatId          String?      // Foreign key for Pejabat
+  pejabat            DataPejabat? @relation(fields: [pejabatId], references: [id])
+  notifikasiId       String?      // Foreign key for Notifikasi
+  notifikasi         Notifikasi?  @relation(fields: [notifikasiId], references: [id])
+  tembusan           DataTembusan[] // Many-to-many relation with DataTembusan
+  referenceNumber           String?               // EU reference number for the chemical
+  negaraAsal                String?               // Country of origin for the chemical
+  dataBahanB3Id             String?               // Foreign key for DataBahanB3
+  dataBahanB3               DataBahanB3?          @relation(fields: [dataBahanB3Id], references: [id])
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  printed             Boolean      @default(false) // Flag to track if the surat has been printed
+  printedAt          DateTime?     // Tanggal cetak surat
+  PersetujuanImport PersetujuanImport[]
+  KebenaranImport KebenaranImport[]
+  ExplicitConsent ExplicitConsent[]
+}
+
+
+model PersetujuanImport {
+  id                 String      @id @default(uuid())
+  baseSuratId        String      // Foreign key for BaseSurat
+  baseSurat          BaseSuratNotfikasi   @relation(fields: [baseSuratId], references: [id])
+  validitasSurat     DateTime?   // Surat validity date
+  echaSpecificData   String?      // Data specific to ECHA, if applicable (e.g., Regulation 649/2012)\
+  // Custom points for Persetujuan Import ECHA
+  point1             String?      // Custom Point 1 for ECHA
+  point2             String?      // Custom Point 2 for ECHA
+  point3             String?      // Custom Point 3 for ECHA
+  point4             String?      // Custom Point 4 for ECHA
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  PDFHeader PDFHeader[]
+}
+
+model ExplicitConsent {
+  id                  String      @id @default(uuid())
+  baseSuratId         String      // Foreign key for BaseSuratNotifikasi
+  baseSurat           BaseSuratNotfikasi @relation(fields: [baseSuratId], references: [id])
+  validitasSurat      DateTime?   // Surat validity date
+  jenisExplicitConsent String?    // Type of Explicit Consent (e.g., 'Excha, Non Echa')
+  // Custom points for Explicit Consent
+  point1              String?     // Custom point for Explicit Consent (related to exporter)
+  point2              String?     // Custom point for Explicit Consent (regulatory basis)
+  point3              String?     // Custom point for Explicit Consent (procedural completion)
+  point4              String?     // Custom point for Explicit Consent (final instructions)
+
+  // Newly added fields
+  namaExporter        String?     // Name of the exporter
+  tujuanImport        String?     // Destination of the import
+  additionalInfo      String?     // Additional information
+  pdfHeaderId         String?     // Foreign key for PDFHeader
+  pdfHeader           PDFHeader?  @relation(fields: [pdfHeaderId], references: [id]) // Relation to PDFHeader
+    // Relation to multiple sections (page content)
+  ExplicitConsentDetails ExplicitConsentDetails[] // Relation to ExplicitConsentSection
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+}
+
+model KebenaranImport {
+  id                        String      @id @default(uuid())
+  baseSuratId               String      // Foreign key for BaseSurat
+  baseSurat                 BaseSuratNotfikasi   @relation(fields: [baseSuratId], references: [id])
+  tanggalMaksimalPengiriman DateTime? // Max delivery date
+  // Specific fields for Kebenaran Import
+  point1             String?     // Custom point for Kebenaran Import
+  point2             String?     // Custom point for Kebenaran Import
+  point3             String?     // Custom point for Kebenaran Import
+
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  PDFHeader PDFHeader[]
+}
+
+model PDFHeader {
+  id                 String   @id @default(uuid())
+  header             String?  // Custom header content (e.g., Kementerian details)
+  subHeader          String?  // Subheader content
+  alamatHeader       String?  // Address for the header
+  telp               String?  // Telephone number
+  fax                String?  // Fax number
+  kotakPos           String?  // PO Box
+  status             String   @default("Active") // Status of the header ('active', 'inactive')
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  // Relation to ExplicitConsent or other documents
+  explicitConsents    ExplicitConsent[]
+  persetujuanImports  PersetujuanImport[]
+  kebenaranImports    KebenaranImport[]
+}
+
+
+model ExplicitConsentDetails {
+  id                      String   @id @default(uuid())
+  explicitConsentId        String   // Foreign key for ExplicitConsent
+  explicitConsent          ExplicitConsent @relation(fields: [explicitConsentId], references: [id])
+
+  // Section 1A - Chemical Identity (Substance)
+  nameOfChemicalSubstance  String?  // Name of the chemical (if in form of substance)
+  casNumberSubstance       String?  // CAS No. for the chemical (if in form of substance)
+  
+  // Section 1B - Chemical Identity (Preparation)
+  nameOfPreparation        String?  // Name of the preparation
+  nameOfChemicalInPreparation String? // Name of the chemical in preparation
+  concentrationInPreparation String? // % concentration of the chemical in preparation
+  casNumberPreparation     String?  // CAS No. for the chemical in preparation
+
+  // Section 2 - Response to the Request for Explicit Consent
+  consentToImport          Boolean?    // Indicates whether the consent is given to import (Yes/No)
+  
+  // Section 3 - Use Categories
+  useCategoryPesticide     Boolean?    // Pesticide use (Yes/No)
+  useCategoryIndustrial    Boolean?    // Industrial use (Yes/No)
+  
+  // Section 4 - Wider Consent for Preparations
+  consentForOtherPreparations Boolean? // Is consent valid for other preparations (Yes/No)
+  allowedConcentrations    String?     // Concentrations allowed for other preparations
+  consentForPureSubstance  Boolean?    // Does consent extend to pure substance (Yes/No)
+  
+  // Section 5 - Restrictions/Conditions
+  hasRestrictions          Boolean?    // Are there restrictions or conditions (Yes/No)
+  restrictionDetails       String?     // Details of restrictions or conditions
+
+  // Section 6 - Time Limit
+  isTimeLimited            Boolean?    // Is the consent time-limited (Yes/No)
+  timeLimitDetails         DateTime?   // Date until the consent is valid
+  
+  // Section 7 - Same Treatment for Domestic and Imported Chemicals
+  sameTreatment            Boolean?    // Is chemical from all sources treated the same as imported chemicals (Yes/No)
+  differentTreatmentDetails String?    // Details if chemicals are treated differently
+
+  // Section 8 - Any Other Relevant Information
+  otherRelevantInformation String?     // Other relevant information provided
+  
+  // Section 9 - Name and Address of Importing DNA
+  dnaInstitutionName       String?     // Name of the DNA institution
+  dnaInstitutionAddress    String?     // Address of the DNA institution
+  dnaContactName           String?     // Contact name at DNA institution
+  dnaTelephone             String?     // Telephone of the DNA institution
+  dnaTelefax               String?     // Telefax of the DNA institution
+  dnaEmail                 String?     // Email address of the DNA institution
+  dnaDate                  DateTime?   // Date of the DNA section
+  
+  createdAt                DateTime    @default(now())
+  updatedAt                DateTime    @updatedAt
+}
+
+model LocationDetails {
+  id                        String                 @id @default(uuid())
+  name                       String                 // Name of the company or entity
+  alamat                     String                 // Address
+
+   // New longitude and latitude fields to store pin point location
+  longitude                  Float                  // Longitude of the location
+  latitude                   Float                  // Latitude of the location
+
+  // Foreign key to B3Substance for AsalMuat relation with unique constraint name
+  b3SubstanceIdAsalMuat      String?
+  b3SubstanceAsalMuat        B3Substance?            @relation("AsalMuatRelation", fields: [b3SubstanceIdAsalMuat], references: [id], map: "AsalMuatForeignKey")
+
+  // Foreign key to B3Substance for TujuanBongkar relation with unique constraint name
+  b3SubstanceIdTujuanBongkar String?
+  b3SubstanceTujuanBongkar   B3Substance?            @relation("TujuanBongkarRelation", fields: [b3SubstanceIdTujuanBongkar], references: [id], map: "TujuanBongkarForeignKey")
+
+  locationType               String           // Enum to distinguish type of location (either asalMuat or tujuanBongkar)
+
+  createdAt                  DateTime               @default(now())
+  updatedAt                  DateTime               @default(now())
+}

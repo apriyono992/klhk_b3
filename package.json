@@ -10,10 +10,14 @@
       "dev": "concurrently \"yarn dev:web\" \"yarn dev:api\"",
       "db:start": "docker-compose up -d",
       "db:migrate": "yarn prisma migrate dev",
-      "db:up": "yarn db:start && yarn db:migrate"
+      "db:up": "yarn db:start && yarn db:migrate",
+      "db:seed": "yarn prisma db seed"
     },
     "devDependencies": {
       "concurrently": "^7.0.0"
-    }
+    },
+  "prisma": {
+    "seed": "ts-node --transpile-only ./api/seed.ts" 
+  }
 }
   

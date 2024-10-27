@@ -1,7 +1,7 @@
-import { Controller, Get, Param, Res } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, NotFoundException, Param, Query, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { PdfService } from '../services/pdf.services';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('PDF')
 @Controller('pdf')
@@ -39,5 +39,37 @@ export class PdfController {
     });
 
     res.end(pdfBuffer);
+  }
+
+  @Get('generateKebenaranImpor/:notifikasiId')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Generate Surat Kebenaran Impor (Pestisida/Non-Pestisida)' })
+  @ApiResponse({
+    status: 200,
+    description: 'PDF generated successfully.',
+  })
+  @ApiResponse({ status: 404, description: 'Notifikasi or DraftSurat not found.' })
+  @ApiParam({ name: 'notifikasiId', description: 'The ID of the Notifikasi to generate the surat for' })
+  @ApiQuery({ name: 'type', description: 'The type of the surat (pestisida or non_pestisida)', required: true })
+  async generateSuratKebenaranImpor(
+    @Param('notifikasiId') notifikasiId: string,
+    @Res() res: Response,
+  ) {
+    try {
+      // Call the PdfService to generate the PDF
+      const pdfBuffer = await this.pdfService.generateKebenaranImporPdf(notifikasiId);
+
+      // Set the response headers for the PDF
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': 'inline; filename="surat-kebenaran-impor.pdf"',
+        'Content-Length': pdfBuffer.length,
+      });
+
+      // Send the PDF back as a response
+      res.end(pdfBuffer);
+    } catch (error) {
+      throw new NotFoundException(`Failed to generate PDF: ${error.message}`);
+    }
   }
 }

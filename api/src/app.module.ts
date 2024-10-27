@@ -23,6 +23,8 @@ import { VehicleModule } from './module/vehicle.module';
 import { BahanB3Module } from './module/bahanB3.module';
 import { DocumentModule } from './module/document.module';
 import { PermohonanRekomendasiB3Module } from './module/permohonanRekom.module';
+import { NotifikasiModule } from './module/notifikasi.module';
+import { DraftNotifikasiModule } from './module/draftNotifikasi.module';
 
 @Module({
   imports: [
@@ -48,6 +50,8 @@ import { PermohonanRekomendasiB3Module } from './module/permohonanRekom.module';
     BahanB3Module,
     DocumentModule,
     PermohonanRekomendasiB3Module,
+    NotifikasiModule,
+    DraftNotifikasiModule
   ],
   controllers: [AppController],
   providers: [

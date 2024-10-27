@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explicit Consent ECHA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header img {
+            width: 100px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 18px;
+            text-transform: uppercase;
+        }
+        .header p {
+            margin: 5px 0;
+        }
+        .content {
+            margin-top: 20px;
+        }
+        .content p {
+            margin: 10px 0;
+        }
+        .bold {
+            font-weight: bold;
+        }
+        .right-align {
+            text-align: right;
+        }
+        .underline {
+            text-decoration: underline;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table th, .table td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: left;
+        }
+        .footer {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="{{base64Logo}}" alt="Logo">
+        <h1>{{header || 'Kementerian Lingkungan Hidup dan Kehutanan'}}</h1>
+        <p>{{subHeader || 'Direktorat Jenderal Pengelolaan Sampah, Limbah dan Bahan Berbahaya dan Beracun'}}</p>
+        <p>{{alamatHeader || 'Gedung Manggala Wanabakti Blok 4 Lantai 5 – Jl. Gatot Subroto, Jakarta 10270'}}</p>
+        <p>Telp. {{telp || '021-5704 501/04 Ext. 4112'}}, Fax. {{fax || '021-5790 2750'}}, Indonesia – Kotak Pos {{kotakPos || '6505'}}</p>
+    </div>
+
+    <div class="right-align">
+        <p>Our Ref: {{nomorSurat || 'S. /PSLB3-PB3/PPI/PLB.4.4/B/07/2024'}}</p>
+        <p>Date: {{tanggalSurat || 'July 2024'}}</p>
+    </div>
+
+    <div class="content">
+        <p>To:</p>
+        <p>
+            {{additionalInfo || '<strong>ECHA PIC Operations</strong><br>Dossier Processing and PIC Unit (C1)<br>European Chemicals Agency – ECHA<br>Helsinki – FINLAND<br>'}}
+        </p>
+
+        <p>Dear Sir / Madam,</p>
+
+        <p>Referring to the notification concerning the above subject, we would like to inform you that we have no objection for the import of {{namaKimia || 'Nonylphenol, branched, ethoxylated'}} with trade name {{namaDagang || 'Rheovis PU 1250 EC'}} (EU REFF# {{referenceNumber || '1X9U3TGVKC'}}) from {{negaraAsal || 'Germany'}} to Indonesia with some requirements as attached.</p>
+
+        <table class="table">
+            <tr>
+                <th>Name of the Chemicals</th>
+                <td>{{namaKimia || 'Nonylphenol, branched, ethoxylated'}}</td>
+            </tr>
+            <tr>
+                <th>CAS Number</th>
+                <td>{{casNumber || '68412-54-4'}}</td>
+            </tr>
+            <tr>
+                <th>Trade Name</th>
+                <td>{{namaDagang || 'Rheovis PU 1250 EC'}}</td>
+            </tr>
+            <tr>
+                <th>Name of the Importer</th>
+                <td>{{namaImporter || 'PT. BASF Distribution Indonesia'}}</td>
+            </tr>
+            <tr>
+                <th>Use</th>
+                <td>{{use || 'Industrial use: Rheology Modifier for paint, coatings, construction and adhesives'}}</td>
+            </tr>
+            <tr>
+                <th>Valid Until</th>
+                <td>{{validUntil || 'July 31, 2025'}}</td>
+            </tr>
+        </table>
+
+        <p>Thank you for your kind attention and cooperation.</p>
+    </div>
+
+    <div class="footer">
+        <p>Sincerely,</p>
+        <p><strong>Sugasri</strong><br>
+        Director of Hazardous Substances Management,<br>
+        On Behalf of Director General of Solid Waste, Hazardous Waste and Hazardous Substances Management,<br>
+        Ministry of Environment and Forestry<br></p>
+    </div>
+
+    <!-- Tembusan Section with Dynamic Values -->
+    <div class="additional-info">
+        <p>cc:<br>
+        {{#each tembusan}}
+        {{@index + 1}}. {{this.nama}}<br>
+        {{/each}}
+        </p>
+    </div>
+
+        <!-- Page Break for PDF -->
+    <div style="page-break-after: always;"></div>
+
+        <!-- Include Lampiran Content -->
+    <%- include('surat-explicit-consent-echa-details.html') %>
+</body>
+</html>

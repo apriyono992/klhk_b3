@@ -16,6 +16,7 @@ import { ApplicationExistsConstraint } from 'src/validators/isApplicationIdExist
 import { CompanyExistsConstraint } from 'src/validators/isCompanyExists.validator';
 import { VehicleExistsConstraint } from 'src/validators/isVehicleExists.validator';
 import { DraftSuratExistsConstraint } from 'src/validators/isDraftSuratExists.validator';
+import { DraftNotifikasiConstraint, NotifikasiConstraint } from 'src/validators/notifikasi.validator';
 
 @Global()  // This makes the module global
 @Module({
@@ -52,7 +53,10 @@ import { DraftSuratExistsConstraint } from 'src/validators/isDraftSuratExists.va
     PejabatIdExistsConstraint,
     PejabatUsedConstraint,
     TembusanIdExistsConstraint,
-    IsTembusanExists
+    IsTembusanExists,
+    NotifikasiConstraint,
+    DraftNotifikasiConstraint,
+
   ],
   exports: [
     IsPhotoValidFile,
@@ -75,7 +79,9 @@ import { DraftSuratExistsConstraint } from 'src/validators/isDraftSuratExists.va
     PejabatIdExistsConstraint,
     PejabatUsedConstraint,
     TembusanIdExistsConstraint,
-    IsTembusanExists
+    IsTembusanExists,
+    NotifikasiConstraint,
+    DraftNotifikasiConstraint
   ],
 })
 export class ValidatorsModule {}

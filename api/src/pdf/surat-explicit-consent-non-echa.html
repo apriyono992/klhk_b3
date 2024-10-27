@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explicit Consent Non ECHA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 11pt;
+            line-height: 1.5;
+        }
+
+        .header {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .address, .content {
+            margin-left: 40px;
+            margin-right: 40px;
+        }
+
+        .content {
+            margin-top: 20px;
+        }
+
+        .signature {
+            margin-left: 40px;
+            margin-right: 40px;
+            margin-top: 60px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            border-top: 1px solid black;
+            padding-top: 10px;
+        }
+
+        .section {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <div class="header">
+        <p>{{header || 'KEMENTERIAN LINGKUNGAN HIDUP DAN KEHUTANAN'}}</p>
+        <p>{{subHeader || 'DIREKTORAT JENDERAL PENGELOLAAN SAMPAH, LIMBAH DAN BAHAN BERBAHAYA DAN BERACUN'}}</p>
+        <p>{{alamatHeader || 'Gedung Manggala Wanabakti Blok 4 Lantai 5 – Jl. Gatot Subroto, Jakarta 10270'}}</p>
+        <p>Telp. {{telp || '021-5704 501/04 Ext. 4112'}}, Fax. {{fax || '021-5790 2750'}}, Indonesia – Kotak Pos {{kotakPos || '6505'}}</p>
+    </div>
+
+    <!-- Address Section -->
+    <div class="address">
+        <p>Our Ref: S.{{refNumber || 'PSLB3-PB3/PPI/PLB.4.4/B/09/2024'}}</p>
+        <p>{{tanggalSurat || 'September 2024'}}</p>
+        <p>Encl: 1 (one) set</p>
+        <p>Subject: Explicit Consent for Exporting Severely Restricted Chemicals to Indonesia</p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <p>{{additionalInfo || 'Multilateral Environmental Agreements and Strategies Unit'}}<br>
+           Hazardous Substances Management Division<br>
+           Department of Industrial Works<br>
+           {{alamat || '75/6 Rama VI Road, Ratchathewi, Bangkok, 10400 Thailand'}}<br><br>
+        </p>
+
+        <p>Dear Sir / Madam,</p>
+
+        <p>Referring to notification concerning the above subject, we would like to inform you that we have no objection for the import of {{namaKimia || 'Epoxyethane or Ethylene Oxide'}} (Reference Number {{referenceNumber || 'MOI0306/9350'}}) from {{negaraAsal || 'Thailand'}} to Indonesia. We are pleased to inform you that we are no longer objecting to the export of:</p>
+
+        <div class="section">
+            <p>Name of the Chemicals: {{namaKimia || 'Ethylene oxide'}}</p>
+            <p>CAS Number: {{casNumber || '75-21-8'}}</p>
+            <p>Name of Trade: {{namaDagang || '-'}}</p>
+        </div>
+
+        <div class="section">
+            <p>Name of the importer: {{namaImporter || 'PT. Samator Tomoe'}}</p>
+            <p>Name of the exporter: {{namaExporter || 'Tomoe Asia Co., Ltd'}}</p>
+            <p>For use of: {{useOf || 'Industrial use (Industrial sterilization of medical devices)'}}</p>
+            <p>Valid Until: {{validUntil || 'Oktober 31, 2025'}}</p>
+        </div>
+
+        <p>Your kind attention and cooperation would be highly appreciated.</p>
+    </div>
+
+    <!-- Signature Section -->
+    <div class="signature">
+        <p>Sincerely,</p>
+        <br><br>
+        <p>Sugasri</p>
+        <p>Director of Hazardous Substances Management,</p>
+        <p>On behalf of Director General of Solid Waste, Hazardous Waste and Hazardous Substances Management</p>
+        <p>Ministry of Environment and Forestry</p>
+    </div>
+
+</body>
+</html>

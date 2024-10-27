@@ -9,8 +9,8 @@ export const EnforcerProvider: Provider = {
     const adapter = await PrismaAdapter.newAdapter({
       datasourceUrl: process.env.DATABASE_URL, // Your database URL
     });
+    const configPath = path.resolve(__dirname, '..', '..', 'provider/rbac.conf'); // Adjusting the path for dist structure
 
-    const configPath = path.resolve(__dirname, '..', 'provider/rbac.conf'); // Adjust the path as needed
 
     const enforcer = await newEnforcer(configPath, adapter);
     await enforcer.loadPolicy(); // Load the policy from the database
