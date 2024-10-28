@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form"
 import { login } from "../../services/api";
 import Cookies from 'js-cookie'
+import { DASHBOARD_PATH, FORGOT_PASSWORD_PATH, REGISTER_PATH } from '../../services/routes';
 
 export default function LoginPage() {
     const [isVisible, setIsVisible] = useState(false);
@@ -27,7 +28,7 @@ export default function LoginPage() {
             Cookies.set('accessToken', response.data.accessToken, { expires: 0.5, secure: true, sameSite: 'strict' });
             Cookies.set('refreshToken', response.data.refreshToken, { expires: 0.5, secure: true, sameSite: 'strict' });
             
-            navigate('/admin/dasbor', { replace: true })
+            navigate(DASHBOARD_PATH, { replace: true })
         }
         return setError(response.data.message)
     }
@@ -80,13 +81,13 @@ export default function LoginPage() {
                         >
                             Ingat Saya
                         </Checkbox>
-                        <Link to="/lupa-sandi/formulir" className="hover:underline">Lupa Password?</Link>
+                        <Link to={FORGOT_PASSWORD_PATH} className="hover:underline">Lupa Password?</Link>
                     </div>
                     <Button isLoading={isSubmitting} isDisabled={isSubmitting} type='submit' radius="sm" color="primary" className="w-full text-lg py-5">Masuk</Button>
                 </form>
                 <div className="mt-4 flex items-center gap-1 justify-center">
                     <span className="text-center">Belum Punya Akun?</span>
-                    <Link to="/daftar" className="text-primary hover:underline">Daftar Disini</Link>
+                    <Link to={REGISTER_PATH} className="text-primary hover:underline">Daftar Disini</Link>
                 </div>
             </div>
         </RootAuth>

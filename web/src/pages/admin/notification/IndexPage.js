@@ -1,7 +1,6 @@
 import RootAdmin from '../../../components/layouts/RootAdmin';
-import { Button, Card, CardBody, CardHeader, Chip, Divider } from '@nextui-org/react';
-import CountWidget from '../../../components/elements/CountWidget';
-import { ArrowPathIcon, CheckIcon, EyeIcon, ListBulletIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Button, Card, CardBody, CardHeader, Divider } from '@nextui-org/react';
+import { EyeIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { authStateFetcher } from '../../../services/api';
 import useSWR from 'swr';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
@@ -9,7 +8,7 @@ import useCustomNavigate from '../../../hooks/useCustomNavigate';
 import { useMemo } from 'react';
 export default function IndexPage() {
     const fetcher = (...args) => authStateFetcher(...args);
-    const { getRecomendationDetailPath } = useCustomNavigate();
+    const { getNotificationDetailPath } = useCustomNavigate();
 
     const { data, isLoading } = useSWR('/products?limit=200', fetcher);
 
@@ -21,7 +20,7 @@ export default function IndexPage() {
         },
         {
             field: 'sku',
-            headerName: 'Kode Permohonan',
+            headerName: 'Nomor Registrasi Notifikasi',
             width: 300
         },
         {
@@ -30,29 +29,26 @@ export default function IndexPage() {
             width: 300
         },
         {
-            field: 'availabilityStatus',
-            headerName: 'Status',
-            width: 150,
-            renderCell: (params) => (<Chip size='sm' color='primary' variant='faded'>{params.value}</Chip>)
-        },
-        {
             field: 'action',
             headerName: 'Aksi',
             renderCell: (params) => (
-                <Button size='sm' color='primary' isIconOnly onClick={() => getRecomendationDetailPath(params.row.sku)}><EyeIcon className='size-4'/></Button>
+                <Button size='sm' color='primary' isIconOnly onClick={() => getNotificationDetailPath(params.row.sku)}><EyeIcon className='size-4'/></Button>
             ),
             sortable: false,
             filterable: false
         }, 
-    ], [getRecomendationDetailPath])
+    ], [getNotificationDetailPath])
     return (
         <RootAdmin>
             <Card className="w-full mt-3" radius='sm'>
                 <CardHeader>
-                    <p>Daftar Permohonan Rekomendasi</p>
+                    <p className="text-md">Daftar Notifikasi</p>
                 </CardHeader>
                 <Divider/>
                 <CardBody className='w-full h-[530px] p-5'>
+                    <div className="mb-5">
+                        <Button size="sm" color="primary" startContent={<PlusIcon className="size-4 stroke-2"/>}>Tambah</Button>
+                    </div>
                     <DataGrid
                         rows={data?.products}
                         loading={isLoading}

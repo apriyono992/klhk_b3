@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import toast, { Toaster } from 'react-hot-toast';
 import Header from '../fragments/admin/Header';
 import Sidebar from '../fragments/admin/Sidebar';
@@ -7,9 +7,9 @@ import Sidebar from '../fragments/admin/Sidebar';
 export default function RootAdmin({ children }) {
     const [isOpenSidebar, setIsOpenSidebar] = useState(false);
 
-    function handleOpenSidebar() {
-        setIsOpenSidebar(!isOpenSidebar);
-    }
+    const handleOpenSidebar = useCallback(() => {
+        setIsOpenSidebar((prev) => !prev);
+    }, []);
 
     useEffect(() => {
         const axiosError = (event) => toast.error(`Error response : ${event.detail}`);

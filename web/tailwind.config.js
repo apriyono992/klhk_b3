@@ -15,11 +15,10 @@ module.exports = {
   ],
   theme: {
     color: {
-      'white': '#fff',
+      'white': '#ffffff',
       'default': "#F3F6FF",
       'primary': "#4CAF50",
       'secondary': "#795548",
-      'accent': "#FF9800",
       'success': "#22c55e",
       'danger': "#ef4444",
       'warning': "#eab308",
@@ -31,9 +30,6 @@ module.exports = {
     daisyui: {
       themes: [],
     },
-  },
-  daisyui: {
-    themes: [],
   },
   darkMode: "class",
   plugins: [
@@ -53,11 +49,6 @@ module.exports = {
             },
             secondary: {
               DEFAULT: "#795548",
-              foreground: "#fff",
-              
-            },
-            accent: {
-              DEFAULT: "#FF9800",
               foreground: "#fff",
               
             },

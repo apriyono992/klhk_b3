@@ -2,12 +2,12 @@ import React from "react";
 import { 
     ArrowTrendingDownIcon,
     ArrowTrendingUpIcon,
-  ChartBarIcon,
-  ClipboardDocumentIcon,
-  CursorArrowRaysIcon,
-  TableCellsIcon,
-  TruckIcon,
-  ViewfinderCircleIcon,
+    ChartBarIcon,
+    ClipboardDocumentIcon,
+    CursorArrowRaysIcon,
+    TableCellsIcon,
+    TruckIcon,
+    ViewfinderCircleIcon,
 } from '@heroicons/react/24/outline';
 import { MapContainer, TileLayer } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
@@ -16,25 +16,19 @@ import {
   CardBody, 
   Tabs, 
   Tab,
-  CardHeader,
   Table,
   TableHeader,
   TableBody,
   TableCell,
   TableRow,
   TableColumn,
+  CardHeader,
 } from "@nextui-org/react";
 import RootAdmin from "../../components/layouts/RootAdmin";
+import { BarChart, PieChart } from "@mui/x-charts";
 
 export default function DashboardPage() {
-const data = [
-    {name: 'Page A', uv: 400, pv: 2400, amt: 2400},
-    {name: 'Page B', uv: 200, pv: 2400, amt: 2400},
-    {name: 'Page C', uv: 100, pv: 2400, amt: 2400},
-    {name: 'Page D', uv: 700, pv: 2400, amt: 2400},
-    {name: 'Page E', uv: 450, pv: 2400, amt: 2400},
-]
-  return (
+    return (
         <RootAdmin>
             <Tabs className="pt-3" color="primary" radius="sm" size="md" variant="bordered">
                 <Tab key="overview" title={
@@ -44,9 +38,7 @@ const data = [
                     </div>
                 }>
                     <div>
-                        <div className="w-full">
-                            <Card radius="md">
-                                <CardBody className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                                     <Card radius="sm" className="px-4 py-3 group ">
                                         <CardBody className="w-full flex flex-row items-center">
                                            <div className="w-full md:w-2/3 flex flex-col">
@@ -92,8 +84,39 @@ const data = [
                                            </div>
                                         </CardBody>
                                     </Card>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-3">
+                            <Card radius="sm">
+                                <CardHeader>
+                                    <span className="text-lg font-bold">Grafik B3</span>
+                                </CardHeader>
+                                <CardBody>
+                                    <BarChart
+                                        xAxis={[{ scaleType: 'band', data: ['group A', 'group B', 'group C'] }]}
+                                        series={[{ data: [4, 3, 5] }, { data: [1, 6, 3] }, { data: [2, 5, 6] }]}
+                                        height={300}
+                                    />
                                 </CardBody>
-                            </Card>  
+                            </Card>
+                            <Card radius="sm">
+                                <CardHeader>
+                                    <span className="text-lg font-bold">Grafik B3</span>
+                                </CardHeader>
+                                <CardBody>
+                                    <PieChart
+                                        series={[
+                                            {
+                                            data: [
+                                                { id: 0, value: 10, label: 'series A' },
+                                                { id: 1, value: 15, label: 'series B' },
+                                                { id: 2, value: 20, label: 'series C' },
+                                            ],
+                                            },
+                                        ]}
+                                        height={200}
+                                    />
+                                </CardBody>
+                            </Card>
                         </div>
                     </div>
                 </Tab>
@@ -155,5 +178,5 @@ const data = [
                 </Tab>
             </Tabs>
         </RootAdmin>
-  );
+    );
 }

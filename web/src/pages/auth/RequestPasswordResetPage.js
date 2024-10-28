@@ -3,6 +3,7 @@ import RootAuth from "../../components/layouts/RootAuth";
 import { Button, Input } from "@nextui-org/react";
 import { ArrowLeftIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 import logo from '../../assets/images/logo.png';
+import { LOGIN_PATH } from "../../services/routes";
 
 export default function RequestPasswordResetPage() {
     return (
@@ -19,7 +20,7 @@ export default function RequestPasswordResetPage() {
                 </form>
                 <div className="mt-4 flex items-center gap-1 justify-center text-primary hover:underline">
                     <ArrowLeftIcon className="size-4"/>
-                    <Link to="/masuk" className="">Kembali ke halaman login</Link>
+                    <Link to={LOGIN_PATH} className="">Kembali ke halaman login</Link>
                 </div>
             </div>
         </RootAuth>

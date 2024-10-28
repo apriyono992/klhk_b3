@@ -20,9 +20,9 @@ import {
 import useAuth from "../../../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie'
+import { LOGIN_PATH } from "../../../services/routes";
 
 export default function Header({ onOpenSidebar }) {
-    const [theme, setTheme] = useState(true);
     const { data, isLoading } = useAuth()
     const navigate = useNavigate();
     const location = useLocation();
@@ -30,7 +30,7 @@ export default function Header({ onOpenSidebar }) {
     function handleLogout() {
         Cookies.remove('accessToken')
         Cookies.remove('refreshToken')
-        return navigate("/masuk")
+        return navigate(LOGIN_PATH)
     }
 
 
@@ -41,7 +41,7 @@ export default function Header({ onOpenSidebar }) {
                     <Button onPress={ onOpenSidebar } isIconOnly color="primary" variant="flat" className="lg:hidden">
                         <Bars3BottomLeftIcon className="size-5" />
                     </Button>    
-                    <Breadcrumbs className="capitalize">
+                    <Breadcrumbs className="capitalize" color="secondary" isDisabled>
                         <BreadcrumbItem><HomeIcon className="size-4 mb-0.5" /></BreadcrumbItem>
                         {
                             location.pathname.split('/').filter(path => path !== '' && path !== 'admin').map((path) => (

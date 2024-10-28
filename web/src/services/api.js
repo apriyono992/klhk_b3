@@ -1,17 +1,27 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import { LOGIN_PATH } from './routes';
 
-const BASE_URL = 'https://dummyjson.com';
+const BASE_URL_DEV = 'https://dummyjson.com';
+const BASE_URL = 'http://localhost:3002';
+
+const instance = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': '123',
+    },
+})
 
 const axiosInstance = axios.create({
-    baseURL: BASE_URL,
+    baseURL: BASE_URL_DEV,
     headers: {
         'Content-Type': 'application/json',
     },
 })
 
 const axiosInstanceAuth = axios.create({
-    baseURL: BASE_URL,
+    baseURL: BASE_URL_DEV,
     headers: {
         'Content-Type': 'application/json'
     },
@@ -52,7 +62,7 @@ axiosInstanceAuth.interceptors.response.use(
             } catch (error) {
                 Cookies.remove('accessToken');
                 Cookies.remove('refreshToken');
-                window.location.href = '/login'
+                window.location.href = LOGIN_PATH
             }
         }
   
@@ -68,14 +78,12 @@ async function refreshToken(refreshToken) {
     return await axiosInstance.post('/auth/refresh', { refreshToken: refreshToken, expiresInMins: 1 }).then(res => res.data)
 }
 
-export async function fetchUserLogin(url) {
+export async function authStateFetcher(url) {
     return await axiosInstanceAuth.get(url).then(res => res.data)
 }
 
-export async function fetchRecomendation(url) {
-    return await axiosInstanceAuth.get(url).then(res => res.data)
+export async function getFetcher(url) {
+
+    return await instance.get(url).then(res => res.data)
 }
 
-export async function fetchRegistration(url) {
-    return await axiosInstanceAuth.get(url).then(res => res.data)
-}

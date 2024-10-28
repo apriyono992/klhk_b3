@@ -1,18 +1,19 @@
 import { ModuleRef, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { NestFastifyApplication, FastifyAdapter } from '@nestjs/platform-fastify';
 import { ValidationPipe } from '@nestjs/common';
 import { AllExceptionsFilter, ValidationFilter } from './utils/response.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { PrismaService } from './services/prisma.services';
-import { PrismaInit } from './utils/prismaInit';
 import { CustomValidationPipe } from './utils/customValidationPipe';
 import { useContainer } from 'class-validator';
-import multipart from '@fastify/multipart';
-import { MercuryModule } from './module/mercuryMonitoring.module';
 import { ValidatorsModule } from './module/validators.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Enable CORS with open settings
+  app.enableCors({
+    origin: '*', // Allow all origins
+    methods: 'GET,POST,PUT,DELETE', // Allow specific methods
+  });
   
   // Global Pipes
   app.useGlobalPipes(new ValidationPipe({

@@ -1,30 +1,23 @@
 import { CheckIcon, PencilSquareIcon, PlusCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
+import { set, useForm } from "react-hook-form";
 
-export default function  InlineEditInput({ value = "", multiline = false, onSave }) {
+export default function  InlineEditInput({ multiline = false, value = '', onSubmit }) {
     const [isEditing, setIsEditing] = useState(false);
-    const [inputValue, setInputValue] = useState(value);
-    const [tempInputValue, setTempInputValue] = useState(value);
+    const [values, setvalues] = useState(value);
+    const { register, handleSubmit, reset, formState: { errors } } = useForm({ defaultValues: { text: values } });
 
-    function handleSave() {
-        if (inputValue.trim() === "") {
-            setInputValue(tempInputValue);
-        } else {
-            setTempInputValue(inputValue)
-            onSave(inputValue);
-        }
+    function handleOnSubmit(data) {
+        onSubmit(data);
         setIsEditing(false);
+        setvalues(data.text);
     };
-
-    function handleCancel() {
-        setInputValue(tempInputValue);
-        setIsEditing(false);
-    };
-
-    function handleOnChange(event) {
-        setInputValue(event.target.value);
-    }
     
+    function onCancel() {
+        reset({text: values});
+        setIsEditing(false);
+        setvalues(values);
+    }
 
     return(
         <>
@@ -32,30 +25,26 @@ export default function  InlineEditInput({ value = "", multiline = false, onSave
             isEditing 
             ? 
                 (
-                    <div className="w-full flex items-center gap-3">
+                    <form onSubmit={handleSubmit(handleOnSubmit)} className="w-full flex items-center gap-3">
                         {
                             multiline
                             ?
-                                <textarea className="text-sm border-1 border-gray-300 focus:ring-0 focus:outline-0 px-1 rounded-md" value={inputValue} onChange={handleOnChange} autoFocus rows={4} cols={60}></textarea>
+                                <textarea {...register("text", { required: true })} className="text-sm border-1 border-gray-300 focus:ring-0 focus:outline-0 px-1 rounded-md" autoFocus rows={4} cols={60}></textarea>
                             :
-                                <input type="text" className="text-sm border-1 border-gray-300 focus:ring-0 focus:outline-0 px-1 rounded-md" value={inputValue} onChange={handleOnChange}autoFocus  />
+                                <input {...register("text", { required: true })} type="text" className="text-sm border-1 border-gray-300 focus:ring-0 focus:outline-0 px-1 rounded-md" autoFocus  />
                                 
 
                         }
-                        <button onClick={handleSave}><CheckIcon className="size-4"/></button>
-                        <button onClick={handleCancel}><XMarkIcon className="size-4"/></button>
-                    </div>
+                        <button><CheckIcon className="size-4"/></button>
+                        <button onClick={onCancel}><XMarkIcon className="size-4"/></button>
+                    </form>
                 )
             : 
                 (
                     <div className="flex items-center">
-                        <span onClick={() => setIsEditing(true)} className={`${inputValue.trim() === "" ? "m-0" : "me-3"} text-sm text-black font-medium`}>{inputValue}</span>
+                        <span onClick={() => setIsEditing(true)} className={`me-3 text-sm text-black font-medium`}>{values}</span>
                         <button onClick={() => setIsEditing(true)}>
-                            {
-                                inputValue.trim() === ""
-                                ? <PlusCircleIcon  className="size-5"/>
-                                : <PencilSquareIcon  className="size-4"/>
-                            }
+                            <PencilSquareIcon  className="size-4"/>
                         </button>
                     </div>
                 )

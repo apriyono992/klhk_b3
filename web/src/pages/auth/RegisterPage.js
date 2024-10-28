@@ -4,6 +4,7 @@ import logo from '../../assets/images/logo.png';
 import RootAuth from '../../components/layouts/RootAuth';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
+import { LOGIN_PATH } from '../../services/routes';
 
 export default function RegisterPage() {
     const [isVisible, setIsVisible] = useState(false);
@@ -18,7 +19,7 @@ export default function RegisterPage() {
                     <h3 className="font-bold text-2xl mt-5">Daftarkan Akun Disini</h3>
                     <div className="mt-4 flex items-center gap-1 justify-center lg:justify-start text-base">
                         <span className="text-center">Sudah Punya Akun?</span>
-                        <Link to="/masuk" className="text-primary hover:underline">Login Disini</Link>
+                        <Link to={LOGIN_PATH} className="text-primary hover:underline">Login Disini</Link>
                     </div>
                 </div>
                 <form className="pt-10 font-medium">
