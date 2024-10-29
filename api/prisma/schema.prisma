@@ -346,6 +346,8 @@ model Company {
   PerusahaanTujuanBongkar PerusahaanTujuanBongkar[]
 
   PerusahaanAsalMuat PerusahaanAsalMuat[]
+
+  PelaporanPengangkutan PelaporanPengangkutan[]
 }
 
 model Vehicle {
@@ -766,11 +768,15 @@ model PelaporanPengangkutan {
   id                      String                 @id @default(uuid())
   applicationId           String                 // Foreign key to Application (permohonan)
   application             Application            @relation(fields: [applicationId], references: [id])
+  companyId               String                 // Foreign key to Company
+  company                 Company                @relation(fields: [companyId], references: [id])
   vehicleId               String                 // Foreign key to Vehicle
   vehicle                 Vehicle                @relation(fields: [vehicleId], references: [id]) // Relation to track reports per vehicle
   bulan                   Int                    // Month of the report (1 for January, 2 for February, etc.)
   tahun                   Int                    // Year of the report
   pengangkutanDetails     PengangkutanDetail[]   // One-to-many relation to PengangkutanDetail
+  periodId             String                 // Foreign key to Period
+  period               Period                 @relation(fields: [periodId], references: [id])
   isDraft                 Boolean                @default(true)  // Report is a draft until finalized
   createdAt               DateTime               @default(now())
   updatedAt               DateTime               @updatedAt
@@ -820,4 +826,18 @@ model PerusahaanTujuanBongkar {
   longitude               Float                  // Unloading destination longitude
   createdAt               DateTime               @default(now())
   updatedAt               DateTime               @updatedAt
+}
+
+
+model Period {
+  id                   String                 @id @default(uuid())
+  name                 String                 // Name of the period, e.g., "Q1 2024"
+  startDate            DateTime               // Start of the reporting period
+  endDate              DateTime               // End of the reporting period
+  finalizationDeadline DateTime               // Deadline for finalizing reports in this period
+  isActive             Boolean                @default(false) // Only one active period allowed
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+
+  pelaporanPengangkutans PelaporanPengangkutan[]
 }
