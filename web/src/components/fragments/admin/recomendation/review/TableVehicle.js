@@ -1,26 +1,21 @@
-import useSWR from "swr";
-import { authStateFetcher } from "../../../../../services/api";
 import { Button, Card, CardBody, CardHeader, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 import ModalAlert from "../../../../elements/ModalAlert";
 import { PencilSquareIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import useRecomendationVehicle from "../../../../../hooks/useRecomendationVehicle";
 
-export default function TableVehicle() {
-    const fetcher = (...args) => authStateFetcher(...args);
-    const { data, isLoading } = useSWR('/products?limit=4&select=id,title,category,minimumOrderQuantity,meta,warrantyInformation,availabilityStatus', fetcher);
-
+export default function TableVehicle({ data, isLoading, mutate }) {
     const { 
         isEdit,
+        onClickCreate,
         onClickEdit, 
         onClickDelete,
         onSubmitDelete,
         onCloseForm,
         onSubmitForm, 
-        modalForm: { onOpenModalForm, isOpenModalForm, onOpenChangeModalForm },
+        modalForm: { isOpenModalForm, onOpenChangeModalForm },
         modalAlert: { isOpenModalAlert, onOpenChangeModalAlert },
         hookForm: { register, handleSubmit, formState: { errors, isSubmitting } }, 
-    } = useRecomendationVehicle();
-
+    } = useRecomendationVehicle({ mutate });
 
     const columns = [
         'No',
@@ -38,7 +33,7 @@ export default function TableVehicle() {
             <Card radius="sm">
                 <CardHeader className="flex items-center gap-3">
                     <p className="text-md">Data Kendaraan</p>
-                    <Button isIconOnly onPress={onOpenModalForm} size="sm" color="primary"><PlusIcon className="size-4 stroke-2"/></Button>
+                    <Button isIconOnly onPress={() => onClickCreate(data.id, data.company.id)} size="sm" color="primary"><PlusIcon className="size-4 stroke-2"/></Button>
                 </CardHeader>
                 <Divider />
                 <CardBody>
@@ -46,19 +41,19 @@ export default function TableVehicle() {
                         <TableHeader>
                             {columns.map((item, index) => <TableColumn key={index}>{item}</TableColumn>)}
                         </TableHeader>
-                        <TableBody loadingContent={<Spinner/>} loadingState={isLoading ? 'loading' : 'idle'}>
-                            {data?.products.map((item, index) => (
+                        <TableBody loadingContent={<Spinner/>} loadingState={isLoading ? 'loading' : 'idle'} emptyContent="Tidak ada data">
+                            {data?.vehicles.map((item, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{index + 1}</TableCell>
-                                    <TableCell>{item.title}</TableCell>
-                                    <TableCell>{item.category}</TableCell>
-                                    <TableCell>{item.minimumOrderQuantity}</TableCell>
-                                    <TableCell>{item.meta.barcode}</TableCell>
-                                    <TableCell>{item.warrantyInformation}</TableCell>
-                                    <TableCell>{item.availabilityStatus}</TableCell>
+                                    <TableCell>{item.vehicle.noPolisi}</TableCell>
+                                    <TableCell>{item.vehicle.modelKendaraan}</TableCell>
+                                    <TableCell>{item.vehicle.tahunPembuatan}</TableCell>
+                                    <TableCell>{item.vehicle.nomorRangka}</TableCell>
+                                    <TableCell>{item.vehicle.nomorRangka}</TableCell>
+                                    <TableCell>{item.vehicle.kepemilikan}</TableCell>
                                     <TableCell className='flex items-center gap-1'>
-                                        <Button size='sm' onPress={() => onClickEdit(item)} color='warning' isIconOnly><PencilSquareIcon className='size-4'/></Button>
-                                        <Button size='sm' onPress={() => onClickDelete(item.id)} color='danger' isIconOnly><TrashIcon className='size-4'/></Button>
+                                        <Button size='sm' onPress={() => onClickEdit(item.vehicle)} color='warning' isIconOnly><PencilSquareIcon className='size-4'/></Button>
+                                        <Button size='sm' onPress={() => onClickDelete(item.vehicle.id, data.id)} color='danger' isIconOnly><TrashIcon className='size-4'/></Button>
                                     </TableCell>
                                 </TableRow>
                             ))}

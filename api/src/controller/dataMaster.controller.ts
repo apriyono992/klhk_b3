@@ -6,6 +6,9 @@ import { CreateDataTembusanDto } from 'src/models/createDataTembusanDto';
 import { SearchDataBahanB3Dto } from 'src/models/searchBahanB3Dto';
 import { SearchDataPejabatDto } from 'src/models/searchDataPejabatDto';
 import { SearchDataTembusanDto } from 'src/models/seatchDataTembusanDto';
+import { UpdateDataBahanB3Dto } from 'src/models/updateDataBahanB3Dto';
+import { UpdateDataPejabatDto } from 'src/models/updateDataPejabatDto';
+import { UpdateDataTembusanDto } from 'src/models/updateDataTembusanDto';
 import { DataMasterService } from 'src/services/dataMaster.services';
 
 @ApiTags('Data Master')
@@ -52,7 +55,7 @@ export class DataMasterController {
     },
   })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
-  async updateDataBahanB3(@Param('id') id: string, @Body() updateDataBahanB3Dto: CreateDataBahanB3Dto) {
+  async updateDataBahanB3(@Param('id') id: string, @Body() updateDataBahanB3Dto: UpdateDataBahanB3Dto) {
     return this.dataMasterService.updateDataBahanB3(id, updateDataBahanB3Dto);
   }
 
@@ -159,7 +162,7 @@ export class DataMasterController {
     },
   })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
-  async updateDataPejabat(@Param('id') id: string, @Body() updateDataPejabatDto: CreateDataPejabatDto) {
+  async updateDataPejabat(@Param('id') id: string, @Body() updateDataPejabatDto: UpdateDataPejabatDto) {
     return this.dataMasterService.updateDataPejabat(id, updateDataPejabatDto);
   }
 
@@ -266,7 +269,7 @@ export class DataMasterController {
     },
   })
   @ApiResponse({ status: 400, description: 'Bad Request.' })
-  async updateDataTembusan(@Param('id') id: string, @Body() updateDataTembusanDto: CreateDataTembusanDto) {
+  async updateDataTembusan(@Param('id') id: string, @Body() updateDataTembusanDto: UpdateDataTembusanDto) {
     return this.dataMasterService.updateDataTembusan(id, updateDataTembusanDto);
   }
 

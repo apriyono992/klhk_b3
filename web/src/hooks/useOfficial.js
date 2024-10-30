@@ -4,19 +4,22 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as yup from 'yup';
+import { deleteFetcher, postFetcher, putFetcher } from "../services/api";
+import { dirtyInput, isResponseErrorObject } from "../services/helpers";
 
-export default function useOfficial() {
+export default function useOfficial({ mutate }) {
     const formSchema =  yup.object().shape({
         nip: yup.string().required('Harus diisi'),
         nama: yup.string().required('Harus diisi'),
-        status: yup.string().required('Harus diisi'),
+        jabatan: yup.string().required('Harus diisi'),
+        status: yup.string().required('Harus diisi')
     }).required()
 
     const {isOpen: isOpenModalForm, onOpen: onOpenModalForm, onOpenChange: onOpenChangeModalForm, onClose: onCloseModalForm} = useDisclosure();
     const {isOpen: isOpenModalAlert, onOpenChange: onOpenChangeModalAlert} = useDisclosure();
     const [editId, setEditId] = useState(null);
     const [isEdit, setIsEdit] = useState(false);
-    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({resolver: yupResolver(formSchema)});
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting, dirtyFields } } = useForm({resolver: yupResolver(formSchema)});
 
     function onClickEdit(item) {    
         setEditId(item.id);
@@ -24,7 +27,8 @@ export default function useOfficial() {
         reset({
             nip: item.nip,   
             nama: item.nama,
-            status: item.status,
+            jabatan: item.jabatan,
+            status: item.status
         });           
         onOpenChangeModalForm();
     }
@@ -35,7 +39,8 @@ export default function useOfficial() {
         reset({
             nip: '',
             nama: '',
-            status: '',
+            jabatan: '',
+            status: ''
         });
         onCloseModalForm()
     }
@@ -47,8 +52,8 @@ export default function useOfficial() {
     
     async function onSubmitDelete() {
         try {
-            await new Promise((r) => setTimeout(r, 1000));
-            console.log(editId);
+            await deleteFetcher('/api/data-master/pejabat', editId);
+            mutate()
             toast.success('Pejabat berhasil dihapus!');
         } catch (error) {
             toast.error('Gagal hapus pejabat!');
@@ -57,18 +62,23 @@ export default function useOfficial() {
 
     async function onSubmitForm(data) {
         try {
-            await new Promise((r) => setTimeout(r, 1000));
             if (isEdit) {
-                console.log(editId);
-                console.log(data);
+                const filteredData = dirtyInput(dirtyFields, data);
+                await putFetcher('/api/data-master/pejabat', editId, filteredData);
+                mutate()
                 toast.success('Pejabat berhasil diubah!');
             } else {
-                console.log(data);
+                await postFetcher('/api/data-master/pejabat', data);
+                mutate()
                 toast.success('Pejabat berhasil ditambah!');
             }
             onCloseForm();
         } catch (error) {
-            toast.success('Error submit form!');
+            isResponseErrorObject(error.response.data.message)
+                ? Object.entries(error.response.data.message).forEach(([key, value]) => {
+                    toast.error(value);
+                })
+                : toast.error(error.response.data.message)
         }
     }
 
@@ -86,7 +96,7 @@ export default function useOfficial() {
             register, 
             handleSubmit, 
             reset, 
-            formState: { errors, isSubmitting }
+            formState: { errors, isSubmitting, dirtyFields }
         },
         isEdit,
         onClickEdit,

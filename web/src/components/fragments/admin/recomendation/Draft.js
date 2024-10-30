@@ -5,42 +5,48 @@ import MultiSelectSort from '../../../elements/MultiSelectSort'
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import toast from 'react-hot-toast';
-import { month } from '../../../../services/enum';
+import { draftPermit, month } from '../../../../services/enum';
+import useSWR from 'swr';
+import { getFetcher, getSelectFetcher } from '../../../../services/api';
 
 export default function Draft() {
     const formSchema =  yup.object().shape({
-        letter_copy: yup.array()
-            .min(1, 'Minimal 1 tembusan')
-            .required('Harus diisi'),
-        letter_number: yup.string().required('harus diisi'),
-        letter_month: yup.number()
-                        .typeError('Harus diisi')
-                        .integer('Harus angka')
-                        .positive('Harus angka'),
-        letter_year: yup.number()
-                        .typeError('Tahun harus valid')
-                        .integer('Harus angka').min(1900, 'Tahun tidak valid')
-                        .max(2099, `Tahun tidak valid`)
-                        .required('harus diisi'),
-        letter_permit: yup.number()
-                        .typeError('Harus diisi')
-                        .integer('Harus angka')
-                        .positive('Harus angka'),
-        letter_note: yup.string().required('harus diisi'),
-        letter_publication_date: yup.date()
-                                    .typeError('Tanggal harus valid')
-                                    .required('harus diisi'),
-        letter_from_date: yup.date()
-                            .typeError('Tanggal harus valid')
-                            .required('harus diisi'),
-        letter_to_date: yup.date()
-                            .typeError('Tanggal harus valid')
-                            .required('harus diisi'),
-        letter_notification: yup.string().required('harus diisi'),
+        tembusan: yup.array()
+                        .min(1, 'Minimal 1 tembusan')
+                        .required('Harus diisi'),
+        nomorSurat: yup.string().required('harus diisi'),
+        // letter_month: yup.number()
+        //                 .typeError('Harus diisi')
+        //                 .integer('Harus angka')
+        //                 .positive('Harus angka'),
+        // letter_year: yup.number()
+        //                 .typeError('Tahun harus valid')
+        //                 .integer('Harus angka').min(1900, 'Tahun tidak valid')
+        //                 .max(2099, `Tahun tidak valid`)
+        //                 .required('harus diisi'),
+        // letter_permit: yup.number()
+        //                 .typeError('Harus diisi')
+        //                 .integer('Harus angka')
+        //                 .positive('Harus angka'),
+        // letter_note: yup.string().required('harus diisi'),
+        pejabatId: yup.string().required('harus diisi'),
+        // letter_publication_date: yup.date()
+        //                             .typeError('Tanggal harus valid')
+        //                             .required('harus diisi'),
+        // letter_from_date: yup.date()
+        //                     .typeError('Tanggal harus valid')
+        //                     .required('harus diisi'),
+        // letter_to_date: yup.date()
+        //                     .typeError('Tanggal harus valid')
+        //                     .required('harus diisi'),
+        // letter_notification: yup.string().required('harus diisi'),
         
     }).required()
 
     const { register, handleSubmit, control, formState: { errors, isSubmitting }, } = useForm({resolver: yupResolver(formSchema)})
+    const { data, isLoading } = useSWR('/api/data-master/pejabat?limit=100', getFetcher);
+    console.log(data?.data);
+    
 
     async function onSubmit(data) {
         try {
@@ -51,25 +57,6 @@ export default function Draft() {
             toast.error('Gagal buat draft sk!');
         }
     }
-
-    const permit = [
-        'Berjangka',
-        'Trasaksional',
-        'Seumur Hidup',
-        'Perkecualian - Transaksional',
-    ]
-
-    const options = [
-        { value: '1', label: 'Orang 1' },
-        { value: '2', label: 'Orang 2' },
-        { value: '3', label: 'Orang 3' },
-        { value: '4', label: 'Orang 4' },
-        { value: '5', label: 'Orang 5' },
-        { value: '6', label: 'Orang 6' },
-        { value: '7', label: 'Orang 7' },
-        { value: '8', label: 'Orang 8' },
-        { value: '9', label: 'Orang 9' },
-    ]
 
     return (
         <div className=''>
@@ -90,7 +77,6 @@ export default function Draft() {
                                     <MultiSelectSort
                                         value={field.value}
                                         onChange={field.onChange}
-                                        options={options}
                                     />  
                                 </div>  
                             )}
@@ -105,17 +91,17 @@ export default function Draft() {
                     <CardBody>
                         <div className='grid grid-cols-1 md:grid-cols-2 gap-3 mb-5'>
                             <Input
-                                {...register('letter_number')}
+                                {...register('nomorSurat')}
                                 isRequired
                                 variant="faded" 
                                 type="text" 
                                 label="Nomor Surat" 
-                                color={errors.letter_number ? 'danger' : 'default'}
-                                isInvalid={errors.letter_number} 
-                                errorMessage={errors.letter_number && errors.letter_number.message}
+                                color={errors.nomorSurat ? 'danger' : 'default'}
+                                isInvalid={errors.nomorSurat} 
+                                errorMessage={errors.nomorSurat && errors.nomorSurat.message}
                                 className="col-span-2"
                             />
-                            <Select
+                            {/* <Select
                                 {...register('letter_month')} 
                                 variant="faded" 
                                 label="Bulan" 
@@ -128,8 +114,8 @@ export default function Draft() {
                                 {month.map((item) => (
                                     <SelectItem key={item}>{item}</SelectItem>
                                 ))}
-                            </Select>
-                            <Input
+                            </Select> */}
+                            {/* <Input
                                 {...register('letter_year')}
                                 isRequired
                                 variant="faded" 
@@ -138,8 +124,8 @@ export default function Draft() {
                                 color={errors.letter_year ? 'danger' : 'default'}
                                 isInvalid={errors.letter_year} 
                                 errorMessage={errors.letter_year && errors.letter_year.message}
-                            />
-                            <Select
+                            /> */}
+                            {/* <Select
                                 {...register('letter_permit')} 
                                 variant="faded" 
                                 label="Status Izin" 
@@ -148,12 +134,13 @@ export default function Draft() {
                                 color={errors.letter_permit ? 'danger' : 'default'}
                                 isInvalid={errors.letter_permit} 
                                 errorMessage={errors.letter_permit && errors.letter_permit.message}
+                                className='col-span-2'
                             >
-                                {permit.map((item, index) => (
-                                    <SelectItem key={index + 1} value={index + 1}>{item}</SelectItem>
+                                {draftPermit.map((item) => (
+                                    <SelectItem key={item}>{item}</SelectItem>
                                 ))}
-                            </Select>
-                            <Textarea
+                            </Select> */}
+                            {/* <Textarea
                                 {...register('letter_note')} 
                                 variant="faded" 
                                 label="Keterangan SK" 
@@ -162,8 +149,22 @@ export default function Draft() {
                                 isInvalid={errors.letter_note} 
                                 errorMessage={errors.letter_note && errors.letter_note.message}
                                 className="col-span-2"
-                            />
-                            <Input
+                            /> */}
+                            <Select
+                                {...register('pejabatId')} 
+                                variant="faded" 
+                                label="Pejabat" 
+                                placeholder="Pilih"
+                                isRequired
+                                color={errors.pejabatId ? 'danger' : 'default'}
+                                isInvalid={errors.pejabatId} 
+                                errorMessage={errors.pejabatId && errors.pejabatId.message}
+                            >
+                                {data?.data.map((item) => (
+                                    <SelectItem key={item.id}>{item.nama}</SelectItem>
+                                ))}
+                            </Select>
+                            {/* <Input
                                 {...register('letter_publication_date')} 
                                 variant="faded" 
                                 label="Tanggal Terbit"
@@ -172,9 +173,8 @@ export default function Draft() {
                                 color={errors.letter_publication_date ? 'danger' : 'default'}
                                 isInvalid={errors.letter_publication_date} 
                                 errorMessage={errors.letter_publication_date && errors.letter_publication_date.message}
-                                className='col-span-2'
-                            />
-                            <Input
+                            /> */}
+                            {/* <Input
                                 {...register('letter_from_date')} 
                                 variant="faded" 
                                 label="Berlaku Dari"
@@ -183,8 +183,8 @@ export default function Draft() {
                                 color={errors.letter_from_date ? 'danger' : 'default'}
                                 isInvalid={errors.letter_from_date} 
                                 errorMessage={errors.letter_from_date && errors.letter_from_date.message}
-                            />
-                            <Input
+                            /> */}
+                            {/* <Input
                                 {...register('letter_to_date')} 
                                 variant="faded" 
                                 label="Sampai"
@@ -193,8 +193,8 @@ export default function Draft() {
                                 color={errors.letter_to_date ? 'danger' : 'default'}
                                 isInvalid={errors.letter_to_date} 
                                 errorMessage={errors.letter_to_date && errors.letter_to_date.message}
-                            />
-                            <Input
+                            /> */}
+                            {/* <Input
                                 {...register('letter_notification')}
                                 variant="faded" 
                                 isRequired
@@ -204,7 +204,7 @@ export default function Draft() {
                                 isInvalid={errors.letter_notification} 
                                 errorMessage={errors.letter_notification && errors.letter_notification.message}
                                 className="col-span-2"
-                            />
+                            /> */}
                         </div>
                         <div>
                             <Button isDisabled={isSubmitting} isLoading={isSubmitting} type="submit" color='primary'>Simpan</Button>

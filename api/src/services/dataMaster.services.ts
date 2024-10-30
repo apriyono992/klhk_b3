@@ -6,6 +6,8 @@ import { CreateDataTembusanDto } from 'src/models/createDataTembusanDto';
 import { SearchDataBahanB3Dto } from 'src/models/searchBahanB3Dto';
 import { SearchDataPejabatDto } from 'src/models/searchDataPejabatDto';
 import { SearchDataTembusanDto } from 'src/models/seatchDataTembusanDto';
+import { UpdateDataTembusanDto } from 'src/models/updateDataTembusanDto';
+import { UpdateDataBahanB3Dto } from 'src/models/updateDataBahanB3Dto';
 
 
 @Injectable()
@@ -30,7 +32,7 @@ export class DataMasterService {
     }
   }
 
-  async updateDataBahanB3(id: string, data: CreateDataBahanB3Dto) {
+  async updateDataBahanB3(id: string, data: UpdateDataBahanB3Dto) {
     try {
       return await this.prisma.$transaction(async (prisma) => {
         const existingBahan = await prisma.dataBahanB3.findUnique({
@@ -41,21 +43,24 @@ export class DataMasterService {
           throw new BadRequestException('Data Bahan B3 does not exist');
         }
 
-        const bahanWithSameDetails = await prisma.dataBahanB3.findFirst({
-          where: {
-            casNumber: data.casNumber,
-            namaDagang: data.namaDagang,
-            NOT: { id },
-          },
-        });
+        // Initialize an empty object to hold the fields that should be updated
+        const updateData: any = {};
 
-        if (bahanWithSameDetails) {
-          throw new BadRequestException('CAS Number and Nama Dagang combination already exists');
+        // Manually check each property and only assign it if it has a value
+        if (data.namaBahanKimia !== undefined && data.namaBahanKimia !== null) {
+          updateData.namaBahanKimia = data.namaBahanKimia;
+        }
+        if (data.namaDagang !== undefined && data.namaDagang !== null) {
+          updateData.namaDagang = data.namaDagang;
+        }
+        if (data.tipeBahan !== undefined && data.tipeBahan !== null) {
+          updateData.tipeBahan = data.tipeBahan;
         }
 
+        // Perform the update with only the fields that have values
         return prisma.dataBahanB3.update({
           where: { id },
-          data,
+          data: updateData,
         });
       });
     } catch (error) {
@@ -91,7 +96,8 @@ export class DataMasterService {
   async createDataPejabat(data: CreateDataPejabatDto) {
     try {
       return await this.prisma.$transaction(async (prisma) => {
-        // Cari draftSurat berdasarkan applicationId
+        if(data.applicationId !== undefined && data.applicationId?.trim() !== '') {
+                  // Cari draftSurat berdasarkan applicationId
         const draftSurat = await prisma.draftSurat.findUnique({
           where: { applicationId: data.applicationId },
         });
@@ -114,6 +120,17 @@ export class DataMasterService {
             }
           },
         });
+
+        }else{
+          return prisma.dataPejabat.create({
+            data: {
+              nip: data.nip,
+              nama: data.nama,
+              jabatan: data.jabatan,
+              status: data.status,
+            },
+          });
+        }
       });
     } catch (error) {
       console.error('Transaction failed:', error);
@@ -132,20 +149,45 @@ export class DataMasterService {
           throw new BadRequestException('Pejabat does not exist');
         }
 
-        const pejabatWithSameNip = await prisma.dataPejabat.findFirst({
-          where: {
-            nip: data.nip,
-            NOT: { id },
-          },
-        });
+        // Initialize an empty object for fields that should be updated
+        const updateData: any = {};
 
-        if (pejabatWithSameNip) {
-          throw new BadRequestException('Pejabat with NIP already exists');
+        // Manually check each property and add to updateData if it has a valid value
+        if (data.nip !== undefined && data.nip !== null) {
+          const pejabatWithSameNip = await prisma.dataPejabat.findFirst({
+            where: {
+              nip: data.nip,
+              NOT: { id: id },
+            },
+          });
+  
+          if (pejabatWithSameNip) {
+            throw new BadRequestException('Pejabat with NIP already exists');
+          }
+          updateData.nip = data.nip;
+        }
+        if (data.nama !== undefined && data.nama !== null) {
+          updateData.nama = data.nama;
+        }
+        if (data.jabatan !== undefined && data.jabatan !== null) {
+          updateData.jabatan = data.jabatan;
+        }
+        if (data.applicationId !== undefined && data.applicationId !== null) {
+          updateData.applicationId = data.applicationId;
+        }
+        if (data.status !== undefined && data.status !== null) {
+          updateData.status = data.status;
         }
 
+        // Update only the fields present in updateData
         return prisma.dataPejabat.update({
           where: { id },
-          data,
+          data: {
+            nip: data.nip ??  existingPejabat.nip,
+            nama: data.nama ?? existingPejabat.nama,
+            jabatan: data.jabatan ?? existingPejabat.jabatan,
+            status: data.status ?? existingPejabat.status,
+          },
         });
       });
     } catch (error) {
@@ -181,34 +223,45 @@ export class DataMasterService {
   async createDataTembusan(data: CreateDataTembusanDto) {
     try {
       return await this.prisma.$transaction(async (prisma) => {
-        // Cari DraftSurat berdasarkan applicationId
-        const draftSurat = await prisma.draftSurat.findUnique({
-          where: { applicationId: data.applicationId },
-        });
 
-        // Validasi jika draftSurat tidak ditemukan
-        if (!draftSurat) {
-          throw new BadRequestException('Draft Surat not found for the provided Application ID.');
+        if(data.applicationId !== undefined || data.applicationId?.trim() !== '') {
+          // Cari DraftSurat berdasarkan applicationId
+          const draftSurat = await prisma.draftSurat.findUnique({
+            where: { applicationId: data.applicationId },
+          });
+
+          // Validasi jika draftSurat tidak ditemukan
+          if (!draftSurat) {
+            throw new BadRequestException('Draft Surat not found for the provided Application ID.');
+          }
+          
+          const existingTembusan = await prisma.dataTembusan.findUnique({
+            where: { nama: data.nama },
+          });
+
+          if (existingTembusan) {
+            throw new BadRequestException('Tembusan with this name already exists');
+          }
+
+          // Buat Data Tembusan dan hubungkan dengan DraftSurat
+          return prisma.dataTembusan.create({
+            data: {
+              nama: data.nama,
+              tipe: data.tipe,
+              DraftSurat: {
+                connect: { id: draftSurat.id } // Hubungkan dengan draftSurat
+              }
+            },
+          });
+        }else{
+          return prisma.dataTembusan.create({
+            data: {
+              nama: data.nama,
+              tipe: data.tipe,
+            },
+          });
         }
         
-        const existingTembusan = await prisma.dataTembusan.findUnique({
-          where: { nama: data.nama },
-        });
-
-        if (existingTembusan) {
-          throw new BadRequestException('Tembusan with this name already exists');
-        }
-
-        // Buat Data Tembusan dan hubungkan dengan DraftSurat
-        return prisma.dataTembusan.create({
-          data: {
-            nama: data.nama,
-            tipe: data.tipe,
-            DraftSurat: {
-              connect: { id: draftSurat.id } // Hubungkan dengan draftSurat
-            }
-          },
-        });
       });
     } catch (error) {
       console.error('Transaction failed:', error);
@@ -216,31 +269,45 @@ export class DataMasterService {
     }
   }
 
-  async updateDataTembusan(id: string, data: CreateDataTembusanDto) {
+  async updateDataTembusan(id: string, data: UpdateDataTembusanDto) {
     try {
       return await this.prisma.$transaction(async (prisma) => {
         const existingTembusan = await prisma.dataTembusan.findUnique({
           where: { id },
         });
-
+  
         if (!existingTembusan) {
           throw new BadRequestException('Tembusan does not exist');
         }
-
-        const tembusanWithSameNama = await prisma.dataTembusan.findFirst({
-          where: {
-            nama: data.nama,
-            NOT: { id },
-          },
-        });
-
-        if (tembusanWithSameNama) {
-          throw new BadRequestException('Tembusan with this name already exists');
+  
+        // Initialize an empty object for fields that should be updated
+        const updateData: any = {};
+  
+        // Manually check each property and add to updateData if it has a valid value
+        if (data.nama !== undefined && data.nama !== null) {
+          const tembusanWithSameNama = await prisma.dataTembusan.findFirst({
+            where: {
+              nama: data.nama,
+              NOT: { id : id },
+            },
+          });
+    
+          if (tembusanWithSameNama) {
+            throw new BadRequestException('Tembusan with this name already exists');
+          }
+          updateData.nama = data.nama;
         }
-
+        if (data.applicationId !== undefined && data.applicationId !== null) {
+          updateData.applicationId = data.applicationId;
+        }
+        if (data.tipe !== undefined && data.tipe !== null) {
+          updateData.tipe = data.tipe;
+        }
+  
+        // Update only the fields present in updateData
         return prisma.dataTembusan.update({
           where: { id },
-          data,
+          data: updateData,
         });
       });
     } catch (error) {
@@ -248,7 +315,6 @@ export class DataMasterService {
       throw new BadRequestException('Failed to update Tembusan. Please try again.');
     }
   }
-
   async deleteDataTembusan(id: string) {
     try {
       return await this.prisma.$transaction(async (prisma) => {

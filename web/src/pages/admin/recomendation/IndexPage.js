@@ -1,36 +1,45 @@
 import RootAdmin from '../../../components/layouts/RootAdmin';
 import { Button, Card, CardBody, CardHeader, Chip, Divider } from '@nextui-org/react';
-import CountWidget from '../../../components/elements/CountWidget';
-import { ArrowPathIcon, CheckIcon, EyeIcon, ListBulletIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { authStateFetcher } from '../../../services/api';
+import { EyeIcon } from '@heroicons/react/24/outline';
+import { getFetcher } from '../../../services/api';
 import useSWR from 'swr';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import useCustomNavigate from '../../../hooks/useCustomNavigate';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 export default function IndexPage() {
-    const fetcher = (...args) => authStateFetcher(...args);
+    const fetcher = (...args) => getFetcher(...args);
     const { getRecomendationDetailPath } = useCustomNavigate();
 
-    const { data, isLoading } = useSWR('/products?limit=200', fetcher);
+    const [page, setPage] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
+    const { data, isLoading } = useSWR(`/api/rekom/permohonan/search?page=${page + 1}&limit=${pageSize}`, fetcher);
+    console.log(data);
+    
 
     const columns = useMemo(() => [
-        { 
-            field: 'id', 
-            headerName: 'No',
-            width: 70 
-        },
         {
-            field: 'sku',
+            field: 'kodePermohonan',
             headerName: 'Kode Permohonan',
             width: 300
         },
         {
-            field: 'category',
+            field: 'company',
             headerName: 'Perusahaan',
-            width: 300
+            width: 300,
+            renderCell: (params) => params.row.company.name
         },
         {
-            field: 'availabilityStatus',
+            field: 'jenisPermohonan',
+            headerName: 'Jenis Permohonan',
+            width: 300,
+        },
+        {
+            field: 'tipeSurat',
+            headerName: 'Tipe Surat',
+            width: 300,
+        },
+        {
+            field: 'status',
             headerName: 'Status',
             width: 150,
             renderCell: (params) => (<Chip size='sm' color='primary' variant='faded'>{params.value}</Chip>)
@@ -39,7 +48,7 @@ export default function IndexPage() {
             field: 'action',
             headerName: 'Aksi',
             renderCell: (params) => (
-                <Button size='sm' color='primary' isIconOnly onClick={() => getRecomendationDetailPath(params.row.sku)}><EyeIcon className='size-4'/></Button>
+                <Button size='sm' color='primary' isIconOnly onClick={() => getRecomendationDetailPath(params.row.id)}><EyeIcon className='size-4'/></Button>
             ),
             sortable: false,
             filterable: false
@@ -54,7 +63,8 @@ export default function IndexPage() {
                 <Divider/>
                 <CardBody className='w-full h-[530px] p-5'>
                     <DataGrid
-                        rows={data?.products}
+                        rows={data?.applications}
+                        rowCount={data?.total || 0}
                         loading={isLoading}
                         columns={columns}
                         disableDensitySelector
@@ -69,8 +79,15 @@ export default function IndexPage() {
                         slots={{
                             toolbar: GridToolbar,
                         }}
+                        paginationMode="server"
+                        onPaginationModelChange={(model) => {
+                            setPage(model.page);
+                            setPageSize(model.pageSize);
+                        }}
                         pageSizeOptions={[5, 10, 15]}
-                        scrollbarSize={5}
+                        page={page}
+                        pageSize={pageSize}
+                        disableRowSelectionOnClick
                     />
                 </CardBody>
             </Card>

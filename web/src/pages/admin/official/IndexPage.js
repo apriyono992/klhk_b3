@@ -1,12 +1,19 @@
-import { Button, Card, CardBody, CardHeader, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, Chip, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react";
 import RootAdmin from "../../../components/layouts/RootAdmin";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { PencilSquareIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import ModalAlert from "../../../components/elements/ModalAlert";
 import useOfficial from "../../../hooks/useOfficial";
+import { getFetcher } from "../../../services/api";
+import useSWR from "swr";
+import { officialStatus } from "../../../services/enum";
 
 export default function IndexPage() {
+    const fetcher = (...args) => getFetcher(...args);
+    const [page, setPage] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
+    const { data, isLoading, mutate } = useSWR(`/api/data-master/pejabat?page=${page + 1}&limit=${pageSize}`, fetcher);
     const { 
         isEdit,
         onClickEdit, 
@@ -16,24 +23,10 @@ export default function IndexPage() {
         onSubmitForm, 
         modalForm: { onOpenModalForm, isOpenModalForm, onOpenChangeModalForm },
         modalAlert: { isOpenModalAlert, onOpenChangeModalAlert },
-        hookForm: { register, handleSubmit, formState: { errors, isSubmitting } }, 
-    } = useOfficial();
-
-    const data = [
-        {
-            id: 1,
-            nip: '67593846929834',
-            nama: 'John Doe',
-            status: 'PLH'
-        },
-    ]
+        hookForm: { register, handleSubmit, formState: { errors, isSubmitting, dirtyFields } }, 
+    } = useOfficial({ mutate });
 
     const columns = useMemo(() =>  [
-        { 
-            field: 'id', 
-            headerName: 'No',
-            width: 70 
-        },
         {
             field: 'nip',
             headerName: 'NIP',
@@ -47,7 +40,10 @@ export default function IndexPage() {
         {
             field: 'status',
             headerName: 'Status',
-            width: 110
+            width: 110,
+            renderCell: (params) => (
+                <Chip size="sm" variant="flat" color="primary">{params.row.status}</Chip>
+            ),
         },
         {
             field: 'action',
@@ -58,9 +54,11 @@ export default function IndexPage() {
                     <Button size='sm' onPress={() => onClickDelete(params.row.id)} color='danger' isIconOnly><TrashIcon className='size-4'/></Button>
                 </div>
             ),
-            width: 250
+            width: 250,
+            sortable: false,
+            filterable: false
         },
-    ], []);
+    ], [onClickEdit, onClickDelete]);
 
 
     return(
@@ -75,8 +73,9 @@ export default function IndexPage() {
                         <Button onPress={onOpenModalForm} size="sm" color="primary" startContent={<PlusIcon className="size-4 stroke-2"/>}>Tambah</Button>
                     </div>
                     <DataGrid
-                        rows={data}
-                        // loading={isLoading}
+                        rows={data?.data}
+                        rowCount={data?.total || 0}
+                        loading={isLoading}
                         columns={columns}
                         disableDensitySelector
                         initialState={{
@@ -85,14 +84,24 @@ export default function IndexPage() {
                                   pageSize: 10,
                                 },
                             },
+                            sorting: {
+                                sortModel: [{ field: 'nama', sort: 'asc' }],
+                            },
                             density: 'compact',
                         }}
                         slots={{
                             toolbar: GridToolbar,
                         }}
+                        paginationMode="server"
+                        onPaginationModelChange={(model) => {
+                            setPage(model.page);
+                            setPageSize(model.pageSize);
+                        }}
                         pageSizeOptions={[5, 10, 15]}
-                        checkboxSelection
+                        page={page}
+                        pageSize={pageSize}
                         disableRowSelectionOnClick
+                        getRowId={(row) => row.id}
                     />
                 </CardBody>
             </Card>
@@ -126,6 +135,16 @@ export default function IndexPage() {
                                             isInvalid={errors.nama} 
                                             errorMessage={errors.nama && errors.nama.message}
                                         />   
+                                        <Input
+                                            {...register('jabatan')}
+                                            isRequired
+                                            variant="faded" 
+                                            type="text" 
+                                            label="Jabatan" 
+                                            color={errors.jabatan ? 'danger' : 'default'}
+                                            isInvalid={errors.jabatan} 
+                                            errorMessage={errors.jabatan && errors.jabatan.message}
+                                        />     
                                         <Select 
                                             {...register('status')}
                                             isRequired
@@ -135,13 +154,13 @@ export default function IndexPage() {
                                             isInvalid={errors.status} 
                                             errorMessage={errors.status && errors.status.message}
                                         >
-                                            <SelectItem key="PLT">PLT</SelectItem>
-                                            <SelectItem key="PLH">PLH</SelectItem>
-                                            <SelectItem key="AKTIF">AKTIF</SelectItem>
+                                            {officialStatus.map((item) => (
+                                                <SelectItem key={item}>{item}</SelectItem>
+                                            ))}
                                         </Select>    
                                     </div>
                                     <div className='flex items-center gap-1'>
-                                        <Button isLoading={isSubmitting} isDisabled={isSubmitting} type='submit' color='primary'>{isEdit ? 'Simpan' : 'Tambah'}</Button>
+                                        <Button isLoading={isSubmitting} isDisabled={isSubmitting || (isEdit && Object.keys(dirtyFields).length === 0)} type='submit' color='primary'>{isEdit ? 'Simpan' : 'Tambah'}</Button>
                                         <Button isDisabled={isSubmitting} color='danger' variant='faded' onPress={onClose}>Batal</Button>
                                     </div>
                                 </form>

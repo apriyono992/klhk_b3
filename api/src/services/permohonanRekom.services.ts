@@ -206,29 +206,38 @@ export class PermohonanRekomendasiB3Service {
 
     // Build the dynamic where condition based on the filters provided
     const whereCondition: Prisma.ApplicationWhereInput = {
-      ...(companyId && { companyId: { in: companyId } }), // Filter by multiple companyIds
-      ...(applicationId && { id: { in: applicationId } }), // Filter by multiple applicationIds
-      ...(status && { status: { in: status } }), // Filter by multiple statuses
-      ...(kodePermohonan && { kodePermohonan: { in: kodePermohonan, mode: 'insensitive' } }), // Filter by multiple kodePermohonan
+        ...(companyId && { companyId: { in: companyId } }), // Filter by multiple companyIds
+        ...(applicationId && { id: { in: applicationId } }), // Filter by multiple applicationIds
+        ...(status && { status: { in: status } }), // Filter by multiple statuses
+        ...(kodePermohonan && { kodePermohonan: { in: kodePermohonan, mode: 'insensitive' } }), // Filter by multiple kodePermohonan
     };
+
+    // Query the total count of applications for pagination
+    const total = await this.prisma.application.count({ where: whereCondition });
 
     // Query the applications based on the dynamic where condition and include pagination
     const applications = await this.prisma.application.findMany({
-      where: whereCondition,
-      skip: (page - 1) * limit,
-      take: limit,
-      orderBy: { [sortBy]: sortOrder },
-      include: {
-        company: true, // Optionally include company relation
-        identitasPemohon: true, // Optionally include identitasPemohon relation
-        vehicles: true, // Optionally include vehicles relation
-        documents: true, // Optionally include documents relation
-      },
+        where: whereCondition,
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: { [sortBy]: sortOrder },
+        select: {
+            id: true,
+            kodePermohonan: true,
+            companyId: true,
+            status: true,
+        },
     });
 
-    return applications;
+    // Return the data in the specified format
+    return {
+        applications,
+        page,
+        limit,
+        total,
+    };
   }
-  
+
   async updateDraftSurat(updateData: DraftSuratDto) {
     // Prepare update object
     const updatePayload: any = {};

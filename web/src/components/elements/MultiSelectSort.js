@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import Select, { components } from 'react-select';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
+import useSWR from 'swr';
+import { getFetcher, getSelectFetcher } from '../../services/api';
+import axios from 'axios';
 
 // Helper function to move array elements
 function arrayMove(array, from, to) {
@@ -63,8 +66,12 @@ const SortableList = SortableContainer(({ items, removeItem }) => {
   );
 });
 
-export default function MultiSelectSort({ value, onChange, options }) {
+export default function MultiSelectSort({ value, onChange }) {
     const [selected, setSelected] = useState(value || []);
+
+    const fetcher = (...args) => getSelectFetcher(...args);
+
+    const { data, error, isLoading } = useSWR('/api/data-master/tembusan?limit=100', fetcher);
 
     const handleChange = (selectedOptions) => {
         setSelected(selectedOptions || [])
@@ -94,14 +101,16 @@ export default function MultiSelectSort({ value, onChange, options }) {
             <SortableSelect
                 useDragHandle
                 axis="xy"
-                placeholder="Cari"
+                placeholder="Cari Tembusan"
                 onSortEnd={onSortEnd}
                 distance={4}
                 getHelperDimensions={({ node }) => node.getBoundingClientRect()}
                 isMulti
-                options={options}
+                isLoading={isLoading}
+                options={data || []}
                 value={selected}
                 onChange={handleChange}
+                noOptionsMessage={() => error ? 'Gagal memuat data' : 'Tidak ada data'}
                 components={{
                     MultiValue: SortableMultiValue,
                     MultiValueLabel: SortableMultiValueLabel,

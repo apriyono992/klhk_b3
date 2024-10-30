@@ -10,7 +10,7 @@ import { IsDistrictValid } from 'src/validators/district.validator';
 import { IsVillageValid } from 'src/validators/village.validator';
 import { PrismaService } from 'src/services/prisma.services';
 import { IsPejabatExists, PejabatIdExistsConstraint, PejabatUsedConstraint } from 'src/validators/dataPejabat.validator';
-import { IsBahanB3Exists, IsDataBahanB3Exist, IsDataBahanB3Exists } from 'src/validators/dataBahanB3.validator';
+import { IsBahanB3Exists, IsDataBahanB3Exist, IsDataBahanB3Exists, IsNamaBahanKimiaB3Exist, IsNamaBahanKimiaExists } from 'src/validators/dataBahanB3.validator';
 import { IsTembusanExists, TembusanIdExistsConstraint } from 'src/validators/dataTembusan.validator';
 import { ApplicationExistsConstraint } from 'src/validators/isApplicationIdExists.validatior';
 import { CompanyExistsConstraint } from 'src/validators/isCompanyExists.validator';
@@ -56,6 +56,7 @@ import { DraftNotifikasiConstraint, NotifikasiConstraint } from 'src/validators/
     IsTembusanExists,
     NotifikasiConstraint,
     DraftNotifikasiConstraint,
+    IsNamaBahanKimiaExists,
 
   ],
   exports: [
@@ -81,7 +82,8 @@ import { DraftNotifikasiConstraint, NotifikasiConstraint } from 'src/validators/
     TembusanIdExistsConstraint,
     IsTembusanExists,
     NotifikasiConstraint,
-    DraftNotifikasiConstraint
+    DraftNotifikasiConstraint,
+    IsNamaBahanKimiaExists
   ],
 })
 export class ValidatorsModule {}

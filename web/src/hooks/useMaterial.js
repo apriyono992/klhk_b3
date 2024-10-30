@@ -4,8 +4,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as yup from 'yup';
+import { deleteFetcher, postFetcher, putFetcher } from "../services/api";
+import { dirtyInput, isResponseErrorObject } from "../services/helpers";
 
-export default function useMaterial() {
+export default function useMaterial({ mutate }) {
     const formSchema =  yup.object().shape({
         casNumber: yup.string().required('Harus diisi'),
         namaBahanKimia: yup.string().required('Harus diisi'),
@@ -17,7 +19,7 @@ export default function useMaterial() {
     const {isOpen: isOpenModalAlert, onOpenChange: onOpenChangeModalAlert} = useDisclosure();
     const [editId, setEditId] = useState(null);
     const [isEdit, setIsEdit] = useState(false);
-    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({resolver: yupResolver(formSchema)});
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting, dirtyFields } } = useForm({resolver: yupResolver(formSchema)});
 
     function onClickEdit(item) {    
         setEditId(item.id);
@@ -50,8 +52,8 @@ export default function useMaterial() {
     
     async function onSubmitDelete() {
         try {
-            await new Promise((r) => setTimeout(r, 1000));
-            console.log(editId);
+            await deleteFetcher('/api/data-master/bahan-b3', editId);
+            mutate()
             toast.success('Bahan B3 berhasil dihapus!');
         } catch (error) {
             toast.error('Gagal hapus Bahan B3!');
@@ -60,18 +62,23 @@ export default function useMaterial() {
 
     async function onSubmitForm(data) {
         try {
-            await new Promise((r) => setTimeout(r, 1000));
             if (isEdit) {
-                console.log(editId);
-                console.log(data);
+                const filteredData = dirtyInput(dirtyFields, data);
+                await putFetcher('/api/data-master/bahan-b3', editId, filteredData);
+                mutate()
                 toast.success('Bahan B3 berhasil diubah!');
             } else {
-                console.log(data);
+                await postFetcher('/api/data-master/bahan-b3', data);
+                mutate()
                 toast.success('Bahan B3 berhasil ditambah!');
             }
             onCloseForm();
         } catch (error) {
-            toast.success('Error submit form!');
+            isResponseErrorObject(error.response.data.message)
+                ? Object.entries(error.response.data.message).forEach(([key, value]) => {
+                    toast.error(value);
+                })
+                : toast.error(error.response.data.message)
         }
     }
 
@@ -89,7 +96,7 @@ export default function useMaterial() {
             register, 
             handleSubmit, 
             reset, 
-            formState: { errors, isSubmitting }
+            formState: { errors, isSubmitting, dirtyFields }
         },
         isEdit,
         onClickEdit,

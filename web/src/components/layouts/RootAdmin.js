@@ -23,7 +23,11 @@ export default function RootAdmin({ children }) {
 
     return (
         <>
-            <Toaster/>
+            <Toaster
+                toastOptions={{
+                    duration: 5000,
+                }}
+            />
 
             <Sidebar isOpenSidebar={isOpenSidebar} setIsOpenSidebar={setIsOpenSidebar} />
             <Header onOpenSidebar={handleOpenSidebar} />

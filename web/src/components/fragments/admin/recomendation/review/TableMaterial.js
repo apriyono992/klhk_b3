@@ -1,13 +1,12 @@
 import useSWR from "swr";
-import { authStateFetcher } from "../../../../../services/api";
+import { getFetcher } from "../../../../../services/api";
 import { Button, Card, CardBody, CardHeader, Checkbox, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 import ModalAlert from "../../../../elements/ModalAlert";
 import { CheckCircleIcon, PencilSquareIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import useRecomendationMaterial from "../../../../../hooks/useRecomendationMaterial";
 
-export default function TableMaterial() {
-    const fetcher = (...args) => authStateFetcher(...args);
-    const { data, isLoading } = useSWR('/products?limit=4&select=id,title,sku,brand,category,availabilityStatus,returnPolicy,shippingInformation', fetcher);
+export default function TableMaterial({ applicationId }) {
+    const { data, isLoading, mutate } = useSWR(`/api/b3-substance/search?applicationId=${applicationId}`, getFetcher);
     const { 
         isEdit,
         onClickEdit, 
@@ -18,7 +17,7 @@ export default function TableMaterial() {
         modalForm: { onOpenModalForm, isOpenModalForm, onOpenChangeModalForm },
         modalAlert: { isOpenModalAlert, onOpenChangeModalAlert },
         hookForm: { register, handleSubmit, formState: { errors, isSubmitting } }, 
-    } = useRecomendationMaterial();
+    } = useRecomendationMaterial({ mutate });
 
     const columns = [
         'No',
@@ -45,7 +44,7 @@ export default function TableMaterial() {
                         <TableHeader>
                             {columns.map((item, index) => <TableColumn key={index}>{item}</TableColumn>)}
                         </TableHeader>
-                        <TableBody loadingContent={<Spinner/>} loadingState={isLoading ? 'loading' : 'idle'}>
+                        <TableBody loadingContent={<Spinner/>} loadingState={isLoading ? 'loading' : 'idle'} emptyContent="Tidak ada data">
                             {data?.products.map((item, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{index + 1}</TableCell>

@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as yup from 'yup';
 
-export default function useRecomendationMaterial() {
+export default function useRecomendationMaterial({ mutate }) {
     const formSchema =  yup.object().shape({
         casNumber: yup.string().required('Harus diisi'),
         namaDagang: yup.string().required('Harus diisi'),   

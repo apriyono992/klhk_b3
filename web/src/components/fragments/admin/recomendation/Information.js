@@ -1,60 +1,87 @@
 import React from "react";
-import { Card, CardBody, Chip } from "@nextui-org/react";
-export default function Informattion({ data }) {
-    const items = (item) => [
+import { Card, CardBody, CardHeader, Chip, Divider } from "@nextui-org/react";
+export default function Information({ data }) {
+    const identity = (item) => [
         {
-            label: "Nama Perusahaan",
-            value: item.identitasPemohon.name,
-            column: ''
+            label: "Nama Pehomon",
+            value: item?.identitasPemohon.namaPemohon
         },
         {
-            label: "Status",
-            value: <Chip size="sm" className="bg-blue-500 text-white">{item.status}</Chip>,
-            column: ''
+            label: "Email",
+            value: item?.identitasPemohon.email,
         },
         {
-            label: "Nama Penanggung Jawab",
-            value: item.identitasPemohon.penanggungJawab,
-            column: ''
+            label: "No. Telepon",
+            value: item?.identitasPemohon.teleponFax,
         },
         {
-            label: "Tipe Surat",
-            value: <Chip size="sm" className="bg-blue-500 text-white">{item.tipeSurat}</Chip>,
-            column: ''
-        },
-        {
-            label: "Alamat Kantor",
-            value: item.identitasPemohon.alamatKantor,
-            column: 'col-span-2'
-        },
-        {
-            label: "Nomor Telepon",
-            value: item.identitasPemohon.telpKantor,
-            column: 'col-span-2'
-        },
-        {
-            label: "Alamat Pool",
-            value: item.identitasPemohon.alamatPool.map((alamat, index) => <div>{index+1}. {alamat}</div>),
-            column: 'col-span-2'
-        },
-        {
-            label: "Bidang Usaha",
-            value: item.identitasPemohon.bidangUsaha,
-            column: 'col-span-2'
+            label: "Alamat Domisili",
+            value: item?.identitasPemohon.alamatDomisili,
         },
     ];
 
+    const company = (item) => [
+        {
+            label: "Nama Perusahaan",
+            value: item?.company.name
+        },
+        {
+            label: "Email",
+            value: item?.company.emailKantor
+        },
+        {
+            label: "Telepon Kantor",
+            value: item?.company.emailKantor
+        },
+        {
+            label: "Fax Kantor",
+            value: item?.company.faxKantor
+        },
+        {
+            label: "Bidang Usaha",
+            value: item?.company.bidangUsaha
+        },
+        {
+            label: "Alamat Kantor",
+            value: item?.company.alamatKantor
+        },
+        {
+            label: "Alamat Pool",
+            value: item?.company.alamatPool.map((pool, index) => (<div key={index}>{index+1}. {pool}</div>)),
+        },
+    ]
+
     return (
-        <Card radius="sm">
-            <CardBody className='grid grid-cols-1 md:grid-cols-2 gap-3'>
-                {items(data).map((item, index) => (
-                    <div key={index} className={`flex flex-col ${item.column}`}>
-                        <span className='text-xs text-gray-400 uppercase'>{item.label}</span>
-                        <span className='text-sm font-medium'>{item.value}</span>
-                    </div>
-                ))}
-            </CardBody>
-        </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <Card radius="sm">
+                <CardHeader>
+                    Identitas Pemohon
+                </CardHeader>
+                <Divider/>
+                <CardBody className="flex flex-col gap-3">
+                    {identity(data).map((item, index) => (
+                        <div key={index} className={`flex flex-col ${item.column}`}>
+                            <span className='text-xs text-gray-400 uppercase'>{item.label}</span>
+                            <span className='text-sm font-medium'>{item.value}</span>
+                        </div>
+                    ))}
+                </CardBody>
+            </Card>
+            <Card radius="sm">
+                <CardHeader>
+                    Identitas Perusahaan
+                </CardHeader>
+                <Divider/>
+                <CardBody className="flex flex-col gap-3">
+                    {company(data).map((item, index) => (
+                        <div key={index} className={`flex flex-col ${item.column}`}>
+                            <span className='text-xs text-gray-400 uppercase'>{item.label}</span>
+                            <span className='text-sm font-medium'>{item.value}</span>
+                        </div>
+                    ))}
+                </CardBody>
+            </Card>
+        </div>
     )
 }
 

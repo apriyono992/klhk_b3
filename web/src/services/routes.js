@@ -34,6 +34,7 @@ export const REGISTRATION_DETAIL_PATH = '/admin/registrasi-b3/daftar/:id'
 
 export const RECOMENDATION_DASHBOARD_PATH = '/admin/rekomendasi-b3/dasbor'
 export const RECOMENDATION_INDEX_PATH = '/admin/rekomendasi-b3/daftar'
+export const RECOMENDATION_CREATE_PATH = '/admin/rekomendasi-b3/tambah'
 export const RECOMENDATION_DETAIL_PATH = '/admin/rekomendasi-b3/daftar/:id'
 
 export const NOTIFICATION_DASHBOARD_PATH = '/admin/notifikasi/dasbor'
@@ -41,7 +42,7 @@ export const NOTIFICATION_INDEX_PATH = '/admin/notifikasi/daftar'
 export const NOTIFICATION_DETAIL_PATH = '/admin/notifikasi/daftar/:id'
 
 export const CARBON_COPY_INDEX_PATH = '/admin/utama/tembusan'
-export const MATERIAL_INDEX_PATH = '/admin/utama/material'
+export const MATERIAL_INDEX_PATH = '/admin/utama/bahan-b3'
 export const OFFICIAL_INDEX_PATH = '/admin/utama/pejabat'
 
 const router = createBrowserRouter([

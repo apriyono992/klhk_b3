@@ -6,52 +6,16 @@ import Draft from '../../../components/fragments/admin/recomendation/Draft';
 import Information from '../../../components/fragments/admin/recomendation/Information';
 import { useParams } from 'react-router-dom';
 import { DocumentIcon } from '@heroicons/react/24/outline';
-import { useState } from 'react';
 import HeaderPage from '../../../components/elements/HeaderPage';
+import useSWR from 'swr';
+import { getFetcher } from '../../../services/api';
 
 export default function DetailPage() {
     const { id } = useParams();
-
-    const [data, setData] = useState({
-        kodePermohonan: "B3-2024-001",
-        status: "DRAFT_PERMOHONAN",
-        tipeSurat: 'Baru',
-        identitasPemohon: {
-            name: "PT Example Company",
-            penanggungJawab: "John Doe",
-            alamatKantor: "Jl. HR. Rasuna Said Kav. C6 Jakarta Selatan 12190",
-            telpKantor: "021-1234567",
-            alamatPool: [
-                "Jl. Merdeka No. 1",
-                "Jl. Soekarno Hatta No. 10"
-            ],
-            bidangUsaha: "Manufacturing",
-        },
-        documents: [
-            {
-                id: "doc123",
-                fileName: "document.pdf",
-                documentType: "IMPROPER_HANDLING",
-                fileUrl: "/uploads/documents/document.pdf",
-                isValid: null,
-                isArchived: false,
-                validationNotes: null,
-                telaahNotes: null
-            }
-        ],
-        vehicles: [
-            {
-                id: "vehicle006",
-                nomorPolisi: "B 3333 PQR",
-                tipeKendaraan: "Truck",
-                tahunPembuatan: 2020,
-                nomorRangka: "35HBGHJBHSB6JBKJB",
-                nomorMesin: "35HBGHJBHSB6JBKJB",
-                pemilik: "PT. XYZ",
-                status: "Active"
-            }
-        ]
-    });
+    const fetcher = (...args) => getFetcher(...args);
+    const { data, isLoading, mutate } = useSWR(`/api/rekom/permohonan/${id}`, fetcher)
+    console.log(data);
+    
 
     let tabs = [
         {
@@ -62,12 +26,12 @@ export default function DetailPage() {
         {
             id: "validasi",
             label: "Validasi Teknis",
-            content: <Validation data={data}/>
+            content: <Validation data={data} isLoading={isLoading} mutate={mutate} />
         },
         {
             id: "telaah",
             label: "Telaah Teknis",
-            content: <Review data={data} />
+            content: <Review data={data} isLoading={isLoading} mutate={mutate} />
         },
         {
             id: "draft",
@@ -78,7 +42,7 @@ export default function DetailPage() {
 
     return (
         <RootAdmin>
-            <HeaderPage title={id} subtitle="Kode Permohonan" action={<Button startContent={<DocumentIcon className="size-4"/>} size="sm" color="primary">View Draft SK</Button>} />
+            <HeaderPage title={data?.kodePermohonan} subtitle="Kode Permohonan" action={<Button startContent={<DocumentIcon className="size-4"/>} size="sm" color="primary">View Draft SK</Button>} />
             <div className="flex w-full flex-col pt-5">
                 <Tabs color="primary" radius="sm" size="md" variant="bordered" aria-label="form">\
                     {tabs.map((tab) => (

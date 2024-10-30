@@ -1,11 +1,12 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { modal, useDisclosure } from "@nextui-org/react";
+import { useDisclosure } from "@nextui-org/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as yup from 'yup';
+import { postFetcher } from "../services/api";
 
-export default function useValidationForm() {
+export default function useValidationForm({ mutate }) {
     const {isOpen: isOpenModalForm, onOpen: onOpenModalForm, onOpenChange: onOpenChangeModalForm, onClose: onCloseModalForm} = useDisclosure();
     const {isOpen: isOpenModalAlert, onOpenChange: onOpenChangeModalAlert} = useDisclosure();
     const [editId, setEditId] = useState(null);
@@ -19,12 +20,15 @@ export default function useValidationForm() {
 
     async function onSubmitForm(data) {
         try {
-            await new Promise((r) => setTimeout(r, 1000));
             console.log(editId);
+            data.documentId = editId;
             console.log(data);
+            await postFetcher('/api/documents/validate', data);
+            mutate()
             toast.success('Status dokumen berhasil diubah!');
             onCloseForm();
         } catch (error) {
+            console.log(error);
             toast.error('Gagal ubah status dokumen!');
         }
     }
@@ -32,9 +36,9 @@ export default function useValidationForm() {
     async function onValidate() {
         try {
             await new Promise((r) => setTimeout(r, 1000));
-            toast.success('Status pengajuan berhasil diubah!');
+            toast.success('Validasi teknis selesai!');
         } catch (error) {
-            toast.error('Gagal ubah status pengajuan!');
+            toast.error('Gagal validasi!');
         }
     }
 

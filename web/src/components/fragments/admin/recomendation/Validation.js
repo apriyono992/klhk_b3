@@ -1,14 +1,10 @@
 import { ArrowPathIcon, EyeIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { Button, Card, CardBody, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Textarea } from '@nextui-org/react';
-import useSWR from 'swr';
-import { authStateFetcher } from '../../../../services/api';
 import IsValidIcon from '../../../elements/IsValidDocument';
 import ModalAlert from '../../../elements/ModalAlert';
 import useValidationForm from '../../../../hooks/useValidationForm';
 
-export default function Validation({ data }) {
-    // const fetcher = (...args) => authStateFetcher(...args);
-    // const { data, isLoading } = useSWR('/todos?limit=20', fetcher);
+export default function Validation({ data, isLoading, mutate }) {
     const { 
         modalForm: { isOpenModalForm, onOpenChangeModalForm },
         modalAlert: { isOpenModalAlert, onOpenChangeModalAlert },
@@ -17,7 +13,11 @@ export default function Validation({ data }) {
         onSubmitForm,
         onClickEdit,
         onValidate 
-    } = useValidationForm();
+    } = useValidationForm({ mutate });
+
+    const areAllValidationNotesPresent = data?.documents?.every(
+        document => document.validationNotes !== null
+    );
 
     const columns = [
         'No',
@@ -32,13 +32,13 @@ export default function Validation({ data }) {
             <Card>
                 <CardBody>
                     <div className='mb-6'>
-                        <Button onPress={onOpenChangeModalAlert} color='warning' size='sm' startContent={<ArrowPathIcon className="size-4"/>}>Validasi Dokumen</Button>
+                        <Button isDisabled={!areAllValidationNotesPresent} onPress={onOpenChangeModalAlert} color='warning' size='sm' startContent={<ArrowPathIcon className="size-4"/>}>Submit Validasi</Button>
                     </div>
                     <Table removeWrapper aria-label="validation-table" radius='sm'>
                         <TableHeader>
                             {columns.map((item, index) => <TableColumn key={index}>{item}</TableColumn>)}
                         </TableHeader>
-                        <TableBody loadingContent={<Spinner/>} loadingState="idle">
+                        <TableBody loadingContent={<Spinner/>} loadingState={isLoading ? 'loading' : 'idle'}>
                             {data?.documents.map((item, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{index + 1}</TableCell>
@@ -52,7 +52,7 @@ export default function Validation({ data }) {
                                             <Button isIconOnly size="sm" color='primary'><EyeIcon className='size-4'/></Button>
                                         </a>
                                         {
-                                            item.archived
+                                            item.isArchived
                                             ? <></>
                                             : <Button isIconOnly size="sm" color="warning" onPress={() => onClickEdit(item)}><PencilSquareIcon className='size-4'/></Button>
                                         }
@@ -104,9 +104,9 @@ export default function Validation({ data }) {
             </Modal>
 
             <ModalAlert
-                heading="Validasi Dokumen?"
+                heading="Submit Validasi?"
                 description="Pastikan semua file sudah tervalidasi"
-                buttonSubmitText='Ya, validasi'
+                buttonSubmitText='Ya'
                 icon='warning'
                 onSubmit={onValidate}
                 isOpen={isOpenModalAlert}

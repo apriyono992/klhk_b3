@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsArray, IsUUID } from 'class-validator';
+import { IsOptional, IsString, IsArray, IsUUID, IsBoolean } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PaginationDto } from './paginationDto';
 
@@ -28,4 +28,9 @@ export class SearchVehicleDto extends PaginationDto {
   @IsOptional()
   @IsUUID()
   companyId?: string;
+
+  @ApiPropertyOptional({ description: 'Include Deleted' })
+  @IsOptional()
+  @IsBoolean()
+  includeDeleted?: boolean;
 }

@@ -7,22 +7,22 @@ import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import toast from "react-hot-toast";
 
 const schema = yup.object().shape({
-    other: yup.array()
+    chronology: yup.array()
                 .of(yup.object().shape({value: yup.string().required("Harus diisi")}))
                 .min(1, "Minimal 1 teks lainnya"),
 });
 
-export default function OtherSection() {
+export default function ChronologySection() {
     const { control, handleSubmit, formState: { errors, isSubmitting },} = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
-            other: [
+            chronology: [
                 { value: "" }, 
             ],
         },
     });
     
-    const { fields, append, remove } = useFieldArray({ control, name: "other", });
+    const { fields, append, remove } = useFieldArray({ control, name: "chronology", });
 
     async function handleOnSubmit(data) {
         try {
@@ -37,7 +37,7 @@ export default function OtherSection() {
     return (
         <Card radius="sm">
             <CardHeader>
-                <p>Teks Lainnya</p>
+                <p>Kronologi Permohonan Rekomendasi Pengangkutan</p>
             </CardHeader>
             <Divider/>
             <CardBody>
@@ -49,18 +49,18 @@ export default function OtherSection() {
                         {fields.map((field, index) => (
                             <div key={index} className="flex items-center gap-1">
                                 <Controller
-                                    name={`other[${index}].value`}
+                                    name={`chronology[${index}].value`}
                                     control={control}
                                     defaultValue={field.value}
                                     render={({ field }) => (
                                         <Input
                                             {...field}
                                             size="sm"
-                                            placeholder="Masukkan Kata"
+                                            placeholder="Masukan Kronologi"
                                             fullWidth
                                             isRequired
-                                            color={errors?.other?.[index]?.value ? "danger" : "default"}
-                                            isInvalid={errors?.other?.[index]?.value} 
+                                            color={errors?.chronology?.[index]?.value ? "danger" : "default"}
+                                            isInvalid={errors?.chronology?.[index]?.value} 
                                         />
                                     )}
                                 />

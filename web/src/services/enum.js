@@ -28,7 +28,32 @@ export const month = [
     'Desember'
 ]
 
-const permit = [
+export const officialStatus = [
+    'PLH',
+    'PLT',
+    'AKTIF'
+]
+
+export const materialType = [
+    'DAPAT DIPERGUNAKAN',
+    'TERBATAS DIPERGUNAKAN',
+    'DILARANG',
+    'B3 BARU',
+    'NON B3'
+]
+
+export const notificationStatus = [
+    'Diterima dari Otoritas Asal B3',
+    'Verifikasi Administrasi dan Teknis',
+    'Kirim Surat Kebenaran Impor ke Importir',
+    'Tunggu Respon',
+    'Ada Rencana Import',
+    'Tidak Ada Import',
+    'Selesai',
+    'Dibatalkan'
+]
+
+export const draftPermit = [
     'Berjangka',
     'Trasaksional',
     'Seumur Hidup',

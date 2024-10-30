@@ -1,12 +1,19 @@
-import { Button, Card, CardBody, CardHeader, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, Chip, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react";
 import RootAdmin from "../../../components/layouts/RootAdmin";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { PencilSquareIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import ModalAlert from "../../../components/elements/ModalAlert";
 import useMaterial from "../../../hooks/useMaterial";
+import useSWR from "swr";
+import { getFetcher } from "../../../services/api";
+import { materialType } from "../../../services/enum";
 
 export default function IndexPage() {
+    const fetcher = (...args) => getFetcher(...args);
+    const [page, setPage] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
+    const { data, isLoading, mutate } = useSWR(`/api/data-master/bahan-b3?page=${page + 1}&limit=${pageSize}`, fetcher);
     const { 
         isEdit,
         onClickEdit, 
@@ -16,25 +23,10 @@ export default function IndexPage() {
         onSubmitForm, 
         modalForm: { onOpenModalForm, isOpenModalForm, onOpenChangeModalForm },
         modalAlert: { isOpenModalAlert, onOpenChangeModalAlert },
-        hookForm: { register, handleSubmit, formState: { errors, isSubmitting } }, 
-    } = useMaterial();
-
-    const data = [
-        {
-            id: 1,
-            casNumber: "50-00-0",
-            namaBahanKimia: "Formaldehyde",
-            namaDagang: "Formalin",
-            tipeBahan: "DAPAT_DIPERGUNAKAN"
-        },
-    ]
+        hookForm: { register, handleSubmit, formState: { errors, isSubmitting, dirtyFields } }, 
+    } = useMaterial({ mutate });
 
     const columns = useMemo(() =>  [
-        { 
-            field: 'id', 
-            headerName: 'No',
-            width: 70 
-        },
         {
             field: 'casNumber',
             headerName: 'Cas Number/Nomor Kimia',
@@ -53,7 +45,19 @@ export default function IndexPage() {
         {
             field: 'tipeBahan',
             headerName: 'Tipe Bahan',
-            width: 300
+            width: 300,
+            renderCell: (params) => {
+                switch (params.row.tipeBahan) {
+                    case 'DILARANG':
+                        return <Chip color="danger" variant="flat" size="sm">DILARANG</Chip>; // Render a specific component or value for 'value1'
+                    case 'TERBATAS DIPERGUNAKAN':
+                        return <Chip color="warning" variant="flat" size="sm">TERBATAS DIPERGUNAKAN</Chip>; // Render a specific component or value for 'value2' // Render a 
+                    default:
+                        return <Chip color="success" variant="flat" size="sm">{params.row.tipeBahan}</Chip>; // Default rendering for any other values
+                }
+            },
+            sortable: false,
+            filterable: false
         },
         {
             field: 'action',
@@ -66,7 +70,7 @@ export default function IndexPage() {
             ),
             width: 250
         },
-    ], []);
+    ], [onClickEdit, onClickDelete]);
 
 
     return(
@@ -81,8 +85,9 @@ export default function IndexPage() {
                         <Button onPress={onOpenModalForm} size="sm" color="primary" startContent={<PlusIcon className="size-4 stroke-2"/>}>Tambah</Button>
                     </div>
                     <DataGrid
-                        rows={data}
-                        // loading={isLoading}
+                        rows={data?.data}
+                        rowCount={data?.total || 0}
+                        loading={isLoading}
                         columns={columns}
                         disableDensitySelector
                         initialState={{
@@ -91,13 +96,22 @@ export default function IndexPage() {
                                   pageSize: 10,
                                 },
                             },
+                            sorting: {
+                                sortModel: [{ field: 'casNumber', sort: 'asc' }],
+                            },
                             density: 'compact',
                         }}
                         slots={{
                             toolbar: GridToolbar,
                         }}
+                        paginationMode="server"
+                        onPaginationModelChange={(model) => {
+                            setPage(model.page);
+                            setPageSize(model.pageSize);
+                        }}
                         pageSizeOptions={[5, 10, 15]}
-                        checkboxSelection
+                        page={page}
+                        pageSize={pageSize}
                         disableRowSelectionOnClick
                     />
                 </CardBody>
@@ -151,15 +165,13 @@ export default function IndexPage() {
                                             isInvalid={errors.tipeBahan} 
                                             errorMessage={errors.tipeBahan && errors.tipeBahan.message}
                                         >
-                                            <SelectItem key="DAPAT_DIPERGUNAKAN">DAPAT DIPERGUNAKAN</SelectItem>
-                                            <SelectItem key="TERBATAS_DIPERGUNAKAN">TERBATAS DIPERGUNAKAN</SelectItem>
-                                            <SelectItem key="DILARANG">DILARANG</SelectItem>
-                                            <SelectItem key="B3_BARU">B3 BARU</SelectItem>
-                                            <SelectItem key="NON_B3">NON B3</SelectItem>
+                                            {materialType.map((item) => (
+                                                <SelectItem key={item}>{item}</SelectItem>
+                                            ))}
                                         </Select>   
                                     </div>
                                     <div className='flex items-center gap-1'>
-                                        <Button isLoading={isSubmitting} isDisabled={isSubmitting} type='submit' color='primary'>{isEdit ? 'Simpan' : 'Tambah'}</Button>
+                                        <Button isLoading={isSubmitting} isDisabled={isSubmitting || (isEdit && Object.keys(dirtyFields).length === 0)} type='submit' color='primary'>{isEdit ? 'Simpan' : 'Tambah'}</Button>
                                         <Button isDisabled={isSubmitting} color='danger' variant='faded' onPress={onClose}>Batal</Button>
                                     </div>
                                 </form>
@@ -170,7 +182,7 @@ export default function IndexPage() {
                         </>
                     )}
                 </ModalContent>
-        </Modal>
+            </Modal>
         </RootAdmin>
     )
 }

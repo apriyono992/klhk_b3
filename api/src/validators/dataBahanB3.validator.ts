@@ -25,15 +25,17 @@ export class IsBahanB3Exists implements ValidatorConstraintInterface {
   constructor(private readonly prisma: PrismaService) {}
 
   // Validate the combination of casNumber and namaDagang
-  async validate(cas: string, args: ValidationArguments) {
-    const [relatedPropertyName] = args.constraints;
-    const namaDagang = (args.object as any)[relatedPropertyName]; // Access the actual 'namaDagang' value from the DTO object
+  async validate(cas: string, args: ValidationArguments, ) {
+    const [namaDagangProperty, namaBahanKimiaProperty] = args.constraints;
+    const namaDagang = (args.object as any)[namaDagangProperty];
+    const namaBahanKimia = (args.object as any)[namaBahanKimiaProperty];
 
     // Check if a record with the same casNumber and namaDagang already exists
     const bahanB3 = await this.prisma.dataBahanB3.findFirst({
       where: {
-        casNumber: cas ?? '',
-        namaDagang: namaDagang ?? '',
+        casNumber: { equals: cas ?? '', mode: 'insensitive' },
+        namaDagang: { equals: namaDagang ?? '', mode: 'insensitive' },
+        namaBahanKimia: { equals: namaBahanKimia ?? '', mode: 'insensitive' },
       },
     });
 
@@ -42,6 +44,40 @@ export class IsBahanB3Exists implements ValidatorConstraintInterface {
 
   defaultMessage(args: ValidationArguments) {
     return `Bahan B3 with CAS Number "${args.value}" and Nama Dagang "${(args.object as any).namaDagang}" already exists.`;
+  }
+}
+
+export function IsNamaBahanKimiaB3Exist(validationOptions?: ValidationOptions) {
+  return function (object: any, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      validator: IsNamaBahanKimiaExists,
+    });
+  };
+}
+
+@ValidatorConstraint({ async: true })
+@Injectable()
+export class IsNamaBahanKimiaExists implements ValidatorConstraintInterface {
+  constructor(private readonly prisma: PrismaService) {}
+
+  // Validate the combination of casNumber and namaDagang
+  async validate(namaBahanKimia: string ) {;
+
+    // Check if a record with the same casNumber and namaDagang already exists
+    const bahanB3 = await this.prisma.dataBahanB3.findFirst({
+      where: {
+        namaBahanKimia :{ equals: namaBahanKimia ?? '', mode: 'insensitive' },
+      },
+    });
+
+    return !bahanB3; // Returns true if no such record exists (validation passes)
+  }
+
+  defaultMessage(args: ValidationArguments) {
+    return `Bahan B3 with Nama Bahan Kimia "${args.value}" already exists.`;
   }
 }
 

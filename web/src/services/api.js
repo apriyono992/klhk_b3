@@ -83,7 +83,39 @@ export async function authStateFetcher(url) {
 }
 
 export async function getFetcher(url) {
-
     return await instance.get(url).then(res => res.data)
+}
+
+export async function getSelectFetcher(url) {
+    return await instance.get(url).then(res => {
+        return res.data.data.map((item) => ({
+            value: item.id,
+            label: item.nama,
+        }))
+    })
+}
+
+export async function postFetcher(url, data) {
+    return await instance.post(url, data).then(res => res.data)
+}
+
+export async function putFetcher(url, id, data) {
+    return await instance.put(`${url}/${id}`, data).then(res => res.data)
+}
+
+export async function putFetcherWithoutId(url, data) {
+    return await instance.put(url, data).then(res => res.data)
+}
+
+export async function patchFetcher(url, id, data) {
+    return await instance.patch(`${url}/${id}`, data).then(res => res.data)
+}
+
+export async function deleteFetcher(url, id) {
+    return await instance.delete(`${url}/${id}`).then(res => res.data)
+}
+
+export async function deleteWithFormFetcher(url, data) {
+    return await instance.delete(url, data).then(res => res.data)
 }
 

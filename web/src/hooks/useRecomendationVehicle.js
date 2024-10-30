@@ -4,8 +4,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as yup from 'yup';
+import { deleteFetcher, deleteWithFormFetcher, postFetcher, putFetcherWithoutId } from "../services/api";
+import { isResponseErrorObject } from "../services/helpers";
 
-export default function useRecomendationVehicle() {
+export default function useRecomendationVehicle({ mutate }) {
     const formSchema =  yup.object().shape({
         noPolisi: yup.string().required('Harus diisi'),
         modelKendaraan: yup.string().required('Harus diisi'),
@@ -21,26 +23,36 @@ export default function useRecomendationVehicle() {
 
     const {isOpen: isOpenModalForm, onOpen: onOpenModalForm, onOpenChange: onOpenChangeModalForm, onClose: onCloseModalForm} = useDisclosure();
     const {isOpen: isOpenModalAlert, onOpenChange: onOpenChangeModalAlert} = useDisclosure();
-    const [editId, setEditId] = useState(null);
+    const [vehicleId, setVehicleId] = useState(null);
+    const [applicationId, setApplicationId] = useState(null);
+    const [companyId, setCompanyId] = useState(null);
     const [isEdit, setIsEdit] = useState(false);
     const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({resolver: yupResolver(formSchema)});
 
+    function onClickCreate(applicationId, companyId) {
+        setApplicationId(applicationId);
+        setCompanyId(companyId);
+        onOpenModalForm()
+    }
+
     function onClickEdit(item) {    
-        setEditId(item.id);
+        setVehicleId(item.id);
         setIsEdit(true);
         reset({
-            noPolisi: item.title,
-            modelKendaraan: item.category,
-            tahunPembuatan: item.minimumOrderQuantity,
-            nomorRangka: item.meta.barcode,
-            nomorMesin: item.warrantyInformation,
-            kepemilikan: item.availabilityStatus,
+            noPolisi: item.noPolisi,
+            modelKendaraan: item.modelKendaraan,
+            tahunPembuatan: item.tahunPembuatan,
+            nomorRangka: item.nomorRangka,
+            nomorMesin: item.nomorMesin,
+            kepemilikan: item.kepemilikan,
         });           
         onOpenChangeModalForm();
     }
 
     function onCloseForm() {
-        setEditId(null);
+        setVehicleId(null);
+        setApplicationId(null);
+        setCompanyId(null);
         setIsEdit(false);
         reset({
             noPolisi: '',
@@ -53,15 +65,22 @@ export default function useRecomendationVehicle() {
         onCloseModalForm()
     }
 
-    function onClickDelete(id) {
-        setEditId(id);
+    function onClickDelete(vehicleId, applicationId) {
+        setVehicleId(vehicleId);
+        setApplicationId(applicationId)
         onOpenChangeModalAlert();
     }
     
     async function onSubmitDelete() {
         try {
-            await new Promise((r) => setTimeout(r, 1000));
-            console.log(editId);
+            const data = {
+                vehicleId: vehicleId,
+                applicationId: applicationId
+            }
+            console.log(data);
+            
+            await deleteWithFormFetcher('/api/vehicles/vehicle/application/remove-vehicle', data);
+            mutate();
             toast.success('Data kendaraan berhasil dihapus!');
         } catch (error) {
             toast.error('Gagal hapus data kendaraan!');
@@ -70,25 +89,33 @@ export default function useRecomendationVehicle() {
 
     async function onSubmitForm(data) {
         try {
-            await new Promise((r) => setTimeout(r, 1000));
             if (isEdit) {
-                console.log(editId);
+                data.vehicleId = vehicleId;
                 console.log(data);
+                await putFetcherWithoutId('/api/vehicles', data);
+                mutate();
                 toast.success('Data kendaraan berhasil diubah!');
             } else {
+                data.applicationId = applicationId;
+                data.companyId = companyId;
                 console.log(data);
+                await postFetcher('/api/vehicles/add-to-application', data);
+                mutate()
                 toast.success('Kendaraan berhasil ditambah!');
             }
             onCloseForm();
         } catch (error) {
-            toast.success('Error submit form!');
+            isResponseErrorObject(error.response.data.message)
+                ? Object.entries(error.response.data.message).forEach(([key, value]) => {
+                    toast.error(value);
+                })
+                : toast.error(error.response.data.message)
         }
     }
 
     return {
         modalForm: {
             isOpenModalForm,
-            onOpenModalForm,
             onOpenChangeModalForm,
         },
         modalAlert: {
@@ -102,6 +129,7 @@ export default function useRecomendationVehicle() {
             formState: { errors, isSubmitting }
         },
         isEdit,
+        onClickCreate,
         onClickEdit,
         onCloseForm,
         onClickDelete,

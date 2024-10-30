@@ -1,14 +1,18 @@
-import { Button, Card, CardBody, CardHeader, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, Chip, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react";
 import RootAdmin from "../../../components/layouts/RootAdmin";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { PencilSquareIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import ModalAlert from "../../../components/elements/ModalAlert";
 import useCarbonCopy from "../../../hooks/useCarbonCopy";
 import useSWR from "swr";
 import { getFetcher } from "../../../services/api";
 
 export default function IndexPage() {
+    const fetcher = (...args) => getFetcher(...args);
+    const [page, setPage] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
+    const { data, isLoading, mutate } = useSWR(`/api/data-master/tembusan?page=${page + 1}&limit=${pageSize}`, fetcher);
     const { 
         isEdit,
         onClickEdit, 
@@ -18,38 +22,10 @@ export default function IndexPage() {
         onSubmitForm, 
         modalForm: { onOpenModalForm, isOpenModalForm, onOpenChangeModalForm },
         modalAlert: { isOpenModalAlert, onOpenChangeModalAlert },
-        hookForm: { register, handleSubmit, formState: { errors, isSubmitting } }, 
-    } = useCarbonCopy();
-
-    // const fetcher = (...args) => getFetcher(...args);
-    // const { data, isLoading } = useSWR('/api/data-master/tembusan', getFetcher);
-    // console.log(data);
-    
-
-    const data = [
-        {
-            id: 1,
-            nama: 'Direktur Utama',
-            tipe: 'UMUM',
-        },
-        {
-            id: 2,
-            nama: 'Kepala Kantor',
-            tipe: 'UMUM',
-        },
-        {
-            id: 3,
-            nama: 'Bupati',
-            tipe: 'UMUM',
-        },
-    ]
+        hookForm: { register, handleSubmit, formState: { errors, isSubmitting, dirtyFields } }, 
+    } = useCarbonCopy({ mutate });
 
     const columns = useMemo(() =>  [
-        { 
-            field: 'id', 
-            headerName: 'No',
-            width: 70 
-        },
         {
             field: 'nama',
             headerName: 'Nama',
@@ -58,7 +34,10 @@ export default function IndexPage() {
         {
             field: 'tipe',
             headerName: 'Tipe',
-            width: 300
+            width: 300,
+            renderCell: (params) => (
+                <Chip color={params.row.tipe === 'UMUM' ? 'primary' : 'secondary'} variant="flat" size="sm">{params.row.tipe}</Chip>
+            ),
         },
         {
             field: 'action',
@@ -69,7 +48,9 @@ export default function IndexPage() {
                     <Button size='sm' onPress={() => onClickDelete(params.row.id)} color='danger' isIconOnly><TrashIcon className='size-4'/></Button>
                 </div>
             ),
-            width: 250
+            width: 250,
+            sortable: false,
+            filterable: false
         },
     ], [onClickEdit, onClickDelete]);
 
@@ -86,8 +67,9 @@ export default function IndexPage() {
                         <Button onPress={onOpenModalForm} size="sm" color="primary" startContent={<PlusIcon className="size-4 stroke-2"/>}>Tambah</Button>
                     </div>
                     <DataGrid
-                        rows={data}
-                        // loading={isLoading}
+                        rows={data?.data}
+                        rowCount={data?.total || 0}
+                        loading={isLoading}
                         columns={columns}
                         disableDensitySelector
                         initialState={{
@@ -96,13 +78,22 @@ export default function IndexPage() {
                                   pageSize: 10,
                                 },
                             },
+                            sorting: {
+                                sortModel: [{ field: 'nama', sort: 'asc' }],
+                            },
                             density: 'compact',
                         }}
                         slots={{
                             toolbar: GridToolbar,
                         }}
+                        paginationMode="server"
+                        onPaginationModelChange={(model) => {
+                            setPage(model.page);
+                            setPageSize(model.pageSize);
+                        }}
                         pageSizeOptions={[5, 10, 15]}
-                        checkboxSelection
+                        page={page}
+                        pageSize={pageSize}
                         disableRowSelectionOnClick
                     />
                 </CardBody>
@@ -141,7 +132,7 @@ export default function IndexPage() {
                                         </Select>   
                                     </div>
                                     <div className='flex items-center gap-1'>
-                                        <Button isLoading={isSubmitting} isDisabled={isSubmitting} type='submit' color='primary'>{isEdit ? 'Simpan' : 'Tambah'}</Button>
+                                        <Button isLoading={isSubmitting} isDisabled={isSubmitting || (isEdit && Object.keys(dirtyFields).length === 0)} type='submit' color='primary'>{isEdit ? 'Simpan' : 'Tambah'}</Button>
                                         <Button isDisabled={isSubmitting} color='danger' variant='faded' onPress={onClose}>Batal</Button>
                                     </div>
                                 </form>

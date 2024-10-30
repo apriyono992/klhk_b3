@@ -1,10 +1,11 @@
-import { Controller, Post, Put, Delete, Body, Param, Query, Get } from '@nestjs/common';
+import { Controller, Post, Put, Delete, Body, Param, Query, Get, HttpStatus, HttpCode } from '@nestjs/common';
 import { ConnectVehiclePemohonanDto } from 'src/models/connectVehiclePemohonanDto';
 import { CreateVehicleDto } from 'src/models/createVehicleDto';
 import { UpdateVehicleDto } from 'src/models/updateVehicleDto';
 import { ApiTags, ApiOperation, ApiBody, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { VehicleService } from 'src/services/vehicle.services';
 import { SearchVehicleDto } from 'src/models/searchVehicleDto';
+import { RemoveVehicleFromApplicationDto } from 'src/models/removeVehicleFromApplicationDto';
 
 @ApiTags('Vehicles')
 @Controller('vehicles')
@@ -205,5 +206,61 @@ export class VehicleController {
   })
   async getVehicleById(@Param('vehicleId') vehicleId: string) {
     return this.vehicleService.getVehicleById(vehicleId);
+  }
+
+  @Delete('/vehicle/application/remove-vehicle')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Remove a vehicle from an application' })
+  @ApiBody({
+    type: RemoveVehicleFromApplicationDto,
+    description: 'Details of the vehicle and application',
+    schema: {
+      example: {
+        vehicleId: '12345',
+        applicationId: '67890'
+      }
+    }
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Vehicle removed successfully from the application.',
+    schema: {
+      example: { message: 'Vehicle removed successfully from the application.' }
+    }
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Vehicle not found.',
+    schema: {
+      example: {
+        statusCode: 404,
+        message: 'Vehicle not found.'
+      }
+    }
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'This vehicle is not linked to the specified application.',
+    schema: {
+      example: {
+        statusCode: 400,
+        message: 'This vehicle is not linked to the specified application.'
+      }
+    }
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'An error occurred while removing the vehicle from the application.',
+    schema: {
+      example: {
+        statusCode: 500,
+        message: 'An error occurred while removing the vehicle from the application.'
+      }
+    }
+  })
+  async removeVehicleFromApplication(@Body() removeVehicleDto: RemoveVehicleFromApplicationDto) {
+    const { vehicleId, applicationId } = removeVehicleDto;
+    const result = await this.vehicleService.removeVehicleFromApplication(vehicleId, applicationId);
+    return result;
   }
 }

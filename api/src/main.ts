@@ -12,7 +12,7 @@ async function bootstrap() {
   // Enable CORS with open settings
   app.enableCors({
     origin: '*', // Allow all origins
-    methods: 'GET,POST,PUT,DELETE', // Allow specific methods
+    methods: 'GET,POST,PUT,PATCH,DELETE', // Allow specific methods
   });
   
   // Global Pipes

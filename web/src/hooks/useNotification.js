@@ -4,37 +4,25 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as yup from 'yup';
-import { deleteFetcher, postFetcher, putFetcher } from "../services/api";
-import { dirtyInput, isResponseErrorObject } from "../services/helpers";
+import { deleteFetcher, postFetcher } from "../services/api";
+import { isResponseErrorObject } from "../services/helpers";
 
-export default function useCarbonCopy({ mutate }) {
+
+export default function useNotification({ mutate }) {
     const formSchema =  yup.object().shape({
-        nama: yup.string().required('Harus diisi'),
-        tipe: yup.string().required('Harus diisi'),
+        companyId: yup.string().required('Harus diisi'),
     }).required()
 
     const {isOpen: isOpenModalForm, onOpen: onOpenModalForm, onOpenChange: onOpenChangeModalForm, onClose: onCloseModalForm} = useDisclosure();
     const {isOpen: isOpenModalAlert, onOpenChange: onOpenChangeModalAlert} = useDisclosure();
     const [editId, setEditId] = useState(null);
-    const [isEdit, setIsEdit] = useState(false);
-    const { register, handleSubmit, reset, formState: { errors, isSubmitting, dirtyFields } } = useForm({resolver: yupResolver(formSchema)});
-
-    function onClickEdit(item) {    
-        setEditId(item.id);
-        setIsEdit(true);
-        reset({
-            nama: item.nama,
-            tipe: item.tipe,   
-        });           
-        onOpenChangeModalForm();
-    }
+    const { register, handleSubmit, reset, control, formState: { errors, isSubmitting } } = useForm({resolver: yupResolver(formSchema)});
 
     function onCloseForm() {
         setEditId(null);
-        setIsEdit(false);
         reset({
-            nama: '',
-            tipe: '',
+            referenceNumber: '',
+            companyId: '',
         });
         onCloseModalForm()
     }
@@ -46,26 +34,22 @@ export default function useCarbonCopy({ mutate }) {
     
     async function onSubmitDelete() {
         try {
-            await deleteFetcher('/api/data-master/tembusan', editId);
+            await deleteFetcher('/api/notifikasi', editId);
             mutate()
-            toast.success('Tembusan berhasil dihapus!');
+            toast.success('Notifikasi dibatalkan!');
         } catch (error) {
-            toast.error('Gagal hapus tembusan!');
+            toast.error('Gagal batalkan notifikasi!');
         }
     }
 
     async function onSubmitForm(data) {
         try {
-            if (isEdit) {
-                const filteredData = dirtyInput(dirtyFields, data);
-                await putFetcher('/api/data-master/tembusan', editId, filteredData);
-                mutate()
-                toast.success('Tembusan berhasil diubah!');
-            } else {
-                await postFetcher('/api/data-master/tembusan', data);
-                mutate()
-                toast.success('Tembusan berhasil ditambah!');
-            }
+            data.status = 'Diterima dari Otoritas Asal B3'
+            await postFetcher('/api/notifikasi', data);
+            mutate()
+            console.log(data);
+            
+            toast.success('Notifikasi berhasil ditambah!');
             onCloseForm();
         } catch (error) {
             isResponseErrorObject(error.response.data.message)
@@ -90,10 +74,9 @@ export default function useCarbonCopy({ mutate }) {
             register, 
             handleSubmit, 
             reset, 
-            formState: { errors, isSubmitting, dirtyFields }
+            control,
+            formState: { errors, isSubmitting }
         },
-        isEdit,
-        onClickEdit,
         onCloseForm,
         onClickDelete,
         onSubmitDelete,
