@@ -79,14 +79,5 @@ import { DraftNotifikasiModule } from './module/draftNotifikasi.module';
     EmailService,
   ],
   exports: [JwtProvider, EnforcerProvider, PermissionUtil, Enforcer, PrismaService, CategoriesValidationPipe, EmailService],
-  ],
-  exports: [
-    JwtProvider,
-    EnforcerProvider,
-    PermissionUtil,
-    Enforcer,
-    PrismaService,
-    CategoriesValidationPipe,
-  ],
 })
 export class AppModule {}
