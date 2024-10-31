@@ -296,7 +296,6 @@ model Regencies {
   provinceId String      @db.Char(250) // Foreign key to Province
   province   Province    @relation(fields: [provinceId], references: [id]) // Relation to Province
   districts  Districts[] // Relation to villages
-  Location   Location[]
 
   @@map("reg_regencies") // Maps to the existing table "reg_regencies"
   Location Location[]
