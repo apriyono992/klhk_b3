@@ -5,46 +5,66 @@ import MultiSelectSort from '../../../elements/MultiSelectSort'
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import toast from 'react-hot-toast';
+import { format } from 'date-fns';
+import { simpanSK } from '../../../../services/api';
 
-export default function Draft() {
+export default function Draft({detailRegistrasi}) {
     const formSchema =  yup.object().shape({
-        letter_copy: yup.array()
+        tembusanIds: yup.array()
             .min(1, 'Minimal 1 tembusan')
             .required('Harus diisi'),
-        letter_number: yup.string().required('harus diisi'),
+        nomor: yup.string().required('harus diisi'),
         letter_month: yup.number()
                         .typeError('Harus diisi')
                         .integer('Harus angka')
                         .positive('Harus angka'),
-        letter_year: yup.number()
+        tahun: yup.number()
                         .typeError('Tahun harus valid')
                         .integer('Harus angka').min(1900, 'Tahun tidak valid')
                         .max(2099, `Tahun tidak valid`)
                         .required('harus diisi'),
-        letter_permit: yup.number()
-                        .typeError('Harus diisi')
-                        .integer('Harus angka')
-                        .positive('Harus angka'),
-        letter_note: yup.string().required('harus diisi'),
-        letter_publication_date: yup.date()
+        status_izin: yup.string().typeError('Harus diisi'),
+        keterangan_sk: yup.string().required('harus diisi'),
+        tanggal_terbit: yup.date()
                                     .typeError('Tanggal harus valid')
                                     .required('harus diisi'),
-        letter_from_date: yup.date()
+        berlaku_dari: yup.date()
                             .typeError('Tanggal harus valid')
                             .required('harus diisi'),
-        letter_to_date: yup.date()
+        berlaku_sampai: yup.date()
                             .typeError('Tanggal harus valid')
                             .required('harus diisi'),
-        letter_notification: yup.string().required('harus diisi'),
+        nomor_notifikasi_impor: yup.string().required('harus diisi'),
         
     }).required()
 
     const { register, handleSubmit, control, formState: { errors, isSubmitting }, } = useForm({resolver: yupResolver(formSchema)})
 
     async function onSubmit(data) {
+        const {letter_month, ...newData} = data
+        const dataBerlakuDari = new Date(data?.berlaku_dari)
+        const dataBerlakuSampai = new Date(data?.berlaku_sampai)
+        const dataTanggalTerbit = new Date(data?.tanggal_terbit)
+        const dataSK = {
+            ...newData,
+            berlaku_dari: format(dataBerlakuDari, 'yyyy-MM-dd'),
+            berlaku_sampai: format(dataBerlakuSampai, 'yyyy-MM-dd'),
+            tanggal_terbit: format(dataTanggalTerbit, 'yyyy-MM-dd'),
+            tembusanIds: data?.tembusanIds.map(it => it.value),
+            id: detailRegistrasi.id,
+            companyId: detailRegistrasi.companyId,
+            nomor: detailRegistrasi.nomor,
+            kode_db_klh_perusahaan: detailRegistrasi.kode_db_klh_perusahaan,
+            nama_perusahaan: detailRegistrasi.nama_perusahaan,
+            alamat_perusahaan: detailRegistrasi.alamat_perusahaan,
+            status: 'In Stock',
+            B3SubtanceIds: detailRegistrasi?.B3Substance.map(it => it.id),
+            registrasiPersyaratanIds: detailRegistrasi?.persyaratan.map(it => it.id)
+        }
+
         try {
-            await new Promise((r) => setTimeout(r, 1000));
-            console.log(data);
+            const response = await simpanSK(dataSK);
+            console.log(response, 'success');
             toast.success('Draft sk berhasil dibuat!');
         } catch (error) {
             toast.error('Gagal buat draft sk!');
@@ -95,7 +115,7 @@ export default function Draft() {
                     <Divider/>
                     <CardBody>
                         <Controller
-                            name='letter_copy'
+                            name='tembusanIds'
                             control={control}
                             rules={{ required: true }}
                             render={({ field, fieldState }) => (
@@ -119,14 +139,14 @@ export default function Draft() {
                     <CardBody>
                         <div className='grid grid-cols-1 md:grid-cols-2 gap-3 mb-5'>
                             <Input
-                                {...register('letter_number')}
+                                {...register('nomor')}
                                 isRequired
                                 variant="faded" 
                                 type="text" 
                                 label="Nomor Surat" 
-                                color={errors.letter_number ? 'danger' : 'default'}
-                                isInvalid={errors.letter_number} 
-                                errorMessage={errors.letter_number && errors.letter_number.message}
+                                color={errors.nomor ? 'danger' : 'default'}
+                                isInvalid={errors.nomor} 
+                                errorMessage={errors.nomor && errors.nomor.message}
                                 className="col-span-2"
                             />
                             <Select
@@ -144,79 +164,79 @@ export default function Draft() {
                                 ))}
                             </Select>
                             <Input
-                                {...register('letter_year')}
+                                {...register('tahun')}
                                 isRequired
                                 variant="faded" 
                                 type="text" 
                                 label="Tahun" 
-                                color={errors.letter_year ? 'danger' : 'default'}
-                                isInvalid={errors.letter_year} 
-                                errorMessage={errors.letter_year && errors.letter_year.message}
+                                color={errors.tahun ? 'danger' : 'default'}
+                                isInvalid={errors.tahun} 
+                                errorMessage={errors.tahun && errors.tahun.message}
                             />
                             <Select
-                                {...register('letter_permit')} 
+                                {...register('status_izin')} 
                                 variant="faded" 
                                 label="Status Izin" 
                                 placeholder="Pilih"
                                 isRequired
-                                color={errors.letter_permit ? 'danger' : 'default'}
-                                isInvalid={errors.letter_permit} 
-                                errorMessage={errors.letter_permit && errors.letter_permit.message}
+                                color={errors.status_izin ? 'danger' : 'default'}
+                                isInvalid={errors.status_izin} 
+                                errorMessage={errors.status_izin && errors.status_izin.message}
                             >
                                 {permit.map((item, index) => (
-                                    <SelectItem key={index + 1} value={index + 1}>{item}</SelectItem>
+                                    <SelectItem key={item} value={item}>{item}</SelectItem>
                                 ))}
                             </Select>
                             <Textarea
-                                {...register('letter_note')} 
+                                {...register('keterangan_sk')} 
                                 variant="faded" 
                                 label="Keterangan SK" 
                                 isRequired
-                                color={errors.letter_note ? 'danger' : 'default'}
-                                isInvalid={errors.letter_note} 
-                                errorMessage={errors.letter_note && errors.letter_note.message}
+                                color={errors.keterangan_sk ? 'danger' : 'default'}
+                                isInvalid={errors.keterangan_sk} 
+                                errorMessage={errors.keterangan_sk && errors.keterangan_sk.message}
                                 className="col-span-2"
                             />
                             <Input
-                                {...register('letter_publication_date')} 
+                                {...register('tanggal_terbit')} 
                                 variant="faded" 
                                 label="Tanggal Terbit"
                                 type="date" 
                                 isRequired
-                                color={errors.letter_publication_date ? 'danger' : 'default'}
-                                isInvalid={errors.letter_publication_date} 
-                                errorMessage={errors.letter_publication_date && errors.letter_publication_date.message}
+                                color={errors.tanggal_terbit ? 'danger' : 'default'}
+                                isInvalid={errors.tanggal_terbit} 
+                                errorMessage={errors.tanggal_terbit && errors.tanggal_terbit.message}
                                 className='col-span-2'
                             />
                             <Input
-                                {...register('letter_from_date')} 
+                                {...register('berlaku_dari')} 
                                 variant="faded" 
                                 label="Berlaku Dari"
                                 type="date" 
                                 isRequired
-                                color={errors.letter_from_date ? 'danger' : 'default'}
-                                isInvalid={errors.letter_from_date} 
-                                errorMessage={errors.letter_from_date && errors.letter_from_date.message}
+                                color={errors.berlaku_dari ? 'danger' : 'default'}
+                                isInvalid={errors.berlaku_dari} 
+                                errorMessage={errors.berlaku_dari && errors.berlaku_dari.message}
                             />
                             <Input
-                                {...register('letter_to_date')} 
+                                {...register('berlaku_sampai')} 
                                 variant="faded" 
                                 label="Sampai"
                                 type="date" 
                                 isRequired
-                                color={errors.letter_to_date ? 'danger' : 'default'}
-                                isInvalid={errors.letter_to_date} 
-                                errorMessage={errors.letter_to_date && errors.letter_to_date.message}
+                                color={errors.berlaku_sampai ? 'danger' : 'default'}
+                                isInvalid={errors.berlaku_sampai} 
+                                errorMessage={errors.berlaku_sampai && errors.berlaku_sampai.message}
                             />
                             <Input
-                                {...register('letter_notification')}
+                                {...register('nomor_notifikasi_impor')}
                                 variant="faded" 
                                 isRequired
                                 type="text" 
                                 label="Nomor Notifikasi Impor" 
-                                color={errors.letter_notification ? 'danger' : 'default'}
-                                isInvalid={errors.letter_notification} 
-                                errorMessage={errors.letter_notification && errors.letter_notification.message}
+                                color={errors.nomor_notifikasi_impor ? 'danger' : 'default'}
+                                isInvalid={errors.nomor_notifikasi_impor} 
+                                errorMessage={errors.nomor_notifikasi_impor && errors.nomor_notifikasi_impor.message}
                                 className="col-span-2"
                             />
                         </div>

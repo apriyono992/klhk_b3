@@ -3,7 +3,7 @@ import Cookies from 'js-cookie'
 import { LOGIN_PATH } from './routes';
 
 const BASE_URL_DEV = 'https://dummyjson.com';
-const BASE_URL = 'http://localhost:3002';
+const BASE_URL = 'http://localhost:3002/api';
 
 const instance = axios.create({
     baseURL: BASE_URL,
@@ -14,14 +14,14 @@ const instance = axios.create({
 })
 
 const axiosInstance = axios.create({
-    baseURL: BASE_URL_DEV,
+    baseURL: BASE_URL,
     headers: {
         'Content-Type': 'application/json',
     },
 })
 
 const axiosInstanceAuth = axios.create({
-    baseURL: BASE_URL_DEV,
+    baseURL: BASE_URL,
     headers: {
         'Content-Type': 'application/json'
     },
@@ -76,6 +76,26 @@ export async function login(data) {
 
 async function refreshToken(refreshToken) {
     return await axiosInstance.post('/auth/refresh', { refreshToken: refreshToken, expiresInMins: 1 }).then(res => res.data)
+}
+
+export async function getListRegistrasi(data) {
+    return await axiosInstance.get('/registrasi/search?page=1&limit=10&sortBy=createdAt&sortOrder=desc',).then(res => res.data)
+}
+
+export async function getDetailRegistrasi(data) {
+    return await axiosInstance.get(`/registrasi/${data}`,).then(res => res.data)
+}
+
+export async function updatePerusahaan(id, data) {
+    return await axiosInstance.put(`/registrasi/update-perusahaan/${id}`, data).then(res => res.data)
+}
+
+export async function simpanSK(data) {
+    return await axiosInstance.post(`/registrasi/save`, data).then(res => res.data)
+}
+
+export async function submitSK(id) {
+    return await axiosInstance.post(`/registrasi/submit-draft-sk/${id}`).then(res => res.data)
 }
 
 export async function authStateFetcher(url) {

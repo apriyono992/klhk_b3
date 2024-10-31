@@ -1,7 +1,7 @@
 import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from './prisma.services';
 import { CreateCompanyDto } from '../models/CreateCompanyDto';
-import { UpdateCompanyDto } from '../models/UpdateCompanyDto';
+import { UpdateCompanyDto } from '../models/updateCompanyDto';
 import { Prisma } from '@prisma/client';
 import { SearchCompanyDto } from 'src/models/searchCompanyDto';
 

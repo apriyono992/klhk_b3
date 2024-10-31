@@ -1,6 +1,6 @@
 import { IsString, IsInt, IsOptional, IsArray, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { CreateCompanyDto } from './createCompanyDto';
+import { CreateCompanyDto } from './CreateCompanyDto';
 import { CreateVehicleDto } from './createVehicleDto';
 
 export class CreateSuratRekomendasiB3Dto {

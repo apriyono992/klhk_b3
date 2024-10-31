@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { PrismaService } from './prisma.services';
 import { CategoryType, Prisma, Status } from '@prisma/client';
 import { nanoid } from 'nanoid';
-import { CreateNewsDto } from '../models/CreateNewsDto';
+import { CreateNewsDto } from '../models/createNewsDto';
 import { CreateArticleDto } from '../models/createArticleDto';
 import { CreateInfoDto } from '../models/createInfoDto';
 import { CreateCompanyDocumentDto } from '../models/createCompanyDocumentDto';

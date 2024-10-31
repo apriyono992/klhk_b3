@@ -1,4 +1,4 @@
-import { IsString, IsBoolean, IsNotEmpty, Validate, IsArray, ArrayNotEmpty } from 'class-validator';
+import { IsString, IsBoolean, IsNotEmpty, Validate, IsArray, ArrayNotEmpty , IsOptional} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDataBahanB3Exists } from 'src/validators/dataBahanB3.validator';
 import { LocationDetailsDto } from './locationDetailsDto';
@@ -16,7 +16,9 @@ export class CreateB3PermohonanRekomDto {
   @IsNotEmpty()
   b3pp74: boolean;
 
-  @ApiProperty({ description: 'Whether it is outside the list of B3 PP 74/2001' })
+  @ApiProperty({
+    description: 'Whether it is outside the list of B3 PP 74/2001',
+  })
   @IsBoolean()
   @IsNotEmpty()
   b3DiluarList: boolean;
@@ -63,4 +65,9 @@ export class CreateB3PermohonanRekomDto {
   @IsString()
   @IsNotEmpty()
   applicationId: string;
+
+  @ApiProperty({ description: 'Foreign key to the Application model' })
+  @IsString()
+  @IsOptional()
+  registrasiId: string;
 }

@@ -1,6 +1,6 @@
 import { Controller, Post, Body, UploadedFile, UploadedFiles, Param, Get, Query, ValidationPipe, UsePipes, BadRequestException, UseInterceptors } from '@nestjs/common';
 import { ContentService } from '../services/content.services';
-import { CreateNewsDto } from '../models/CreateNewsDto';
+import { CreateNewsDto } from '../models/createNewsDto';
 import { CreateArticleDto } from '../models/createArticleDto';
 import { CreateInfoDto } from '../models/createInfoDto';
 import { CreateCompanyDocumentDto } from '../models/createCompanyDocumentDto';

@@ -10,7 +10,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
-export default function TableMaterial({ className }) {
+export default function TableMaterial({ className, dataB3 }) {
     const fetcher = (...args) => authStateFetcher(...args);
     const { data, isLoading } = useSWR('/products?limit=4', fetcher);
     const {isOpen: isOpenModalAlert, onOpen: onOpenModalAlert, onOpenChange: onOpenChangeModalAlert, onClose: onCloseModalAlert } = useDisclosure();
@@ -36,39 +36,39 @@ export default function TableMaterial({ className }) {
     const list = (item) => [
         {
             'label': 'No. Reg. Bahan Kimia',
-            'value': item.title
+            'value': dataB3.no_reg_bahanb3
         },
         {
             'label': 'Cas Number',
-            'value': item.category
+            'value': item.dataBahanB3.casNumber
         },
         {
             'label': 'Nama Bahan Kimia',
-            'value': item.price
+            'value': item.dataBahanB3.namaBahanKimia
         },
         {
             'label': 'Nama Dagang',
-            'value': item.rating
+            'value': item.dataBahanB3.namaDagang
         },
         {
             'label': 'Kategori Bahan Kimia',
-            'value': item.stock
+            'value': item.fasaB3
         },
         {
             'label': 'HS Code',
-            'value': '0215213383'
+            'value': item.dataBahanB3.casNumber
         },
         {
             'label': 'Klasifikasi Bahan Kimia',
-            'value': '0215213383'
+            'value': item.karakteristikB3
         },
         {
             'label': 'Karateristik Bahan Kimia',
-            'value': '0215213383'
+            'value': item.fasaB3
         },
         {
             'label': 'Tujuan Penggunaan',
-            'value': '0215213383'
+            'value': item.tujuanPenggunaan
         },
         {
             'label': 'Jumlah Impor',
@@ -171,13 +171,13 @@ export default function TableMaterial({ className }) {
                             {columns.map((item, index) => <TableColumn key={index}>{item}</TableColumn>)}
                         </TableHeader>
                         <TableBody loadingContent={<Spinner />} loadingState={isLoading ? 'loading' : 'idle'}>
-                            {data?.products.map((item, index) => (
+                            {dataB3?.B3Substance?.map((item, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{index + 1}</TableCell>
-                                    <TableCell>{item.title}</TableCell>
-                                    <TableCell>{item.category}</TableCell>
-                                    <TableCell>{item.price}</TableCell>
-                                    <TableCell>{item.discountPercentage}</TableCell>
+                                    <TableCell>{item.dataBahanB3.casNumber}</TableCell>
+                                    <TableCell>{item.dataBahanB3.namaDagang}</TableCell>
+                                    <TableCell>{item.dataBahanB3.namaBahanKimia}</TableCell>
+                                    <TableCell>{dataB3?.no_reg_bahanb3}</TableCell>
                                     <TableCell className='flex items-center gap-1'>
                                         <ModalDetailList list={list(item)}/>
                                         <Button isIconOnly size="sm" color="warning" onPress={() => handleOnEdit(item)}><PencilSquareIcon className="size-4" /></Button>

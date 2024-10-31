@@ -2,57 +2,69 @@ import { Button, Card, CardBody, Chip } from "@nextui-org/react";
 import { ArrowPathIcon, CheckIcon, EyeIcon, ListBulletIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import RootAdmin from "../../../components/layouts/RootAdmin";
 import CountWidget from "../../../components/elements/CountWidget";
-import { authStateFetcher } from "../../../services/api";
+import { authStateFetcher, getListRegistrasi } from "../../../services/api";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import useSWR from "swr";
 import useCustomNavigate from "../../../hooks/useCustomNavigate";
 import { useMemo } from "react";
+import { formattedDate } from "../../../services/helpers";
+import { differenceInMonths} from 'date-fns'
 
 export default function IndexPage() {
     const fetcher = (...args) => authStateFetcher(...args);
     const { getRegistrationDetailPath } = useCustomNavigate();
 
-    const { data, isLoading } = useSWR('/products?limit=200', fetcher);
+    const { data, isLoading } = useSWR('/registrasi/search?page=1&limit=10&sortBy=createdAt&sortOrder=desc', fetcher);
 
     const columns = useMemo(() =>  [
         { 
-            field: 'id', 
+            field: 'updatedAt', 
             headerName: 'No',
-            width: 70 
+            width: 70,
+            renderCell: (params) => 1,
         },
         {
-            field: 'title',
+            field: 'nomor',
             headerName: 'Nomor Registrasi',
             width: 300
         },
         {
-            field: 'category',
+            field: 'nama_perusahaan',
             headerName: 'Perusahaan',
             width: 300
         },
         {
             field: 'brand',
             headerName: 'Sub Layanan',
-            width: 200
+            width: 200,
+            renderCell: () => "Registrasi B3 (Baru)"
         },
         {
-            field: 'meta.createdAt',
+            field: 'tanggal_terbit',
             headerName: 'Tanggal Masuk Data',
-            width: 200
+            width: 200,
+            valueGetter: (value, row) => {
+                return formattedDate(value)
+            },
         },
         {
             field: 'shippingInformation',
             headerName: 'Lama Proses',
-            width: 200
+            width: 200,
+            valueGetter: (value, row) => {
+                let startDate = row.berlaku_dari
+                let endDate = row.berlaku_sampai
+                return `${differenceInMonths(endDate, startDate)} Bulan`
+            }
         },
         {
-            field: 'availabilityStatus',
+            field: 'status',
             headerName: 'Status',
             width: 150,
             renderCell: (params) => (<Chip size='sm' color='primary' variant='faded'>{params.value}</Chip>)
         },
         {
-            field: 'sku',
+            field: 'id',
             headerName: 'Aksi',
             renderCell: (params) => (
                 <Button size='sm' color='primary' isIconOnly onClick={() => getRegistrationDetailPath(params.value)}><EyeIcon className='size-4'/></Button>
@@ -73,7 +85,7 @@ export default function IndexPage() {
             <Card className="w-full mt-3" radius="sm">
                 <CardBody className='w-full h-[550px] p-5'>
                     <DataGrid
-                        rows={data?.products}
+                        rows={data?.registrasi}
                         loading={isLoading}
                         columns={columns}
                         disableDensitySelector

@@ -1,0 +1,67 @@
+[
+  {
+    "id": "07c1a9a1-2c7a-4f4e-9a8d-5b2b711cfc1f",
+    "namaPemohon": "Ahmad Ridwan",
+    "jabatan": "Direktur Utama",
+    "alamatDomisili": "Jl. Merdeka No. 12, Jakarta",
+    "teleponFax": "021-1234567",
+    "email": "ridwan@company.com",
+    "npwp": "01.234.567.8-901.000",
+    "ktp": "3276010101010001",
+    "companyId": "89955d90-8f57-470c-b0cc-3b813460e9f2",
+    "createdAt": "2024-01-01T08:00:00.000Z",
+    "updatedAt": "2024-01-02T09:30:00.000Z"
+  },
+  {
+    "id": "f2b3e3c6-bc1e-4873-a1b2-c24bdf8f4c3b",
+    "namaPemohon": "Siti Zahra",
+    "jabatan": "Manager",
+    "alamatDomisili": "Jl. Kuningan Timur No. 45, Bandung",
+    "teleponFax": "022-7654321",
+    "email": "zahra@company.com",
+    "npwp": "02.345.678.9-012.000",
+    "ktp": "3276020202020002",
+    "companyId": "89955d90-8f57-470c-b0cc-3b813460e9f2",
+    "createdAt": "2024-02-10T10:15:00.000Z",
+    "updatedAt": "2024-02-11T11:45:00.000Z"
+  },
+  {
+    "id": "d3c4a5b7-0e4c-46ad-bb1d-7058f5e6a7b1",
+    "namaPemohon": "Budi Santoso",
+    "jabatan": "Kepala Bagian",
+    "alamatDomisili": "Jl. Sudirman No. 8, Surabaya",
+    "teleponFax": "031-6789123",
+    "email": "budi@company.com",
+    "npwp": "03.456.789.0-123.000",
+    "ktp": "3276030303030003",
+    "companyId": "89955d90-8f57-470c-b0cc-3b813460e9f2",
+    "createdAt": "2024-03-15T09:30:00.000Z",
+    "updatedAt": "2024-03-16T10:45:00.000Z"
+  },
+  {
+    "id": "a8f6d2b8-1e2d-4d79-a6bd-9c28f1d6f4a8",
+    "namaPemohon": "Rina Anggraini",
+    "jabatan": "Staff",
+    "alamatDomisili": "Jl. Diponegoro No. 22, Medan",
+    "teleponFax": "061-1230987",
+    "email": "rina@company.com",
+    "npwp": "04.567.890.1-234.000",
+    "ktp": "3276040404040004",
+    "companyId": "89955d90-8f57-470c-b0cc-3b813460e9f2",
+    "createdAt": "2024-04-20T13:45:00.000Z",
+    "updatedAt": "2024-04-21T14:15:00.000Z"
+  },
+  {
+    "id": "09a6b3f5-7c9e-4b2b-a5c4-3e7b612a8f9d",
+    "namaPemohon": "Adi Pratama",
+    "jabatan": "Asisten Manager",
+    "alamatDomisili": "Jl. Cihampelas No. 99, Bandung",
+    "teleponFax": "022-8765432",
+    "email": "adi@company.com",
+    "npwp": "05.678.901.2-345.000",
+    "ktp": "3276050505050005",
+    "companyId": "89955d90-8f57-470c-b0cc-3b813460e9f2",
+    "createdAt": "2024-05-10T15:30:00.000Z",
+    "updatedAt": "2024-05-11T16:00:00.000Z"
+  }
+]

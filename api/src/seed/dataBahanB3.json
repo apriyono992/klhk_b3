@@ -1,0 +1,47 @@
+[
+  {
+    "id": "29a6b55e-4f6d-4d5a-92c5-8e2371b7e3bb",
+    "casNumber": "108-88-3",
+    "namaBahanKimia": "Toluene",
+    "namaDagang": "Toluol",
+    "tipeBahan": "Solvent",
+    "createdAt": "2024-01-10T08:30:00.000Z",
+    "updatedAt": "2024-01-10T09:00:00.000Z"
+  },
+  {
+    "id": "836e59a5-3b24-47d4-8c62-6a43e8a0de5e",
+    "casNumber": "67-56-1",
+    "namaBahanKimia": "Methanol",
+    "namaDagang": "Wood Alcohol",
+    "tipeBahan": "Alcohol",
+    "createdAt": "2024-02-05T14:20:00.000Z",
+    "updatedAt": "2024-02-06T16:30:00.000Z"
+  },
+  {
+    "id": "c2a5d7f4-8be3-4e82-971d-71f4b97a9a8d",
+    "casNumber": "75-09-2",
+    "namaBahanKimia": "Dichloromethane",
+    "namaDagang": "Methylene Chloride",
+    "tipeBahan": "Solvent",
+    "createdAt": "2024-03-15T12:00:00.000Z",
+    "updatedAt": "2024-03-16T08:00:00.000Z"
+  },
+  {
+    "id": "53fdaf2a-32c3-4709-bb84-afe4f8a8136e",
+    "casNumber": "79-01-6",
+    "namaBahanKimia": "Trichloroethylene",
+    "namaDagang": "Tri-Clene",
+    "tipeBahan": "Solvent",
+    "createdAt": "2024-04-25T08:45:00.000Z",
+    "updatedAt": "2024-04-25T10:15:00.000Z"
+  },
+  {
+    "id": "9b16f3c9-d1cb-4d17-88f1-6a6f3f7a3de3",
+    "casNumber": "50-00-0",
+    "namaBahanKimia": "Formaldehyde",
+    "namaDagang": "Formalin",
+    "tipeBahan": "Preservative",
+    "createdAt": "2024-05-01T09:30:00.000Z",
+    "updatedAt": "2024-05-02T11:00:00.000Z"
+  }
+]

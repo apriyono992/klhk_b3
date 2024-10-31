@@ -1,0 +1,20 @@
+{
+  "id": "f7283e3d-5a9e-4e88-9e4a-2a3b7f8e1b63",
+  "kodePermohonan": "APP-2024-001",
+  "status": "Pending",
+  "tipeSurat": "Surat Izin",
+  "tanggalPengajuan": "2024-01-15T10:00:00.000Z",
+  "tanggalDisetujui": null,
+  "tanggalBerakhir": null,
+  "companyId": "89955d90-8f57-470c-b0cc-3b813460e9f2",
+  "identitasPemohonId": "07c1a9a1-2c7a-4f4e-9a8d-5b2b711cfc1f",
+  "requiredDocumentsStatus": {
+    "document1": "submitted",
+    "document2": "pending",
+    "document3": "approved"
+  },
+  "deletedAt": null,
+  "createdAt": "2024-01-15T10:00:00.000Z",
+  "updatedAt": "2024-01-15T11:00:00.000Z",
+  "jenisPermohonan": "Perpanjangan"
+}

@@ -5,6 +5,6 @@
 
 */
 -- AlterTable
-ALTER TABLE "reg_provinces" DROP CONSTRAINT "reg_provinces_pkey",
+ALTER TABLE "reg_provinces" DROP CONSTRAINT "reg_provinces_pkey" CASCADE ,
 ALTER COLUMN "id" SET DATA TYPE TEXT,
 ADD CONSTRAINT "reg_provinces_pkey" PRIMARY KEY ("id");

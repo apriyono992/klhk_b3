@@ -1,39 +1,58 @@
 import { Card, CardBody, CardHeader, Divider } from "@nextui-org/react";
 import InlineEditInput from "../../../../elements/InlineEditInput";
+import { updatePerusahaan } from "../../../../../services/api";
+import { useParams } from "react-router-dom";
 
-export default function CompanySection({ className }) {
+export default function CompanySection({ className, dataCompany }) {
+    const { id } = useParams();
+
     function onSubmitName(data) {
-        console.log(data);
+        const name = {nama_perusahaan: data.text}
+
+        try {
+            const response = updatePerusahaan(id, name);
+            console.log(response, 'success');
+        } catch (error) {
+            console.log('error update:', error)
+        }
     }
+
     function onSubmitAddress(data) {
-        console.log(data);
+        const name = {alamat_perusahaan: data.text}
+
+        try {
+            const response = updatePerusahaan(id, name);
+            console.log(response, 'success');
+        } catch (error) {
+            console.log('error update:', error)
+        }
     }
 
 
     const data = [
         {
             'label': 'Nama Perusahaan',
-            'value': <InlineEditInput value='PT. XYZ' onSubmit={onSubmitName}/>
+            'value': <InlineEditInput value={dataCompany?.nama_perusahaan || dataCompany?.company?.name} onSubmit={onSubmitName}/>
         },
         {
             'label': 'Alamat Kantor Pusat',
-            'value': <InlineEditInput multiline value='Wisma Budi Lantai 8 dan 9, Jl.HR.Rasuna Said Kav.C6 Jakarta Selatan' onSubmit={onSubmitAddress} />
+            'value': <InlineEditInput multiline value={dataCompany?.alamat_perusahaan} onSubmit={onSubmitAddress} />
         },
         {
             'label': 'Nomor Telepon',
-            'value': <span className='text-sm font-medium'>0215213383</span>
+            'value': <span className='text-sm font-medium'>{dataCompany?.company?.telpKantor}</span>
         },
         {
             'label': 'Nomor Fax',
-            'value': <span className='text-sm font-medium'>0215213383</span>
+            'value': <span className='text-sm font-medium'>{dataCompany?.company?.faxKantor}</span>
         },
         {
             'label': 'NPWP',
-            'value': <span className='text-sm font-medium'>0816512132486514</span>
+            'value': <span className='text-sm font-medium'>{dataCompany?.company?.npwp}</span>
         },
         {
             'label': 'Nomor Induk Berusaha',
-            'value': <span className='text-sm font-medium'>0816512132486514</span>
+            'value': <span className='text-sm font-medium'>{dataCompany?.company?.nomorInduk}</span>
         }
     ]
 

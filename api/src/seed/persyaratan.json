@@ -1,0 +1,38 @@
+[
+  {
+    "id": "f8d8a0e1-5c27-4e0e-8f7c-1234567890ab",
+    "createdAt": "2023-10-30T12:00:00.000Z",
+    "updatedAt": "2023-10-30T12:00:00.000Z",
+    "name": "Dokumen A",
+    "document_number": "DOC-001",
+    "path": "/files/dokumen-a.pdf",
+    "notes": "Dokumen ini untuk keperluan A",
+    "status": "dibuat",
+    "approved_by": "",
+    "registrasiId": "5e2b95f2-7f58-4a6f-926d-334a0d2f07d3"
+  },
+  {
+    "id": "9a8b7c6d-5e4f-3a2b-8c7d-4567890abcd1",
+    "createdAt": "2023-10-30T12:00:00.000Z",
+    "updatedAt": "2023-10-30T12:00:00.000Z",
+    "name": "Dokumen B",
+    "document_number": "DOC-002",
+    "path": "/files/dokumen-b.pdf",
+    "notes": "Dokumen ini untuk keperluan B",
+    "status": "dibuat",
+    "approved_by": "",
+    "registrasiId": "5e2b95f2-7f58-4a6f-926d-334a0d2f07d3"
+  },
+  {
+    "id": "4e3d2c1b-7f6a-9b8c-7d8e-7890abcdef12",
+    "createdAt": "2023-10-30T12:00:00.000Z",
+    "updatedAt": "2023-10-30T12:00:00.000Z",
+    "name": "Dokumen C",
+    "document_number": "DOC-003",
+    "path": "/files/dokumen-c.pdf",
+    "notes": "Dokumen ini untuk keperluan C",
+    "status": "dibuat",
+    "approved_by": "",
+    "registrasiId": "5e2b95f2-7f58-4a6f-926d-334a0d2f07d3"
+  }
+]

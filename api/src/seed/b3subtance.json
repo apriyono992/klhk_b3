@@ -1,0 +1,72 @@
+[
+  {
+    "id": "1a3b5678-7c9d-4e4f-8b62-1b3d56e7a2b4",
+    "dataBahanB3Id": "29a6b55e-4f6d-4d5a-92c5-8e2371b7e3bb",
+    "b3pp74": true,
+    "b3DiluarList": false,
+    "karakteristikB3": "Flammable",
+    "fasaB3": "Liquid",
+    "jenisKemasan": "Drum",
+    "tujuanPenggunaan": "Industrial solvent",
+    "applicationId": "f7283e3d-5a9e-4e88-9e4a-2a3b7f8e1b63",
+    "createdAt": "2024-01-20T08:00:00.000Z",
+    "updatedAt": "2024-01-20T09:00:00.000Z",
+    "registrasiId": "5e2b95f2-7f58-4a6f-926d-334a0d2f07d3"
+  },
+  {
+    "id": "2b4f5d67-8c9f-4f4d-9b12-2d4f67e7b2c5",
+    "dataBahanB3Id": "836e59a5-3b24-47d4-8c62-6a43e8a0de5e",
+    "b3pp74": true,
+    "b3DiluarList": false,
+    "karakteristikB3": "Toxic",
+    "fasaB3": "Liquid",
+    "jenisKemasan": "Bottle",
+    "tujuanPenggunaan": "Laboratory reagent",
+    "applicationId": "f7283e3d-5a9e-4e88-9e4a-2a3b7f8e1b63",
+    "createdAt": "2024-01-20T08:10:00.000Z",
+    "updatedAt": "2024-01-20T09:15:00.000Z",
+    "registrasiId": "5e2b95f2-7f58-4a6f-926d-334a0d2f07d3"
+  },
+  {
+    "id": "3c5e6f78-9d1f-5g6h-0i23-3e5f68f7c3d6",
+    "dataBahanB3Id": "c2a5d7f4-8be3-4e82-971d-71f4b97a9a8d",
+    "b3pp74": false,
+    "b3DiluarList": true,
+    "karakteristikB3": "Carcinogenic",
+    "fasaB3": "Liquid",
+    "jenisKemasan": "Canister",
+    "tujuanPenggunaan": "Cleaning solvent",
+    "applicationId": "f7283e3d-5a9e-4e88-9e4a-2a3b7f8e1b63",
+    "createdAt": "2024-01-20T08:20:00.000Z",
+    "updatedAt": "2024-01-20T09:30:00.000Z",
+    "registrasiId": "5e2b95f2-7f58-4a6f-926d-334a0d2f07d3"
+  },
+  {
+    "id": "4d6g7h89-0j2k-6i7j-1k34-4f6g79h8d4e7",
+    "dataBahanB3Id": "53fdaf2a-32c3-4709-bb84-afe4f8a8136e",
+    "b3pp74": true,
+    "b3DiluarList": false,
+    "karakteristikB3": "Explosive",
+    "fasaB3": "Solid",
+    "jenisKemasan": "Bag",
+    "tujuanPenggunaan": "Industrial production",
+    "applicationId": "f7283e3d-5a9e-4e88-9e4a-2a3b7f8e1b63",
+    "createdAt": "2024-01-20T08:30:00.000Z",
+    "updatedAt": "2024-01-20T09:45:00.000Z",
+    "registrasiId": "5e2b95f2-7f58-4a6f-926d-334a0d2f07d3"
+  },
+  {
+    "id": "5e7i8j90-1k3l-7j8k-2l45-5g7h90i9e5f8",
+    "dataBahanB3Id": "9b16f3c9-d1cb-4d17-88f1-6a6f3f7a3de3",
+    "b3pp74": false,
+    "b3DiluarList": true,
+    "karakteristikB3": "Corrosive",
+    "fasaB3": "Gas",
+    "jenisKemasan": "Cylinder",
+    "tujuanPenggunaan": "Chemical synthesis",
+    "applicationId": "f7283e3d-5a9e-4e88-9e4a-2a3b7f8e1b63",
+    "createdAt": "2024-01-20T08:40:00.000Z",
+    "updatedAt": "2024-01-20T10:00:00.000Z",
+    "registrasiId": "5e2b95f2-7f58-4a6f-926d-334a0d2f07d3"
+  }
+]

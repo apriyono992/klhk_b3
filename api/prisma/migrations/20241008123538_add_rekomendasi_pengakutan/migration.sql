@@ -28,15 +28,15 @@ ALTER TABLE "SuratRekomendasiB3" DROP CONSTRAINT "SuratRekomendasiB3_companyId_f
 ALTER TABLE "Company" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL;
 
--- AlterTable
+-- -- AlterTable
 -- ALTER TABLE "DataBahanB3" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 -- ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL;
 
--- AlterTable
+-- -- AlterTable
 -- ALTER TABLE "DataPejabat" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 -- ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL;
 
--- AlterTable
+-- -- AlterTable
 -- ALTER TABLE "DataTembusan" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 -- ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL;
 

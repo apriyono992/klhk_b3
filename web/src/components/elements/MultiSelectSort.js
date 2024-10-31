@@ -71,7 +71,7 @@ export default function MultiSelectSort({ value, onChange }) {
 
     const fetcher = (...args) => getSelectFetcher(...args);
 
-    const { data, error, isLoading } = useSWR('/api/data-master/tembusan?limit=100', fetcher);
+    const { data, error, isLoading } = useSWR('/data-master/tembusan?limit=100', fetcher);
 
     const handleChange = (selectedOptions) => {
         setSelected(selectedOptions || [])

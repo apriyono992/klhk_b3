@@ -1,6 +1,6 @@
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { TipeDokumen } from './enums/TipeDokumen';
+import { TipeDokumen } from './enums/tipeDokumen';
 import { IsApplicationExists } from 'src/validators/isApplicationIdExists.validatior';
 
 export class CreateDocumentDto {

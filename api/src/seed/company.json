@@ -1,0 +1,50 @@
+[
+  {
+    "id": "2c6a744c-87cb-4b6e-9e9a-5ece97e2371d",
+    "name": "PT Maju Bersama",
+    "penanggungJawab": "Budi Santoso",
+    "alamatKantor": "Jl. Merdeka No. 1, Jakarta",
+    "telpKantor": "021-12345678",
+    "faxKantor": "021-87654321",
+    "emailKantor": "contact@maju-bersama.co.id",
+    "npwp": "01.234.567.8-123.456",
+    "nomorInduk": "1234567890",
+    "kodeDBKlh": "K1234",
+    "alamatPool": ["Jl. Pool No. 1, Jakarta", "Jl. Pool No. 2, Jakarta"],
+    "bidangUsaha": "Transportasi",
+    "createdAt": "2024-01-01T10:00:00.000Z",
+    "updatedAt": "2024-01-01T10:00:00.000Z"
+  },
+  {
+    "id": "f9b54d99-64e8-4974-9899-24d6e52ada39",
+    "name": "PT Sukses Selalu",
+    "penanggungJawab": "Ani Rahmawati",
+    "alamatKantor": "Jl. Kebon Sirih No. 5, Bandung",
+    "telpKantor": "022-98765432",
+    "faxKantor": "022-23456789",
+    "emailKantor": "info@sukses-selalu.co.id",
+    "npwp": "12.345.678.9-123.456",
+    "nomorInduk": "0987654321",
+    "kodeDBKlh": "S5678",
+    "alamatPool": ["Jl. Pool Barat No. 5, Bandung"],
+    "bidangUsaha": "Konstruksi",
+    "createdAt": "2024-02-01T10:00:00.000Z",
+    "updatedAt": "2024-02-01T10:00:00.000Z"
+  },
+  {
+    "id": "89955d90-8f57-470c-b0cc-3b813460e9f2",
+    "name": "PT Inovasi Teknologi",
+    "penanggungJawab": "Rudi Hartono",
+    "alamatKantor": "Jl. Diponegoro No. 10, Surabaya",
+    "telpKantor": "031-54321098",
+    "faxKantor": "031-12345678",
+    "emailKantor": "support@inovasi-teknologi.co.id",
+    "npwp": "21.456.789.0-123.456",
+    "nomorInduk": "1122334455",
+    "kodeDBKlh": "I9101",
+    "alamatPool": ["Jl. Pool Selatan No. 3, Surabaya"],
+    "bidangUsaha": "Teknologi Informasi",
+    "createdAt": "2024-03-01T10:00:00.000Z",
+    "updatedAt": "2024-03-01T10:00:00.000Z"
+  }
+]

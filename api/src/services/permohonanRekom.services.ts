@@ -4,7 +4,7 @@ import { PrismaService } from './prisma.services';
 import { CreateIdentitasPemohonDto } from 'src/models/identitasPemohonDto';
 import { generateUniqueCode } from 'src/utils/uniqueKodeRekom';
 import { StatusPermohonan } from 'src/models/enums/statusPermohonan';
-import { TipeDokumen } from 'src/models/enums/TipeDokumen';
+import { TipeDokumen } from 'src/models/enums/tipeDokumen';
 import { SearchApplicationDto } from 'src/models/searchPermohonanRekomendasiDto';
 import path from 'path';
 import { DraftSuratDto } from 'src/models/draftSuratDto';

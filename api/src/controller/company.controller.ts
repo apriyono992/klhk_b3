@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { CompanyService } from '../services/company.services';
 import { CreateCompanyDto } from '../models/CreateCompanyDto';
-import { UpdateCompanyDto } from '../models/UpdateCompanyDto';
-import { SearchCompanyDto } from '../models/SearchCompanyDto';
+import { UpdateCompanyDto } from '../models/updateCompanyDto';
+import { SearchCompanyDto } from '../models/searchCompanyDto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiQuery, ApiParam } from '@nestjs/swagger';
 
 @ApiTags('Company')
