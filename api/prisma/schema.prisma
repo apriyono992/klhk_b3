@@ -281,12 +281,13 @@ model JenisSampleType {
 }
 
 model Province {
-  id        String      @id @default(uuid()) @db.Char(2) // Province ID (2 characters)
-  name      String      @db.VarChar(255) // Province name
-  regencies Regencies[] // Relation to regencies
-  Location  Location[]
+  id        String       @id @default(uuid()) @db.Char(2) // Province ID (2 characters)
+  name      String       @db.VarChar(255) // Province name
+  regencies Regencies[]  // Relation to regencies
+  cities City[]
 
   @@map("reg_provinces") // Maps to the existing table "reg_provinces"
+  Location  Location[]
 }
 
 model Regencies {
@@ -298,6 +299,8 @@ model Regencies {
   Location   Location[]
 
   @@map("reg_regencies") // Maps to the existing table "reg_regencies"
+  Location Location[]
+  users    User[]
 }
 
 model Districts {
@@ -885,4 +888,42 @@ model Persyaratan {
 
   registrasiId String?
   registrasi   Registrasi? @relation(fields: [registrasiId], references: [id])
+}
+
+model City {
+  id         String   @id @default(uuid())
+  name       String
+  provinceId String
+  province   Province @relation(fields: [provinceId], references: [id])
+}
+
+model User {
+  id          String @id @default(uuid())
+  email       String @unique
+  phoneNumber String @unique
+  fullName   String
+  password    String
+  salt        String
+  refreshToken String?  // Nullable field for storing the refresh token
+  address     String @db.Text
+  cityId      String
+  provinceId  String
+  regency       Regencies   @relation(fields: [cityId], references: [id])
+  idNumber    String // no KTP
+   idPhotoUrl  String?
+  resetPassword ResetPassword[]
+}
+
+model ResetPassword {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String
+  expiredAt DateTime
+  used      Boolean  @default(false)
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Secret {
+  clientId    String @id
+  clientSecret String
 }

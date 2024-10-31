@@ -22,6 +22,8 @@ async function bootstrap() {
     forbidNonWhitelisted: true,
   }));
 
+  app.enableCors();
+  
   // Global Filters
   app.useGlobalFilters(new AllExceptionsFilter());
   
@@ -35,6 +37,7 @@ async function bootstrap() {
 
   //define useContainer in main.ts file
   useContainer(app.select(ValidatorsModule), { fallbackOnErrors: true });
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   // Swagger Setup
   const config = new DocumentBuilder()

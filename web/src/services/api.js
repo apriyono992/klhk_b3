@@ -71,7 +71,27 @@ axiosInstanceAuth.interceptors.response.use(
 );
 
 export async function login(data) {
-    return await axiosInstance.post('/auth/login', data).then(res => res).catch(err => err.response)
+    return await axiosInstance.post('api/auth/login', data).then(res => res).catch(err => err.response)
+};
+
+export async function registerUser(data) {
+    return await axiosInstance.post('api/auth/register', data).then(res => res).catch(err => err.response)
+};
+
+export async function uploadPhoto(data) {
+    return await axiosInstance.post('api/upload/file', data, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    }).then(res => res).catch(err => err.response)
+};
+
+export async function getProvince() {
+    return await axiosInstance.get('api/location/provinces').then(res => res.data)
+};
+
+export async function getCity(url) {
+    return await axiosInstance.get(url).then(res => res.data)
 };
 
 async function refreshToken(refreshToken) {

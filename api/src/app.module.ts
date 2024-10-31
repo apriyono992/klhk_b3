@@ -23,12 +23,21 @@ import { VehicleModule } from './module/vehicle.module';
 import { BahanB3Module } from './module/bahanB3.module';
 import { DocumentModule } from './module/document.module';
 import { PermohonanRekomendasiB3Module } from './module/permohonanRekom.module';
+import { AuthModule } from './module/auth.module';
+import { AuthController } from './controller/auth.controller';
+import { AuthService } from './services/auth.services';
+import { ConfigModule } from '@nestjs/config';
+import { EmailService } from './services/email.services';
+import { UploadModule } from './module/upload.module';
 import { RegistrasiModule } from './module/registrasi.module';
 import { NotifikasiModule } from './module/notifikasi.module';
 import { DraftNotifikasiModule } from './module/draftNotifikasi.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true, // This makes ConfigService globally available in your app
+    }),
     ValidatorsModule,
     RolesModule,
     CasbinModule,
@@ -51,11 +60,13 @@ import { DraftNotifikasiModule } from './module/draftNotifikasi.module';
     BahanB3Module,
     DocumentModule,
     PermohonanRekomendasiB3Module,
+    AuthModule,
+    UploadModule,
     RegistrasiModule,
     NotifikasiModule,
     DraftNotifikasiModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, AuthController],
   providers: [
     AppService,
     JwtProvider,
@@ -64,6 +75,10 @@ import { DraftNotifikasiModule } from './module/draftNotifikasi.module';
     Enforcer,
     PrismaService,
     CategoriesValidationPipe,
+    AuthService,
+    EmailService,
+  ],
+  exports: [JwtProvider, EnforcerProvider, PermissionUtil, Enforcer, PrismaService, CategoriesValidationPipe, EmailService],
   ],
   exports: [
     JwtProvider,

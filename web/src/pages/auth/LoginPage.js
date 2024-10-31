@@ -21,7 +21,9 @@ export default function LoginPage() {
     
     async function onSubmit(data) {
         setError("")
-        data.expiresInMins = 1  
+        data.expiresInMins = 1
+        data.clientId = "klhk-974f693f-9dcf-4b3a-b76e-eaee0da0c3a9"
+        data.clientSecret= "56f3bd572037efc90b74b08f8eb3db8fa4fb28ed47270f87279613b529b225d1"
         const response = await login(data)
         
         if (response.status === 200) {
@@ -44,16 +46,16 @@ export default function LoginPage() {
                 { error && <span className="text-danger">{ error }</span> }
                 <form className="pt-3 font-medium" onSubmit={handleSubmit(onSubmit)}>
                     <Input 
-                        {...register('username', { required: "Email is required" })} 
+                        {...register('email', { required: "Email is required" })} 
                         radius="sm" 
                         className="pb-5" 
                         type="text" 
                         size="lg"
-                        color={errors.username ? 'danger' : 'default'} 
+                        color={errors.email ? 'danger' : 'default'} 
                         placeholder="Email" 
                         startContent={<EnvelopeIcon className="size-5" />}  
-                        isInvalid={errors.username} 
-                        errorMessage={errors.username && errors.username.message} 
+                        isInvalid={errors.email} 
+                        errorMessage={errors.email && errors.email.message} 
                     />
                     <Input
                         {...register('password', { required: "Password is required" })}
