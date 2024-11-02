@@ -187,6 +187,28 @@ export class DocumentController {
     );
   }
 
+  @Post('validateTelaah')
+  @ApiOperation({ summary: 'Admin validates the uploaded document' })
+  @ApiResponse({
+    status: 200,
+    description: 'Document validated successfully.',
+    schema: {
+      example: {
+        documentId: 'doc123',
+        isValid: true,
+        validationNotes: 'Valid document',
+      },
+    },
+  })
+  @ApiResponse({ status: 404, description: 'Document not found.' })
+  async validateTelaahDocument(@Body() validateDocumentDto: ValidateDocumentDto) {
+    return this.documentService.validateTelaahDocument(
+      validateDocumentDto.documentId,
+      validateDocumentDto.isValid,
+      validateDocumentDto.validationNotes,
+    );
+  }
+
   @Get('application/:applicationId/type/:documentType')
   @ApiOperation({ summary: 'Retrieve documents by type for a specific application' })
   @ApiQuery({ name: 'includeArchived', required: false, type: Boolean, description: 'Include archived documents in the response' })

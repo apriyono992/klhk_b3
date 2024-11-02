@@ -351,6 +351,10 @@ model Company {
   PerusahaanAsalMuat PerusahaanAsalMuat[]
 
   PelaporanPengangkutan PelaporanPengangkutan[]
+
+  LaporanPengangkutanFinal LaporanPengangkutanFinal[]
+
+  TelaahTeknisRekomendasiB3 TelaahTeknisRekomendasiB3[]
 }
 
 model Vehicle {
@@ -414,6 +418,8 @@ model Application {
   statusHistory           ApplicationStatusHistory[] // Relation to status history
 
   PelaporanPengangkutan PelaporanPengangkutan[]
+  LaporanPengangkutanFinal LaporanPengangkutanFinal[]
+  TelaahTeknisRekomendasiB3 TelaahTeknisRekomendasiB3[]
 }
 
 model ApplicationStatusHistory {
@@ -457,6 +463,7 @@ model B3Substance {
   updatedAt DateTime @updatedAt
 
   PengangkutanDetail PengangkutanDetail[]
+  LaporanPengangkutanFinalDetail LaporanPengangkutanFinalDetail[]
 }
 
 model DocumentRekomendasiB3 {
@@ -469,7 +476,8 @@ model DocumentRekomendasiB3 {
   applicationId   String // Foreign key for Application
   application     Application @relation(fields: [applicationId], references: [id])
   isArchived      Boolean     @default(false) // Archive old document version
-
+  isValidTelaah   Boolean? // To mark if the document is valid after technical review
+  telaahNotes    String? // Notes from the technical review
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -539,6 +547,7 @@ model DataPejabat {
   DraftSurat           DraftSurat[]
   FinalSurat           FinalSurat[]
   DraftSuratNotifikasi BaseSuratNotfikasi[]
+  TelaahTeknisRekomendasiB3 TelaahTeknisRekomendasiB3[]
 }
 
 model DataTembusan {
@@ -925,4 +934,46 @@ model ResetPassword {
 model Secret {
   clientId    String @id
   clientSecret String
+}
+
+model LaporanPengangkutanFinal {
+  id                      String                     @id @default(uuid())
+  applicationId           String                     // Referensi ke Application (Permohonan)
+  application             Application                @relation(fields: [applicationId], references: [id])
+  perusahaanId            String                     // Referensi ke Company
+  perusahaan              Company                    @relation(fields: [perusahaanId], references: [id])
+  bulan                   Int                        // Bulan laporan
+  tahun                   Int                        // Tahun laporan
+  finalisasiPada          DateTime                   @default(now()) // Waktu finalisasi laporan
+  totalJumlahB3           Float                      // Total semua jenis B3 yang diangkut
+  jenisB3Details          LaporanPengangkutanFinalDetail[] // Relasi ke detail jenis B3
+
+  @@unique([applicationId, perusahaanId, bulan, tahun]) // Memastikan satu laporan per application, company, bulan, dan tahun
+}
+
+model LaporanPengangkutanFinalDetail {
+  id                      String                 @id @default(uuid())
+  laporanPengangkutanFinalId String              // Referensi ke LaporanPengangkutanFinal
+  laporanPengangkutanFinal LaporanPengangkutanFinal @relation(fields: [laporanPengangkutanFinalId], references: [id])
+  b3SubstanceId           String                 // Referensi ke B3Substance
+  b3Substance             B3Substance            @relation(fields: [b3SubstanceId], references: [id])
+  jumlahB3                Float                  // Jumlah total untuk jenis B3 ini
+
+  @@unique([laporanPengangkutanFinalId, b3SubstanceId]) // Memastikan satu record per jenis B3 di setiap laporan final
+}
+
+model TelaahTeknisRekomendasiB3{
+  id String @id @default(uuid())
+  applicationId String @unique
+  application Application @relation(fields: [applicationId], references: [id])
+  companyId String
+  company Company @relation(fields: [companyId], references: [id])
+  printed Boolean @default(false)
+  notes String?
+  kronologi_permohonan String[]
+  lain_lain String[]
+  tindak_lanjut String
+  pejabat DataPejabat[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

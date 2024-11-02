@@ -72,4 +72,35 @@ export class PdfController {
       throw new NotFoundException(`Failed to generate PDF: ${error.message}`);
     }
   }
+
+  @Get('generateTelaahTeknis/:applicationId')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Generate Surat Telaah Teknis' })
+  @ApiResponse({
+    status: 200,
+    description: 'PDF generated successfully.',
+  })
+  @ApiResponse({ status: 404, description: 'Permohonan Aplication not found.' })
+  @ApiParam({ name: 'applicationId', description: 'The ID of the Permohonan Rekomendasi to generate the surat for Telaah Teknis' })
+  async generateTelaahTeknis(
+    @Param('applicationId') applicationId: string,
+    @Res() res: Response,
+  ) {
+    try {
+      // Call the PdfService to generate the PDF
+      const pdfBuffer = await this.pdfService.generateTelaahTeknisPdf(applicationId);
+
+      // Set the response headers for the PDF
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': 'inline; filename="telaah-teknis.pdf"',
+        'Content-Length': pdfBuffer.length,
+      });
+
+      // Send the PDF back as a response
+      res.end(pdfBuffer);
+    } catch (error) {
+      throw new NotFoundException(`Failed to generate PDF: ${error.message}`);
+    }
+  }
 }

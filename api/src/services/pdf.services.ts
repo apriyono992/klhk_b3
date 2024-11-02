@@ -370,4 +370,64 @@ export class PdfService {
     return pdfBuffer;
   }
   
+
+  async generateTelaahTeknisPdf(applicationId: string) {
+    // Fetch data from TelaahTeknisRekomendasiB3 with related Application, Company, and Pejabat
+    const telaahTeknis = await this.prisma.telaahTeknisRekomendasiB3.findFirst({
+      where: { applicationId: applicationId },
+      include: {
+        application: {
+          include: { 
+            company: true,
+            vehicles:true,
+            b3Substances: {include: {asalMuatLocations: true, tujuanBongkarLocations: true}},
+
+           },
+        },
+        pejabat: true,  // Include DataPejabat array
+      },
+    });
+
+    if (!telaahTeknis) {
+      throw new NotFoundException(`Telaah Teknis with application ID ${applicationId} not found.`);
+    }
+
+    // Define the path to the HTML template file
+    const templatePath = path.resolve(__dirname, '../pdf/telaahTeknis.html');
+
+    // Load the logo image and convert it to base64 for embedding
+    const base64Logo = fs.readFileSync(path.resolve(__dirname, '../pdf/logo_klhk.png')).toString('base64');
+    const base64Image = `data:image/png;base64,${base64Logo}`;
+
+    // Render the HTML template with dynamic data
+    const template = fs.readFileSync(templatePath, 'utf-8');
+    const renderedHtml = ejs.render(template, {
+      base64Image,
+      application: telaahTeknis.application,
+      company: telaahTeknis.application.company,
+      notes: telaahTeknis.notes,
+      kronologiPermohonan: telaahTeknis.kronologi_permohonan,
+      lainLain: telaahTeknis.lain_lain,
+      tindakLanjut: telaahTeknis.tindak_lanjut,
+      pejabat: telaahTeknis.pejabat,  // Pass the DataPejabat array to the template
+    });
+
+    // Launch Puppeteer and generate the PDF
+    const browser = await puppeteer.launch({ headless: true });
+    const page = await browser.newPage();
+    await page.setContent(renderedHtml, { waitUntil: 'networkidle0' });
+
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: {
+        bottom: '20mm',
+        left: '20mm',
+        right: '20mm',
+      },
+    });
+
+    await browser.close();
+    return pdfBuffer;
+  }
 }

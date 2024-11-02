@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Telahaan Administrasi dan Teknis</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  h1, h2 {
+    text-align: center;
+    font-weight: bold;
+  }
+  .section {
+    margin-top: 20px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  th, td {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: center;
+    vertical-align: top;
+  }
+  th {
+    background-color: #f2f2f2;
+  }
+  .signature-space {
+    height: 60px;
+    border-bottom: 1px solid #000;
+    margin-bottom: 5px;
+  }
+  .signature-name {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  .role {
+    font-style: italic;
+  }
+</style>
+</head>
+    <body>
+      <h1>TELAAHAN ADMINISTRASI DAN TEKNIS</h1>
+      <h2>PROSES PERMOHONAN REKOMENDASI PENGANGKUTAN B3</h2>
+      
+      <div class="section">
+        <strong>Nama Perusahaan:</strong> <%= company.name %><br>
+        <strong>Bidang Usaha:</strong> Pengangkutan B3<br>
+        <strong>Jenis Rekomendasi:</strong> Pengangkutan B3 Moda Angkutan Darat<br>
+        <strong>Sifat Permohonan:</strong> Penambahan Kendaraan<br>
+      </div>
+      
+      <div class="section">
+        <h2>A. Kronologi Permohonan Rekomendasi Pengangkutan</h2>
+        <ol>
+          <% kronologiPermohonan.forEach((item) => { %>
+            <li><%= item %></li>
+          <% }) %>
+        </ol>
+      </div>
+      
+      <div class="section">
+        <h2>B. Telaahan Administrasi</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Data Persyaratan Kelengkapan Dokumen Administrasi yang Telah Dilengkapi</th>
+              <th>Valid</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% documentRekomendasiB3.forEach((doc, index) => { %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= doc.documentType %></td>
+                <td class="validation"><%= doc.isValidTelaah ? 'V' : 'X' %></td>
+                <td class="description"><%= doc.telaahNotes || 'Ada & Sesuai' %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="section">
+        <h2>C. Telaahan Teknis</h2>
+        <ol>
+          <li>Spesifikasi dan identitas alat angkut yang digunakan adalah sebagai berikut:</li>
+        </ol>
+        <table>
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Nomor Polisi</th>
+              <th>Merk/Model Kendaraan</th>
+              <th>Tahun Pembuatan</th>
+              <th>Nomor Rangka</th>
+              <th>Nomor Mesin</th>
+              <th>Kepemilikan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% vehicles.forEach((vehicle, index) => { %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= vehicle.noPolisi %></td>
+                <td><%= vehicle.modelKendaraan %></td>
+                <td><%= vehicle.tahunPembuatan %></td>
+                <td><%= vehicle.nomorRangka %></td>
+                <td><%= vehicle.nomorMesin %></td>
+                <td><%= vehicle.kepemilikan %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      
+        <ol start="2">
+          <li>Jenis Bahan Berbahaya dan Beracun yang diangkut sebagai berikut:</li>
+        </ol>
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama Dagang</th>
+              <th>Nama Bahan Kimia/ CAS Number</th>
+              <th>B3 PP 74/2001</th>
+              <th>Karakteristik B3</th>
+              <th>Fasa B3</th>
+              <th>Jenis Kemasan</th>
+              <th>Asal Muat B3</th>
+              <th>Tujuan Bongkar B3</th>
+              <th>Tujuan Penggunaan B3</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% b3Substances.forEach((substance, index) => { %>
+              <tr>
+                <td><%= index + 1 %></td>
+                <td><%= substance.dataBahanB3.namaDagang %></td>
+                <td><%= substance.dataBahanB3.namaKimia %> / <%= substance.dataBahanB3.casNumber %></td>
+                <td class="validation"><%= substance.b3pp74 ? 'V' : 'X' %></td>
+                <td><%= substance.karakteristikB3 %></td>
+                <td><%= substance.fasaB3 %></td>
+                <td><%= substance.jenisKemasan %></td>
+                <td>
+                  <% substance.asalMuatLocations.forEach(location => { %>
+                    <div><%= location.nama %> (<%= location.kota %>, <%= location.provinsi %>)</div>
+                  <% }) %>
+                </td>
+                <td>
+                  <% substance.tujuanBongkarLocations.forEach(location => { %>
+                    <div><%= location.nama %> (<%= location.kota %>, <%= location.provinsi %>)</div>
+                  <% }) %>
+                </td>
+                <td><%= substance.tujuanPenggunaan %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      
+        <div class="note">
+          <p><strong>Lain-lain</strong></p>
+          <ul>
+            <% lainLain.forEach((note) => { %>
+              <li><%= note %></li>
+            <% }) %>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>D. Tindak Lanjut</h2>
+        <p><%= tindakLanjut %></p>
+      
+        <table>
+          <thead>
+            <tr>
+              <% pejabat.slice(0, 3).forEach((official) => { %>
+                <th><%= official.role %></th>
+              <% }) %>
+            </tr>
+          </thead>
+          <tbody>
+            <% pejabat.forEach((official, index) => { %>
+              <!-- Start a new row every 3 items -->
+              <% if (index % 3 === 0) { %>
+                <tr>
+              <% } %>
+      
+              <td>
+                <div class="signature-space"></div>
+                <div class="signature-name"><%= official.name %></div>
+                <div class="role"><%= official.role %></div>
+              </td>
+      
+              <!-- Close the row after 3 items or if it's the last item -->
+              <% if (index % 3 === 2 || index === pejabat.length - 1) { %>
+                </tr>
+              <% } %>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+  </body>
+</html>

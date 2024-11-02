@@ -12,6 +12,7 @@ import { AddTembusanToDraftSkDto } from 'src/models/addTembusanToDraftSkDto';
 import { AddPejabatToDraftSkDto } from 'src/models/addPejabatToDraftSkDto';
 import { UpdateApplicationStatusDto } from 'src/models/updateApplicationStatusDto';
 import { JenisPermohonan } from 'src/models/enums/jenisPermohonan';
+import { TelaahTeknisUpsertDto } from 'src/models/telaahTeknisDto';
 
 @Injectable()
 export class PermohonanRekomendasiB3Service {
@@ -350,7 +351,66 @@ export class PermohonanRekomendasiB3Service {
         }
       }
     }
-  }  
+  }
+  
+  async upsertTelaahTeknis(applicationId: string, data: TelaahTeknisUpsertDto) {
+    // Find the existing record based on applicationId
+    const existingRecord = await this.prisma.telaahTeknisRekomendasiB3.findFirst({
+      where: { applicationId },
+      include: { pejabat: true },
+    });
+    
+    // If pejabat data is provided, prepare the connect and disconnect arrays
+    let connectPejabat = [];
+    let disconnectPejabat = [];
+
+    if (data.pejabat) {
+      const existingPejabatIds = existingRecord?.pejabat.map((p) => p.id) || [];
+      const newPejabatIds = data.pejabat.map((p) => p.id);
+
+      // Determine which pejabat records to connect
+      connectPejabat = newPejabatIds
+        .filter((id) => !existingPejabatIds.includes(id))
+        .map((id) => ({ id }));
+
+      // Determine which pejabat records to disconnect
+      disconnectPejabat = existingPejabatIds
+        .filter((id) => !newPejabatIds.includes(id))
+        .map((id) => ({ id }));
+    }
+  
+    if (existingRecord) {
+      // If it exists, update only the provided fields
+      return this.prisma.telaahTeknisRekomendasiB3.update({
+        where: { id: existingRecord.id },
+        data: {
+          ...(data.kronologi_permohonan && { kronologi_permohonan: data.kronologi_permohonan }),
+          ...(data.lain_lain && { lain_lain: data.lain_lain }),
+          ...(data.tindak_lanjut && { tindak_lanjut: data.tindak_lanjut }),
+          ...(data.pejabat && { pejabat: {
+            connect: connectPejabat,
+            disconnect: disconnectPejabat,
+          } }),
+          ...(data.printed !== undefined && { printed: data.printed }),
+        },
+      });
+    } else {
+      // Otherwise, create a new record with the provided data
+      return this.prisma.telaahTeknisRekomendasiB3.create({
+        data: {
+          applicationId,
+          companyId: data.companyId || undefined, // ensure `companyId` is provided if needed
+          kronologi_permohonan: data.kronologi_permohonan || [],
+          lain_lain: data.lain_lain || [],
+          tindak_lanjut: data.tindak_lanjut || '',
+          pejabat: data.pejabat ? {
+            connect: data.pejabat.map((p) => ({ id: p.id })),
+          } : undefined,
+          printed: data.printed ?? existingRecord?.printed ?? false,
+        },
+      });
+    }
+  }
 
   // async createPejabatAndConnectToDraftSurat(applicationId: string, pejabatData: { nip: string; nama: string; jabatan: string; status: string }) {
   //   return await this.prisma.$transaction(async (prisma) => {

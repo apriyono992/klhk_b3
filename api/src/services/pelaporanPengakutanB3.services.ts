@@ -375,6 +375,31 @@ export class PelaporanPengangkutanService {
       }
     }
 
+    // Agregasi jumlah B3 per jenis dari detail laporan
+  const totalJumlahB3 = report.pengangkutanDetails.reduce((total, detail) => total + detail.jumlahB3, 0);
+
+  // Buat laporan final di tabel LaporanPengangkutanFinal
+  const finalizedReport = await this.prisma.laporanPengangkutanFinal.create({
+    data: {
+      applicationId: report.applicationId,
+      perusahaanId: report.application.companyId,
+      bulan: report.bulan,
+      tahun: report.tahun,
+      totalJumlahB3,
+    },
+  });
+
+  // Simpan detail jenis B3 di tabel LaporanPengangkutanFinalDetail
+  for (const detail of report.pengangkutanDetails) {
+    await this.prisma.laporanPengangkutanFinalDetail.create({
+      data: {
+        laporanPengangkutanFinalId: finalizedReport.id,
+        b3SubstanceId: detail.b3SubstanceId,
+        jumlahB3: detail.jumlahB3,
+      },
+    });
+  }
+
     // Finalize the report and mark it as non-draft if all reports are present
     await this.prisma.pelaporanPengangkutan.update({
       where: { id },
@@ -395,6 +420,8 @@ export class PelaporanPengangkutanService {
             vehicles: true, // Include vehicles associated with the application
           },
         },
+        company: true, // Include company information
+        vehicle: true, // Include vehicle information
         pengangkutanDetails: {
           include: {
             b3Substance: true, // Include B3Substance details in each PengangkutanDetail, if applicable
@@ -470,6 +497,8 @@ export class PelaporanPengangkutanService {
             company: true,
           },
         },
+        vehicle: true,
+        company: true,
         pengangkutanDetails: {
           include: {
             b3Substance: true,

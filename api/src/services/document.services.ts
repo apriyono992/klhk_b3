@@ -181,8 +181,27 @@ export class DocumentService {
     return this.prisma.documentRekomendasiB3.update({
       where: { id: documentId },
       data: {
-        isValid,
-        validationNotes,
+        isValid: isValid,
+        validationNotes: validationNotes,
+      },
+    });
+  }
+
+   // Validate a document by an admin
+   async validateTelaahDocument(documentId: string, isValid: boolean, validationNotes?: string) {
+    const document = await this.prisma.documentRekomendasiB3.findUnique({
+      where: { id: documentId },
+    });
+
+    if (!document) {
+      throw new NotFoundException(`Document with ID ${documentId} not found`);
+    }
+
+    return this.prisma.documentRekomendasiB3.update({
+      where: { id: documentId },
+      data: {
+        isValidTelaah : isValid,
+        telaahNotes: validationNotes,
       },
     });
   }

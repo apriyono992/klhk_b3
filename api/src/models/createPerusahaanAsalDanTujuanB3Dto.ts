@@ -1,19 +1,24 @@
-import { IsUUID, IsString, IsNumber } from 'class-validator';
+import { IsUUID, IsString, IsNumber, IsLatitude, IsLongitude, IsNotEmpty } from 'class-validator';
 
 export class CreatePerusahaanAsalMuatDanTujuanDto {
   @IsUUID()
+  @IsNotEmpty()
   companyId: string;
 
   @IsString()
+  @IsNotEmpty()
   namaPerusahaan: string;
 
   @IsString()
+  @IsNotEmpty()
   alamat: string;
 
-  @IsNumber()
+  @IsLatitude()
+  @IsNotEmpty()
   latitude: number;
 
-  @IsNumber()
+  @IsLongitude()
+  @IsNotEmpty()
   longitude: number;
 
   @IsString()

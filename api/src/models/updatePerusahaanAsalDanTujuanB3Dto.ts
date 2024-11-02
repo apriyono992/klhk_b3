@@ -1,4 +1,4 @@
-import { IsUUID, IsString, IsNumber, IsOptional } from 'class-validator';
+import { IsUUID, IsString, IsNumber, IsOptional, IsLongitude, IsLatitude } from 'class-validator';
 
 export class UpdatePerusahaanAsalMuatDanTujuanDto {
   @IsUUID()
@@ -13,11 +13,11 @@ export class UpdatePerusahaanAsalMuatDanTujuanDto {
   @IsOptional()
   alamat: string;
 
-  @IsNumber()
+  @IsLatitude()
   @IsOptional()
   latitude: number;
 
-  @IsNumber()
+  @IsLongitude()
   @IsOptional()
   longitude: number;
 

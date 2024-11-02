@@ -4,6 +4,7 @@ import { DraftSuratDto } from 'src/models/draftSuratDto';
 import { StatusPermohonan } from 'src/models/enums/statusPermohonan';
 import { CreateIdentitasPemohonDto } from 'src/models/identitasPemohonDto';
 import { SearchApplicationDto } from 'src/models/searchPermohonanRekomendasiDto';
+import { TelaahTeknisUpsertDto } from 'src/models/telaahTeknisDto';
 import { UpdateApplicationStatusDto } from 'src/models/updateApplicationStatusDto';
 import { PermohonanRekomendasiB3Service } from 'src/services/permohonanRekom.services';
 
@@ -330,5 +331,71 @@ export class PermohonanRekomendasiB3Controller {
       message: 'Successfully updated the DraftSurat',
       data: updatedDraftSurat,
     };
+  }
+
+  @Patch('rekom/permohonan/:applicationId')
+  @ApiOperation({ summary: 'Upsert Telaah Teknis Rekomendasi B3 for a given application ID' })
+  @ApiParam({
+    name: 'applicationId',
+    type: String,
+    description: 'The ID of the application to upsert Telaah Teknis for',
+  })
+  @ApiBody({
+    type: TelaahTeknisUpsertDto,
+    examples: {
+      example1: {
+        summary: 'Partial update with new pejabat connections',
+        value: {
+          kronologi_permohonan: ['Step 1', 'Step 2'],
+          lain_lain: ['Item 1', 'Item 2'],
+          tindak_lanjut: 'Follow-up details',
+          pejabat: [{ id: 'pejabat123' }, { id: 'pejabat456' }],
+          printed: true,
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Telaah Teknis upserted successfully',
+    content: {
+      'application/json': {
+        example: {
+          message: 'Telaah Teknis updated successfully',
+          telaahTeknis: {
+            id: 'telaah123',
+            applicationId: 'app123',
+            kronologi_permohonan: ['Step 1', 'Step 2'],
+            lain_lain: ['Item 1', 'Item 2'],
+            tindak_lanjut: 'Follow-up details',
+            pejabat: [{ id: 'pejabat123', name: 'Pejabat A' }, { id: 'pejabat456', name: 'Pejabat B' }],
+            printed: true,
+            updatedAt: '2024-10-31T12:00:00.000Z',
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid data or application ID not found.',
+  })
+  async upsertTelaahTeknis(
+    @Param('applicationId') applicationId: string,
+    @Body() data: TelaahTeknisUpsertDto,
+  ) {
+    if (!applicationId) {
+      throw new BadRequestException('Application ID is required.');
+    }
+
+    try {
+      const result = await this.permohonanService.upsertTelaahTeknis(applicationId, data);
+      return {
+        message: 'Telaah Teknis updated successfully',
+        telaahTeknis: result,
+      };
+    } catch (error) {
+      throw new BadRequestException('Error upserting Telaah Teknis: ' + error.message);
+    }
   }
 }
