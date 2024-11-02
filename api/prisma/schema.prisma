@@ -339,7 +339,7 @@ model Company {
   vehicles        Vehicle[] // One-to-many relationship: A company can have multiple vehicles
   applications    Application[] // One-to-many: A company can submit multiple applications
   registrasi      Registrasi[] // One-to-many: A company can have multiple registration sk
-
+  tipePerusahaan  String? // Tipe perusahaan
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
