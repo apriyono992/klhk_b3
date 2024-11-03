@@ -1,12 +1,14 @@
 import { IsOptional, IsString, IsArray, IsUUID, IsBoolean } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PaginationDto } from './paginationDto';
+import { Transform } from 'class-transformer';
 
 export class SearchVehicleDto extends PaginationDto {
   @ApiPropertyOptional({ description: 'Search by multiple vehicle registration numbers (noPolisi)', type: [String] })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
   noPolisi?: string[];
 
   @ApiPropertyOptional({ description: 'Search by vehicle model' })

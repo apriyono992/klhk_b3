@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { TipeDokumen } from 'src/models/enums/TipeDokumen';
+import { TipeDokumen } from './src/models/enums/TipeDokumen';
 const prisma = new PrismaClient();
 
 

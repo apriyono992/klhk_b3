@@ -3,38 +3,56 @@ import { useDisclosure } from "@nextui-org/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import * as yup from 'yup';
+import { deleteFetcher, postFetcher, putFetcherWithoutId } from "../services/api";
+import { dirtyInput, formDataWithParsedLocation, isResponseErrorObject } from "../services/helpers";
+import { reviewMaterialSchema } from "../services/validation";
 
 export default function useRecomendationMaterial({ mutate }) {
-    const formSchema =  yup.object().shape({
-        casNumber: yup.string().required('Harus diisi'),
-        namaDagang: yup.string().required('Harus diisi'),   
-        namaBahanKimia: yup.string().required('Harus diisi'),
-        b3pp74: yup.boolean().oneOf([true, false], 'Isi harus valid atau tidak valid'),   
-        karakteristikB3: yup.string().required('Harus diisi'),
-        fasaB3: yup.string().required('Harus diisi'),
-        jenisKemasan: yup.string().required('Harus diisi'),
-        tujuanPenggunaan: yup.string().required('Harus diisi'), 
-    }).required()
-
     const {isOpen: isOpenModalForm, onOpen: onOpenModalForm, onOpenChange: onOpenChangeModalForm, onClose: onCloseModalForm} = useDisclosure();
     const {isOpen: isOpenModalAlert, onOpenChange: onOpenChangeModalAlert} = useDisclosure();
+    const [applicationId, setApplicationId] = useState(null);
     const [editId, setEditId] = useState(null);
     const [isEdit, setIsEdit] = useState(false);
-    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({resolver: yupResolver(formSchema)});
+    const { register, handleSubmit, control, reset, formState: { errors, isSubmitting, dirtyFields } } = useForm({
+        resolver: yupResolver(reviewMaterialSchema),
+        defaultValues: {
+            asalMuat: [
+                { name: "", alamat: "", longitude: "", latitude: "" }, 
+            ],
+            tujuanBongkar: [
+                { name: "", alamat: "", longitude: "", latitude: "" },
+            ],
+        },
+    });
 
-    function onClickEdit(item) {    
-        setEditId(item.id);
+    function onClickCreate(applicationId) {
+        setApplicationId(applicationId);
+        onOpenModalForm()
+    }
+
+    function onClickEdit(item) {
+        setEditId(item.id);    
         setIsEdit(true);
         reset({
-            casNumber: item.sku,
-            namaDagang: item.title,   
-            namaBahanKimia: item.brand,
-            b3pp74: true,   
-            karakteristikB3: item.category,
-            fasaB3: item.availabilityStatus,
-            jenisKemasan: item.returnPolicy,
-            tujuanPenggunaan: item.shippingInformation,
+            dataBahanB3Id: item.dataBahanB3Id,  
+            b3pp74: item.b3pp74,   
+            b3DiluarList: item.b3DiluarList,   
+            karakteristikB3: item.karakteristikB3,
+            fasaB3: item.fasaB3,
+            jenisKemasan: item.jenisKemasan,
+            asalMuat: item?.asalMuatLocations?.map((location) => ({
+                name: location.name,
+                alamat: location.alamat,
+                longitude: location.longitude,
+                latitude: location.latitude
+            })),
+            tujuanBongkar: item?.tujuanBongkarLocations?.map((location) => ({
+                name: location.name,
+                alamat: location.alamat,
+                longitude: location.longitude,
+                latitude: location.latitude
+            })),
+            tujuanPenggunaan: item.tujuanPenggunaan,
         });           
         onOpenChangeModalForm();
     }
@@ -43,13 +61,14 @@ export default function useRecomendationMaterial({ mutate }) {
         setEditId(null);
         setIsEdit(false);
         reset({
-            casNumber: '',
-            namaDagang: '',   
-            namaBahanKimia: '',
-            b3pp74: false,   
+            dataBahanB3Id: '',
+            b3pp74: '',   
+            b3DiluarList: '',   
             karakteristikB3: '',
             fasaB3: '',
             jenisKemasan: '',
+            asalMuat: [{ name: "", alamat: "", longitude: "", latitude: "" }],
+            tujuanBongkar: [{ name: "", alamat: "", longitude: "", latitude: "" }],
             tujuanPenggunaan: '',
         });
         onCloseModalForm()
@@ -62,8 +81,9 @@ export default function useRecomendationMaterial({ mutate }) {
     
     async function onSubmitDelete() {
         try {
-            await new Promise((r) => setTimeout(r, 1000));
             console.log(editId);
+            await deleteFetcher(`/api/b3-substance`, editId);
+            mutate();
             toast.success('Data bahan b3 berhasil dihapus!');
         } catch (error) {
             toast.error('Gagal hapus data bahan b3!');
@@ -72,18 +92,29 @@ export default function useRecomendationMaterial({ mutate }) {
 
     async function onSubmitForm(data) {
         try {
-            await new Promise((r) => setTimeout(r, 1000));
             if (isEdit) {
-                console.log(editId);
-                console.log(data);
+                const filteredData = dirtyInput(dirtyFields, data);
+                filteredData.dataBahanB3Id = editId;
+                const transformedData = formDataWithParsedLocation(filteredData);
+                console.log(transformedData);
+                
+                await putFetcherWithoutId(`/api/b3-substance/`, transformedData); 
+                mutate();                
                 toast.success('Data bahan b3 berhasil diubah!');
             } else {
-                console.log(data);
+                data.applicationId = applicationId;                
+                const transformedData = formDataWithParsedLocation(data);
+                await postFetcher('/api/b3-substance/', transformedData);
+                mutate()
                 toast.success('Bahan b3 berhasil ditambah!');
             }
             onCloseForm();
         } catch (error) {
-            toast.success('Error submit form!');
+            isResponseErrorObject(error.response.data.message)
+                ? Object.entries(error.response.data.message).forEach(([key, value]) => {
+                    toast.error(value);
+                })
+                : toast.error(error.response.data.message)
         }
     }
 
@@ -99,11 +130,13 @@ export default function useRecomendationMaterial({ mutate }) {
         },
         hookForm: {
             register, 
-            handleSubmit, 
+            handleSubmit,
+            control, 
             reset, 
-            formState: { errors, isSubmitting }
+            formState: { errors, isSubmitting, dirtyFields }
         },
         isEdit,
+        onClickCreate,
         onClickEdit,
         onCloseForm,
         onClickDelete,

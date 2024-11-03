@@ -2,6 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsArray, IsString, IsEnum } from 'class-validator';
 import { PaginationDto } from './paginationDto';
 import { TembusanTipe } from './enums/tipeTembusan';
+import { Transform } from 'class-transformer';
 
 export class SearchDataTembusanDto extends PaginationDto {
   @ApiPropertyOptional({
@@ -12,6 +13,7 @@ export class SearchDataTembusanDto extends PaginationDto {
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
   nama?: string[];
 
   @ApiPropertyOptional({
@@ -22,5 +24,6 @@ export class SearchDataTembusanDto extends PaginationDto {
   @IsOptional()
   @IsArray()
   @IsEnum(TembusanTipe, { each: true })
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
   tipe?: TembusanTipe[];
 }

@@ -10,13 +10,13 @@ import { IsDistrictValid } from 'src/validators/district.validator';
 import { IsVillageValid } from 'src/validators/village.validator';
 import { PrismaService } from 'src/services/prisma.services';
 import { IsPejabatExists, PejabatIdExistsConstraint, PejabatUsedConstraint } from 'src/validators/dataPejabat.validator';
-import { IsBahanB3Exists, IsDataBahanB3Exist, IsDataBahanB3Exists, IsNamaBahanKimiaB3Exist, IsNamaBahanKimiaExists } from 'src/validators/dataBahanB3.validator';
+import { DataBahanB3MustConstaint, IsBahanB3Exists, IsDataBahanB3Exist, IsDataBahanB3Exists, IsNamaBahanKimiaB3Exist, IsNamaBahanKimiaExists } from 'src/validators/dataBahanB3.validator';
 import { IsTembusanExists, TembusanIdExistsConstraint } from 'src/validators/dataTembusan.validator';
 import { ApplicationExistsConstraint } from 'src/validators/isApplicationIdExists.validatior';
 import { CompanyExistsConstraint } from 'src/validators/isCompanyExists.validator';
 import { VehicleExistsConstraint } from 'src/validators/isVehicleExists.validator';
 import { DraftSuratExistsConstraint } from 'src/validators/isDraftSuratExists.validator';
-import { DraftNotifikasiConstraint, NotifikasiConstraint } from 'src/validators/notifikasi.validator';
+import { DraftNotifikasiConstraint, EuReferenceContsraint, NotifikasiConstraint } from 'src/validators/notifikasi.validator';
 
 @Global()  // This makes the module global
 @Module({
@@ -57,6 +57,8 @@ import { DraftNotifikasiConstraint, NotifikasiConstraint } from 'src/validators/
     NotifikasiConstraint,
     DraftNotifikasiConstraint,
     IsNamaBahanKimiaExists,
+    EuReferenceContsraint,
+    DataBahanB3MustConstaint
 
   ],
   exports: [
@@ -83,7 +85,8 @@ import { DraftNotifikasiConstraint, NotifikasiConstraint } from 'src/validators/
     IsTembusanExists,
     NotifikasiConstraint,
     DraftNotifikasiConstraint,
-    IsNamaBahanKimiaExists
+    IsNamaBahanKimiaExists,
+    EuReferenceContsraint
   ],
 })
 export class ValidatorsModule {}

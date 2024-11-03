@@ -1,10 +1,10 @@
-import { IsString, IsBoolean, IsOptional, Validate } from 'class-validator';
+import { IsString, IsBoolean, IsOptional, Validate, IsArray } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsDataBahanB3Exists } from 'src/validators/dataBahanB3.validator';
+import { IsBahanB3Exists, IsDataBahanB3Exists } from 'src/validators/dataBahanB3.validator';
+import { LocationDetailsDto } from './locationDetailsDto';
 
 export class UpdateB3PermohonanRekomDto {
   @ApiPropertyOptional({ description: 'Foreign key for DataBahanB3' })
-  @Validate(IsDataBahanB3Exists)
   @IsString()
   @IsOptional()
   dataBahanB3Id?: string;
@@ -34,15 +34,23 @@ export class UpdateB3PermohonanRekomDto {
   @IsOptional()
   jenisKemasan?: string;
 
-  @ApiPropertyOptional({ description: 'Origin of the B3' })
-  @IsString()
+  // New: Array of origin locations (asalMuat)
+  @ApiPropertyOptional({
+    description: 'Array of origin locations (asalMuat)',
+    type: [LocationDetailsDto],
+  })
+  @IsArray()
   @IsOptional()
-  asalMuat?: string;
+  asalMuat: LocationDetailsDto[];
 
-  @ApiPropertyOptional({ description: 'Destination of the B3' })
-  @IsString()
+  // New: Array of destination locations (tujuanBongkar)
+  @ApiPropertyOptional({
+    description: 'Array of destination locations (tujuanBongkar)',
+    type: [LocationDetailsDto],
+  })
+  @IsArray()
   @IsOptional()
-  tujuanBongkar?: string;
+  tujuanBongkar: LocationDetailsDto[];
 
   @ApiPropertyOptional({ description: 'Purpose of the B3' })
   @IsString()

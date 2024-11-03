@@ -1,9 +1,15 @@
 import { PhoneIcon, EnvelopeIcon, MapPinIcon } from "@heroicons/react/24/outline";
 import banner from '../../assets/banner/bg-auth.png';
+import { Toaster } from "react-hot-toast";
 
 export default function RootAuth({ children }) {
     return (
         <>
+            <Toaster
+                toastOptions={{
+                    duration: 5000,
+                }}
+            />
             <div className="fixed lg:hidden w-full h-1/3 bg-primary rounded-br-2xl rounded-bl-2xl"></div>
             <div className="hidden lg:flex flex-col fixed min-h-screen max-h-screen w-1/2 justify-between bg-default">
                 <img alt="bg-login" className='w-full lg:w-1/2 object-cover fixed left-0 top-1/2 transform -translate-y-1/2 opacity-20' src={banner} />

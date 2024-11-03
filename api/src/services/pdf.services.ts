@@ -160,14 +160,15 @@ export class PdfService {
     // Render the template with dynamic data
     const renderedHtml = ejs.render(template, {
       base64Image,
-      nomorSurat: draftSurat.nomorSurat,
-      sifatSurat: draftSurat.sifatSurat,
-      pejabat: draftSurat.pejabat,
-      company: draftSurat.notifikasi?.company,
-      tembusan: draftSurat.tembusan,
-      bahanKimia: draftSurat.notifikasi.dataBahanB3Id,
-      email: draftSurat.emailPenerima,
-      tanggalPengiriman: draftSurat.tanggalPengiriman,
+      draftSurat: draftSurat ?? {},
+      nomorSurat: draftSurat.nomorSurat ?? '',
+      sifatSurat: draftSurat.sifatSurat ?? '',
+      pejabat: draftSurat.pejabat ?? '',
+      company: draftSurat.notifikasi?.company ?? '',
+      tembusan: draftSurat.tembusan ?? '',
+      bahanKimia: draftSurat.notifikasi.dataBahanB3.namaDagang ?? '',
+      email: draftSurat.emailPenerima ?? '',
+      tanggalPengiriman: draftSurat.tanggalPengiriman ?? '',
       // Custom points for Kebenaran Import
       customPoint1: draftSurat.KebenaranImport?.[0]?.point1 || '',
       customPoint2: draftSurat.KebenaranImport?.[0]?.point2 || '',
@@ -370,7 +371,6 @@ export class PdfService {
     return pdfBuffer;
   }
   
-
   async generateTelaahTeknisPdf(applicationId: string) {
     // Fetch data from TelaahTeknisRekomendasiB3 with related Application, Company, and Pejabat
     const telaahTeknis = await this.prisma.telaahTeknisRekomendasiB3.findFirst({

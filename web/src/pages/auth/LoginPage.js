@@ -5,13 +5,14 @@ import { Button, Checkbox, Input } from '@nextui-org/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from "react";
 import { useForm } from "react-hook-form"
-import { login } from "../../services/api";
 import Cookies from 'js-cookie'
 import { DASHBOARD_PATH, FORGOT_PASSWORD_PATH, REGISTER_PATH } from '../../services/routes';
+import { isResponseErrorObject } from '../../services/helpers';
+import toast from 'react-hot-toast';
+import { postFetcher } from '../../services/api';
 
 export default function LoginPage() {
     const [isVisible, setIsVisible] = useState(false);
-    const [error, setError] = useState("")
     const { register, handleSubmit, formState: { errors, isSubmitting }, } = useForm()
     const navigate = useNavigate();
 
@@ -20,19 +21,24 @@ export default function LoginPage() {
     }
     
     async function onSubmit(data) {
-        setError("")
-        data.expiresInMins = 1
-        data.clientId = "klhk-974f693f-9dcf-4b3a-b76e-eaee0da0c3a9"
-        data.clientSecret= "56f3bd572037efc90b74b08f8eb3db8fa4fb28ed47270f87279613b529b225d1"
-        const response = await login(data)
-        
-        if (response.status === 200) {
-            Cookies.set('accessToken', response.data.accessToken, { expires: 0.5, secure: true, sameSite: 'strict' });
-            Cookies.set('refreshToken', response.data.refreshToken, { expires: 0.5, secure: true, sameSite: 'strict' });
+        try {
+            data.expiresInMins = 1
+            data.clientId = "klhk-974f693f-9dcf-4b3a-b76e-eaee0da0c3a9"
+            data.clientSecret= "56f3bd572037efc90b74b08f8eb3db8fa4fb28ed47270f87279613b529b225d1"
+            const response = await postFetcher('/api/auth/login',  data)
             
-            navigate(DASHBOARD_PATH, { replace: true })
+            Cookies.set('accessToken', response.accessToken, { expires: 0.5, secure: true, sameSite: 'strict' });
+            Cookies.set('refreshToken', response.refreshToken, { expires: 0.5, secure: true, sameSite: 'strict' });
+            Cookies.set('sessionExpired', response.sessionExpired, { expires: 0.5, secure: true, sameSite: 'strict' });
+            
+            navigate(DASHBOARD_PATH, { replace: true })    
+        } catch (error) {
+            isResponseErrorObject(error.response.data.message)
+                ? Object.entries(error.response.data.message).forEach(([key, value]) => {
+                    toast.error(value)
+                })
+                : toast.error(error.response.data.message)
         }
-        return setError(response.data.message)
     }
 
     return (
@@ -43,7 +49,6 @@ export default function LoginPage() {
                     <h3 className="font-bold text-2xl mt-5">Masukan Akun Anda</h3>
                     <p className="text-base">Sistem Informasi Tata Kelola dan Perizinan Bahan Berbahaya dan Beracun</p>
                 </div>
-                { error && <span className="text-danger">{ error }</span> }
                 <form className="pt-3 font-medium" onSubmit={handleSubmit(onSubmit)}>
                     <Input 
                         {...register('email', { required: "Email is required" })} 

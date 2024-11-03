@@ -224,7 +224,7 @@ export class DataMasterService {
     try {
       return await this.prisma.$transaction(async (prisma) => {
 
-        if(data.applicationId !== undefined || data.applicationId?.trim() !== '') {
+        if(data.applicationId !== undefined && data.applicationId?.trim() !== '') {
           // Cari DraftSurat berdasarkan applicationId
           const draftSurat = await prisma.draftSurat.findUnique({
             where: { applicationId: data.applicationId },

@@ -50,27 +50,77 @@ export class BahanB3Service {
           ...tujuanBongkarLocations.map(location => ({ ...location, b3SubstanceIdAsalMuat: null }))
         ],
       });
-  
-      return newB3Substance; // Return the newly created B3Substance
     });
   
     return {
       message: 'B3Substance added successfully to the application',
+      b3Substance: transaction,
     };
   }
-  
-
 
   // Edit an existing B3Substance
   async updateB3Substance(updateB3SubstanceDto: UpdateB3PermohonanRekomDto) {
-    const updatedB3Substance = await this.prisma.b3Substance.update({
-      where: { id: updateB3SubstanceDto.dataBahanB3Id },
-      data: updateB3SubstanceDto,
+    const { asalMuat, tujuanBongkar, dataBahanB3Id, ...b3SubstanceData } = updateB3SubstanceDto;
+
+    // Initialize data object to include only defined properties
+    const data: any = {};
+    if (b3SubstanceData.b3pp74 !== undefined) data.b3pp74 = b3SubstanceData.b3pp74;
+    if (b3SubstanceData.b3DiluarList !== undefined) data.b3DiluarList = b3SubstanceData.b3DiluarList;
+    if (b3SubstanceData.karakteristikB3 !== undefined) data.karakteristikB3 = b3SubstanceData.karakteristikB3;
+    if (b3SubstanceData.fasaB3 !== undefined) data.fasaB3 = b3SubstanceData.fasaB3;
+    if (b3SubstanceData.jenisKemasan !== undefined) data.jenisKemasan = b3SubstanceData.jenisKemasan;
+    if (b3SubstanceData.tujuanPenggunaan !== undefined) data.tujuanPenggunaan = b3SubstanceData.tujuanPenggunaan;
+
+    // Begin transaction to ensure consistency
+    const transaction = await this.prisma.$transaction(async (prisma) => {
+      // Update the B3Substance base data
+      const updatedB3Substance = await prisma.b3Substance.update({
+        where: { id: dataBahanB3Id },
+        data,
+      });
+
+      if(!updatedB3Substance) {
+        throw new NotFoundException(`B3Substance with ID ${dataBahanB3Id} not found`);
+      }
+
+      // Update asalMuat locations if provided
+      if (asalMuat) {
+        await prisma.locationDetails.deleteMany({
+          where: { b3SubstanceIdAsalMuat: dataBahanB3Id, locationType: 'ASAL_MUAT' },
+        });
+        const asalMuatLocations = asalMuat.map((location) => ({
+          name: location.name,
+          alamat: location.alamat,
+          longitude: location.longitude,
+          latitude: location.latitude,
+          b3SubstanceIdAsalMuat: dataBahanB3Id,
+          locationType: 'ASAL_MUAT',
+        }));
+        await prisma.locationDetails.createMany({ data: asalMuatLocations });
+      }
+
+      // Update tujuanBongkar locations if provided
+      if (tujuanBongkar) {
+        await prisma.locationDetails.deleteMany({
+          where: { b3SubstanceIdTujuanBongkar: dataBahanB3Id, locationType: 'TUJUAN_BONGKAR' },
+        });
+        const tujuanBongkarLocations = tujuanBongkar.map((location) => ({
+          name: location.name,
+          alamat: location.alamat,
+          longitude: location.longitude,
+          latitude: location.latitude,
+          b3SubstanceIdTujuanBongkar: dataBahanB3Id,
+          locationType: 'TUJUAN_BONGKAR',
+        }));
+        await prisma.locationDetails.createMany({ data: tujuanBongkarLocations });
+      }
+
+      return updatedB3Substance;
     });
 
     return {
       message: 'B3Substance updated successfully',
-      b3Substance: updatedB3Substance,
+      b3Substance: transaction,
     };
   }
 

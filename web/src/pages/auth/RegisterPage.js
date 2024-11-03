@@ -3,53 +3,23 @@ import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/images/logo.png';
 import RootAuth from '../../components/layouts/RootAuth';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import { useEffect, useState } from 'react';
-import { getCity, getProvince, registerUser, uploadPhoto } from '../../services/api';
+import { useState } from 'react';
+import { getFetcher, postFetcher, uploadPhoto } from '../../services/api';
 import { useForm } from "react-hook-form";
 import toast from 'react-hot-toast';
-import { useState } from 'react';
 import { LOGIN_PATH } from '../../services/routes';
+import useSWR from 'swr';
+import { isResponseErrorObject } from '../../services/helpers';
 
 export default function RegisterPage() {
-    const [error, setError] = useState("")
     const [uploadStatus, setUpload] = useState({});
     const [isVisible, setIsVisible] = useState(false);
-    const [dataProvince, setDataProvince] = useState([]);    
-    const [dataCity, setDataCity] = useState([]);
     const { register, handleSubmit, watch, formState: { errors, isSubmitting }, getValues, setValue } = useForm();
     const navigate = useNavigate();
     const provinceId = watch('provinceId');
 
-    useEffect(() => {
-        getData();
-    }, []);
-
-    useEffect(() => {
-        if (provinceId) {
-            fetchCities(provinceId)
-            setValue('cityId', '');
-        } else {
-            setDataCity([]);
-        }
-    }, [provinceId, setValue]);
-
-    const fetchCities = async (param) => {
-        try {
-            const cities = await getCity('api/location/cities?provinceId=' + param);
-            setDataCity(cities);
-        } catch (error) {
-            console.log('error fetching:', error)
-        }
-    }
-
-    const getData = async () => {
-        try {
-            const province = await getProvince();
-            setDataProvince(province);
-        } catch (error) {
-            console.log('error fetching:', error);
-        }
-    };
+    const { data: province } = useSWR('api/location/provinces', getFetcher)
+    const { data: regency } = useSWR(provinceId ? `api/location/cities?provinceId=${provinceId}` : null, getFetcher)
 
     const handleFileUpload = async (event) => {
         try {
@@ -60,7 +30,6 @@ export default function RegisterPage() {
             try {
                 const response = await uploadPhoto(formData);
                 setUpload(response.data)
-                console.log('Upload success:', response.data);
             } catch (error) {
                 console.error('Error uploading file:', error);
             }
@@ -72,20 +41,27 @@ export default function RegisterPage() {
     const toggleVisibility = () => setIsVisible(!isVisible);
 
     async function onSubmit(data) {
-        setError("")
-        const { confirmPassword, attachments, ...newData } = data;
-        const updatedData = {
-            ...newData,
-            idPhotoUrl: uploadStatus.path
-        }
+        try {
+            const { confirmPassword, attachments, ...newData } = data;
+            const updatedData = {
+                ...newData,
+                idPhotoUrl: uploadStatus.path
+            }            
 
-        const response = await registerUser(updatedData)
-        
-        if (response.status === 201) {
-            toast.success('Berhasil membuat akun!')
-            navigate('/masuk', { replace: true })
+            const response = await postFetcher('/api/auth/register', updatedData)
+            
+            if (response.status === 201) {
+                toast.success('Berhasil membuat akun silahkan masuk!')
+                navigate('/masuk', { replace: true })
+            } 
+        } catch (error) {
+            isResponseErrorObject(error.response.data.message)
+                ? Object.entries(error.response.data.message).forEach(([key, value]) => {
+                    toast.error(value)
+                })
+                : toast.error(error.response.data.message)
+            
         }
-        return setError(response.data.message)
     }
 
     return (
@@ -100,11 +76,10 @@ export default function RegisterPage() {
                     </div>
                 </div>
 
-                { error && <span className="text-danger">{ error }</span> }
                 <form className="pt-10 font-medium" onSubmit={handleSubmit(onSubmit)}>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4 mb-5">
                         <Input 
-                            {...register('fullName', { required: "FullName is required" })}
+                            {...register('fullName')}
                             color={errors.fullName ? 'danger' : 'default'} 
                             isInvalid={errors.fullName} 
                             errorMessage={errors.fullName && errors.fullName.message} 
@@ -116,7 +91,7 @@ export default function RegisterPage() {
                             placeholder='Masukan nama lengkap' 
                         />
                         <Input 
-                            {...register('email', { required: "email is required" })}
+                            {...register('email')}
                             color={errors.email ? 'danger' : 'default'} 
                             isInvalid={errors.email} 
                             errorMessage={errors.email && errors.email.message} 
@@ -128,7 +103,7 @@ export default function RegisterPage() {
                             placeholder='Masukan email' 
                         />
                         <Input 
-                            {...register('phoneNumber', { required: "phoneNumber is required" })}
+                            {...register('phoneNumber')}
                             color={errors.phoneNumber ? 'danger' : 'default'} 
                             isInvalid={errors.phoneNumber} 
                             errorMessage={errors.phoneNumber && errors.phoneNumber.message}
@@ -151,9 +126,8 @@ export default function RegisterPage() {
                             placeholder='Pilih provinsi'
                             onChange={(e) => setValue('provinceId', e.target.value)}
                         >
-                            <SelectItem value="" disabled>Pilih Provinsi</SelectItem>
-                            {dataProvince?.map(it => (
-                                <SelectItem key={it.id} value={it.id}>{it.name}</SelectItem>
+                            {province?.map(item => (
+                                <SelectItem key={item.id}>{item.name}</SelectItem>
                             ))}
                         </Select>
                         <Select 
@@ -167,7 +141,7 @@ export default function RegisterPage() {
                             size="md" 
                             placeholder='Pilih kota / kabupaten'
                         >
-                            {dataCity?.map(it => (
+                            {regency?.map(it => (
                                 <SelectItem key={it.id} value={it.id}>{it.name}</SelectItem>
                             ))}
                         </Select>

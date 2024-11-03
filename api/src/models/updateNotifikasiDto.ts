@@ -41,4 +41,8 @@ export class UpdateNotifikasiDto {
   @IsOptional()
   @IsString()
   printed?: boolean;  // Flag to mark whether the draft surat has been generated or printed
+
+  @IsOptional()
+  @IsString()
+  changeBy?: string;  // Flag to mark whether the draft surat has been generated or printed
 }

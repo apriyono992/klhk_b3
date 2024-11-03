@@ -1,110 +1,52 @@
-import { ArrowPathIcon, EyeIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
-import { Button, Card, CardBody, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Textarea, useDisclosure } from '@nextui-org/react';
-import React, { useState } from 'react'
-import * as yup from 'yup';
-import useSWR from 'swr';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
+import { EyeIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
+import { Button, Card, CardBody, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Textarea } from '@nextui-org/react';
+import React from 'react'
 import toast from 'react-hot-toast';
-import IsValidIcon from '../../../../elements/IsValidDocument';
+import IsValidIcon from '../../../../elements/isValidIcon';
+import useDucumentReviewForm from '../../../../../hooks/useDocumentReviewForm';
 import ModalAlert from '../../../../elements/ModalAlert';
 
-export default function DocumentReview({ data }) {
-    // const fetcher = (...args) => authStateFetcher(...args);
-    // const { data, isLoading } = useSWR('/todos?limit=20', fetcher);
-    const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
-    const [isEditId, setIsEditId] = useState(null);
-
-    const schema =  yup.object().shape({
-        isValid: yup.boolean().oneOf([true, false], 'isi harus valid atau tidak valid'),
-        validationNotes: yup.string().required('Harus diisi'),   
-    }).required()
-
-    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({resolver: yupResolver(schema)});
+export default function DocumentReview({ data, isLoading, mutate }) {
+    const { 
+        modalForm: { isOpenModalForm, onOpenChangeModalForm },
+        modalAlert: { isOpenModalAlert, onOpenChangeModalAlert },
+        hookForm: { register, handleSubmit, formState: { errors, isSubmitting } },
+        onCloseForm,
+        onSubmitForm,
+        onClickEdit,
+        onValidate 
+    } = useDucumentReviewForm({ mutate });
 
     const columns = [
         'No',
         'Nama',
         'Status',
-        'Catatan Validasi',
+        'Catatan Telaah',
         'Aksi',
     ]
-
-    async function handleOnSubmit(data) {
-        try {
-            await new Promise((r) => setTimeout(r, 1000));
-            console.log(isEditId);
-            console.log(data);
-            toast.success('Status dokumen validasi berhasil diubah!');
-            reset();
-            onClose();
-        } catch (error) {
-            toast.success('Gagal ubah status dokumen validasi!');
-        }
-    }
-
-    function handleOnClose() {
-        setIsEditId(null);
-        reset({
-            isValid: '',
-            validationNotes: '',   
-        });
-    }
-
-    function handleOnEdit(item) {         
-        setIsEditId(item.id);            
-        onOpen();
-    }
-
-    async function handleOnValidate(data) {
-        try {
-            await new Promise((r) => setTimeout(r, 1000));
-            console.log(data);
-            toast.success('Status dokumen berhasil diubah!');
-            reset();
-            onClose();
-        } catch (error) {
-            toast.success('Gagal ubah status dokument!');
-        }
-    }
 
     return (
         <>
             <Card>
                 <CardBody>
-                    <div className='mb-6'>
-                        <ModalAlert 
-                            heading="Validasi Dokumen?" 
-                            description="Pastikan semua dokumen sudah ditelaah"
-                            buttonSubmitText="Ya, validasi"
-                            buttonTriggerText="Validasi"
-                            color="warning"
-                            startIcon={<ArrowPathIcon className="size-4"/>}
-                            onSubmit={() => handleOnValidate(data)}
-                        />
-                    </div>
                     <Table removeWrapper aria-label="validation-table" radius='sm'>
                         <TableHeader>
-                        {columns.map((item, index) => <TableColumn key={index}>{item}</TableColumn>)}
+                            {columns.map((item, index) => <TableColumn key={index}>{item}</TableColumn>)}
                         </TableHeader>
-                        <TableBody loadingContent={<Spinner/>} loadingState="idle">
-                            {data?.documents.map((item, index) => (
+                        <TableBody loadingContent={<Spinner/>} loadingState={isLoading ? 'loading' : 'idle'}>
+                            {data?.documents?.map((item, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{item.documentType}</TableCell>
                                     <TableCell>
-                                        <IsValidIcon value={item.isValid} />
+                                        <IsValidIcon value={item.isValidTelaah} />
                                     </TableCell>
-                                    <TableCell>{item.validationNotes}</TableCell>
+                                    <TableCell>{item.telaahNotes}</TableCell>
                                     <TableCell className='flex items-center gap-1'>
                                         <a target='_blank' href={item.fileUrl} className=''>
                                             <Button isIconOnly size="sm" color='primary'><EyeIcon className='size-4'/></Button>
                                         </a>
-                                        {
-                                            item.archived
-                                            ? <></>
-                                            : <Button isIconOnly size="sm" color="warning" onPress={() => handleOnEdit(item)}><PencilSquareIcon className='size-4'/></Button>
-                                        }
+                                        <Button isIconOnly size="sm" color="warning" onPress={() => onClickEdit(item)}><PencilSquareIcon className='size-4'/></Button>
                                         
                                     </TableCell>
                                 </TableRow>
@@ -114,28 +56,28 @@ export default function DocumentReview({ data }) {
                 </CardBody>
             </Card>
 
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange} onClose={handleOnClose} isDismissable={false} isKeyboardDismissDisabled={false}>
+            <Modal isOpen={isOpenModalForm} onOpenChange={onOpenChangeModalForm} onClose={onCloseForm} isDismissable={false} isKeyboardDismissDisabled={false}>
                 <ModalContent>
                     {(onClose) => (
                         <>
                             <ModalHeader>Ubah Status Dokumen</ModalHeader>
                             <ModalBody>
-                                <form onSubmit={handleSubmit(handleOnSubmit)}>
+                                <form onSubmit={handleSubmit(onSubmitForm)}>
                                     <div className='flex flex-col gap-3 mb-6'>  
                                         <Checkbox 
-                                            {...register('isValid')}
+                                            {...register('isValidTelaah')}
                                         >
                                             Dokumen valid
                                         </Checkbox>
                                         <Textarea
-                                            {...register('validationNotes')}
+                                            {...register('telaahNotes')}
                                             isRequired
                                             variant="faded" 
                                             type="text" 
                                             label="Catatan" 
-                                            color={errors.validationNotes ? 'danger' : 'default'}
-                                            isInvalid={errors.validationNotes} 
-                                            errorMessage={errors.validationNotes && errors.validationNotes.message}
+                                            color={errors.telaahNotes ? 'danger' : 'default'}
+                                            isInvalid={errors.telaahNotes} 
+                                            errorMessage={errors.telaahNotes && errors.telaahNotes.message}
                                         />
                                     </div>
                                     <div className='flex items-center gap-1'>
@@ -151,6 +93,16 @@ export default function DocumentReview({ data }) {
                     )}
                 </ModalContent>
             </Modal>
+
+            <ModalAlert
+                heading="Submit Telaah?"
+                description="Pastikan semua file sudah ditelaah"
+                buttonSubmitText='Ya'
+                icon='warning'
+                onSubmit={() => onValidate(data.id)}
+                isOpen={isOpenModalAlert}
+                onOpenChange={onOpenChangeModalAlert}  
+            />
         </>
     )
 }

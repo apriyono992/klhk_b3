@@ -1,6 +1,5 @@
 import { Button, Card, CardBody, CardHeader, Chip, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react";
 import RootAdmin from "../../../components/layouts/RootAdmin";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { PencilSquareIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useMemo, useState } from "react";
 import ModalAlert from "../../../components/elements/ModalAlert";
@@ -8,12 +7,12 @@ import useMaterial from "../../../hooks/useMaterial";
 import useSWR from "swr";
 import { getFetcher } from "../../../services/api";
 import { materialType } from "../../../services/enum";
+import CustomDataGrid from "../../../components/elements/CustomDataGrid";
 
 export default function IndexPage() {
-    const fetcher = (...args) => getFetcher(...args);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
-    const { data, isLoading, mutate } = useSWR(`/api/data-master/bahan-b3?page=${page + 1}&limit=${pageSize}`, fetcher);
+    const { data, isLoading, mutate } = useSWR(`/api/data-master/bahan-b3?page=${page + 1}&limit=${pageSize}`, getFetcher);
     const { 
         isEdit,
         onClickEdit, 
@@ -30,22 +29,18 @@ export default function IndexPage() {
         {
             field: 'casNumber',
             headerName: 'Cas Number/Nomor Kimia',
-            width: 280
         },
         {
             field: 'namaBahanKimia',
             headerName: 'Nama Bahan Kimia',
-            width: 300
         },
         {
             field: 'namaDagang',
             headerName: 'Nama Dagang',
-            width: 300
         },
         {
             field: 'tipeBahan',
             headerName: 'Tipe Bahan',
-            width: 300,
             renderCell: (params) => {
                 switch (params.row.tipeBahan) {
                     case 'DILARANG':
@@ -68,7 +63,8 @@ export default function IndexPage() {
                     <Button size='sm' onPress={() => onClickDelete(params.row.id)} color='danger' isIconOnly><TrashIcon className='size-4'/></Button>
                 </div>
             ),
-            width: 250
+            sortable: false,
+            filterable: false
         },
     ], [onClickEdit, onClickDelete]);
 
@@ -84,35 +80,20 @@ export default function IndexPage() {
                     <div className="mb-5">
                         <Button onPress={onOpenModalForm} size="sm" color="primary" startContent={<PlusIcon className="size-4 stroke-2"/>}>Tambah</Button>
                     </div>
-                    <DataGrid
-                        rows={data?.data}
+                    <CustomDataGrid
+                        data={data?.data}
                         rowCount={data?.total || 0}
-                        loading={isLoading}
+                        isLoading={isLoading}
                         columns={columns}
-                        disableDensitySelector
+                        pageSize={pageSize}
+                        setPageSize={setPageSize}
+                        page={page}
+                        setPage={setPage}
                         initialState={{
-                            pagination: {
-                                paginationModel: {
-                                  pageSize: 10,
-                                },
-                            },
                             sorting: {
                                 sortModel: [{ field: 'casNumber', sort: 'asc' }],
                             },
-                            density: 'compact',
                         }}
-                        slots={{
-                            toolbar: GridToolbar,
-                        }}
-                        paginationMode="server"
-                        onPaginationModelChange={(model) => {
-                            setPage(model.page);
-                            setPageSize(model.pageSize);
-                        }}
-                        pageSizeOptions={[5, 10, 15]}
-                        page={page}
-                        pageSize={pageSize}
-                        disableRowSelectionOnClick
                     />
                 </CardBody>
             </Card>

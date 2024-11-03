@@ -1,8 +1,9 @@
-import { IsString, IsOptional, IsUUID, IsDateString, isEmail, IsEmail } from 'class-validator';
+import { IsString, IsOptional, IsUUID, IsDateString, isEmail, IsEmail, IsEnum } from 'class-validator';
 import { IsDataBahanB3Exist } from 'src/validators/dataBahanB3.validator';
 import { IsPejabatNipExist } from 'src/validators/dataPejabat.validator';
 import { IsTembusanExist } from 'src/validators/dataTembusan.validator';
 import { IsDraftNotifikasiExists, IsNotifikasiExists } from 'src/validators/notifikasi.validator';
+import { TipeSuratNotifikasi } from './enums/tipeSuratNotifikasi';
 
 export class UpdateDraftSuratKebenaranImportDto  {
   
@@ -22,8 +23,9 @@ export class UpdateDraftSuratKebenaranImportDto  {
   @IsDateString()
   tanggalMaksimalSurat?: string;  // Tanggal Surat (optional for now)
 
-  @IsString()
-  tipeSurat: string;  // Kebenaran Import
+  @IsOptional()
+  @IsEnum(TipeSuratNotifikasi)
+  tipeSurat: TipeSuratNotifikasi;  // Kebenaran Import
 
   @IsOptional()
   @IsString()
@@ -40,7 +42,14 @@ export class UpdateDraftSuratKebenaranImportDto  {
   @IsOptional()
   @IsString()
   negaraAsal?: string;  // Optional: Sifat Surat
+  
+  @IsOptional()
+  @IsString()
+  namaPengirimNotifikasi?: string;  // Optional: Sifat Surat
 
+  @IsOptional()
+  @IsString()
+  perusaahaanAsal?: string;  // Optional: Sifat Surat
 
   @IsOptional()
   @IsString()

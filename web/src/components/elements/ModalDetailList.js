@@ -1,19 +1,18 @@
 import { EyeIcon } from "@heroicons/react/24/outline";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 
-export default function ModalDetailList({ list }) {
+export default function ModalDetailList({ list, label }) {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
-
     return (
         <>
-            <Button isIconOnly color="primary" size="sm" onPress={onOpen}><EyeIcon className="size-4" /></Button>
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="inside">
+            <Button isIconOnly size="sm" color="success" onPress={onOpen}><EyeIcon className='size-4'/></Button>
+            <Modal size="xl" isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="inside">
                 <ModalContent>
                 {(onClose) => (
                     <>
-                        <ModalHeader className="flex flex-col gap-1">Detail</ModalHeader>
+                        <ModalHeader className="flex flex-col gap-1">Detail {label}</ModalHeader>
                         <ModalBody>
-                        <div className='flex flex-col gap-3'>
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
                             {list.map((item, index) => (
                                 <div key={index} className='flex flex-col'>
                                     <span className='text-xs text-gray-400 uppercase'>{item.label}</span>

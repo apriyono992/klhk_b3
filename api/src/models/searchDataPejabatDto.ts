@@ -2,6 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsArray, IsString, IsEnum } from 'class-validator';
 import { PaginationDto } from './paginationDto';
 import { PejabatStatus } from './enums/statusPejabat';
+import { Transform } from 'class-transformer';
 
 export class SearchDataPejabatDto extends PaginationDto {
   @ApiPropertyOptional({
@@ -12,6 +13,7 @@ export class SearchDataPejabatDto extends PaginationDto {
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
   nip?: string[];
 
   @ApiPropertyOptional({
@@ -22,6 +24,7 @@ export class SearchDataPejabatDto extends PaginationDto {
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
   nama?: string[];
 
   @ApiPropertyOptional({
@@ -32,6 +35,7 @@ export class SearchDataPejabatDto extends PaginationDto {
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
   jabatan?: string[];
 
   @ApiPropertyOptional({
@@ -42,5 +46,6 @@ export class SearchDataPejabatDto extends PaginationDto {
   @IsOptional()
   @IsArray()
   @IsEnum(PejabatStatus, { each: true })
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
   status?: PejabatStatus[];
 }

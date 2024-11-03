@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from './prisma.services';
 import { CreateNotifikasiDto } from '../models/createNotifikasiDto';
 import { UpdateNotifikasiDto } from '../models/updateNotifikasiDto';
 import { SearchNotifikasiDto } from '../models/searchNotifikasiDto';
-import { Prisma } from '@prisma/client';
+import { Prisma, Status } from '@prisma/client';
 import { StatusNotifikasi } from '../models/enums/statusNotifikasi';
 import { DraftSuratNotifikasiService } from './draftSuratNotifikasi.service';
 import { TipeSuratNotifikasi } from 'src/models/enums/tipeSuratNotifikasi';
@@ -24,8 +24,9 @@ const allowedStatusTransitions = {
     StatusNotifikasi.DIBATALKAN,
   ],
   [StatusNotifikasi.TUNGGU_RESPON]: [
+    StatusNotifikasi.ADA_RENCANA_IMPOR,
+    StatusNotifikasi.TIDAK_ADA_IMPOR,
     StatusNotifikasi.DIBATALKAN,
-    StatusNotifikasi.SELESAI
   ],
   [StatusNotifikasi.ADA_RENCANA_IMPOR]: [
     StatusNotifikasi.DIBATALKAN,
@@ -50,9 +51,12 @@ export class NotifikasiService {
       const newNotifikasi = await prisma.notifikasi.create({
         data: {
           companyId: dto.companyId,
+          referenceNumber: dto.referenceNumber,
+          dataBahanB3Id: dto.databahanb3Id,
           status: dto.status,
           tanggalDiterima: dto.tanggalDiterima || new Date(),
           exceedsThreshold: dto.exceedsThreshold || false,
+          createdById: dto.changeBy || undefined, // Directly assign the user ID as a string here
         },
       });
 
@@ -62,6 +66,7 @@ export class NotifikasiService {
           newStatus: dto.status,
           tanggalPerubahan: new Date(),
           changedAt: new Date(),
+          changedBy: dto.changeBy || undefined, // Directly assign the user ID as a string here
           oldStatus: null,
         },
       });
@@ -81,7 +86,7 @@ export class NotifikasiService {
       // Enforce notes if the previous status was DIBATALKAN and the status is being changed
       if (notifikasi.status === StatusNotifikasi.DIBATALKAN && dto.status && dto.status !== StatusNotifikasi.DIBATALKAN) {
         if (!dto.notes) {
-          throw new Error(`Notes are required when changing the status from DIBATALKAN to another status.`);
+          throw new BadRequestException(`Notes are required when changing the status from DIBATALKAN to another status.`);
         }
       }
 
@@ -89,7 +94,7 @@ export class NotifikasiService {
       if (dto.status && dto.status !== notifikasi.status) {
         const validTransitions = allowedStatusTransitions[notifikasi.status];
         if (!validTransitions.includes(dto.status)) {
-          throw new Error(
+          throw new BadRequestException(
             `Invalid status transition from ${notifikasi.status} to ${dto.status}. Allowed transitions are: ${validTransitions.join(
               ', ',
             )}.`,
@@ -172,6 +177,7 @@ export class NotifikasiService {
             newStatus: dto.status,
             tanggalPerubahan: dto.tanggalPerubahan || new Date(),
             changedAt: new Date(),
+            changedBy: dto.changeBy || undefined, // Directly assign the user ID as a string here
             notes: dto.notes, // Include notes if provided
           },
         });
@@ -186,9 +192,11 @@ export class NotifikasiService {
     const notifikasi = await this.prisma.notifikasi.findUnique({
       where: { id },
       include: {
-        statusHistory: true,
+        statusHistory: { include: { User: true } },
         company: true,
         draftSuratNotifikasiId: true,
+        dataBahanB3: true,
+        User: true,
       },
     });
     if (!notifikasi) throw new NotFoundException(`Notifikasi with ID ${id} not found`);
@@ -236,6 +244,7 @@ export class NotifikasiService {
           company: true,
           statusHistory: true,
           draftSuratNotifikasiId: true,
+          dataBahanB3: true,
         },
       }),
     ]);

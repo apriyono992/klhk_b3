@@ -28,9 +28,9 @@ export default function OtherSection() {
         try {
             await new Promise((r) => setTimeout(r, 1000));
             console.log(data);
-            toast.success('Teks lainnya berhasil ditambah!');
+            toast.success('Teks lainnya berhasil diubah!');
         } catch (error) {
-            toast.success('Gagal tambah teks lainnya!');
+            toast.error('Gagal ubah teks lainnya!');
         }
     }
 
@@ -47,7 +47,7 @@ export default function OtherSection() {
                     </Button>
                     <div className="flex flex-col gap-2 my-7">
                         {fields.map((field, index) => (
-                            <div key={index} className="flex items-center gap-1">
+                            <div key={index} className="flex items-end gap-1 mb-2">
                                 <Controller
                                     name={`other[${index}].value`}
                                     control={control}
@@ -56,7 +56,9 @@ export default function OtherSection() {
                                         <Input
                                             {...field}
                                             size="sm"
-                                            placeholder="Masukkan Kata"
+                                            label={`Lainnya ${index + 1}`}
+                                            placeholder="Masukkan Teks"
+                                            labelPlacement='outside'
                                             fullWidth
                                             isRequired
                                             color={errors?.other?.[index]?.value ? "danger" : "default"}

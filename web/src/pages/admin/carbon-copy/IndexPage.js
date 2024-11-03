@@ -1,18 +1,17 @@
 import { Button, Card, CardBody, CardHeader, Chip, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react";
 import RootAdmin from "../../../components/layouts/RootAdmin";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { PencilSquareIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useMemo, useState } from "react";
 import ModalAlert from "../../../components/elements/ModalAlert";
 import useCarbonCopy from "../../../hooks/useCarbonCopy";
 import useSWR from "swr";
 import { getFetcher } from "../../../services/api";
+import CustomDataGrid from "../../../components/elements/CustomDataGrid";
 
 export default function IndexPage() {
-    const fetcher = (...args) => getFetcher(...args);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
-    const { data, isLoading, mutate } = useSWR(`/api/data-master/tembusan?page=${page + 1}&limit=${pageSize}`, fetcher);
+    const { data, isLoading, mutate } = useSWR(`/api/data-master/tembusan?page=${page + 1}&limit=${pageSize}`, getFetcher);
     const { 
         isEdit,
         onClickEdit, 
@@ -29,12 +28,10 @@ export default function IndexPage() {
         {
             field: 'nama',
             headerName: 'Nama',
-            width: 300
         },
         {
             field: 'tipe',
             headerName: 'Tipe',
-            width: 300,
             renderCell: (params) => (
                 <Chip color={params.row.tipe === 'UMUM' ? 'primary' : 'secondary'} variant="flat" size="sm">{params.row.tipe}</Chip>
             ),
@@ -48,7 +45,6 @@ export default function IndexPage() {
                     <Button size='sm' onPress={() => onClickDelete(params.row.id)} color='danger' isIconOnly><TrashIcon className='size-4'/></Button>
                 </div>
             ),
-            width: 250,
             sortable: false,
             filterable: false
         },
@@ -66,35 +62,20 @@ export default function IndexPage() {
                     <div className="mb-5">
                         <Button onPress={onOpenModalForm} size="sm" color="primary" startContent={<PlusIcon className="size-4 stroke-2"/>}>Tambah</Button>
                     </div>
-                    <DataGrid
-                        rows={data?.data}
+                    <CustomDataGrid
+                        data={data?.data}
                         rowCount={data?.total || 0}
-                        loading={isLoading}
+                        isLoading={isLoading}
                         columns={columns}
-                        disableDensitySelector
+                        pageSize={pageSize}
+                        setPageSize={setPageSize}
+                        page={page}
+                        setPage={setPage}
                         initialState={{
-                            pagination: {
-                                paginationModel: {
-                                  pageSize: 10,
-                                },
-                            },
                             sorting: {
                                 sortModel: [{ field: 'nama', sort: 'asc' }],
                             },
-                            density: 'compact',
                         }}
-                        slots={{
-                            toolbar: GridToolbar,
-                        }}
-                        paginationMode="server"
-                        onPaginationModelChange={(model) => {
-                            setPage(model.page);
-                            setPageSize(model.pageSize);
-                        }}
-                        pageSizeOptions={[5, 10, 15]}
-                        page={page}
-                        pageSize={pageSize}
-                        disableRowSelectionOnClick
                     />
                 </CardBody>
             </Card>

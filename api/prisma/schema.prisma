@@ -579,6 +579,8 @@ model Notifikasi {
   dataBahanB3            DataBahanB3?              @relation(fields: [dataBahanB3Id], references: [id])
   statusHistory          NotifikasiStatusHistory[] // Relation to status history
   draftSuratNotifikasiId BaseSuratNotfikasi[] // Foreign key for DraftSuratNotifikasi
+  createdById            String? // Foreign key for User
+  User                   User? @relation(fields: [createdById], references: [id])
   createdAt              DateTime                  @default(now())
   updatedAt              DateTime                  @updatedAt
   exceedsThreshold       Boolean                   @default(false) // New field to track if the process exceeds 30 days
@@ -593,7 +595,9 @@ model NotifikasiStatusHistory {
   tanggalPerubahan DateTime   @default(now()) // Timestamp of the status change
   newStatus        String // Enum or string to track the new status
   changedAt        DateTime   @default(now()) // Timestamp of the status change
+
   changedBy        String? // Optional field to track the user who changed the status
+  User             User? @relation(fields: [changedBy], references: [id])
 }
 
 model BaseSuratNotfikasi {
@@ -612,6 +616,8 @@ model BaseSuratNotfikasi {
   tembusan          DataTembusan[] // Many-to-many relation with DataTembusan
   referenceNumber   String? // EU reference number for the chemical
   negaraAsal        String? // Country of origin for the chemical
+  namaPengirimNotifikasi       String? // Email pengirim
+  perusaahaanAsal  String? // Perusahaan pengirim
   dataBahanB3Id     String? // Foreign key for DataBahanB3
   dataBahanB3       DataBahanB3?        @relation(fields: [dataBahanB3Id], references: [id])
   createdAt         DateTime            @default(now())
@@ -920,6 +926,10 @@ model User {
   idNumber    String // no KTP
    idPhotoUrl  String?
   resetPassword ResetPassword[]
+
+   NotifikasiStatusHistory NotifikasiStatusHistory[]
+
+   Notifikasi Notifikasi[]
 }
 
 model ResetPassword {

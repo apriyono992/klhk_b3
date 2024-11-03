@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as yup from 'yup';
-import { deleteFetcher, deleteWithFormFetcher, postFetcher, putFetcherWithoutId } from "../services/api";
+import { deleteWithFormFetcher, postFetcher, putFetcherWithoutId } from "../services/api";
 import { isResponseErrorObject } from "../services/helpers";
 
 export default function useRecomendationVehicle({ mutate }) {
@@ -37,6 +37,7 @@ export default function useRecomendationVehicle({ mutate }) {
 
     function onClickEdit(item) {    
         setVehicleId(item.id);
+        setVehicleId(item.id);
         setIsEdit(true);
         reset({
             noPolisi: item.noPolisi,
@@ -50,6 +51,9 @@ export default function useRecomendationVehicle({ mutate }) {
     }
 
     function onCloseForm() {
+        setVehicleId(null);
+        setApplicationId(null);
+        setCompanyId(null);
         setVehicleId(null);
         setApplicationId(null);
         setCompanyId(null);
@@ -79,11 +83,15 @@ export default function useRecomendationVehicle({ mutate }) {
             }
             console.log(data);
             
-            await deleteWithFormFetcher('/api/vehicles/vehicle/application/remove-vehicle', data);
+            await deleteWithFormFetcher('/api/vehicles/vehicle/application/remove-vehicle', {data});
             mutate();
             toast.success('Data kendaraan berhasil dihapus!');
         } catch (error) {
-            toast.error('Gagal hapus data kendaraan!');
+            isResponseErrorObject(error.response.data.message)
+                ? Object.entries(error.response.data.message).forEach(([key, value]) => {
+                    toast.error(value);
+                })
+                : toast.error(error.response.data.message)
         }
     }
 
@@ -91,20 +99,32 @@ export default function useRecomendationVehicle({ mutate }) {
         try {
             if (isEdit) {
                 data.vehicleId = vehicleId;
+                data.vehicleId = vehicleId;
                 console.log(data);
+                await putFetcherWithoutId('/api/vehicles', data);
+                mutate();
                 await putFetcherWithoutId('/api/vehicles', data);
                 mutate();
                 toast.success('Data kendaraan berhasil diubah!');
             } else {
                 data.applicationId = applicationId;
                 data.companyId = companyId;
+                data.applicationId = applicationId;
+                data.companyId = companyId;
                 console.log(data);
+                await postFetcher('/api/vehicles/add-to-application', data);
+                mutate()
                 await postFetcher('/api/vehicles/add-to-application', data);
                 mutate()
                 toast.success('Kendaraan berhasil ditambah!');
             }
             onCloseForm();
         } catch (error) {
+            isResponseErrorObject(error.response.data.message)
+                ? Object.entries(error.response.data.message).forEach(([key, value]) => {
+                    toast.error(value);
+                })
+                : toast.error(error.response.data.message)
             isResponseErrorObject(error.response.data.message)
                 ? Object.entries(error.response.data.message).forEach(([key, value]) => {
                     toast.error(value);

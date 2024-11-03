@@ -6,13 +6,13 @@ import useSWR from 'swr';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import useCustomNavigate from '../../../hooks/useCustomNavigate';
 import { useMemo, useState } from 'react';
+import CustomDataGrid from '../../../components/elements/CustomDataGrid';
 export default function IndexPage() {
-    const fetcher = (...args) => getFetcher(...args);
     const { getRecomendationDetailPath } = useCustomNavigate();
 
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
-    const { data, isLoading } = useSWR(`/api/rekom/permohonan/search?page=${page + 1}&limit=${pageSize}`, fetcher);
+    const { data, isLoading } = useSWR(`/api/rekom/permohonan/search?page=${page + 1}&limit=${pageSize}`, getFetcher);
     console.log(data);
     
 
@@ -41,7 +41,7 @@ export default function IndexPage() {
         {
             field: 'status',
             headerName: 'Status',
-            width: 150,
+            width: 250,
             renderCell: (params) => (<Chip size='sm' color='primary' variant='faded'>{params.value}</Chip>)
         },
         {
@@ -54,6 +54,7 @@ export default function IndexPage() {
             filterable: false
         }, 
     ], [getRecomendationDetailPath])
+
     return (
         <RootAdmin>
             <Card className="w-full mt-3" radius='sm'>
@@ -62,32 +63,15 @@ export default function IndexPage() {
                 </CardHeader>
                 <Divider/>
                 <CardBody className='w-full h-[530px] p-5'>
-                    <DataGrid
-                        rows={data?.applications}
+                    <CustomDataGrid
+                        data={data?.applications}
                         rowCount={data?.total || 0}
-                        loading={isLoading}
+                        isLoading={isLoading}
                         columns={columns}
-                        disableDensitySelector
-                        initialState={{
-                            pagination: {
-                                paginationModel: {
-                                  pageSize: 10,
-                                },
-                            },
-                            density: 'compact',
-                        }}
-                        slots={{
-                            toolbar: GridToolbar,
-                        }}
-                        paginationMode="server"
-                        onPaginationModelChange={(model) => {
-                            setPage(model.page);
-                            setPageSize(model.pageSize);
-                        }}
-                        pageSizeOptions={[5, 10, 15]}
-                        page={page}
                         pageSize={pageSize}
-                        disableRowSelectionOnClick
+                        setPageSize={setPageSize}
+                        page={page}
+                        setPage={setPage}
                     />
                 </CardBody>
             </Card>

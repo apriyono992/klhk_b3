@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException, BadRequestException } from '@nestjs/common';
 import { Application, DraftSurat, Prisma } from '@prisma/client';
 import { PrismaService } from './prisma.services';
 import { CreateIdentitasPemohonDto } from 'src/models/identitasPemohonDto';
@@ -113,46 +113,72 @@ export class PermohonanRekomendasiB3Service {
       // Check if the application exists
       const application = await prisma.application.findUnique({
         where: { id: data.applicationId },
+        include :{ documents: true }
       });
-  
-      // Log the old status and the new status in ApplicationStatusHistory
-      await prisma.applicationStatusHistory.create({
-        data: {
-          applicationId: application.id,
-          oldStatus: application.status,
-          newStatus: data.status,
-          changedAt: new Date(),
-          changedBy: data.userId ?? null, // Optionally track the user who updated the status
-        },
-      });
-  
-      // Update the status of the application
-      const updatedApplication = await prisma.application.update({
-        where: { id: data.applicationId },
-        data: {
-          status: data.status,
-          updatedAt: new Date(),
-        },
-      });
-  
+      let updatedApplication;
       // Check if the new status is 'ValidasiPemohonanSelesai' and create DraftSurat if true
-      if (data.status === StatusPermohonan.ValidasiPemohonanSelesai) {
-        await prisma.draftSurat.create({
+      if (data.status === StatusPermohonan.ValidasiPemohonanSelesai ) {
+        if(application.status !== data.status && (application.documents.length > 0 && application.documents.every(doc => doc.isValid === true))){
+            // Log the old status and the new status in ApplicationStatusHistory
+            await prisma.applicationStatusHistory.create({
+              data: {
+                applicationId: application.id,
+                oldStatus: application.status,
+                newStatus: data.status,
+                changedAt: new Date(),
+                changedBy: data.userId ?? null, // Optionally track the user who updated the status
+              },
+            });
+        
+            // Update the status of the application
+            updatedApplication = await prisma.application.update({
+              where: { id: data.applicationId },
+              data: {
+                status: data.status,
+                updatedAt: new Date(),
+              },
+            });
+      
+          await prisma.draftSurat.create({
+            data: {
+              applicationId: application.id, // NOT NULL, wajib
+              tipeSurat: application.tipeSurat, // NOT NULL, wajib (ubah sesuai kebutuhan Anda)
+              nomorSurat: null, // Nullable
+              tanggalSurat: null, // Nullable
+              kodeDBKlh: null, // Nullable
+              pejabatId: null, // Nullable
+              tembusan: {}, // Optional, bisa diisi atau tidak tergantung data yang tersedia
+            },
+          });
+        }
+        else{
+          throw new BadRequestException('Failed to update status to ValidasiPemohonanSelesai, not all documents are valid');
+        }
+         
+      }
+      else if (application.status !== data.status){
+        // Log the old status and the new status in ApplicationStatusHistory
+        await prisma.applicationStatusHistory.create({
           data: {
-            applicationId: application.id, // NOT NULL, wajib
-            tipeSurat: application.tipeSurat, // NOT NULL, wajib (ubah sesuai kebutuhan Anda)
-            nomorSurat: null, // Nullable
-            tanggalSurat: null, // Nullable
-            kodeDBKlh: null, // Nullable
-            pejabatId: null, // Nullable
-            tembusan: {}, // Optional, bisa diisi atau tidak tergantung data yang tersedia
+            applicationId: application.id,
+            oldStatus: application.status,
+            newStatus: data.status,
+            changedAt: new Date(),
+            changedBy: data.userId ?? null, // Optionally track the user who updated the status
+          },
+        });
+    
+        // Update the status of the application
+        updatedApplication = await prisma.application.update({
+          where: { id: data.applicationId },
+          data: {
+            status: data.status,
+            updatedAt: new Date(),
           },
         });
       }
-  
       return {
-        message: `Application status updated to ${data.status}`,
-        application: updatedApplication,
+        message: `Application status updated to ${data.status}`
       };
     });
   }
@@ -191,6 +217,13 @@ export class PermohonanRekomendasiB3Service {
             vehicle: true,
           },
         },        // Optionally include draftSurat relation
+        b3Substances:{
+          include:{
+            dataBahanB3:true,
+            asalMuatLocations: true,
+            tujuanBongkarLocations: true
+          }
+        }
       },
     });
 
@@ -222,11 +255,12 @@ export class PermohonanRekomendasiB3Service {
         skip: (page - 1) * limit,
         take: limit,
         orderBy: { [sortBy]: sortOrder },
-        select: {
-            id: true,
-            kodePermohonan: true,
-            companyId: true,
-            status: true,
+        include: {
+          company: true, // Optionally include company relation
+          identitasPemohon: true, // Optionally include identitasPemohon relation
+          vehicles: true, // Optionally include vehicles relation
+          documents: true, // Optionally include documents relation
+          b3Substances:true,
         },
     });
 

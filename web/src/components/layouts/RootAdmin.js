@@ -11,16 +11,6 @@ export default function RootAdmin({ children }) {
         setIsOpenSidebar((prev) => !prev);
     }, []);
 
-    useEffect(() => {
-        const axiosError = (event) => toast.error(`Error response : ${event.detail}`);
-        window.addEventListener('axiosError', axiosError);
-    
-        return () => {
-            window.removeEventListener('axiosError', axiosError);
-        };
-    }, []);
-    
-
     return (
         <>
             <Toaster

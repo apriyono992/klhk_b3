@@ -2,7 +2,7 @@ import { Button, Card, CardBody, Chip } from "@nextui-org/react";
 import { ArrowPathIcon, CheckIcon, EyeIcon, ListBulletIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import RootAdmin from "../../../components/layouts/RootAdmin";
 import CountWidget from "../../../components/elements/CountWidget";
-import { authStateFetcher, getListRegistrasi } from "../../../services/api";
+import { getFetcher } from "../../../services/api";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import useSWR from "swr";
 import useCustomNavigate from "../../../hooks/useCustomNavigate";
@@ -11,10 +11,8 @@ import { formattedDate } from "../../../services/helpers";
 import { differenceInMonths} from 'date-fns'
 
 export default function IndexPage() {
-    const fetcher = (...args) => authStateFetcher(...args);
     const { getRegistrationDetailPath } = useCustomNavigate();
-
-    const { data, isLoading } = useSWR('/registrasi/search?page=1&limit=10&sortBy=createdAt&sortOrder=desc', fetcher);
+    const { data, isLoading } = useSWR('/registrasi/search?page=1&limit=10&sortBy=createdAt&sortOrder=desc', getFetcher);
 
     const columns = useMemo(() =>  [
         { 

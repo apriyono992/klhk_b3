@@ -1,7 +1,4 @@
-import { useState } from "react";
 import { 
-    SunIcon, 
-    MoonIcon, 
     UserIcon, 
     Bars3BottomLeftIcon,
     ArrowLeftStartOnRectangleIcon,
@@ -23,13 +20,14 @@ import Cookies from 'js-cookie'
 import { LOGIN_PATH } from "../../../services/routes";
 
 export default function Header({ onOpenSidebar }) {
-    const { data, isLoading } = useAuth()
+    const { data } = useAuth()
     const navigate = useNavigate();
     const location = useLocation();
 
     function handleLogout() {
         Cookies.remove('accessToken')
         Cookies.remove('refreshToken')
+        Cookies.remove('sessionExpire')
         return navigate(LOGIN_PATH)
     }
 
@@ -52,15 +50,13 @@ export default function Header({ onOpenSidebar }) {
                 </div>
                 <Dropdown placement="bottom-start">
                     <DropdownTrigger>
-                        <User
-                            as="button"
+                        <User 
+                            as="button" 
+                            name={`${data.fullName}`}
+                            description="User"
                             avatarProps={{
-                                isBordered: true,
-                                src: `${data?.image}`,
+                                src: `https://ui-avatars.com/api/?name=${data.fullName}`
                             }}
-                            
-                            description={ isLoading ? 'Loading...' : `${data?.email}` }
-                            name={ isLoading ? 'Loading...' : `${data?.firstName} ${data?.lastName}`}
                         />
                     </DropdownTrigger>
                     <DropdownMenu variant="faded">

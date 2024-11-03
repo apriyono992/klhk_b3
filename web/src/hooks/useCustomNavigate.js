@@ -16,11 +16,13 @@ export default function useCustomNavigate() {
     const getRegistrationDetailPath = (id) => navigate(`/admin/registrasi-b3/daftar/${id}`);
     const getRecomendationDetailPath = (id) => navigate(`/admin/rekomendasi-b3/daftar/${id}`);
     const getNotificationDetailPath = (id) => navigate(`/admin/notifikasi/daftar/${id}`);
+    const getNotificationImportVerificationDraftPath = (id) => navigate(`/admin/notifikasi/draft-surat-kebenaran-impor/${id}`);
 
     return { 
         getRegistrationDetailPath, 
         getRecomendationDetailPath, 
         getNotificationDetailPath,
+        getNotificationImportVerificationDraftPath,
         getCurrentRouteGroup 
     };
 }

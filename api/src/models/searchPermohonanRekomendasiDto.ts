@@ -5,6 +5,7 @@ import { IsCompanyExists } from 'src/validators/isCompanyExists.validator';
 import { IsApplicationExists } from 'src/validators/isApplicationIdExists.validatior';
 import { IsKodePermohonanExists } from 'src/validators/isKodePermohonanExists.validator';
 import { PaginationDto } from './paginationDto';
+import { Transform } from 'class-transformer';
 
 export class SearchApplicationDto extends PaginationDto {
     @ApiPropertyOptional({ description: 'Filter by company IDs', type: [String] })
@@ -13,6 +14,7 @@ export class SearchApplicationDto extends PaginationDto {
     @ArrayNotEmpty()
     @IsString({ each: true })
     @IsCompanyExists({ each: true })
+    @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
     companyId?: string[];
   
     @ApiPropertyOptional({ description: 'Filter by application IDs', type: [String] })
@@ -21,6 +23,7 @@ export class SearchApplicationDto extends PaginationDto {
     @ArrayNotEmpty()
     @IsString({ each: true })
     @IsApplicationExists({ each: true })
+    @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
     applicationId?: string[];
   
     @ApiPropertyOptional({ description: 'Filter by application statuses', enum: StatusPermohonan, isArray: true })
@@ -28,6 +31,7 @@ export class SearchApplicationDto extends PaginationDto {
     @IsArray()
     @ArrayNotEmpty()
     @IsEnum(StatusPermohonan, { each: true })
+    @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
     status?: StatusPermohonan[];
   
     @ApiPropertyOptional({ description: 'Search by kodePermohonan', type: [String] })
@@ -36,5 +40,6 @@ export class SearchApplicationDto extends PaginationDto {
     @ArrayNotEmpty()
     @IsString({ each: true })
     @IsKodePermohonanExists({ each: true })
+    @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
     kodePermohonan?: string[];
   }

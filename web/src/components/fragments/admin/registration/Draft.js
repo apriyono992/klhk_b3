@@ -1,7 +1,6 @@
 import { Button, Card, CardBody, CardHeader, Divider, Input, Select, SelectItem, Textarea } from '@nextui-org/react'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import MultiSelectSort from '../../../elements/MultiSelectSort'
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import toast from 'react-hot-toast';
@@ -114,21 +113,7 @@ export default function Draft({detailRegistrasi}) {
                     </CardHeader>
                     <Divider/>
                     <CardBody>
-                        <Controller
-                            name='tembusanIds'
-                            control={control}
-                            rules={{ required: true }}
-                            render={({ field, fieldState }) => (
-                                <div className='flex flex-col'>
-                                    {fieldState.error && <div className="text-red-500 text-xs">{fieldState.error.message}</div>}
-                                    <MultiSelectSort
-                                        value={field.value}
-                                        onChange={field.onChange}
-                                        options={options}
-                                    />  
-                                </div>  
-                            )}
-                        />
+
                     </CardBody>
                 </Card>
                 <Card radius='sm'>

@@ -3,25 +3,27 @@ import React from 'react'
 import { patchFetcher } from '../../../../services/api';
 import { isResponseErrorObject } from '../../../../services/helpers';
 import toast from 'react-hot-toast';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import SelectSearch from '../../../elements/SelectSearch';
 import { notificationStatus } from '../../../../services/enum';
-import { XCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { XCircleIcon } from '@heroicons/react/24/outline';
+import useAuth from '../../../../hooks/useAuth';
 
 export default function Form({ data, mutate, className }) {
     const formSchema =  yup.object().shape({
+        tanggalPerubahan: yup.date().typeError('Tanggal harus valid').required('harus diisi'),
         notes: yup.string().required('Harus diisi'),
         status: yup.string().required('Harus diisi'),
     }).required()
     const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({resolver: yupResolver(formSchema)});
+    const { data: user } = useAuth();
     async function onSubmitForm(formData) {
         try {
-            formData.companyId = data?.company.id
+            formData.companyId = data?.company?.id
+            formData.changeBy = user.userId
             await patchFetcher('/api/notifikasi', data?.id, formData);
             mutate()
-            console.log(formData);
             reset();
             toast.success('Riwayat notifikasi berhasil ditambah!');
         } catch (error) {
@@ -32,9 +34,6 @@ export default function Form({ data, mutate, className }) {
                 : toast.error(error.response.data.message)
         }
     }
-
-    console.log(data);
-    
 
     return (
         <Card radius='sm' className={className}>
@@ -48,7 +47,17 @@ export default function Form({ data, mutate, className }) {
                             </div>
                         :
                             <form onSubmit={handleSubmit(onSubmitForm)}>
-                                <div className='flex flex-col gap-3 mb-6'>  
+                                <div className='flex flex-col gap-3 mb-6'>
+                                    <Input
+                                        {...register('tanggalPerubahan')}
+                                        isRequired
+                                        variant="faded" 
+                                        type="date"
+                                        label="Tanggal Input" 
+                                        color={errors.tanggalPerubahan ? 'danger' : 'default'}
+                                        isInvalid={errors.tanggalPerubahan} 
+                                        errorMessage={errors.tanggalPerubahan && errors.tanggalPerubahan.message}
+                                    />  
                                     <Textarea
                                         {...register('notes')}
                                         isRequired

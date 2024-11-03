@@ -20,23 +20,23 @@ export class DraftSuratNotifikasiService {
         data: {
           baseSurat: {
             create: {
-              nomorSurat: dto.nomorSurat || null, 
-              tanggalSurat: dto.tanggalSurat || null,
+              nomorSurat: dto.nomorSurat || undefined, 
+              tanggalSurat: dto.tanggalSurat || undefined,
               tipeSurat: dto.tipeSurat,
-              kodeDBKlh: dto.kodeDBKlh || null,
-              sifatSurat: dto.sifatSurat || null,
-              emailPenerima: dto.emailPenerima || null,
-              tanggalPengiriman: dto.tanggalPengiriman || null,
-              pejabat: dto.pejabatId ? { connect: { id: dto.pejabatId } } : null,
+              kodeDBKlh: dto.kodeDBKlh || undefined,
+              sifatSurat: dto.sifatSurat || undefined,
+              emailPenerima: dto.emailPenerima || undefined,
+              tanggalPengiriman: dto.tanggalPengiriman || undefined,
+              pejabat: dto.pejabatId ? { connect: { id: dto.pejabatId } } : undefined,
               notifikasi: dto.notifikasiId ? { connect: { id: dto.notifikasiId } } : null,
-              tembusan: dto.tembusanIds ? { connect: dto.tembusanIds.map((tembusanId) => ({ id: tembusanId })) } : null,
+              tembusan: dto.tembusanIds ? { connect: dto.tembusanIds.map((tembusanId) => ({ id: tembusanId })) } : undefined,
               createdAt: new Date(),
               updatedAt: new Date(),
             },
           },
-          point1: dto.customPoint1 || null,
-          point2: dto.customPoint2 || null,
-          point3: dto.customPoint3 || null,
+          point1: dto.customPoint1 || undefined,
+          point2: dto.customPoint2 || undefined,
+          point3: dto.customPoint3 || undefined,
           tanggalMaksimalPengiriman: dto.tanggalMaksimalPengirimanSurat || undefined,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -48,9 +48,9 @@ export class DraftSuratNotifikasiService {
         await prisma.notifikasi.update({
           where: { id: dto.notifikasiId },
           data: {
-            dataBahanB3: dto.dataBahanB3Id ? { connect: { id: dto.dataBahanB3Id } } : null,
-            referenceNumber: dto.referenceNumber || null,
-            negaraAsal: dto.negaraAsal || null,
+            dataBahanB3: dto.dataBahanB3Id ? { connect: { id: dto.dataBahanB3Id } } : undefined,
+            referenceNumber: dto.referenceNumber || undefined,
+            negaraAsal: dto.negaraAsal || undefined,
           },
         });
       }
@@ -58,7 +58,6 @@ export class DraftSuratNotifikasiService {
       return draftSurat;
     });
   }
-
 
   // Method for updating Draft Surat Kebenaran Import with transaction
   async updateDraftSuratKebenaranImport(id: string, dto: UpdateDraftSuratKebenaranImportDto) {
@@ -73,7 +72,7 @@ export class DraftSuratNotifikasiService {
       }
 
       const updatedDraftSurat = await prisma.kebenaranImport.update({
-        where: { id },
+        where: { id: existingDraftSurat.KebenaranImport[0].id },
         data: {
           baseSurat: {
             update: {
@@ -81,6 +80,7 @@ export class DraftSuratNotifikasiService {
               tanggalSurat: dto.tanggalSurat ?? existingDraftSurat.tanggalSurat,
               kodeDBKlh: dto.kodeDBKlh ?? existingDraftSurat.kodeDBKlh,
               sifatSurat: dto.sifatSurat ?? existingDraftSurat.sifatSurat,
+              tipeSurat: dto.tipeSurat ?? existingDraftSurat.tipeSurat,
               emailPenerima: dto.emailPenerima ?? existingDraftSurat.emailPenerima,
               tanggalPengiriman: dto.tanggalPengiriman ?? existingDraftSurat.tanggalPengiriman,
               pejabat: dto.pejabatId ? { connect: { id: dto.pejabatId } } : undefined,
@@ -90,6 +90,8 @@ export class DraftSuratNotifikasiService {
               updatedAt: new Date(),
               referenceNumber: dto.referenceNumber ?? existingDraftSurat.notifikasi.referenceNumber,
               negaraAsal: dto.negaraAsal ?? existingDraftSurat.notifikasi.negaraAsal,
+              namaPengirimNotifikasi: dto.namaPengirimNotifikasi ?? existingDraftSurat.namaPengirimNotifikasi,           
+              perusaahaanAsal: dto.perusaahaanAsal ?? existingDraftSurat.perusaahaanAsal,
             },
           },
           point1: dto.customPoint1 ?? existingDraftSurat.KebenaranImport[0].point1,

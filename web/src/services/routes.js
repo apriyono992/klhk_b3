@@ -15,9 +15,11 @@ import RecomendationDetailPage from "../pages/admin/recomendation/DetailPage";
 import NotificationDashboardPage from "../pages/admin/notification/DashboardPage";
 import NotificationIndexPage from "../pages/admin/notification/IndexPage";
 import NotificationDetailPage from "../pages/admin/notification/DetailPage";
+import NotificationImportVerficationDraftPage from "../pages/admin/notification/ImportVerficationDraftPage";
 import CarbonCopyIndexPage from "../pages/admin/carbon-copy/IndexPage";
 import MaterialIndexPage from "../pages/admin/material/IndexPage";
 import OfficialIndexPage from "../pages/admin/official/IndexPage";
+import CompanyIndexPage from "../pages/admin/company/IndexPage";
 
 export const ROOT_PATH = '/'
 
@@ -40,10 +42,12 @@ export const RECOMENDATION_DETAIL_PATH = '/admin/rekomendasi-b3/daftar/:id'
 export const NOTIFICATION_DASHBOARD_PATH = '/admin/notifikasi/dasbor'
 export const NOTIFICATION_INDEX_PATH = '/admin/notifikasi/daftar'
 export const NOTIFICATION_DETAIL_PATH = '/admin/notifikasi/daftar/:id'
+export const NOTIFICATION_IMPORT_VERIFICATION_PATH = '/admin/notifikasi/draft-surat-kebenaran-impor/:id'
 
 export const CARBON_COPY_INDEX_PATH = '/admin/utama/tembusan'
 export const MATERIAL_INDEX_PATH = '/admin/utama/bahan-b3'
 export const OFFICIAL_INDEX_PATH = '/admin/utama/pejabat'
+export const COMPANY_INDEX_PATH = '/admin/utama/perusahaan'
 
 const router = createBrowserRouter([
     { path: "/", element: <div className='min-h-screen'>Halaman Landing Page</div>,},
@@ -72,10 +76,12 @@ const router = createBrowserRouter([
             { path: NOTIFICATION_DASHBOARD_PATH, element: <NotificationDashboardPage />,},
             { path: NOTIFICATION_INDEX_PATH, element: <NotificationIndexPage />,},
             { path: NOTIFICATION_DETAIL_PATH, element: <NotificationDetailPage />,},
+            { path: NOTIFICATION_IMPORT_VERIFICATION_PATH, element: <NotificationImportVerficationDraftPage />,},
 
             { path: CARBON_COPY_INDEX_PATH, element: <CarbonCopyIndexPage />, },
             { path: OFFICIAL_INDEX_PATH, element: <OfficialIndexPage />,},
             { path: MATERIAL_INDEX_PATH, element: <MaterialIndexPage />,},
+            { path: COMPANY_INDEX_PATH, element: <CompanyIndexPage />,},
             
         ],
     },

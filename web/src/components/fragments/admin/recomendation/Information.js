@@ -1,53 +1,53 @@
 import React from "react";
-import { Card, CardBody, CardHeader, Chip, Divider } from "@nextui-org/react";
+import { Card, CardBody, CardHeader, Divider } from "@nextui-org/react";
 export default function Information({ data }) {
     const identity = (item) => [
         {
             label: "Nama Pehomon",
-            value: item?.identitasPemohon.namaPemohon
+            value: item?.identitasPemohon?.namaPemohon
         },
         {
             label: "Email",
-            value: item?.identitasPemohon.email,
+            value: item?.identitasPemohon?.email,
         },
         {
             label: "No. Telepon",
-            value: item?.identitasPemohon.teleponFax,
+            value: item?.identitasPemohon?.teleponFax,
         },
         {
             label: "Alamat Domisili",
-            value: item?.identitasPemohon.alamatDomisili,
+            value: item?.identitasPemohon?.alamatDomisili,
         },
     ];
 
     const company = (item) => [
         {
             label: "Nama Perusahaan",
-            value: item?.company.name
+            value: item?.company?.name
         },
         {
             label: "Email",
-            value: item?.company.emailKantor
+            value: item?.company?.emailKantor
         },
         {
             label: "Telepon Kantor",
-            value: item?.company.emailKantor
+            value: item?.company?.telpKantor
         },
         {
             label: "Fax Kantor",
-            value: item?.company.faxKantor
+            value: item?.company?.faxKantor
         },
         {
             label: "Bidang Usaha",
-            value: item?.company.bidangUsaha
+            value: item?.company?.bidangUsaha
         },
         {
             label: "Alamat Kantor",
-            value: item?.company.alamatKantor
+            value: item?.company?.alamatKantor
         },
         {
             label: "Alamat Pool",
-            value: item?.company.alamatPool.map((pool, index) => (<div key={index}>{index+1}. {pool}</div>)),
+            value: item?.company?.alamatPool?.map((pool, index) => (<div key={index}>{index+1}. {pool}</div>)),
         },
     ]
 

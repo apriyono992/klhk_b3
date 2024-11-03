@@ -12,7 +12,37 @@ export class BahanB3Controller {
 
   @Post()
   @ApiOperation({ summary: 'Create a new B3Substance' })
-  @ApiBody({ type: CreateB3PermohonanRekomDto })
+  @ApiBody({
+    type: CreateB3PermohonanRekomDto,
+    schema: {
+      example: {
+        dataBahanB3Id: '123456',
+        applicationId: 'app123',
+        b3pp74: true,
+        b3DiluarList: false,
+        karakteristikB3: 'Corrosive',
+        fasaB3: 'Solid',
+        jenisKemasan: 'Drum',
+        asalMuat: [
+          {
+            name: 'Jakarta',
+            alamat: 'Jl. Sudirman',
+            longitude: 106.8272,
+            latitude: -6.1751,
+          },
+        ],
+        tujuanBongkar: [
+          {
+            name: 'Surabaya',
+            alamat: 'Jl. Tunjungan',
+            longitude: 112.7378,
+            latitude: -7.2575,
+          },
+        ],
+        tujuanPenggunaan: 'Industrial',
+      },
+    },
+  })
   @ApiResponse({
     status: 201,
     description: 'B3Substance added successfully to the application',
@@ -25,8 +55,22 @@ export class BahanB3Controller {
           karakteristikB3: 'Corrosive',
           fasaB3: 'Solid',
           jenisKemasan: 'Drum',
-          asalMuat: 'Jakarta',
-          tujuanBongkar: 'Surabaya',
+          asalMuat: [
+            {
+              name: 'Jakarta',
+              alamat: 'Jl. Sudirman',
+              longitude: 106.8272,
+              latitude: -6.1751,
+            },
+          ],
+          tujuanBongkar: [
+            {
+              name: 'Surabaya',
+              alamat: 'Jl. Tunjungan',
+              longitude: 112.7378,
+              latitude: -7.2575,
+            },
+          ],
           tujuanPenggunaan: 'Industrial',
           createdAt: '2024-10-19T10:00:00Z',
           updatedAt: '2024-10-19T10:00:00Z',
@@ -38,9 +82,39 @@ export class BahanB3Controller {
     return this.bahanB3Service.createB3Substance(createB3SubstanceDto);
   }
 
+
   @Put()
   @ApiOperation({ summary: 'Update an existing B3Substance' })
-  @ApiBody({ type: UpdateB3PermohonanRekomDto })
+  @ApiBody({
+    type: UpdateB3PermohonanRekomDto,
+    schema: {
+      example: {
+        dataBahanB3Id: '123456',
+        b3pp74: true,
+        b3DiluarList: false,
+        karakteristikB3: 'Flammable',
+        fasaB3: 'Liquid',
+        jenisKemasan: 'Canister',
+        asalMuat: [
+          {
+            name: 'Bandung',
+            alamat: 'Jl. Soekarno Hatta',
+            longitude: 107.6191,
+            latitude: -6.9175,
+          },
+        ],
+        tujuanBongkar: [
+          {
+            name: 'Medan',
+            alamat: 'Jl. Medan Merdeka',
+            longitude: 98.6722,
+            latitude: 3.5952,
+          },
+        ],
+        tujuanPenggunaan: 'Research',
+      },
+    },
+  })
   @ApiResponse({
     status: 200,
     description: 'B3Substance updated successfully',
@@ -53,8 +127,22 @@ export class BahanB3Controller {
           karakteristikB3: 'Flammable',
           fasaB3: 'Liquid',
           jenisKemasan: 'Canister',
-          asalMuat: 'Bandung',
-          tujuanBongkar: 'Medan',
+          asalMuat: [
+            {
+              name: 'Bandung',
+              alamat: 'Jl. Soekarno Hatta',
+              longitude: 107.6191,
+              latitude: -6.9175,
+            },
+          ],
+          tujuanBongkar: [
+            {
+              name: 'Medan',
+              alamat: 'Jl. Medan Merdeka',
+              longitude: 98.6722,
+              latitude: 3.5952,
+            },
+          ],
           tujuanPenggunaan: 'Research',
           createdAt: '2024-10-19T10:00:00Z',
           updatedAt: '2024-10-20T10:00:00Z',
@@ -62,9 +150,10 @@ export class BahanB3Controller {
       },
     },
   })
-  async updateB3Substance(@Body() updateB3SubstanceDto: UpdateB3PermohonanRekomDto) {
+  async updateB3Substance( @Body() updateB3SubstanceDto: UpdateB3PermohonanRekomDto) {
     return this.bahanB3Service.updateB3Substance(updateB3SubstanceDto);
   }
+  
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a B3Substance' })

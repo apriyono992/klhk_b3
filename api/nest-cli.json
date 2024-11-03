@@ -5,12 +5,30 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "assets": [
-      "**/*.env",
-      "**/*.conf",
-      "seed/*.json",
-      "**/*.html",
-      "**/*.css",
-      "pdf/*"
+      {
+        "include": "**/*.env",
+        "outDir": "dist/src"
+      },
+      {
+        "include": "**/*.conf",
+        "outDir": "dist/src"
+      },
+      {
+        "include": "seed/*.json",
+        "outDir": "dist/src/seed"
+      },
+      {
+        "include": "**/*.html",
+        "outDir": "dist/src"
+      },
+      {
+        "include": "**/*.css",
+        "outDir": "dist/src"
+      },
+      {
+        "include": "pdf/*",
+        "outDir": "dist/src/pdf"
+      }
     ]
   }
 }

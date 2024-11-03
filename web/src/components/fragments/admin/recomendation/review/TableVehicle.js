@@ -63,7 +63,7 @@ export default function TableVehicle({ data, isLoading, mutate }) {
             </Card>
 
             <ModalAlert isOpen={isOpenModalAlert} onOpenChange={onOpenChangeModalAlert} onSubmit={onSubmitDelete} icon="danger"/>
-            <Modal isOpen={isOpenModalForm} onOpenChange={onOpenChangeModalForm} onClose={onCloseForm} isDismissable={false} isKeyboardDismissDisabled={false}>
+            <Modal scrollBehavior="inside" isOpen={isOpenModalForm} onOpenChange={onOpenChangeModalForm} onClose={onCloseForm} isDismissable={false} isKeyboardDismissDisabled={false}>
                 <ModalContent>
                     {(onClose) => (
                         <>

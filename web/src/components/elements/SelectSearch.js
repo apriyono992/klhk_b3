@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
-import { getFetcher } from '../../services/api';
 import { debounce } from 'lodash';
 import AsyncSelect from 'react-select/async';
 
-export default function SelectSearch({ url, value, onChange }) {
+export default function SelectSearch({ fetcher, fieldOptionName, fieldOptionSubName, isMulti, value, onChange }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [selected, setSelected] = useState(value);
@@ -17,10 +16,10 @@ export default function SelectSearch({ url, value, onChange }) {
         try {
             setLoading(true);
             setError(null);
-            const response = await getFetcher(`/api/company?name=${inputValue}`);
+            const response = await fetcher(inputValue);
             return response.data.map((item) => ({
                 value: item.id,
-                label: item.name,
+                label: `${item?.[fieldOptionName]} ${ fieldOptionSubName ? '- '+item?.[fieldOptionSubName] : '' }`,
             }));
         } catch (err) {
             setError('Gagal memuat data');
@@ -29,15 +28,16 @@ export default function SelectSearch({ url, value, onChange }) {
             setLoading(false);
         }
     };
+
+    const debouncedFetch = debounce(async (inputValue, resolve) => {
+        const options = await fetchOptions(inputValue);
+        resolve(options);
+    }, 700);
+
     const loadOptions = (inputValue) => {
         return new Promise((resolve) => {
             if (inputValue.length > 2) {
-                const debouncedFetch = debounce(async () => {
-                const options = await fetchOptions(inputValue);
-                resolve(options);
-                }, 500);
-                
-                debouncedFetch();
+                debouncedFetch(inputValue, resolve);
             } else {
                 resolve([]);
             }
@@ -47,6 +47,7 @@ export default function SelectSearch({ url, value, onChange }) {
     return (
         <AsyncSelect
             loadOptions={loadOptions}
+            isMulti={isMulti}
             cacheOptions
             value={selected}
             onChange={handleChange}

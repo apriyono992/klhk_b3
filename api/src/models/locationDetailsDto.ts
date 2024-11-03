@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsNumber, IsLongitude, IsLatitude } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 // DTO for LocationDetails with longitude and latitude
@@ -14,12 +14,12 @@ export class LocationDetailsDto {
   alamat: string;
 
   @ApiProperty({ description: 'Longitude of the location' })
-  @IsNumber()
+  @IsLongitude()
   @IsNotEmpty()
   longitude: number;
 
   @ApiProperty({ description: 'Latitude of the location' })
-  @IsNumber()
+  @IsLatitude()
   @IsNotEmpty()
   latitude: number;
 }

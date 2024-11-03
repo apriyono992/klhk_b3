@@ -1,4 +1,4 @@
-import { Button, Tab, Tabs } from '@nextui-org/react'
+import { Button, Chip, Tab, Tabs } from '@nextui-org/react'
 import RootAdmin from '../../../components/layouts/RootAdmin'
 import Validation from '../../../components/fragments/admin/recomendation/Validation';
 import Review from '../../../components/fragments/admin/recomendation/review/Review';
@@ -12,10 +12,8 @@ import { getFetcher } from '../../../services/api';
 
 export default function DetailPage() {
     const { id } = useParams();
-    const fetcher = (...args) => getFetcher(...args);
-    const { data, isLoading, mutate } = useSWR(`/api/rekom/permohonan/${id}`, fetcher)
+    const { data, isLoading, mutate } = useSWR(`/api/rekom/permohonan/${id}`, getFetcher)
     console.log(data);
-    
 
     let tabs = [
         {
@@ -36,13 +34,22 @@ export default function DetailPage() {
         {
             id: "draft",
             label: "Draft SK",
-            content: <Draft/>
+            content: <Draft data={data} mutate={mutate}/>
         }
     ];
 
     return (
         <RootAdmin>
-            <HeaderPage title={data?.kodePermohonan} subtitle="Kode Permohonan" action={<Button startContent={<DocumentIcon className="size-4"/>} size="sm" color="primary">View Draft SK</Button>} />
+            <HeaderPage 
+                title={data?.kodePermohonan} 
+                subtitle="Kode Permohonan" 
+                action={
+                    <div className='flex items-center gap-3'>
+                        <Chip size="sm" variant='bordered' color='primary'>{data?.status}</Chip>
+                        <Button startContent={<DocumentIcon className="size-4"/>} size="sm" color="primary">View Draft SK</Button>
+                    </div>
+                }
+            />
             <div className="flex w-full flex-col pt-5">
                 <Tabs color="primary" radius="sm" size="md" variant="bordered" aria-label="form">\
                     {tabs.map((tab) => (

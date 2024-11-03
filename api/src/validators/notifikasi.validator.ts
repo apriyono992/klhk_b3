@@ -44,7 +44,7 @@ export function IsDraftNotifikasiExists(validationOptions?: ValidationOptions) {
       target: object.constructor,
       propertyName: propertyName,
       options: validationOptions,
-      validator: NotifikasiConstraint,
+      validator: DraftNotifikasiConstraint,
     });
   };
 }
@@ -66,4 +66,34 @@ export class DraftNotifikasiConstraint implements ValidatorConstraintInterface {
   defaultMessage(args: ValidationArguments) {
     return `Draft Notifikasi ${args.value} Not Found`;
   }
+}
+
+@Injectable()
+@ValidatorConstraint({ async: true })
+export class EuReferenceContsraint implements ValidatorConstraintInterface {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async validate(referenceNumber: any, args: ValidationArguments) {
+    const company = await this.prisma.notifikasi.findFirst({ where: { referenceNumber: referenceNumber?.toLowerCase().trim() } });
+    if (company){
+      return false;
+    }
+    return true; // Return true if company exists, otherwise false
+  }
+
+  defaultMessage(args: ValidationArguments) {
+    return 'Reference Number is already exists'; // Error message
+  }
+}
+
+export function IsReferenceExists(validationOptions?: ValidationOptions) {
+  return function (object: Object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: EuReferenceContsraint,
+    });
+  };
 }

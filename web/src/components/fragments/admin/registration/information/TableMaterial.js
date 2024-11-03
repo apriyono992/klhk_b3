@@ -1,5 +1,5 @@
 import { Button, Card, CardBody, CardHeader, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
-import { authStateFetcher } from "../../../../../services/api";
+import { getFetcher } from "../../../../../services/api";
 import ModalAlert from "../../../../elements/ModalAlert";
 import ModalDetailList from "../../../../elements/ModalDetailList";
 import useSWR from "swr";
@@ -11,8 +11,7 @@ import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
 export default function TableMaterial({ className, dataB3 }) {
-    const fetcher = (...args) => authStateFetcher(...args);
-    const { data, isLoading } = useSWR('/products?limit=4', fetcher);
+    const { data, isLoading } = useSWR('/products?limit=4', getFetcher);
     const {isOpen: isOpenModalAlert, onOpen: onOpenModalAlert, onOpenChange: onOpenChangeModalAlert, onClose: onCloseModalAlert } = useDisclosure();
     const {isOpen: isOpenModalForm, onOpen: onOpenModalForm, onOpenChange: onOpenChangeModalForm, onClose : onCloseModalForm } = useDisclosure();
     const [editId, setEditId] = useState(null);

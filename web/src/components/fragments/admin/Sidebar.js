@@ -3,17 +3,19 @@ import {
     ClipboardDocumentIcon,
     CursorArrowRaysIcon,
     ListBulletIcon,
-    ChevronRightIcon,
     FolderIcon,
-    DocumentIcon,
     ChartBarIcon,
-    BellAlertIcon
+    BellAlertIcon,
+    BuildingOfficeIcon,
+    ExclamationTriangleIcon,
+    UserGroupIcon,
+    AtSymbolIcon
 } from "@heroicons/react/24/outline";
 import { Accordion, AccordionItem, Avatar } from "@nextui-org/react";
 import logo from '../../../assets/images/logo.png'
 import ListItem from "../../elements/ListItem";
 import { useEffect, useRef } from "react";
-import { CARBON_COPY_INDEX_PATH, DASHBOARD_PATH, MATERIAL_INDEX_PATH, NOTIFICATION_DASHBOARD_PATH, NOTIFICATION_INDEX_PATH, OFFICIAL_INDEX_PATH, RECOMENDATION_DASHBOARD_PATH, RECOMENDATION_INDEX_PATH, REGISTRATION_DASHBOARD_PATH, REGISTRATION_INDEX_PATH } from "../../../services/routes";
+import { CARBON_COPY_INDEX_PATH, COMPANY_INDEX_PATH, DASHBOARD_PATH, MATERIAL_INDEX_PATH, NOTIFICATION_DASHBOARD_PATH, NOTIFICATION_INDEX_PATH, OFFICIAL_INDEX_PATH, RECOMENDATION_DASHBOARD_PATH, RECOMENDATION_INDEX_PATH, REGISTRATION_DASHBOARD_PATH, REGISTRATION_INDEX_PATH } from "../../../services/routes";
 import useCustomNavigate from "../../../hooks/useCustomNavigate";
 
 export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
@@ -78,9 +80,10 @@ export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
                             <ListItem url={NOTIFICATION_INDEX_PATH} variant="subitem" title="Daftar" icon={<ListBulletIcon className="size-4" />} />
                         </AccordionItem>
                         <AccordionItem key="4" title="Mater Data" className="" startContent={<FolderIcon className="size-5" />}>
-                            <ListItem url={CARBON_COPY_INDEX_PATH} variant="subitem" title="Tembusan" icon={<DocumentIcon className="size-4" />} />
-                            <ListItem url={OFFICIAL_INDEX_PATH} variant="subitem" title="Pejabat" icon={<DocumentIcon className="size-4" />} />
-                            <ListItem url={MATERIAL_INDEX_PATH} variant="subitem" title="Bahan B3" icon={<DocumentIcon className="size-4" />} />
+                            <ListItem url={CARBON_COPY_INDEX_PATH} variant="subitem" title="Tembusan" icon={<AtSymbolIcon className="size-4" />} />
+                            <ListItem url={OFFICIAL_INDEX_PATH} variant="subitem" title="Pejabat" icon={<UserGroupIcon className="size-4" />} />
+                            <ListItem url={MATERIAL_INDEX_PATH} variant="subitem" title="Bahan B3" icon={<ExclamationTriangleIcon className="size-4" />} />
+                            <ListItem url={COMPANY_INDEX_PATH} variant="subitem" title="Perusahaan" icon={<BuildingOfficeIcon className="size-4" />} />
                         </AccordionItem>
                     </Accordion>
                 </ul>

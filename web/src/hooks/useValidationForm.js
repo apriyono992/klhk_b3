@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as yup from 'yup';
-import { postFetcher } from "../services/api";
+import { patchFetcherWithoutId, postFetcher } from "../services/api";
+import useAuth from "./useAuth";
 
 export default function useValidationForm({ mutate }) {
     const {isOpen: isOpenModalForm, onOpen: onOpenModalForm, onOpenChange: onOpenChangeModalForm, onClose: onCloseModalForm} = useDisclosure();
@@ -17,6 +18,7 @@ export default function useValidationForm({ mutate }) {
     }).required()
 
     const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({resolver: yupResolver(schema)});
+    const { data: user } = useAuth()
 
     async function onSubmitForm(data) {
         try {
@@ -33,9 +35,16 @@ export default function useValidationForm({ mutate }) {
         }
     }
 
-    async function onValidate() {
+    async function onValidate(applicationId) {
         try {
-            await new Promise((r) => setTimeout(r, 1000));
+
+            const data = {
+                applicationId: applicationId,
+                status: 'VALIDASI_PEMOHONAN_SELESAI',
+                userId: user.userId
+            }
+            await patchFetcherWithoutId('/api/rekom/permohonan/status', data);
+            mutate()
             toast.success('Validasi teknis selesai!');
         } catch (error) {
             toast.error('Gagal validasi!');

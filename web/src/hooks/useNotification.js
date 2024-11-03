@@ -6,13 +6,17 @@ import toast from "react-hot-toast";
 import * as yup from 'yup';
 import { deleteFetcher, postFetcher } from "../services/api";
 import { isResponseErrorObject } from "../services/helpers";
+import useAuth from "./useAuth";
 
 
 export default function useNotification({ mutate }) {
     const formSchema =  yup.object().shape({
+        databahanb3Id: yup.string().required('harus diisi'),
+        referenceNumber: yup.string().required('Harus diisi'),
         companyId: yup.string().required('Harus diisi'),
     }).required()
 
+    const { data : user } = useAuth()
     const {isOpen: isOpenModalForm, onOpen: onOpenModalForm, onOpenChange: onOpenChangeModalForm, onClose: onCloseModalForm} = useDisclosure();
     const {isOpen: isOpenModalAlert, onOpenChange: onOpenChangeModalAlert} = useDisclosure();
     const [editId, setEditId] = useState(null);
@@ -21,17 +25,13 @@ export default function useNotification({ mutate }) {
     function onCloseForm() {
         setEditId(null);
         reset({
+            databahanb3Id: '',
             referenceNumber: '',
             companyId: '',
         });
         onCloseModalForm()
     }
 
-    function onClickDelete(id) {
-        setEditId(id);
-        onOpenChangeModalAlert();
-    }
-    
     async function onSubmitDelete() {
         try {
             await deleteFetcher('/api/notifikasi', editId);
@@ -45,9 +45,10 @@ export default function useNotification({ mutate }) {
     async function onSubmitForm(data) {
         try {
             data.status = 'Diterima dari Otoritas Asal B3'
+            data.changeBy = user.userId
             await postFetcher('/api/notifikasi', data);
             mutate()
-            console.log(data);
+            // console.log(data);
             
             toast.success('Notifikasi berhasil ditambah!');
             onCloseForm();
@@ -78,7 +79,6 @@ export default function useNotification({ mutate }) {
             formState: { errors, isSubmitting }
         },
         onCloseForm,
-        onClickDelete,
         onSubmitDelete,
         onSubmitForm,
     }

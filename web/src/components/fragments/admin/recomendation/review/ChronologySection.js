@@ -28,9 +28,9 @@ export default function ChronologySection() {
         try {
             await new Promise((r) => setTimeout(r, 1000));
             console.log(data);
-            toast.success('Teks lainnya berhasil ditambah!');
+            toast.success('Kronologi berhasil diubah!');
         } catch (error) {
-            toast.success('Gagal tambah teks lainnya!');
+            toast.error('Gagal ubah kronologi!');
         }
     }
 
@@ -47,7 +47,7 @@ export default function ChronologySection() {
                     </Button>
                     <div className="flex flex-col gap-2 my-7">
                         {fields.map((field, index) => (
-                            <div key={index} className="flex items-center gap-1">
+                            <div key={index} className="flex items-end gap-3 mb-2">
                                 <Controller
                                     name={`chronology[${index}].value`}
                                     control={control}
@@ -55,16 +55,18 @@ export default function ChronologySection() {
                                     render={({ field }) => (
                                         <Input
                                             {...field}
-                                            size="sm"
+                                            label={`Kronologi ${index+1}`}
+                                            labelPlacement='outside'
                                             placeholder="Masukan Kronologi"
                                             fullWidth
                                             isRequired
+                                            size="sm"
                                             color={errors?.chronology?.[index]?.value ? "danger" : "default"}
                                             isInvalid={errors?.chronology?.[index]?.value} 
                                         />
                                     )}
                                 />
-                                <Button color="danger" size="sm" isIconOnly onClick={() => remove(index)} isDisabled={fields.length === 1}><TrashIcon className="size-4"/></Button>
+                                <Button size="sm" color="danger" isIconOnly onClick={() => remove(index)} isDisabled={fields.length === 1}><TrashIcon className="size-4"/></Button>
                             </div>
                         ))}
                     </div>

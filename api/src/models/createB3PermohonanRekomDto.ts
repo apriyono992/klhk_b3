@@ -1,7 +1,8 @@
-import { IsString, IsBoolean, IsNotEmpty, Validate, IsArray, ArrayNotEmpty , IsOptional} from 'class-validator';
+import { IsString, IsBoolean, IsNotEmpty, Validate, IsArray, ArrayNotEmpty , IsOptional, ValidateNested} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDataBahanB3Exists } from 'src/validators/dataBahanB3.validator';
 import { LocationDetailsDto } from './locationDetailsDto';
+import { Type } from 'class-transformer';
 
 // Updated DTO for creating a B3Substance
 export class CreateB3PermohonanRekomDto {
@@ -45,6 +46,8 @@ export class CreateB3PermohonanRekomDto {
   })
   @IsArray()
   @ArrayNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => LocationDetailsDto)
   asalMuat: LocationDetailsDto[];
 
   // New: Array of destination locations (tujuanBongkar)
@@ -54,6 +57,8 @@ export class CreateB3PermohonanRekomDto {
   })
   @IsArray()
   @ArrayNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => LocationDetailsDto)
   tujuanBongkar: LocationDetailsDto[];
 
   @ApiProperty({ description: 'Purpose of the B3' })

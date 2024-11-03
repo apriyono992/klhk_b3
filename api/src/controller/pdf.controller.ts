@@ -73,6 +73,69 @@ export class PdfController {
     }
   }
 
+  @Get('generatePersetujuanImport/:applicationId')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Generate Surat Persetujuan Import' })
+  @ApiResponse({
+    status: 200,
+    description: 'PDF generated successfully.',
+  })
+  @ApiResponse({ status: 404, description: 'Permohonan Aplication not found.' })
+  @ApiParam({ name: 'applicationId', description: 'The ID of the Permohonan Rekomendasi to generate the surat for Surat Persetujuan Import' })
+  async generatePesetujuanImport(
+    @Param('applicationId') applicationId: string,
+    @Res() res: Response,
+  ) {
+    try {
+      // Call the PdfService to generate the PDF
+      const pdfBuffer = await this.pdfService.generatePersetujuanImportPdf(applicationId);
+
+      // Set the response headers for the PDF
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': 'inline; filename="Persetujuan-Import.pdf"',
+        'Content-Length': pdfBuffer.length,
+      });
+
+      // Send the PDF back as a response
+      res.end(pdfBuffer);
+    } catch (error) {
+      throw new NotFoundException(`Failed to generate PDF: ${error.message}`);
+    }
+  }
+
+  @Get('generateExplicitConsent/:applicationId')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Generate Surat Telaah Teknis' })
+  @ApiResponse({
+    status: 200,
+    description: 'PDF generated successfully.',
+  })
+  @ApiResponse({ status: 404, description: 'Permohonan Aplication not found.' })
+  @ApiParam({ name: 'applicationId', description: 'The ID of the Permohonan Rekomendasi to generate the surat for Telaah Teknis' })
+  async generateExplicitConsent(
+    @Param('applicationId') applicationId: string,
+    @Res() res: Response,
+  ) {
+    try {
+      // Call the PdfService to generate the PDF
+      const pdfBuffer = await this.pdfService.generateExplicitConsentPdf(applicationId);
+
+      // Set the response headers for the PDF
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': 'inline; filename="explicit consent.pdf"',
+        'Content-Length': pdfBuffer.length,
+      });
+
+      // Send the PDF back as a response
+      res.end(pdfBuffer);
+    } catch (error) {
+      throw new NotFoundException(`Failed to generate PDF: ${error.message}`);
+    }
+  }
+
+
   @Get('generateTelaahTeknis/:applicationId')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Generate Surat Telaah Teknis' })

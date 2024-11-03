@@ -39,13 +39,13 @@
     <p><strong>Lampiran:</strong> 1 (satu) berkas</p>
     <p><strong>Hal:</strong> Konfirmasi Kebenaran Impor Bahan Berbahaya dan Beracun</p>
 
-    <p>Yth. Direktur <%= company.name %></p>
+    <p>Yth. Direktur <%= company?.name %></p>
     <p>di Tempat</p>
 
     <p>Bersama ini dengan hormat disampaikan hal-hal sebagai berikut:</p>
     <ol>
-      <li><%= customPoint1 %></li>
-      <li><%= customPoint2 %></li>
+      <li>Email dari <em><%= draftSurat?.namaPengirimNotifikasi %></em>  tentang Export of <em> <%= bahanKimia %></em>;</li>
+      <li>Perusahaan Saudara yang berencana untuk mengimpor bahan kimia <em> <%= bahanKimia %></em> <strong>(Reference Number <%=draftSurat?.notifikasi?.referenceNumber%>)</strong>, dari <%=draftSurat?.perusahaanAsal%> yang berkedudukan di <%=draftSurat?.negaraAsal%>;</li>
       <li>Agar Saudara segera menyampaikan:
         <ul>
           <li>Surat resmi konfirmasi rencana impor dan rencana penggunaan bahan kimia tersebut</li>

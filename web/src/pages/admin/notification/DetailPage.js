@@ -11,10 +11,9 @@ export default function DetailPage() {
     const { data, isLoading, mutate } = useSWR(`/api/notifikasi/${id}`, getFetcher);
     console.log(data);
     
-
     return (
         <RootAdmin>
-            <HeaderPage title={data?.company.name} subtitle="Notifikasi Perusahaan"  />
+            <HeaderPage title={data?.company?.name} subtitle="Notifikasi Perusahaan"  />
             <div className='grid grid-cols-1 md:grid-cols-5 gap-3 pt-3'>
                 <Timeline data={data} isLoading={isLoading} className='col-span-3'/>
                 <Form data={data} mutate={mutate} className='col-span-2' />

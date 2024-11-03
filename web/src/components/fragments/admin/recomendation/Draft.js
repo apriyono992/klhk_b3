@@ -1,213 +1,136 @@
-import { Button, Card, CardBody, CardHeader, Divider, Input, Select, SelectItem, Textarea } from '@nextui-org/react'
+import { Button, Card, CardBody, CardHeader, Divider, Input, Select, SelectItem } from '@nextui-org/react'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import MultiSelectSort from '../../../elements/MultiSelectSort'
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import toast from 'react-hot-toast';
-import { draftPermit, month } from '../../../../services/enum';
 import useSWR from 'swr';
-import { getFetcher, getSelectFetcher } from '../../../../services/api';
+import { getFetcher, getSelectFetcher, patchFetcherWithoutId } from '../../../../services/api';
+import ReactSelect from '../../../elements/ReactSelect';
+import { draftRecomendationLetter } from '../../../../services/validation';
+import { dirtyInput, isResponseErrorObject } from '../../../../services/helpers';
 
-export default function Draft() {
-    const formSchema =  yup.object().shape({
-        tembusan: yup.array()
-                        .min(1, 'Minimal 1 tembusan')
-                        .required('Harus diisi'),
-        nomorSurat: yup.string().required('harus diisi'),
-        // letter_month: yup.number()
-        //                 .typeError('Harus diisi')
-        //                 .integer('Harus angka')
-        //                 .positive('Harus angka'),
-        // letter_year: yup.number()
-        //                 .typeError('Tahun harus valid')
-        //                 .integer('Harus angka').min(1900, 'Tahun tidak valid')
-        //                 .max(2099, `Tahun tidak valid`)
-        //                 .required('harus diisi'),
-        // letter_permit: yup.number()
-        //                 .typeError('Harus diisi')
-        //                 .integer('Harus angka')
-        //                 .positive('Harus angka'),
-        // letter_note: yup.string().required('harus diisi'),
-        pejabatId: yup.string().required('harus diisi'),
-        // letter_publication_date: yup.date()
-        //                             .typeError('Tanggal harus valid')
-        //                             .required('harus diisi'),
-        // letter_from_date: yup.date()
-        //                     .typeError('Tanggal harus valid')
-        //                     .required('harus diisi'),
-        // letter_to_date: yup.date()
-        //                     .typeError('Tanggal harus valid')
-        //                     .required('harus diisi'),
-        // letter_notification: yup.string().required('harus diisi'),
-        
-    }).required()
-
-    const { register, handleSubmit, control, formState: { errors, isSubmitting }, } = useForm({resolver: yupResolver(formSchema)})
-    const { data, isLoading } = useSWR('/api/data-master/pejabat?limit=100', getFetcher);
-    console.log(data?.data);
+export default function Draft({ data, mutate }) {
+    const { register, handleSubmit, control, formState: { errors, isSubmitting, dirtyFields }, } = useForm({
+        resolver: yupResolver(draftRecomendationLetter), 
+        defaultValues: {
+            tembusanIds: data?.draftSurat?.tembusan?.map((item) => ({ value: item.id, label: item.nama })),
+            nomorSurat: data?.draftSurat?.nomorSurat,
+            tipeSurat: data?.draftSurat?.tipeSurat,
+            pejabatId: {value: data.draftSurat?.pejabat?.id, label: data?.draftSurat?.pejabat?.nama},
+        }
+    })
+    const { data: dataPejabat, isLoading: isLoadingPejabat } = useSWR('/api/data-master/pejabat?limit=100', getSelectFetcher);
+    const { data: dataTembusan, isLoading: isLoadingTembusan } = useSWR('/api/data-master/tembusan?limit=100', getSelectFetcher);
     
-
-    async function onSubmit(data) {
+    async function onSubmit(formData) {
         try {
-            await new Promise((r) => setTimeout(r, 1000));
-            console.log(data);
-            toast.success('Draft sk berhasil dibuat!');
+            // await new Promise(r => setTimeout(r, 1000));
+            const filteredData = dirtyInput(dirtyFields, formData);
+            filteredData.draftId = data?.draftSurat.id
+            console.log(filteredData);
+            
+            await patchFetcherWithoutId('/api/rekom/permohonan/draft-surat', filteredData);
+            mutate()
+            toast.success('Draft sk berhasil diubah!');
         } catch (error) {
-            toast.error('Gagal buat draft sk!');
+            isResponseErrorObject(error.response.data.message)
+                ? Object.entries(error.response.data.message).forEach(([key, value]) => {
+                    toast.error(value);
+                })
+                : toast.error(error.response.data.message)
         }
     }
 
     return (
         <div className=''>
-            <form onSubmit={handleSubmit(onSubmit)} className='grid grid-cols-1 md:grid-cols-2 gap-3 py-3'>
-                <Card radius='sm'>
+            <form onSubmit={handleSubmit(onSubmit)} className='grid grid-cols-1 md:grid-cols-5 gap-3 py-3'>
+                <Card radius='sm' className='col-span-3 h-[500px]'>
                     <CardHeader>
                         <p className="text-md">Tembusan</p>
                     </CardHeader>
                     <Divider/>
                     <CardBody>
                         <Controller
-                            name='letter_copy'
+                            name="tembusanIds"
                             control={control}
-                            rules={{ required: true }}
                             render={({ field, fieldState }) => (
-                                <div className='flex flex-col'>
-                                    {fieldState.error && <div className="text-red-500 text-xs">{fieldState.error.message}</div>}
-                                    <MultiSelectSort
-                                        value={field.value}
-                                        onChange={field.onChange}
-                                    />  
-                                </div>  
+                                <ReactSelect
+                                    label="Tembusan"
+                                    isMulti={true}
+                                    data={dataTembusan}
+                                    isLoading={isLoadingTembusan}
+                                    value={field.value}
+                                    onChange={(selectedOptions) => field.onChange(selectedOptions.map(option => option.value))}
+                                    error={fieldState.error && fieldState.error.message}
+                                /> 
                             )}
-                        />
+                        />  
                     </CardBody>
                 </Card>
-                <Card radius='sm'>
+                <Card radius='sm' className='col-span-2'>
                     <CardHeader>
                         <p className="text-md">Draft Sk</p>
                     </CardHeader>
                     <Divider/>
                     <CardBody>
-                        <div className='grid grid-cols-1 md:grid-cols-2 gap-3 mb-5'>
+                        <div className='flex flex-col gap-3 mb-5'>
                             <Input
                                 {...register('nomorSurat')}
                                 isRequired
                                 variant="faded" 
                                 type="text" 
                                 label="Nomor Surat" 
+                                labelPlacement='outside'
+                                placeholder="..."
                                 color={errors.nomorSurat ? 'danger' : 'default'}
                                 isInvalid={errors.nomorSurat} 
                                 errorMessage={errors.nomorSurat && errors.nomorSurat.message}
                                 className="col-span-2"
                             />
-                            {/* <Select
-                                {...register('letter_month')} 
-                                variant="faded" 
-                                label="Bulan" 
-                                placeholder="Pilih"
-                                isRequired
-                                color={errors.letter_month ? 'danger' : 'default'}
-                                isInvalid={errors.letter_month} 
-                                errorMessage={errors.letter_month && errors.letter_month.message}
-                            >
-                                {month.map((item) => (
-                                    <SelectItem key={item}>{item}</SelectItem>
-                                ))}
-                            </Select> */}
-                            {/* <Input
-                                {...register('letter_year')}
+                            <Input
+                                {...register('tipeSurat')}
                                 isRequired
                                 variant="faded" 
                                 type="text" 
-                                label="Tahun" 
-                                color={errors.letter_year ? 'danger' : 'default'}
-                                isInvalid={errors.letter_year} 
-                                errorMessage={errors.letter_year && errors.letter_year.message}
-                            /> */}
-                            {/* <Select
-                                {...register('letter_permit')} 
-                                variant="faded" 
-                                label="Status Izin" 
-                                placeholder="Pilih"
-                                isRequired
-                                color={errors.letter_permit ? 'danger' : 'default'}
-                                isInvalid={errors.letter_permit} 
-                                errorMessage={errors.letter_permit && errors.letter_permit.message}
-                                className='col-span-2'
-                            >
-                                {draftPermit.map((item) => (
-                                    <SelectItem key={item}>{item}</SelectItem>
-                                ))}
-                            </Select> */}
-                            {/* <Textarea
-                                {...register('letter_note')} 
-                                variant="faded" 
-                                label="Keterangan SK" 
-                                isRequired
-                                color={errors.letter_note ? 'danger' : 'default'}
-                                isInvalid={errors.letter_note} 
-                                errorMessage={errors.letter_note && errors.letter_note.message}
+                                label="Tipe Surat" 
+                                labelPlacement='outside'
+                                placeholder="..."
+                                color={errors.tipeSurat ? 'danger' : 'default'}
+                                isInvalid={errors.tipeSurat} 
+                                errorMessage={errors.tipeSurat && errors.tipeSurat.message}
                                 className="col-span-2"
-                            /> */}
-                            <Select
+                            />
+                            {/* <Select
                                 {...register('pejabatId')} 
                                 variant="faded" 
                                 label="Pejabat" 
-                                placeholder="Pilih"
                                 isRequired
                                 color={errors.pejabatId ? 'danger' : 'default'}
                                 isInvalid={errors.pejabatId} 
                                 errorMessage={errors.pejabatId && errors.pejabatId.message}
+                                defaultSelectedKeys={[`${data.draftSurat.pejabat.id}` ?? '']}
                             >
-                                {data?.data.map((item) => (
+                                {dataPejabat?.data.map((item) => (
                                     <SelectItem key={item.id}>{item.nama}</SelectItem>
                                 ))}
-                            </Select>
-                            {/* <Input
-                                {...register('letter_publication_date')} 
-                                variant="faded" 
-                                label="Tanggal Terbit"
-                                type="date" 
-                                isRequired
-                                color={errors.letter_publication_date ? 'danger' : 'default'}
-                                isInvalid={errors.letter_publication_date} 
-                                errorMessage={errors.letter_publication_date && errors.letter_publication_date.message}
-                            /> */}
-                            {/* <Input
-                                {...register('letter_from_date')} 
-                                variant="faded" 
-                                label="Berlaku Dari"
-                                type="date" 
-                                isRequired
-                                color={errors.letter_from_date ? 'danger' : 'default'}
-                                isInvalid={errors.letter_from_date} 
-                                errorMessage={errors.letter_from_date && errors.letter_from_date.message}
-                            /> */}
-                            {/* <Input
-                                {...register('letter_to_date')} 
-                                variant="faded" 
-                                label="Sampai"
-                                type="date" 
-                                isRequired
-                                color={errors.letter_to_date ? 'danger' : 'default'}
-                                isInvalid={errors.letter_to_date} 
-                                errorMessage={errors.letter_to_date && errors.letter_to_date.message}
-                            /> */}
-                            {/* <Input
-                                {...register('letter_notification')}
-                                variant="faded" 
-                                isRequired
-                                type="text" 
-                                label="Nomor Notifikasi Impor" 
-                                color={errors.letter_notification ? 'danger' : 'default'}
-                                isInvalid={errors.letter_notification} 
-                                errorMessage={errors.letter_notification && errors.letter_notification.message}
-                                className="col-span-2"
-                            /> */}
+                            </Select> */}
+                            <Controller
+                                name="pejabatId"
+                                control={control}
+                                render={({ field, fieldState }) => (
+                                    <ReactSelect
+                                        label="Pejabat"
+                                        data={dataPejabat}
+                                        isLoading={isLoadingPejabat}
+                                        value={field.value}
+                                        onChange={(selectedOptions) => field.onChange(selectedOptions.value)}
+                                        error={fieldState.error && fieldState.error.message}
+                                    /> 
+                                )}
+                            />  
                         </div>
                         <div>
-                            <Button isDisabled={isSubmitting} isLoading={isSubmitting} type="submit" color='primary'>Simpan</Button>
+                            <Button isDisabled={isSubmitting || Object.keys(dirtyFields).length === 0} isLoading={isSubmitting} type="submit" color='primary'>Simpan</Button>
                         </div>
                     </CardBody>
                 </Card>
