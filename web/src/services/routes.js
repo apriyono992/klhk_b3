@@ -19,9 +19,14 @@ import NotificationImportVerficationDraftPage from "../pages/admin/notification/
 import CarbonCopyIndexPage from "../pages/admin/carbon-copy/IndexPage";
 import MaterialIndexPage from "../pages/admin/material/IndexPage";
 import OfficialIndexPage from "../pages/admin/official/IndexPage";
+import HomePage from "../pages/landing-page/home";
+import BeritaPage from "../pages/landing-page/berita";
+import ArticlePage from "../pages/landing-page/article";
 import CompanyIndexPage from "../pages/admin/company/IndexPage";
 
 export const ROOT_PATH = '/'
+export const BERITA_PATH = '/berita'
+export const ARTICLE_PATH = '/artikel'
 
 export const LOGIN_PATH = '/masuk'
 export const REGISTER_PATH = '/daftar'
@@ -50,7 +55,9 @@ export const OFFICIAL_INDEX_PATH = '/admin/utama/pejabat'
 export const COMPANY_INDEX_PATH = '/admin/utama/perusahaan'
 
 const router = createBrowserRouter([
-    { path: "/", element: <div className='min-h-screen'>Halaman Landing Page</div>,},
+    { path: "/", element: <HomePage/>,},
+    { path: BERITA_PATH, element: <BeritaPage/>,},
+    { path: ARTICLE_PATH, element: <ArticlePage/>,},
     {
         element: <RouteGuest />,
         children: [

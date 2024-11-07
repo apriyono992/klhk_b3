@@ -29,6 +29,7 @@
     "react-scripts": "5.0.1",
     "react-select": "^5.8.1",
     "react-sortable-hoc": "^2.0.0",
+    "swiper": "^11.1.14",
     "swr": "^2.2.5",
     "tailwind-merge": "1.14.0",
     "yup": "^1.4.0"
