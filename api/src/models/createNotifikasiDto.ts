@@ -4,6 +4,7 @@ import { StatusNotifikasi } from './enums/statusNotifikasi';
 import { IsCompanyExists } from 'src/validators/isCompanyExists.validator';
 import { IsReferenceExists } from 'src/validators/notifikasi.validator';
 import { DataBahanB3MustExist } from 'src/validators/dataBahanB3.validator';
+import { IsISO2CountryCode } from 'src/validators/country.validator';
 
 export class CreateNotifikasiDto {
   @IsUUID()
@@ -33,4 +34,8 @@ export class CreateNotifikasiDto {
   @IsOptional()
   @IsBoolean()
   exceedsThreshold?: boolean;
+
+  @IsOptional()
+  @IsISO2CountryCode()
+  negaraAsal?: string;
 }

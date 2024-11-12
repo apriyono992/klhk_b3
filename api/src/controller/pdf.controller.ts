@@ -41,7 +41,7 @@ export class PdfController {
     res.end(pdfBuffer);
   }
 
-  @Get('generateKebenaranImpor/:notifikasiId')
+  @Get('generateKebenaranImpor/:referenceId')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Generate Surat Kebenaran Impor (Pestisida/Non-Pestisida)' })
   @ApiResponse({
@@ -49,15 +49,14 @@ export class PdfController {
     description: 'PDF generated successfully.',
   })
   @ApiResponse({ status: 404, description: 'Notifikasi or DraftSurat not found.' })
-  @ApiParam({ name: 'notifikasiId', description: 'The ID of the Notifikasi to generate the surat for' })
-  @ApiQuery({ name: 'type', description: 'The type of the surat (pestisida or non_pestisida)', required: true })
+  @ApiParam({ name: 'referenceId', description: 'The ID of the Notifikasi to generate the surat for' })
   async generateSuratKebenaranImpor(
-    @Param('notifikasiId') notifikasiId: string,
+    @Param('referenceId') referenceId: string,
     @Res() res: Response,
   ) {
     try {
       // Call the PdfService to generate the PDF
-      const pdfBuffer = await this.pdfService.generateKebenaranImporPdf(notifikasiId);
+      const pdfBuffer = await this.pdfService.generateKebenaranImporPdf(referenceId);
 
       // Set the response headers for the PDF
       res.set({
@@ -73,22 +72,22 @@ export class PdfController {
     }
   }
 
-  @Get('generatePersetujuanImport/:applicationId')
+  @Get('generatePersetujuanImport/:referenceId')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Generate Surat Persetujuan Import' })
   @ApiResponse({
     status: 200,
     description: 'PDF generated successfully.',
   })
-  @ApiResponse({ status: 404, description: 'Permohonan Aplication not found.' })
+  @ApiResponse({ status: 404, description: 'Permohonan Refence Number not found.' })
   @ApiParam({ name: 'applicationId', description: 'The ID of the Permohonan Rekomendasi to generate the surat for Surat Persetujuan Import' })
   async generatePesetujuanImport(
-    @Param('applicationId') applicationId: string,
+    @Param('referenceId') referenceId: string,
     @Res() res: Response,
   ) {
     try {
       // Call the PdfService to generate the PDF
-      const pdfBuffer = await this.pdfService.generatePersetujuanImportPdf(applicationId);
+      const pdfBuffer = await this.pdfService.generatePersetujuanImportPdf(referenceId);
 
       // Set the response headers for the PDF
       res.set({
@@ -104,22 +103,22 @@ export class PdfController {
     }
   }
 
-  @Get('generateExplicitConsent/:applicationId')
+  @Get('generateExplicitConsent/:referenceId')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Generate Surat Telaah Teknis' })
   @ApiResponse({
     status: 200,
     description: 'PDF generated successfully.',
   })
-  @ApiResponse({ status: 404, description: 'Permohonan Aplication not found.' })
+  @ApiResponse({ status: 404, description: 'Refence Not Found not found.' })
   @ApiParam({ name: 'applicationId', description: 'The ID of the Permohonan Rekomendasi to generate the surat for Telaah Teknis' })
   async generateExplicitConsent(
-    @Param('applicationId') applicationId: string,
+    @Param('referenceId') referenceId: string,
     @Res() res: Response,
   ) {
     try {
       // Call the PdfService to generate the PDF
-      const pdfBuffer = await this.pdfService.generateExplicitConsentPdf(applicationId);
+      const pdfBuffer = await this.pdfService.generateExplicitConsentPdf(referenceId);
 
       // Set the response headers for the PDF
       res.set({

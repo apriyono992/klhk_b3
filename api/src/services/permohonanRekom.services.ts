@@ -13,6 +13,7 @@ import { AddPejabatToDraftSkDto } from 'src/models/addPejabatToDraftSkDto';
 import { UpdateApplicationStatusDto } from 'src/models/updateApplicationStatusDto';
 import { JenisPermohonan } from 'src/models/enums/jenisPermohonan';
 import { TelaahTeknisUpsertDto } from 'src/models/telaahTeknisDto';
+import { TipeDokumenTelaah } from 'src/models/enums/tipeDokumenTelaah';
 
 @Injectable()
 export class PermohonanRekomendasiB3Service {
@@ -39,24 +40,24 @@ export class PermohonanRekomendasiB3Service {
 
     // Initialize the requiredDocumentsStatus JSON object with all required documents set to false
     const initialRequiredDocumentsStatus = {
-      [TipeDokumen.SDS_OR_LDK]: false,
-      [TipeDokumen.SOP_BONGKAR_MUAT]: false,
-      [TipeDokumen.SOP_TANGGAP_DARURAT]: false,
-      [TipeDokumen.STNK_KIR]: false,
-      [TipeDokumen.FOTO_KENDARAAN]: false,
-      [TipeDokumen.FOTO_SOP]: false,
-      [TipeDokumen.FOTO_KEMASAN_B3]: false,
-      [TipeDokumen.FOTO_ALAT_PELINDUNG_DIRI]: false,
-      [TipeDokumen.BUKTI_PELATIHAN]: false,
-      [TipeDokumen.SURAT_KETERANGAN_HASIL_PENGUJIAN_TANGKI_UKUR]: false,
-      [TipeDokumen.SURAT_KETERANGAN_BEJANA_TEKAN]: false,
-      [TipeDokumen.IT_IP_PREKURSOR]: false,
-      [TipeDokumen.INFORMASI_KETERSEDIAAN_ALAT_KOMUNIKASI]: false,
-      [TipeDokumen.INFORMASI_PEMELIHARAAN_KENDARAAN]: false,
-      [TipeDokumen.INFORMASI_PENCUCIAN_TANGKI]: false,
-      [TipeDokumen.SURAT_REKOMENDASI_B3_SEBELUMNYA]: false,
-      [TipeDokumen.SK_DIRJEN_PERHUBUNGAN_DARAT]: false,
-      [TipeDokumen.Other]: false,
+      // [TipeDokumen.SDS_OR_LDK]: false,
+      // [TipeDokumen.SOP_BONGKAR_MUAT]: false,
+      // [TipeDokumen.SOP_TANGGAP_DARURAT]: false,
+      // [TipeDokumen.STNK_KIR]: false,
+      // [TipeDokumen.FOTO_KENDARAAN]: false,
+      // [TipeDokumen.FOTO_SOP]: false,
+      // [TipeDokumen.FOTO_KEMASAN_B3]: false,
+      // [TipeDokumen.FOTO_ALAT_PELINDUNG_DIRI]: false,
+      // [TipeDokumen.BUKTI_PELATIHAN]: false,
+      // [TipeDokumen.SURAT_KETERANGAN_HASIL_PENGUJIAN_TANGKI_UKUR]: false,
+      // [TipeDokumen.SURAT_KETERANGAN_BEJANA_TEKAN]: false,
+      // [TipeDokumen.IT_IP_PREKURSOR]: false,
+      // [TipeDokumen.INFORMASI_KETERSEDIAAN_ALAT_KOMUNIKASI]: false,
+      // [TipeDokumen.INFORMASI_PEMELIHARAAN_KENDARAAN]: false,
+      // [TipeDokumen.INFORMASI_PENCUCIAN_TANGKI]: false,
+      // [TipeDokumen.SURAT_REKOMENDASI_B3_SEBELUMNYA]: false,
+      // [TipeDokumen.SK_DIRJEN_PERHUBUNGAN_DARAT]: false,
+      // [TipeDokumen.Other]: false,
     };
 
     while (retryCount <= maxRetries) {
@@ -126,7 +127,7 @@ export class PermohonanRekomendasiB3Service {
                 oldStatus: application.status,
                 newStatus: data.status,
                 changedAt: new Date(),
-                changedBy: data.userId ?? null, // Optionally track the user who updated the status
+                changedBy: data.userId ?? undefined, // Optionally track the user who updated the status
               },
             });
         
@@ -138,18 +139,65 @@ export class PermohonanRekomendasiB3Service {
                 updatedAt: new Date(),
               },
             });
-      
-          await prisma.draftSurat.create({
+
+          const telaah = await prisma.telaahTeknisRekomendasiB3.create({
             data: {
-              applicationId: application.id, // NOT NULL, wajib
-              tipeSurat: application.tipeSurat, // NOT NULL, wajib (ubah sesuai kebutuhan Anda)
-              nomorSurat: null, // Nullable
-              tanggalSurat: null, // Nullable
-              kodeDBKlh: null, // Nullable
-              pejabatId: null, // Nullable
-              tembusan: {}, // Optional, bisa diisi atau tidak tergantung data yang tersedia
+              application: {connect: {id: application.id}}, // NOT NULL, wajib
+              company: {connect: {id: application.companyId}}, // NOT NULL, wajib (ubah sesuai kebutuhan Anda)
+              tindak_lanjut: '', // Nullable
             },
           });
+
+          // Insert TelaahTeknisDocumentNotesRekomendasiB3 records based on TipeDokumenTelaah enum
+          const documentTypes = Object.values(TipeDokumenTelaah);
+          for (const tipeDokumen of documentTypes) {
+            try{
+              await prisma.telaahTeknisDocumentNotesRekomendasiB3.create({
+                data: {
+                  telaahTeknisRekomendasiB3Id: telaah.id,
+                  tipeDokumen: tipeDokumen,
+                  isValid: false, // Default to false; this can be updated later as needed
+                  notes: null,
+                  changedBy: data.userId ?? undefined, // Optionally track the user who added the initial status
+                },
+              });
+            }catch(error){
+              console.log(error);
+            }
+
+          }
+
+          const draftSurat = await prisma.draftSurat.findUnique({
+            where: { applicationId: application.id },
+            include :{ PermohonanRekomendasiTembusan: {include:{ DataTembusan: true }} }
+          });
+          
+          if(draftSurat){
+            await prisma.draftSurat.update({
+              where: { id: draftSurat.id },
+              data: {
+                tipeSurat: application.tipeSurat, // NOT NULL, wajib (ubah sesuai kebutuhan Anda)
+                nomorSurat: null, // Nullable
+                tanggalSurat: null, // Nullable
+                kodeDBKlh: null, // Nullable
+                pejabatId: null, // Nullable
+              },
+            }); // Update DraftSurat
+          }
+          else{
+            await prisma.draftSurat.create({
+              data: {
+                applicationId: application.id, // NOT NULL, wajib
+                tipeSurat: application.tipeSurat, // NOT NULL, wajib (ubah sesuai kebutuhan Anda)
+                nomorSurat: null, // Nullable
+                tanggalSurat: null, // Nullable
+                kodeDBKlh: null, // Nullable
+                pejabatId: null, // Nullable
+                PermohonanRekomendasiTembusan: {}, // Optional, bisa diisi atau tidak tergantung data yang tersedia
+              },
+            });
+
+          }
         }
         else{
           throw new BadRequestException('Failed to update status to ValidasiPemohonanSelesai, not all documents are valid');
@@ -164,7 +212,7 @@ export class PermohonanRekomendasiB3Service {
             oldStatus: application.status,
             newStatus: data.status,
             changedAt: new Date(),
-            changedBy: data.userId ?? null, // Optionally track the user who updated the status
+            changedBy: data.userId ?? undefined, // Optionally track the user who updated the status
           },
         });
     
@@ -208,7 +256,9 @@ export class PermohonanRekomendasiB3Service {
         draftSurat: {
           include: {
             pejabat: true,
-            tembusan: true,
+            PermohonanRekomendasiTembusan: {
+              include:{ DataTembusan: true }
+            },
           },
         },
         identitasPemohon: true,  // Include Identitas Pemohon
@@ -223,7 +273,12 @@ export class PermohonanRekomendasiB3Service {
             asalMuatLocations: true,
             tujuanBongkarLocations: true
           }
-        }
+        },
+        TelaahTeknisRekomendasiB3:{
+          include:{
+            TelaahTeknisDocumentNotesRekomendasiB3:true,
+            TelaahTeknisPejabat: {include: {DataPejabat: true}}
+          }}
       },
     });
 
@@ -297,16 +352,25 @@ export class PermohonanRekomendasiB3Service {
       updatePayload.tanggalSurat = updateData.tanggalSurat;
     }
 
-    if (updateData.tembusanIds) {
-      updatePayload.tembusan = {
-        set: updateData.tembusanIds.map((id) => ({ id })), // Clear old tembusan and set new ones
-      };
-    }
-
     // Perform the update
     const updatedDraftSurat = await this.prisma.draftSurat.update({
       where: { id: updateData.draftId },
-      data: updatePayload,
+      data: {
+        pejabatId: updatePayload.pejabatId ?? undefined,
+        kodeDBKlh: updatePayload.kodeDBKlh ?? undefined,
+        nomorSurat: updatePayload.nomorSurat ?? undefined,
+        tipeSurat: updatePayload.tipeSurat ?? undefined,
+        tanggalSurat: updatePayload.tanggalSurat ?? undefined,
+        PermohonanRekomendasiTembusan: {
+          deleteMany: updateData.tembusanIds ? {} : undefined, // Remove existing tembusan entries
+          create: updateData.tembusanIds
+                ? updateData.tembusanIds.map((tembusanId, index) => ({
+                      dataTembusanId: tembusanId,
+                      index: index,
+                  }))
+                : undefined,
+        },
+      },
     });
 
     return updatedDraftSurat;
@@ -356,12 +420,12 @@ export class PermohonanRekomendasiB3Service {
           // Ambil data aplikasi untuk cek versi
           const existingApplication = await prisma.draftSurat.findUnique({
             where: { id: updateData.applicationId },
-            select: { tembusan: true, updatedAt: true }
+            select: { PermohonanRekomendasiTembusan: {include: {DataTembusan: true}}, updatedAt: true }
           });
   
           // Filter out tembusan yang sudah ada untuk menghindari duplikasi
           const filteredTembusanIds = updateData.tembusanIds.filter(id => 
-            !existingApplication.tembusan.some(tembusan => tembusan.id === id)
+            !existingApplication.PermohonanRekomendasiTembusan.some(tembusan => tembusan.dataTembusanId === id)
           );
   
           if (filteredTembusanIds.length === 0) {
@@ -372,8 +436,11 @@ export class PermohonanRekomendasiB3Service {
           return await prisma.draftSurat.update({
             where: { id: updateData.applicationId, updatedAt: existingApplication.updatedAt }, // OCC check menggunakan updatedAt
             data: {
-              tembusan: {
-                connect: filteredTembusanIds.map(id => ({ id }))
+              PermohonanRekomendasiTembusan: {
+                create: filteredTembusanIds.map((tembusanId, index) => ({
+                  dataTembusanId: tembusanId,
+                  index: index,
+                })),
               }
             }
           });
@@ -389,9 +456,17 @@ export class PermohonanRekomendasiB3Service {
   
   async upsertTelaahTeknis(applicationId: string, data: TelaahTeknisUpsertDto) {
     // Find the existing record based on applicationId
+    const application = await this.prisma.application.findFirst({
+      where: { id: applicationId },
+      include: { company: true },
+    });
+
+    // Find the existing record based on applicationId
     const existingRecord = await this.prisma.telaahTeknisRekomendasiB3.findFirst({
       where: { applicationId },
-      include: { pejabat: true },
+      include: { TelaahTeknisPejabat: {
+        include:{ DataPejabat: true }
+      } },
     });
     
     // If pejabat data is provided, prepare the connect and disconnect arrays
@@ -399,8 +474,8 @@ export class PermohonanRekomendasiB3Service {
     let disconnectPejabat = [];
 
     if (data.pejabat) {
-      const existingPejabatIds = existingRecord?.pejabat.map((p) => p.id) || [];
-      const newPejabatIds = data.pejabat.map((p) => p.id);
+      const existingPejabatIds = existingRecord?.TelaahTeknisPejabat.map((p) => p.id) || [];
+      const newPejabatIds = data.pejabat.map((p) => p);
 
       // Determine which pejabat records to connect
       connectPejabat = newPejabatIds
@@ -421,9 +496,14 @@ export class PermohonanRekomendasiB3Service {
           ...(data.kronologi_permohonan && { kronologi_permohonan: data.kronologi_permohonan }),
           ...(data.lain_lain && { lain_lain: data.lain_lain }),
           ...(data.tindak_lanjut && { tindak_lanjut: data.tindak_lanjut }),
-          ...(data.pejabat && { pejabat: {
-            connect: connectPejabat,
-            disconnect: disconnectPejabat,
+          ...(data.pejabat && { TelaahTeknisPejabat: {
+            deleteMany: {},
+            create: data.pejabat
+                  ? data.pejabat.map((pejabatId, index) => ({
+                        dataPejabatId: pejabatId,
+                        index: index,
+                    }))
+                  : undefined,
           } }),
           ...(data.printed !== undefined && { printed: data.printed }),
         },
@@ -432,14 +512,19 @@ export class PermohonanRekomendasiB3Service {
       // Otherwise, create a new record with the provided data
       return this.prisma.telaahTeknisRekomendasiB3.create({
         data: {
-          applicationId,
-          companyId: data.companyId || undefined, // ensure `companyId` is provided if needed
+          application: {connect: { id: application.id }},
+          company: { connect: {id: application.companyId}},
           kronologi_permohonan: data.kronologi_permohonan || [],
           lain_lain: data.lain_lain || [],
           tindak_lanjut: data.tindak_lanjut || '',
-          pejabat: data.pejabat ? {
-            connect: data.pejabat.map((p) => ({ id: p.id })),
-          } : undefined,
+          TelaahTeknisPejabat: {
+            create: data.pejabat
+                  ? data.pejabat.map((pejabatId, index) => ({
+                        dataPejabatId: pejabatId,
+                        index: index,
+                    }))
+                  : undefined,
+          },
           printed: data.printed ?? existingRecord?.printed ?? false,
         },
       });

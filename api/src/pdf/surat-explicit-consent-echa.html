@@ -6,24 +6,69 @@
     <title>Explicit Consent ECHA</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.2;
         }
         .header {
-            text-align: center;
-            margin-bottom: 20px;
+        text-align: center;
+        margin-bottom: 20px;
         }
         .header img {
-            width: 100px;
+        width: 80px;
+        vertical-align: middle;
         }
-        .header h1 {
-            margin: 0;
-            font-size: 18px;
-            text-transform: uppercase;
+        .header .title {
+        display: inline-block;
+        width: calc(100% - 100px);
+        vertical-align: middle;
+        text-align: center;
+        line-height: 1.2;
+        }
+        .header h3, .header h4 {
+        margin: 5px 0;
+        font-weight: bold;
+        }
+        .header h3 {
+        font-size: 18px;
+        }
+        .header h4 {
+        font-size: 16px;
         }
         .header p {
-            margin: 5px 0;
+        margin: 2px 0;
+        font-size: 12px;
+        }
+        .header hr {
+        border: none;
+        border-top: 2px solid black;
+        margin-top: 10px;
+        }
+        .details {
+          display: flex;
+          justify-content: space-between;
+        }
+        .details-left {
+          width: 70%;
+          display: flex;
+          flex-direction: column;
+        }
+        .details-row {
+          display: flex;
+        }
+        .details-label {
+            width: 80px;
+        }
+        .details-separator {
+            width: 10px;
+            text-align: center;
+        }
+        .details-value {
+            flex: 1;
+        }
+        .details-right {
+            width: 30%;
+            text-align: right;
+            vertical-align: top;
         }
         .content {
             margin-top: 20px;
@@ -31,104 +76,437 @@
         .content p {
             margin: 10px 0;
         }
-        .bold {
+        .signature-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 30px;
+            line-height: 1.2; /* Adjust line height for even closer spacing */
+        }
+        .signature {
+            text-align: left;
+            margin-right: 50px; /* Adjust to align with other content if needed */
+        }
+        .position {
+            margin-bottom: 0px;
+            line-height: 1.2; /* Adjust line height for even closer spacing */
+        }
+        .signature-space {
+            margin-bottom: 80px; /* Space for the signature */
+        }
+        .name {
+            margin-bottom: 0px;
             font-weight: bold;
+            line-height: 1.2; /* Adjust line height for even closer spacing */
         }
-        .right-align {
-            text-align: right;
+        .tembusan {
+            margin-top: 20px; /* Adjust this if more space is needed */
+            line-height: 1.2; /* Adjust line height for even closer spacing */
         }
-        .underline {
-            text-decoration: underline;
+        .tembusan p {
+         margin-bottom: 2px;
         }
-        .table {
+        .tembusan ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        /* Title with black background */
+        h1 {
+            font-weight: bold;
+            text-align: center;
+            font-size: 12px;
+            margin-top: 20px;
+            background-color: black;
+            color: white;
+            padding: 10px;
+        }
+
+        /* Table layout for sections */
+        .section-box {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 0px; /* Compact spacing between sections */
+            page-break-inside: avoid;
         }
-        .table th, .table td {
+
+        /* Add specific top margin to simulate space after a page break */
+        .section-box {
+            margin-top: 0px; /* General top margin for spacing */
+        }
+
+        /* Section header styling */
+        .section-header {
+            background-color: #d3d3d3; /* Light gray */
+            font-style: italic;
+            color: black;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 4px;
             border: 1px solid black;
-            padding: 5px;
             text-align: left;
         }
-        .footer {
-            margin-top: 20px;
+
+        /* Cell styling with borders */
+        .section-box td {
+            border: 1px solid black;
+            padding: 4px; /* Compact padding */
+            vertical-align: top;
+        }
+
+        .data-field {
+            font-weight: bold;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        /* Avoid page breaks within each section */
+        .no-page-break {
+            page-break-inside: avoid;
+            margin-top: auto;
+        }
+
+        /* Title styling */
+        .document-title {
+            font-weight: bold;
+            text-align: center;
+            font-size: 12px;
+            background-color: black;
+            color: white;
+            padding: 10px;
+        }
+
+         /* Cell styling with borders */
+        .section-box td {
+            border: 1px solid black;
+            padding: 4px; /* Compact padding */
+            vertical-align: top;
+        }
+
+        /* Spacing for sections that start on a new page */
+        @media print {
+            /* Create a spacer effect after a page break */
+            .section-box {
+                position: relative;
+            }
+
+            .section-box::before {
+                content: "";
+                display: block;
+                height: 30px; /* Adjust this value for desired space */
+                margin-top: -30px; /* Offset margin to prevent overlap */
+            }
+
+                /* Ensure spacer-row only applies when printing */
+            .spacer-row td {
+                height: 30px; /* Adjust for more or less space */
+                border: none; /* Ensure borders remain invisible in print */
+            }
+        }
+        /* Spacer row for consistent top spacing */
+        .spacer-row {
+            height: 10px; /* Adjust this height to create the needed space */
+        }
+        .spacer-row td {
+            border: none; /* Remove borders specifically for spacer row */
         }
     </style>
 </head>
 <body>
     <div class="header">
+        <img src="<%= base64Image %>" alt="Logo KLHK">
+        <div class="title">
+          <h3>KEMENTERIAN LINGKUNGAN HIDUP DAN KEHUTANAN</h3>
+          <h4>DIREKTORAT JENDERAL PENGELOLAAN SAMPAH, LIMBAH DAN BAHAN BERBAHAYA DAN BERACUN</h4>
+          <p>Gedung Manggala Wanabakti Blok 4 Lantai 5 - Jl. Gatot Subroto, Jakarta 10270</p>
+          <p>Telp. 021-5704 501/04 Ext. 4112, Fax. 021-5790 2750; Indonesia – Kotak Pos 6505</p>
+        </div>
+        <hr>
+      </div>
+    <!-- <div class="header">
         <img src="{{base64Logo}}" alt="Logo">
         <h1>{{header || 'Kementerian Lingkungan Hidup dan Kehutanan'}}</h1>
         <p>{{subHeader || 'Direktorat Jenderal Pengelolaan Sampah, Limbah dan Bahan Berbahaya dan Beracun'}}</p>
         <p>{{alamatHeader || 'Gedung Manggala Wanabakti Blok 4 Lantai 5 – Jl. Gatot Subroto, Jakarta 10270'}}</p>
         <p>Telp. {{telp || '021-5704 501/04 Ext. 4112'}}, Fax. {{fax || '021-5790 2750'}}, Indonesia – Kotak Pos {{kotakPos || '6505'}}</p>
-    </div>
+    </div> -->
 
-    <div class="right-align">
+    <!-- <div class="right-align">
         <p>Our Ref: {{nomorSurat || 'S. /PSLB3-PB3/PPI/PLB.4.4/B/07/2024'}}</p>
         <p>Date: {{tanggalSurat || 'July 2024'}}</p>
+    </div> -->
+    <div class="details">
+        <div class="details-left">
+          <div class="details-row">
+            <div class="details-label">Our Ref</div>
+            <div class="details-separator">:</div>
+            <div class="details-value"><%= nomorSurat %></div>
+          </div>
+          <div class="details-row">
+            <div class="details-label">Encl</div>
+            <div class="details-separator">:</div>
+            <div class="details-value">1 (one) set</div>
+          </div>
+          <div class="details-row">
+            <div class="details-label">Subject</div>
+            <div class="details-separator">:</div>
+            <div class="details-value">Explicit Concent for Exporting Severely<br>Restricted Chemicals to Indonesia</div>
+          </div>
+        </div>
+        <div class="details-right">
+          <p><%= tanggalSurat || 'N/A' %></p>
+        </div>
     </div>
 
     <div class="content">
         <p>To:</p>
         <p>
-            {{additionalInfo || '<strong>ECHA PIC Operations</strong><br>Dossier Processing and PIC Unit (C1)<br>European Chemicals Agency – ECHA<br>Helsinki – FINLAND<br>'}}
+            <%= tujuanSurat|| 'N/A' %>
         </p>
 
         <p>Dear Sir / Madam,</p>
 
-        <p>Referring to the notification concerning the above subject, we would like to inform you that we have no objection for the import of {{namaKimia || 'Nonylphenol, branched, ethoxylated'}} with trade name {{namaDagang || 'Rheovis PU 1250 EC'}} (EU REFF# {{referenceNumber || '1X9U3TGVKC'}}) from {{negaraAsal || 'Germany'}} to Indonesia with some requirements as attached.</p>
-
-        <table class="table">
-            <tr>
-                <th>Name of the Chemicals</th>
-                <td>{{namaKimia || 'Nonylphenol, branched, ethoxylated'}}</td>
-            </tr>
-            <tr>
-                <th>CAS Number</th>
-                <td>{{casNumber || '68412-54-4'}}</td>
-            </tr>
-            <tr>
-                <th>Trade Name</th>
-                <td>{{namaDagang || 'Rheovis PU 1250 EC'}}</td>
-            </tr>
-            <tr>
-                <th>Name of the Importer</th>
-                <td>{{namaImporter || 'PT. BASF Distribution Indonesia'}}</td>
-            </tr>
-            <tr>
-                <th>Use</th>
-                <td>{{use || 'Industrial use: Rheology Modifier for paint, coatings, construction and adhesives'}}</td>
-            </tr>
-            <tr>
-                <th>Valid Until</th>
-                <td>{{validUntil || 'July 31, 2025'}}</td>
-            </tr>
-        </table>
+        <p>Referring to the notification concerning the above subject, we would like to inform you that we have no objection for the import of 
+            <%= namaKimia || 'namaKimia' %> with trade name <%= namaDagang|| 'Nama Dagang' %> (Reference Number <%= referenceNumber|| 'N/A' %>) from <%= negaraAsal|| 'N/A' %> to Indonesia with some requirements as attached.</p>
 
         <p>Thank you for your kind attention and cooperation.</p>
     </div>
 
-    <div class="footer">
+    <!-- <div class="footer">
         <p>Sincerely,</p>
         <p><strong>Sugasri</strong><br>
         Director of Hazardous Substances Management,<br>
         On Behalf of Director General of Solid Waste, Hazardous Waste and Hazardous Substances Management,<br>
         Ministry of Environment and Forestry<br></p>
-    </div>
+    </div> -->
 
     <!-- Tembusan Section with Dynamic Values -->
-    <div class="additional-info">
-        <p>cc:<br>
-        {{#each tembusan}}
-        {{@index + 1}}. {{this.nama}}<br>
-        {{/each}}
-        </p>
+    <div class="signature-container">
+        <div class="signature">
+          <p class="position">Sincerely,</p>
+          <p class="signature-space"></p> <!-- Space for signature -->
+          <p class="name"><%= pejabat?.nama || 'Sugasri' %></p>
+          <p>NIP. <%= pejabat?.nip || '19690827 199803 1 001' %></p>
+        </div>
+      </div>
+  
+    <div class="tembusan">
+      <p>Cc:</p>
+      <ol>
+        <% tembusan.forEach((t, index) => { %>
+          <li><%= t.nama %> - <%= t.tipe %></li>
+        <% }) %>
+      </ol>
     </div>
-
         <!-- Page Break for PDF -->
     <div style="page-break-after: always;"></div>
 
-        <!-- Include Lampiran Content -->
-    <%- include('surat-explicit-consent-echa-details.html') %>
+    <!-- Include Lampiran Content -->
+    <!-- Title with Black Background -->
+    <h1 class="document-title">
+      IMPORTING COUNTRY RESPONSE TO REQUEST FOR EXPLICIT CONSENT
+    </h1>
+
+    <!-- Section 1A -->
+    <table class="section-box" style="page-break-inside: avoid;">
+    <tr class="spacer-row">
+        <td colspan="3"></td>
+    </tr>
+      <tr>
+          <td colspan="2" class="section-header">SECTION 1A. CHEMICAL IDENTITY, IF IN FORM OF SUBSTANCE (TO BE COMPLETED BY EXPORTING DNA)</td>
+      </tr>
+      <tr>
+          <td>Name of chemical:</td>
+          <td><span class="data-field"><%= nameOfChemicalSubstance || '-' %></span></td>
+      </tr>
+      <tr>
+          <td>CAS No.:</td>
+          <td><span class="data-field"><%= casNumberSubstance || '-' %></span></td>
+      </tr>
+    </table>
+
+    <!-- Section 1B -->
+    <table class="section-box" style="page-break-inside: avoid;">
+        <tr class="spacer-row">
+            <td colspan="3"></td>
+        </tr>
+      <tr>
+          <td colspan="2" class="section-header">SECTION 1B. CHEMICAL IDENTITY, IF IN FORM OF PREPARATION (TO BE COMPLETED BY EXPORTING DNA)</td>
+      </tr>
+      <tr>
+          <td>Name of preparation:</td>
+          <td><strong><%= nameOfPreparation || '-' %></strong></td>
+      </tr>
+      <tr>
+          <td>Name of chemical and % concentration:</td>
+          <td><strong><%= nameOfChemicalInPreparation || '-' %> - <%= concentrationInPreparation || '-' %></strong></td>
+      </tr>
+      <tr>
+          <td>CAS No.:</td>
+          <td><strong><%= casNumberPreparation || '-' %></strong></td>
+      </tr>
+    </table>
+
+    <!-- Section 2 -->
+    <table class="section-box" style="page-break-inside: avoid;">
+        <tr class="spacer-row">
+            <td colspan="3"></td>
+        </tr>
+      <tr>
+          <td colspan="2" class="section-header">SECTION 2. RESPONSE TO THE REQUEST FOR EXPLICIT CONSENT</td>
+      </tr>
+      <tr>
+          <td>Do you consent to import?</td>
+          <td><strong><%= consentToImport ? '✓ YES (Please complete sections 3 to 9)' : '✘ NO (Please complete sections 3 and 7 to 9)' %></strong></td>
+      </tr>
+    </table>
+
+    <!-- Section 3 -->
+    <table class="section-box" style="page-break-inside: avoid;">
+        <tr class="spacer-row">
+            <td colspan="3"></td>
+        </tr>
+      <tr>
+          <td colspan="2" class="section-header">SECTION 3. TO WHICH OF THE FOLLOWING USE CATEGORIES DOES YOUR RESPONSE APPLY?</td>
+      </tr>
+      <tr>
+          <td>(A) Pesticide</td>
+          <td><strong><%= useCategoryPesticide ? '✓ Yes' : '✘ No' %></strong></td>
+      </tr>
+      <tr>
+          <td>(B) Industrial chemical</td>
+          <td><strong><%= useCategoryIndustrial ? '✓ Yes' : '✘ No' %></strong></td>
+      </tr>
+    </table>
+
+    <!-- Section 4 -->
+    <table class="section-box" style="page-break-inside: avoid;">
+        <tr class="spacer-row">
+            <td colspan="3"></td>
+        </tr>
+      <tr>
+          <td colspan="2" class="section-header">SECTION 4. IF CONSENT IS GIVEN IN SECTION 2, AND THE CHEMICAL IS IN THE FORM OF A PREPARATION, DOES CONSENT GO WIDER THAN THE SPECIFIC PREPARATION LISTED IN SECTION 1B?</td>
+      </tr>
+      <tr>
+          <td>Is consent valid for other preparations containing the same chemical at different concentrations?</td>
+          <td><strong><%= consentForOtherPreparations ? '✓ Yes' : '✘ No' %></strong></td>
+      </tr>
+      <tr>
+          <td>The concentrations that are allowed are:</td>
+          <td><span class="data-field"><%= allowedConcentrations || '-' %></span></td>
+      </tr>
+      <tr>
+          <td>Does consent extend to the chemical in the form of a pure substance?</td>
+          <td><strong><%= consentForPureSubstance ? '✓ Yes' : '✘ No' %></strong></td>
+      </tr>
+    </table>
+
+    <!-- Section 5 -->
+    <table class="section-box" style="page-break-inside: avoid;">
+        <tr class="spacer-row">
+            <td colspan="3"></td>
+        </tr>
+      <tr>
+          <td colspan="2" class="section-header">SECTION 5. IF CONSENT IS GIVEN IN SECTION 2, ARE THERE ANY RESTRICTIONS/CONDITIONS?</td>
+      </tr>
+      <tr>
+          <td>Are there any restrictions or conditions attached to consent?</td>
+          <td><strong><%= hasRestrictions ? '✓ Yes' : '✘ No' %></strong></td>
+      </tr>
+      <tr>
+          <td>Restriction details:</td>
+          <td><span class="data-field"><%= restrictionDetails || '-' %></span></td>
+      </tr>
+    </table>
+
+    <!-- Section 6 -->
+    <table class="section-box" style="page-break-inside: avoid;">
+        <tr class="spacer-row">
+            <td colspan="3"></td>
+        </tr>
+      <tr>
+          <td colspan="2" class="section-header">SECTION 6. IF CONSENT IS GIVEN IN SECTION 2, HOW LONG DOES IT APPLY?</td>
+      </tr>
+      <tr>
+          <td>Is the consent time-limited?</td>
+          <td><strong><%= isTimeLimited ? '✓ Yes' : '✘ No' %></strong></td>
+      </tr>
+      <tr>
+          <td>If consent is time-limited, the length of time it applies is:</td>
+          <td><span class="data-field"><%= timeLimitDetails ? timeLimitDetails.toDateString() : '-' %></span></td>
+      </tr>
+    </table>
+
+    <!-- Section 7 -->
+    <table class="section-box" style="page-break-inside: avoid;">
+        <tr class="spacer-row">
+            <td colspan="3"></td>
+        </tr>
+      <tr>
+          <td colspan="2" class="section-header">SECTION 7. WOULD USE OF THE CHEMICAL FROM ALL SOURCES BE TREATED THE SAME AS THE PROPOSED EXPORT FROM THE EU?</td>
+      </tr>
+      <tr>
+          <td><strong><%= sameTreatment ? '✓ YES' : '✘ NO' %></strong></td>
+          <td>If 'No', the reasons why are:
+              <ul>
+                  <li>For chemical from domestic production, the treatment will be a little bit different from imported chemical, because there is no need to notify the chemical that domestic production for domestic use.</li>
+                  <li>For chemical that imported from other countries, the treatment will be the same as from the EU.</li>
+              </ul>
+          </td>
+      </tr>
+    </table>
+
+    <!-- Section 8 -->
+    <table class="section-box" style="page-break-inside: avoid;">
+        <tr class="spacer-row">
+            <td colspan="3"></td>
+        </tr>
+      <tr>
+          <td colspan="2" class="section-header">SECTION 8. ANY OTHER RELEVANT INFORMATION</td>
+      </tr>
+      <tr>
+          <td colspan="2"><span class="data-field"><%= otherRelevantInformation || '-' %></span></td>
+      </tr>
+    </table>
+
+    <!-- Section 9 -->
+    <table class="section-box" style="page-break-inside: avoid;">
+        <tr class="spacer-row">
+            <td colspan="3"></td>
+        </tr>
+      <tr>
+          <td colspan="2" class="section-header">SECTION 9. NAME AND ADDRESS OF IMPORTING DNA</td>
+      </tr>
+      <tr>
+          <td>Institution:</td>
+          <td><strong><%= dnaInstitutionName || 'Directorate of Hazardous Substances Management, Ministry of Environment and Forestry of Indonesia' %></strong></td>
+      </tr>
+      <tr>
+          <td>Address:</td>
+          <td><strong><%= dnaInstitutionAddress || 'C Building 2nd Floor, DI Panjaitan Street Kav. 24, Kebon Nanas, Jakarta Timur 13410, Indonesia' %></strong></td>
+      </tr>
+      <tr>
+          <td>Contact name:</td>
+          <td><strong><%= dnaContactName || 'Sugasri (Director of Hazardous Substances Management)' %></strong></td>
+      </tr>
+      <tr>
+          <td>Telephone:</td>
+          <td><strong><%= dnaTelephone || '+62-21-8590 5639' %></strong></td>
+      </tr>
+      <tr>
+          <td>Telefax:</td>
+          <td><strong><%= dnaTelefax || '+62-21-8590 6679' %></strong></td>
+      </tr>
+      <tr>
+          <td>E-mail address:</td>
+          <td><strong><%= dnaEmail || 'notifikasi_b3@yahoo.com, indahrsari@yahoo.co.id, registrasi.b3@gmail.com, indahrahmisari@menlhk.go.id' %></strong></td>
+      </tr>
+      <tr>
+          <td>Date:</td>
+          <td><strong><%= dnaDate ? dnaDate.toDateString() : 'July 2024' %></strong></td>
+      </tr>
+    </table>
+      
 </body>
 </html>

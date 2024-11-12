@@ -10,11 +10,13 @@ export class UpdatePengangkutanDetailDto {
   @IsOptional()
   jumlahB3: number;
 
-  @IsArray()
   @IsOptional()
-  perusahaanAsalMuat: CreatePerusahaanAsalMuatDanTujuanDto[];
+  @IsArray()
+  @IsString({ each: true })
+  perusahaanAsalMuat: string[];
 
-  @IsArray()
   @IsOptional()
-  perusahaanTujuanBongkar: CreatePerusahaanAsalMuatDanTujuanDto[];
+  @IsArray()
+  @IsString({ each: true })
+  perusahaanTujuanBongkar: string[];
 }

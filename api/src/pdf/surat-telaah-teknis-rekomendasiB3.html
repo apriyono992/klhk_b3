@@ -5,16 +5,52 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Telahaan Administrasi dan Teknis</title>
 <style>
-  body {
+   body {
     font-family: Arial, sans-serif;
     margin: 20px;
   }
   h1, h2 {
     text-align: center;
     font-weight: bold;
+    margin: 0;
+  }
+  .header-info {
+    margin-top: 20px;
+    display: table;
+    width: 100%;
+  }
+  .header-info .info-row {
+    display: table-row;
+  }
+  .header-info .label,
+  .header-info .value {
+    display: table-cell;
+    padding: 2px 5px;
+    vertical-align: top;
+  }
+  .header-info .label {
+    width: 30%;
+  }
+  .header-info .separator {
+    display: table-cell;
+    width: 1%;
+    padding: 2px 5px;
+    vertical-align: top;
+  }
+  .header-info .value {
+    font-weight: normal;
   }
   .section {
     margin-top: 20px;
+  }
+  .section-title {
+    font-weight: bold;
+    text-decoration: underline;
+    margin-top: 20px;
+  }
+  .chronology-list {
+    margin-top: 10px;
+    padding-left: 20px;
   }
   table {
     width: 100%;
@@ -31,7 +67,7 @@
     background-color: #f2f2f2;
   }
   .signature-space {
-    height: 60px;
+    height: 120px;
     border-bottom: 1px solid #000;
     margin-bottom: 5px;
   }
@@ -42,31 +78,68 @@
   .role {
     font-style: italic;
   }
+  @media print {
+      /* Ensure table headers repeat on each new page */
+      thead {
+          display: table-header-group;
+      }
+
+      .section-tindak-lanjut::before {
+          content: "";
+          display: block;
+          height: 20px; /* Adjust this value as needed for desired space */
+      }
+
+      /* Add top padding for the header on a new page */
+      thead::before {
+          content: "";
+          display: block;
+          height: 20px; /* Adjust this value as needed for desired space */
+      }
+  }
 </style>
 </head>
     <body>
       <h1>TELAAHAN ADMINISTRASI DAN TEKNIS</h1>
       <h2>PROSES PERMOHONAN REKOMENDASI PENGANGKUTAN B3</h2>
       
-      <div class="section">
-        <strong>Nama Perusahaan:</strong> <%= company.name %><br>
-        <strong>Bidang Usaha:</strong> Pengangkutan B3<br>
-        <strong>Jenis Rekomendasi:</strong> Pengangkutan B3 Moda Angkutan Darat<br>
-        <strong>Sifat Permohonan:</strong> Penambahan Kendaraan<br>
+      <div class="header-info">
+        <div class="info-row">
+          <div class="label">Nama Perusahaan</div>
+          <div class="separator">:</div>
+          <div class="value"><%= company?.name || 'N/A' %></div>
+        </div>
+        <div class="info-row">
+          <div class="label">Bidang Usaha</div>
+          <div class="separator">:</div>
+          <div class="value">Angkutan Multimoda</div>
+        </div>
+        <div class="info-row">
+          <div class="label">Jenis Rekomendasi</div>
+          <div class="separator">:</div>
+          <div class="value">Pengangkutan B3 Moda Angkutan Darat</div>
+        </div>
+        <div class="info-row">
+          <div class="label">Sifat Permohonan</div>
+          <div class="separator">:</div>
+          <div class="value">Permohonan Perpanjangan Kendaraan</div>
+        </div>
       </div>
       
+      <!-- Section A -->
       <div class="section">
-        <h2>A. Kronologi Permohonan Rekomendasi Pengangkutan</h2>
-        <ol>
-          <% kronologiPermohonan.forEach((item) => { %>
-            <li><%= item %></li>
+        <p class="section-title">A. Kronologi Permohonan Rekomendasi Pengangkutan</p>
+        <ol class="chronology-list">
+          <% (kronologiPermohonan || []).forEach((item) => { %>
+            <li><%- item %></li>
           <% }) %>
         </ol>
       </div>
       
-      <div class="section">
-        <h2>B. Telaahan Administrasi</h2>
-        <table>
+    <!-- Section B -->
+    <div class="section">
+      <p class="section-title">B. Telaahan Administrasi</p>
+      <table class="print-table">
           <thead>
             <tr>
               <th>No</th>
@@ -76,20 +149,20 @@
             </tr>
           </thead>
           <tbody>
-            <% documentRekomendasiB3.forEach((doc, index) => { %>
+            <% (documentRekomendasiB3 || []).forEach((doc, index) => { %>
               <tr>
                 <td><%= index + 1 %></td>
-                <td><%= doc.documentType %></td>
-                <td class="validation"><%= doc.isValidTelaah ? 'V' : 'X' %></td>
-                <td class="description"><%= doc.telaahNotes || 'Ada & Sesuai' %></td>
+                <td><%= doc?.tipeDokumen || 'N/A' %></td>
+                <td class="validation"><%= doc?.isValid ? 'V' : 'X' %></td>
+                <td class="description"><%= doc?.notes || 'Ada & Sesuai' %></td>
               </tr>
             <% }) %>
           </tbody>
-        </table>
-      </div>
+      </table>
+    </div>
       
       <div class="section">
-        <h2>C. Telaahan Teknis</h2>
+        <p class="section-title">C. Telaahan Teknis</p>
         <ol>
           <li>Spesifikasi dan identitas alat angkut yang digunakan adalah sebagai berikut:</li>
         </ol>
@@ -106,15 +179,15 @@
             </tr>
           </thead>
           <tbody>
-            <% vehicles.forEach((vehicle, index) => { %>
+            <% (vehicles || []).forEach((vehicle, index) => { %>
               <tr>
                 <td><%= index + 1 %></td>
-                <td><%= vehicle.noPolisi %></td>
-                <td><%= vehicle.modelKendaraan %></td>
-                <td><%= vehicle.tahunPembuatan %></td>
-                <td><%= vehicle.nomorRangka %></td>
-                <td><%= vehicle.nomorMesin %></td>
-                <td><%= vehicle.kepemilikan %></td>
+                <td><%= vehicle?.noPolisi || 'N/A' %></td>
+                <td><%= vehicle?.modelKendaraan || 'N/A' %></td>
+                <td><%= vehicle?.tahunPembuatan || 'N/A' %></td>
+                <td><%= vehicle?.nomorRangka || 'N/A' %></td>
+                <td><%= vehicle?.nomorMesin || 'N/A' %></td>
+                <td><%= company?.name || 'N/A' %></td>
               </tr>
             <% }) %>
           </tbody>
@@ -139,26 +212,26 @@
             </tr>
           </thead>
           <tbody>
-            <% b3Substances.forEach((substance, index) => { %>
+            <% (b3Substances || []).forEach((substance, index) => { %>
               <tr>
                 <td><%= index + 1 %></td>
-                <td><%= substance.dataBahanB3.namaDagang %></td>
-                <td><%= substance.dataBahanB3.namaKimia %> / <%= substance.dataBahanB3.casNumber %></td>
-                <td class="validation"><%= substance.b3pp74 ? 'V' : 'X' %></td>
-                <td><%= substance.karakteristikB3 %></td>
-                <td><%= substance.fasaB3 %></td>
-                <td><%= substance.jenisKemasan %></td>
+                <td><%= substance?.dataBahanB3?.namaDagang || 'N/A' %></td>
+                <td><%= substance?.dataBahanB3?.namaBahanKimia || 'N/A' %> / <%= substance?.dataBahanB3?.casNumber || 'N/A' %></td>
+                <td class="validation"><%= substance?.b3pp74 ? 'V' : 'X' %></td>
+                <td><%= substance?.karakteristikB3 || 'N/A' %></td>
+                <td><%= substance?.fasaB3 || 'N/A' %></td>
+                <td><%= substance?.jenisKemasan || 'N/A' %></td>
                 <td>
-                  <% substance.asalMuatLocations.forEach(location => { %>
-                    <div><%= location.nama %> (<%= location.kota %>, <%= location.provinsi %>)</div>
+                  <% (substance?.asalMuatLocations || []).forEach(location => { %>
+                    <div><%= location?.name || 'nama Perusahaan tidak diketahui' %> (<%= location?.kota || 'kota tidak diketahui' %>, <%= location?.provinsi || 'provinsi tidak diketahui' %>)</div>
                   <% }) %>
                 </td>
                 <td>
-                  <% substance.tujuanBongkarLocations.forEach(location => { %>
-                    <div><%= location.nama %> (<%= location.kota %>, <%= location.provinsi %>)</div>
+                  <% (substance?.tujuanBongkarLocations || []).forEach(location => { %>
+                    <div><%= location?.name || 'nama Perusahaan tidak diketahui' %> (<%= location?.kota || 'kota tidak diketahui' %>, <%= location?.provinsi || 'provinsi tidak diketahui' %>)</div>
                   <% }) %>
                 </td>
-                <td><%= substance.tujuanPenggunaan %></td>
+                <td><%= substance?.tujuanPenggunaan || 'N/A' %></td>
               </tr>
             <% }) %>
           </tbody>
@@ -167,44 +240,46 @@
         <div class="note">
           <p><strong>Lain-lain</strong></p>
           <ul>
-            <% lainLain.forEach((note) => { %>
-              <li><%= note %></li>
+            <% (lainLain || []).forEach((note) => { %>
+              <li><%- note || 'N/A' %></li>
             <% }) %>
           </ul>
         </div>
       </div>
 
-      <div class="section">
-        <h2>D. Tindak Lanjut</h2>
-        <p><%= tindakLanjut %></p>
+      <div class="section section-tindak-lanjut" style="page-break-inside: avoid; break-inside: avoid; margin-top: 20px;">
+        <p class="section-title">D. Tindak Lanjut</p>
+        <p><%- tindakLanjut || 'N/A' %></p>
       
-        <table>
-          <thead>
-            <tr>
-              <% pejabat.slice(0, 3).forEach((official) => { %>
-                <th><%= official.role %></th>
-              <% }) %>
-            </tr>
-          </thead>
-          <tbody>
-            <% pejabat.forEach((official, index) => { %>
-              <!-- Start a new row every 3 items -->
-              <% if (index % 3 === 0) { %>
-                <tr>
-              <% } %>
-      
-              <td>
-                <div class="signature-space"></div>
-                <div class="signature-name"><%= official.name %></div>
-                <div class="role"><%= official.role %></div>
-              </td>
-      
-              <!-- Close the row after 3 items or if it's the last item -->
-              <% if (index % 3 === 2 || index === pejabat.length - 1) { %>
-                </tr>
-              <% } %>
+        <table class="section-tindak-lanjut" style="page-break-inside: avoid; break-inside: avoid;">
+        <tbody style="page-break-inside: avoid; break-inside: avoid;">
+            <% (pejabat || []).forEach((official, index) => { %>
+                <!-- Repeat the header row every 3 rows -->
+                <% if (index % 3 === 0) { %>
+                    <tr style="page-break-inside: avoid; break-inside: avoid; font-weight: bold;">
+                        <% (pejabat || []).slice(index, index + 3).forEach((headerOfficial) => { %>
+                            <th style="text-align: center;"><%= headerOfficial?.jabatan || 'N/A' %></th>
+                        <% }) %>
+                    </tr>
+                <% } %>
+        
+                <!-- Start a new row every 3 items -->
+                <% if (index % 3 === 0) { %>
+                    <tr style="page-break-inside: avoid; break-inside: avoid;">
+                <% } %>
+        
+                <td style="padding: 10px; page-break-inside: avoid; break-inside: avoid;">
+                    <div style="height: 50px;"></div> <!-- Signature space -->
+                    <div style="text-align: center;"><%= official?.nama || 'N/A' %></div>
+                    <div style="text-align: center;"><%= official?.nip || 'N/A' %></div>
+                </td>
+        
+                <!-- Close the row after 3 items or if it's the last item -->
+                <% if (index % 3 === 2 || index === pejabat.length - 1) { %>
+                    </tr>
+                <% } %>
             <% }) %>
-          </tbody>
+        </tbody>        
         </table>
       </div>
   </body>

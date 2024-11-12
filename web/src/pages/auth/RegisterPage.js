@@ -48,12 +48,10 @@ export default function RegisterPage() {
                 idPhotoUrl: uploadStatus.path
             }            
 
-            const response = await postFetcher('/api/auth/register', updatedData)
-            
-            if (response.status === 201) {
-                toast.success('Berhasil membuat akun silahkan masuk!')
-                navigate('/masuk', { replace: true })
-            } 
+            await postFetcher('/api/auth/register', updatedData)
+            toast.success('Berhasil membuat akun silahkan masuk!')
+        
+            navigate(LOGIN_PATH, { replace: true })    
         } catch (error) {
             isResponseErrorObject(error.response.data.message)
                 ? Object.entries(error.response.data.message).forEach(([key, value]) => {

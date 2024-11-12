@@ -1,9 +1,11 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { CompanyService } from '../services/company.services';
-import { CreateCompanyDto } from '../models/CreateCompanyDto';
+import { CreateCompanyDto } from '../models/createCompanyDto';
 import { UpdateCompanyDto } from '../models/updateCompanyDto';
 import { SearchCompanyDto } from '../models/searchCompanyDto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiQuery, ApiParam } from '@nestjs/swagger';
+import { UpdateDataSupplierDto } from 'src/models/updateDataSupplierDto';
+import { CreateDataSupplierDto } from 'src/models/createDataSupplierDto';
 
 @ApiTags('Company')
 @Controller('company')
@@ -169,4 +171,245 @@ export class CompanyController {
   async deleteCompany(@Param('id') id: string) {
     return this.companyService.deleteCompany(id);
   }
+
+  // Endpoint untuk menambah DataSupplier
+  @Post(':companyId/supplier')
+  @ApiOperation({ summary: 'Add new DataSupplier' })
+  @ApiParam({ name: 'companyId', description: 'ID of the company' })
+  @ApiBody({
+    type: CreateDataSupplierDto,
+    examples: {
+      example1: {
+        summary: 'Example Request',
+        value: {
+          namaSupplier: 'PT. Supplier XYZ',
+          alamat: 'Jl. Sudirman No. 1',
+          email: 'contact@supplierxyz.com',
+          telepon: '081234567890',
+          fax: '021-12345678',
+          longitude: 106.84513,
+          latitude: -6.20876,
+          provinceId: '123',
+          regencyId: '456',
+          districtId: '789',
+          villageId: '101',
+          dataPICs: [
+            {
+              namaPIC: 'John Doe',
+              jabatan: 'Manager',
+              email: 'john.doe@supplierxyz.com',
+              telepon: '081234567891',
+              fax: '021-12345679',
+            },
+          ],
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'DataSupplier created successfully.',
+    schema: {
+      example: {
+        id: 'supplier-id-123',
+        companyId: 'company-id-456',
+        namaSupplier: 'PT. Supplier XYZ',
+        alamat: 'Jl. Sudirman No. 1',
+        email: 'contact@supplierxyz.com',
+        telepon: '081234567890',
+        fax: '021-12345678',
+        longitude: 106.84513,
+        latitude: -6.20876,
+        provinceId: '123',
+        regencyId: '456',
+        districtId: '789',
+        villageId: '101',
+        createdAt: '2024-11-11T10:00:00Z',
+        updatedAt: '2024-11-11T10:00:00Z',
+        dataPICs: [
+          {
+            id: 'pic-id-789',
+            namaPIC: 'John Doe',
+            jabatan: 'Manager',
+            email: 'john.doe@supplierxyz.com',
+            telepon: '081234567891',
+            fax: '021-12345679',
+          },
+        ],
+      },
+    },
+  })
+  async addDataSupplier(@Param('companyId') companyId: string, @Body() data: CreateDataSupplierDto) {
+    return this.companyService.addDataSupplier(companyId, data);
+  }
+
+  // Endpoint untuk mengupdate DataSupplier
+  @Put('supplier/:supplierId')
+  @ApiOperation({ summary: 'Update DataSupplier' })
+  @ApiParam({ name: 'supplierId', description: 'ID of the supplier' })
+  @ApiBody({
+    type: UpdateDataSupplierDto,
+    examples: {
+      example1: {
+        summary: 'Example Request',
+        value: {
+          namaSupplier: 'PT. Supplier Baru',
+          alamat: 'Jl. Gatot Subroto No. 2',
+          email: 'newcontact@supplierxyz.com',
+          telepon: '081234567892',
+          fax: '021-12345680',
+          longitude: 106.84514,
+          latitude: -6.20877,
+          provinceId: '124',
+          regencyId: '457',
+          districtId: '790',
+          villageId: '102',
+          dataPICs: [
+            {
+              id: 'pic-id-789',
+              namaPIC: 'Jane Doe',
+              jabatan: 'Supervisor',
+              email: 'jane.doe@supplierxyz.com',
+              telepon: '081234567893',
+            },
+          ],
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'DataSupplier updated successfully.',
+    schema: {
+      example: {
+        id: 'supplier-id-123',
+        companyId: 'company-id-456',
+        namaSupplier: 'PT. Supplier Baru',
+        alamat: 'Jl. Gatot Subroto No. 2',
+        email: 'newcontact@supplierxyz.com',
+        telepon: '081234567892',
+        fax: '021-12345680',
+        longitude: 106.84514,
+        latitude: -6.20877,
+        provinceId: '124',
+        regencyId: '457',
+        districtId: '790',
+        villageId: '102',
+        updatedAt: '2024-11-11T12:00:00Z',
+        dataPICs: [
+          {
+            id: 'pic-id-789',
+            namaPIC: 'Jane Doe',
+            jabatan: 'Supervisor',
+            email: 'jane.doe@supplierxyz.com',
+            telepon: '081234567893',
+          },
+        ],
+      },
+    },
+  })
+  async updateDataSupplier(@Param('supplierId') supplierId: string, @Body() data: UpdateDataSupplierDto) {
+    return this.companyService.updateDataSupplier(supplierId, data);
+  }
+
+  // Endpoint untuk menghapus DataSupplier
+  @Delete('supplier/:supplierId')
+  @ApiOperation({ summary: 'Delete DataSupplier' })
+  @ApiParam({ name: 'supplierId', description: 'ID of the supplier' })
+  @ApiResponse({
+    status: 200,
+    description: 'DataSupplier deleted successfully.',
+    schema: {
+      example: {
+        message: 'DataSupplier deleted successfully.',
+      },
+    },
+  })
+  @ApiResponse({ status: 404, description: 'Supplier not found.' })
+  async deleteDataSupplier(@Param('supplierId') supplierId: string) {
+    await this.companyService.deleteDataSupplier(supplierId);
+    return { message: 'DataSupplier deleted successfully.' };
+  }
+
+   // Endpoint untuk mengambil daftar DataSupplier dalam satu company
+   @Get(':companyId/suppliers')
+   @ApiOperation({ summary: 'List all DataSuppliers for a company' })
+   @ApiParam({ name: 'companyId', description: 'ID of the company' })
+   @ApiResponse({
+     status: 200,
+     description: 'List of DataSuppliers retrieved successfully.',
+     schema: {
+       example: [
+         {
+           id: 'supplier-id-123',
+           companyId: 'company-id-456',
+           namaSupplier: 'PT. Supplier XYZ',
+           alamat: 'Jl. Sudirman No. 1',
+           email: 'contact@supplierxyz.com',
+           telepon: '081234567890',
+           fax: '021-12345678',
+           longitude: 106.84513,
+           latitude: -6.20876,
+           provinceId: '123',
+           regencyId: '456',
+           districtId: '789',
+           villageId: '101',
+           dataPICs: [
+             {
+               id: 'pic-id-789',
+               namaPIC: 'John Doe',
+               jabatan: 'Manager',
+               email: 'john.doe@supplierxyz.com',
+               telepon: '081234567891',
+               fax: '021-12345679',
+             },
+           ],
+         },
+       ],
+     },
+   })
+   async listDataSuppliers(@Param('companyId') companyId: string) {
+     return this.companyService.listDataSuppliers(companyId);
+   }
+ 
+   // Endpoint untuk mengambil daftar DataCustomer dalam satu company
+   @Get(':companyId/customers')
+   @ApiOperation({ summary: 'List all DataCustomers for a company' })
+   @ApiParam({ name: 'companyId', description: 'ID of the company' })
+   @ApiResponse({
+     status: 200,
+     description: 'List of DataCustomers retrieved successfully.',
+     schema: {
+       example: [
+         {
+           id: 'customer-id-123',
+           companyId: 'company-id-456',
+           namaCustomer: 'PT. Customer ABC',
+           alamat: 'Jl. Thamrin No. 5',
+           email: 'info@customerabc.com',
+           telepon: '081234567890',
+           fax: '021-12345678',
+           longitude: 106.84513,
+           latitude: -6.20876,
+           provinceId: '123',
+           regencyId: '456',
+           districtId: '789',
+           villageId: '101',
+           dataPICs: [
+             {
+               id: 'pic-id-890',
+               namaPIC: 'Jane Doe',
+               jabatan: 'Director',
+               email: 'jane.doe@customerabc.com',
+               telepon: '081234567891',
+               fax: '021-12345680',
+             },
+           ],
+         },
+       ],
+     },
+   })
+   async listDataCustomers(@Param('companyId') companyId: string) {
+     return this.companyService.listDataCustomers(companyId);
+   }
 }

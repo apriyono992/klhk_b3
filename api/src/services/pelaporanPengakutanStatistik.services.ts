@@ -75,18 +75,19 @@ export class PengangkutanStatistikService {
     }
 
     try {
-      const result = await this.prisma.perusahaanAsalMuat.groupBy({
-        by: ['companyId'],
-        _count: {
-          pengangkutanDetailId: true,
-        },
-        orderBy: {
-          _count: {
-            pengangkutanDetailId: 'desc',
-          },
-        },
-        take: limit,
-      });
+      const result = []
+      // await this.prisma.perusahaanAsalMuat.groupBy({
+      //   by: ['companyId'],
+      //   _count: {
+      //     pengangkutanDetailId: true,
+      //   },
+      //   orderBy: {
+      //     _count: {
+      //       pengangkutanDetailId: 'desc',
+      //     },
+      //   },
+      //   take: limit,
+      // });
 
       const topCompaniesByRoutes = await Promise.all(
         result.map(async (item) => {

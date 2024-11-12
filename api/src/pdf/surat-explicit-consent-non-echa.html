@@ -7,99 +7,254 @@
     <title>Explicit Consent Non ECHA</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            font-size: 11pt;
-            line-height: 1.5;
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.2;
         }
-
         .header {
+        text-align: center;
+        margin-bottom: 20px;
+        }
+        .header img {
+        width: 80px;
+        vertical-align: middle;
+        }
+        .header .title {
+        display: inline-block;
+        width: calc(100% - 100px);
+        vertical-align: middle;
+        text-align: center;
+        line-height: 1.2;
+        }
+        .header h3, .header h4 {
+        margin: 5px 0;
+        font-weight: bold;
+        }
+        .header h3 {
+        font-size: 18px;
+        }
+        .header h4 {
+        font-size: 16px;
+        }
+        .header p {
+        margin: 2px 0;
+        font-size: 12px;
+        }
+        .header hr {
+        border: none;
+        border-top: 2px solid black;
+        margin-top: 10px;
+        }
+        .details {
+          display: flex;
+          justify-content: space-between;
+        }
+        .details-left {
+          width: 70%;
+          display: flex;
+          flex-direction: column;
+        }
+        .details-row {
+          display: flex;
+        }
+        .details-label {
+            width: 80px;
+        }
+        .details-separator {
+            width: 10px;
             text-align: center;
-            font-weight: bold;
-            margin-bottom: 20px;
         }
-
-        .address, .content {
-            margin-left: 40px;
-            margin-right: 40px;
+        .details-value {
+            flex: 1;
         }
-
+        .details-right {
+            width: 30%;
+            text-align: right;
+            vertical-align: top;
+        }
         .content {
             margin-top: 20px;
         }
 
-        .signature {
-            margin-left: 40px;
-            margin-right: 40px;
-            margin-top: 60px;
+        p {
+            margin: 10px 0;
         }
 
-        .footer {
+        table.section {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+        table.section tr {
+            margin: 0;
+            padding: 0;
+        }
+
+
+        table.section td {
+            padding: 1px 0;
+        }
+
+        .label {
+            width: 180px; /* Adjust as needed */
+            font-weight: bold;
+            vertical-align: top;
+        }
+
+        .colon {
+            width: 10px; /* Adjust if necessary */
             text-align: center;
-            margin-top: 60px;
-            border-top: 1px solid black;
-            padding-top: 10px;
         }
-
-        .section {
-            margin-top: 10px;
+        .signature-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 30px;
+            line-height: 1.2; /* Adjust line height for even closer spacing */
+        }
+        .signature {
+            text-align: left;
+            margin-right: 50px; /* Adjust to align with other content if needed */
+        }
+        .position {
+            margin-bottom: 0px;
+            line-height: 1.2; /* Adjust line height for even closer spacing */
+        }
+        .signature-space {
+            margin-bottom: 80px; /* Space for the signature */
+        }
+        .name {
+            margin-bottom: 0px;
+            font-weight: bold;
+            line-height: 1.2; /* Adjust line height for even closer spacing */
+        }
+        .tembusan {
+            margin-top: 20px; /* Adjust this if more space is needed */
+            line-height: 1.2; /* Adjust line height for even closer spacing */
+        }
+        .tembusan p {
+         margin-bottom: 2px;
+        }
+        .tembusan ol {
+            margin: 0;
+            padding-left: 20px;
         }
     </style>
 </head>
 <body>
 
     <!-- Header Section -->
-    <div class="header">
+    <!-- <div class="header">
         <p>{{header || 'KEMENTERIAN LINGKUNGAN HIDUP DAN KEHUTANAN'}}</p>
         <p>{{subHeader || 'DIREKTORAT JENDERAL PENGELOLAAN SAMPAH, LIMBAH DAN BAHAN BERBAHAYA DAN BERACUN'}}</p>
         <p>{{alamatHeader || 'Gedung Manggala Wanabakti Blok 4 Lantai 5 – Jl. Gatot Subroto, Jakarta 10270'}}</p>
         <p>Telp. {{telp || '021-5704 501/04 Ext. 4112'}}, Fax. {{fax || '021-5790 2750'}}, Indonesia – Kotak Pos {{kotakPos || '6505'}}</p>
+    </div> -->
+
+    <div class="header">
+        <img src="<%= base64Image %>" alt="Logo KLHK">
+        <div class="title">
+          <h3>KEMENTERIAN LINGKUNGAN HIDUP DAN KEHUTANAN</h3>
+          <h4>DIREKTORAT JENDERAL PENGELOLAAN SAMPAH, LIMBAH DAN BAHAN BERBAHAYA DAN BERACUN</h4>
+          <p>Gedung Manggala Wanabakti Blok 4 Lantai 5 - Jl. Gatot Subroto, Jakarta 10270</p>
+          <p>Telp. 021-5704 501/04 Ext. 4112, Fax. 021-5790 2750; Indonesia – Kotak Pos 6505</p>
+        </div>
+        <hr>
     </div>
 
-    <!-- Address Section -->
-    <div class="address">
-        <p>Our Ref: S.{{refNumber || 'PSLB3-PB3/PPI/PLB.4.4/B/09/2024'}}</p>
-        <p>{{tanggalSurat || 'September 2024'}}</p>
-        <p>Encl: 1 (one) set</p>
-        <p>Subject: Explicit Consent for Exporting Severely Restricted Chemicals to Indonesia</p>
+    <div class="details">
+        <div class="details-left">
+          <div class="details-row">
+            <div class="details-label">Our Ref</div>
+            <div class="details-separator">:</div>
+            <div class="details-value"><%= nomorSurat %></div>
+          </div>
+          <div class="details-row">
+            <div class="details-label">Encl</div>
+            <div class="details-separator">:</div>
+            <div class="details-value">1 (one) set</div>
+          </div>
+          <div class="details-row">
+            <div class="details-label">Subject</div>
+            <div class="details-separator">:</div>
+            <div class="details-value">Explicit Concent for Exporting Severely<br>Restricted Chemicals to Indonesia</div>
+          </div>
+        </div>
+        <div class="details-right">
+          <p><%= tanggalSurat || 'N/A' %></p>
+        </div>
     </div>
 
-    <!-- Main Content -->
     <div class="content">
-        <p>{{additionalInfo || 'Multilateral Environmental Agreements and Strategies Unit'}}<br>
-           Hazardous Substances Management Division<br>
-           Department of Industrial Works<br>
-           {{alamat || '75/6 Rama VI Road, Ratchathewi, Bangkok, 10400 Thailand'}}<br><br>
-        </p>
-
+        <p><%= tujuanSurat || 'N/A' %></p>
+    
         <p>Dear Sir / Madam,</p>
-
-        <p>Referring to notification concerning the above subject, we would like to inform you that we have no objection for the import of {{namaKimia || 'Epoxyethane or Ethylene Oxide'}} (Reference Number {{referenceNumber || 'MOI0306/9350'}}) from {{negaraAsal || 'Thailand'}} to Indonesia. We are pleased to inform you that we are no longer objecting to the export of:</p>
-
-        <div class="section">
-            <p>Name of the Chemicals: {{namaKimia || 'Ethylene oxide'}}</p>
-            <p>CAS Number: {{casNumber || '75-21-8'}}</p>
-            <p>Name of Trade: {{namaDagang || '-'}}</p>
-        </div>
-
-        <div class="section">
-            <p>Name of the importer: {{namaImporter || 'PT. Samator Tomoe'}}</p>
-            <p>Name of the exporter: {{namaExporter || 'Tomoe Asia Co., Ltd'}}</p>
-            <p>For use of: {{useOf || 'Industrial use (Industrial sterilization of medical devices)'}}</p>
-            <p>Valid Until: {{validUntil || 'Oktober 31, 2025'}}</p>
-        </div>
-
+    
+        <p>Referring to notification concerning the above subject, we would like to inform you that we have no objection for the import of 
+            <%= namaDagang || 'Nama Dagang' %> (Reference Number <strong><%= referenceNumber || 'N/A' %></strong>) from <%= negaraAsal || 'negaraAsal' %> to Indonesia. We are pleased to inform you that we are no longer objecting to the export of:</p>
+    
+        <table class="section">
+            <tr>
+                <td class="label">Name of the Chemicals</td>
+                <td class="colon">:</td>
+                <td><%= namaKimia || 'namaKimia' %></td>
+            </tr>
+            <tr>
+                <td class="label">CAS Number</td>
+                <td class="colon">:</td>
+                <td><%= casNumber || 'casNumber' %></td>
+            </tr>
+            <tr>
+                <td class="label">Name of Trade</td>
+                <td class="colon">:</td>
+                <td><%= namaDagang || 'namaDagang' %></td>
+            </tr>
+        </table>
+        
+    
+        <table class="section">
+            <tr>
+                <td class="label">Name of the importer</td>
+                <td class="colon">:</td>
+                <td><%= namaImpoter || 'namaImpoter' %></td>
+            </tr>
+            <tr>
+                <td class="label">Name of the exporter</td>
+                <td class="colon">:</td>
+                <td><%= namaExporter || 'namaExporter' %></td>
+            </tr>
+            <tr>
+                <td class="label">For use of</td>
+                <td class="colon">:</td>
+                <td><%= tujuanPenggunaan || 'tujuanPenggunaan' %></td>
+            </tr>
+            <tr>
+                <td class="label">Valid Until</td>
+                <td class="colon">:</td>
+                <td><%= validUntil || 'validUntil' %></td>
+            </tr>
+        </table>
+    
         <p>Your kind attention and cooperation would be highly appreciated.</p>
     </div>
-
-    <!-- Signature Section -->
-    <div class="signature">
-        <p>Sincerely,</p>
-        <br><br>
-        <p>Sugasri</p>
-        <p>Director of Hazardous Substances Management,</p>
-        <p>On behalf of Director General of Solid Waste, Hazardous Waste and Hazardous Substances Management</p>
-        <p>Ministry of Environment and Forestry</p>
+    <!-- Tembusan Section with Dynamic Values -->
+    <div class="signature-container">
+        <div class="signature">
+          <p class="position">Sincerely,</p>
+          <p class="signature-space"></p> <!-- Space for signature -->
+          <p class="name"><%= pejabat?.nama || 'Sugasri' %></p>
+          <p>NIP. <%= pejabat?.nip || '19690827 199803 1 001' %></p>
+        </div>
+      </div>
+  
+    <div class="tembusan">
+      <p>Cc:</p>
+      <ol>
+        <% tembusan.forEach((t, index) => { %>
+          <li><%= t.nama %> - <%= t.tipe %></li>
+        <% }) %>
+      </ol>
     </div>
+        <!-- Page Break for PDF -->
+    <div style="page-break-after: always;"></div>
 
 </body>
 </html>

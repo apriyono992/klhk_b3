@@ -11,12 +11,13 @@ export default function DocumentReview({ data, isLoading, mutate }) {
         modalForm: { isOpenModalForm, onOpenChangeModalForm },
         modalAlert: { isOpenModalAlert, onOpenChangeModalAlert },
         hookForm: { register, handleSubmit, formState: { errors, isSubmitting } },
+        watch,
         onCloseForm,
         onSubmitForm,
         onClickEdit,
         onValidate 
     } = useDucumentReviewForm({ mutate });
-
+    const isValid = watch('isValid');
     const columns = [
         'No',
         'Nama',
@@ -34,14 +35,14 @@ export default function DocumentReview({ data, isLoading, mutate }) {
                             {columns.map((item, index) => <TableColumn key={index}>{item}</TableColumn>)}
                         </TableHeader>
                         <TableBody loadingContent={<Spinner/>} loadingState={isLoading ? 'loading' : 'idle'}>
-                            {data?.documents?.map((item, index) => (
+                            {data?.TelaahTeknisRekomendasiB3[0]?.TelaahTeknisDocumentNotesRekomendasiB3.map((item, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{index + 1}</TableCell>
-                                    <TableCell>{item.documentType}</TableCell>
+                                    <TableCell>{item.tipeDokumen}</TableCell>
                                     <TableCell>
-                                        <IsValidIcon value={item.isValidTelaah} />
+                                        <IsValidIcon value={item.isValid} />
                                     </TableCell>
-                                    <TableCell>{item.telaahNotes}</TableCell>
+                                    <TableCell>{item.notes}</TableCell>
                                     <TableCell className='flex items-center gap-1'>
                                         <a target='_blank' href={item.fileUrl} className=''>
                                             <Button isIconOnly size="sm" color='primary'><EyeIcon className='size-4'/></Button>
@@ -65,19 +66,21 @@ export default function DocumentReview({ data, isLoading, mutate }) {
                                 <form onSubmit={handleSubmit(onSubmitForm)}>
                                     <div className='flex flex-col gap-3 mb-6'>  
                                         <Checkbox 
-                                            {...register('isValidTelaah')}
+                                            {...register('isValid')}
                                         >
                                             Dokumen valid
                                         </Checkbox>
                                         <Textarea
-                                            {...register('telaahNotes')}
-                                            isRequired
+                                            {...register('validationNotes', {
+                                                required: !isValid ? 'Catatan harus diisi jika dokumen tidak valid' : false,
+                                            })}
+                                            isRequired={!isValid}
                                             variant="faded" 
                                             type="text" 
                                             label="Catatan" 
-                                            color={errors.telaahNotes ? 'danger' : 'default'}
-                                            isInvalid={errors.telaahNotes} 
-                                            errorMessage={errors.telaahNotes && errors.telaahNotes.message}
+                                            color={errors.validationNotes ? 'danger' : 'default'}
+                                            isInvalid={errors.validationNotes} 
+                                            errorMessage={errors.validationNotes && errors.validationNotes.message}
                                         />
                                     </div>
                                     <div className='flex items-center gap-1'>

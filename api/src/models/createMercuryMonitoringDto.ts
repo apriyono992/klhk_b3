@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsDate, IsNumber, IsArray, Validate, IsOptional, IsLongitude, IsLatitude } from 'class-validator';
+import { IsNotEmpty, IsString, IsDate, IsNumber, IsArray, Validate, IsOptional, IsLongitude, IsLatitude, IsDateString } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsJenisSampelExist } from 'src/validators/jenisSample.validator';
@@ -36,7 +36,6 @@ export class CreateMercuryMonitoringDto {
   })
   @IsNotEmpty()
   @IsDate()
-  @Type(() => Date)
   tahunPengambilan: Date;
 
   @ApiProperty({
@@ -125,6 +124,7 @@ export class CreateMercuryMonitoringDto {
     format: 'float'
   })
   @IsNotEmpty()
+  @Transform(({ value }) => parseFloat(value))
   @IsLongitude()
   peskLongitude: number;
 

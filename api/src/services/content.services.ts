@@ -740,10 +740,10 @@ export class ContentService {
     if(params.name !== undefined || params.categoryName.length > 0 || params.type !== undefined){
       await this.prisma.searchMetric.create({
         data: {
-            userId: userId || null,
-            keyword: params.name || null,
+            userId: userId || undefined,
+            keyword: params.name || undefined,
             categoryName: params.categoryName || [],
-            type: params.type || null,  // Log the type of content being searched
+            type: params.type || undefined,  // Log the type of content being searched
             timestamp: new Date(),
         },
       });
@@ -754,10 +754,10 @@ export class ContentService {
     if(params.title !== undefined || params.categoryName.length > 0 ){
       await this.prisma.searchMetric.create({
         data: {
-            userId: userId || null,
-            keyword: params.title || null,
+            userId: userId || undefined,
+            keyword: params.title || undefined,
             categoryName: params.categoryName || [],
-            type:  CategoryType.EVENT || null,  // Log the type of content being searched
+            type:  CategoryType.EVENT || undefined,  // Log the type of content being searched
             timestamp: new Date(),
         },
       });

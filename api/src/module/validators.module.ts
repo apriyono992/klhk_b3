@@ -17,9 +17,12 @@ import { CompanyExistsConstraint } from 'src/validators/isCompanyExists.validato
 import { VehicleExistsConstraint } from 'src/validators/isVehicleExists.validator';
 import { DraftSuratExistsConstraint } from 'src/validators/isDraftSuratExists.validator';
 import { DraftNotifikasiConstraint, EuReferenceContsraint, NotifikasiConstraint } from 'src/validators/notifikasi.validator';
+import { IsISO2Country } from 'src/validators/country.validator';
+import { CountryModule } from './country.module';
 
 @Global()  // This makes the module global
 @Module({
+  imports: [CountryModule],
   providers: [
     PrismaService,
     {
@@ -58,8 +61,8 @@ import { DraftNotifikasiConstraint, EuReferenceContsraint, NotifikasiConstraint 
     DraftNotifikasiConstraint,
     IsNamaBahanKimiaExists,
     EuReferenceContsraint,
-    DataBahanB3MustConstaint
-
+    DataBahanB3MustConstaint,
+    IsISO2Country,
   ],
   exports: [
     IsPhotoValidFile,
@@ -86,7 +89,8 @@ import { DraftNotifikasiConstraint, EuReferenceContsraint, NotifikasiConstraint 
     NotifikasiConstraint,
     DraftNotifikasiConstraint,
     IsNamaBahanKimiaExists,
-    EuReferenceContsraint
+    EuReferenceContsraint,
+    IsISO2Country,
   ],
 })
 export class ValidatorsModule {}

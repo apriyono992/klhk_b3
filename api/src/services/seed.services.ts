@@ -209,7 +209,7 @@ export class SeedService {
   private async seedB3subtance() {
     const filePath = path.join(process.cwd(), 'src/seed/b3subtance.json');
     const data = this.readJsonFile(filePath);
-
+    
     await this.prisma.b3Substance.createMany({
       data,
       skipDuplicates: true, // This ensures that existing records are skipped

@@ -38,16 +38,16 @@ export class MercuryMonitoringService {
     const mercuryMonitoring = await this.prisma.mercuryMonitoring.create({
       data: {
         jenisSampelId: jenisSampelId ?? null,
-        bakuMutuLingkunganId: bakuMutuLingkunganId ?? null,
+        bakuMutuLingkunganId: bakuMutuLingkunganId ?? undefined,
         tahunPengambilan: tahunPengambilan,
         hasilKadar: hasilKadar,
         satuan: satuan,
         tingkatKadar: tingkatKadar,
         konsentrasi: konsentrasi,
         peskLocationId: peskLatitude && peskLongitude ? 
-        await this.createLocation(peskLatitude, peskLongitude, peskProvinceId, peskRegencyId, peskDistrictId, peskVillageId) : null,
+        await this.createLocation(peskLatitude, peskLongitude, peskProvinceId, peskRegencyId, peskDistrictId, peskVillageId) : undefined,
         warehouseLocationId: warehouseLatitude && warehouseLongitude ? 
-        await this.createLocation(warehouseLatitude, warehouseLongitude, warehouseProvinceId, warehouseRegencyId, warehouseDistrictId, warehouseVillageId) : null,
+        await this.createLocation(warehouseLatitude, warehouseLongitude, warehouseProvinceId, warehouseRegencyId, warehouseDistrictId, warehouseVillageId) : undefined,
       },
     });
 
@@ -280,10 +280,10 @@ export class MercuryMonitoringService {
       id: location.id,
       latitude: location.latitude,
       longitude: location.longitude,
-      province: location.province?.name || null,
-      regency: location.regency?.name || null,
-      district: location.district?.name || null,
-      village: location.village?.name || null,
+      province: location.province?.name || undefined,
+      regency: location.regency?.name || undefined,
+      district: location.district?.name || undefined,
+      village: location.village?.name || undefined,
     };
   }
 }

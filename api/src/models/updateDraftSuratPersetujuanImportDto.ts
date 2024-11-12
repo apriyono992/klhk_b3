@@ -5,6 +5,7 @@ import { IsDataBahanB3Exist } from 'src/validators/dataBahanB3.validator';
 import { IsPejabatIdExists } from 'src/validators/dataPejabat.validator';
 import { IsNotifikasiExists } from 'src/validators/notifikasi.validator';
 import { IsTembusanExist } from 'src/validators/dataTembusan.validator';
+import { Type } from 'class-transformer';
 
 export class UpdateDraftSuratPersetujuanImportDto {
   @IsOptional()
@@ -13,6 +14,7 @@ export class UpdateDraftSuratPersetujuanImportDto {
   nomorSurat?: string;
 
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   @ApiPropertyOptional({ description: 'Tanggal Surat' })
   tanggalSurat?: Date;
@@ -42,6 +44,7 @@ export class UpdateDraftSuratPersetujuanImportDto {
   emailPenerima?: string;
 
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   @ApiPropertyOptional({ description: 'Tanggal Pengiriman' })
   tanggalPengiriman?: Date;
@@ -107,7 +110,46 @@ export class UpdateDraftSuratPersetujuanImportDto {
   negaraAsal?: string;
 
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   @ApiPropertyOptional({ description: 'Validitas Surat' })
   validitasSurat?: Date;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ description: 'Regulation for Import' })
+  regulation?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ description: 'nomorSuratKebenaranImport for Import' })
+  nomorSuratKebenaranImport?: string;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  @ApiPropertyOptional({ description: 'tanggalSuratKebenaranImport for Import' })
+  tanggalSuratKebenaranImport?: Date;
+  
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ description: 'nomorSuratPerusahaanPengimpor for Import' })
+  nomorSuratPerusahaanPengimpor?: string;
+    
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  @ApiPropertyOptional({ description: 'tanggalDiterimaKebenaranImport for Import' })
+  tanggalDiterimaKebenaranImport?: Date;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ description: 'nomorSuratExplicitConsent for Import' })
+  nomorSuratExplicitConsent?: string;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  @ApiPropertyOptional({ description: 'tanggalSuratExplicitConsent for Import' })
+  tanggalSuratExplicitConsent?: Date;
 }

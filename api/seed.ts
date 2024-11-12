@@ -19,6 +19,18 @@ function generateUniqueSlug(title) {
 }
 
 async function main() {
+ try{
+  await prisma.secret.create({
+    data:{
+      clientId:"klhk-974f693f-9dcf-4b3a-b76e-eaee0da0c3a9",
+      clientSecret:"56f3bd572037efc90b74b08f8eb3db8fa4fb28ed47270f87279613b529b225d1"
+    }
+  })
+
+ }catch(error){
+
+ }
+
   // Seed Multiple DataBahanB3
   const dataBahanB3 = await prisma.dataBahanB3.createMany({
     data: [
@@ -355,9 +367,9 @@ async function main() {
         telpKantor: '1234567890',
         faxKantor: '0987654321',
         emailKantor: 'contact@techcorp.com',
-        npwp: '123456789012345',
-        nomorInduk: '56789',
-        kodeDBKlh: 'DB123',
+        npwp: '1234567890123451',
+        nomorInduk: '567891',
+        kodeDBKlh: 'DB1231',
         alamatPool: ['Pool 1', 'Pool 2'],
         bidangUsaha: 'Technology',
       },
@@ -375,11 +387,11 @@ async function main() {
     // Seed Vehicle
   const vehicle1 = await prisma.vehicle.create({
     data: {
-      noPolisi: '123XYZ',
+      noPolisi: '123XYZ2',
       modelKendaraan: 'Model S',
       tahunPembuatan: 2020,
-      nomorRangka: 'ABC123',
-      nomorMesin: 'XYZ789',
+      nomorRangka: 'ABC1234',
+      nomorMesin: 'XYZ7891',
       kepemilikan: 'Owned',
       company: { connect: { id: company.id } }, // Connect to the company
     },
@@ -387,11 +399,11 @@ async function main() {
 
   const vehicle2 = await prisma.vehicle.create({
     data: {
-      noPolisi: '456ABC',
+      noPolisi: '456ABCD',
       modelKendaraan: 'Model X',
       tahunPembuatan: 2021,
-      nomorRangka: 'DEF456',
-      nomorMesin: 'UVW123',
+      nomorRangka: 'DEF4563',
+      nomorMesin: 'UVW1232',
       kepemilikan: 'Owned',
       company: { connect: { id: company.id } }, // Connect to the company
     },
@@ -416,7 +428,7 @@ async function main() {
   // Seed Application
   const application = await prisma.application.create({
     data: {
-      kodePermohonan: 'APP123',
+      kodePermohonan: 'APP1243',
       status: 'PENDING',
       jenisPermohonan: 'Import',
       tipeSurat: 'Surat A',
@@ -464,28 +476,26 @@ const vehicles = await prisma.vehicle.findMany({
 
   try{
          // Seed `DocumentRekomendasiB3` for each document type
-  const documentData = [
-    { fileName: 'sds_or_ldk.pdf', documentType: TipeDokumen.SDS_OR_LDK, fileUrl: 'https://example.com/sds_or_ldk.pdf' },
-    { fileName: 'sop_bongkar_muat.pdf', documentType: TipeDokumen.SOP_BONGKAR_MUAT, fileUrl: 'https://example.com/sop_bongkar_muat.pdf' },
-    { fileName: 'sop_tanggap_darurat.pdf', documentType: TipeDokumen.SOP_TANGGAP_DARURAT, fileUrl: 'https://example.com/sop_tanggap_darurat.pdf' },
-    { fileName: 'stnk_kir.pdf', documentType: TipeDokumen.STNK_KIR, fileUrl: 'https://example.com/stnk_kir.pdf' },
-    { fileName: 'foto_kendaraan.jpg', documentType: TipeDokumen.FOTO_KENDARAAN, fileUrl: 'https://example.com/foto_kendaraan.jpg' },
-    { fileName: 'foto_sop.jpg', documentType: TipeDokumen.FOTO_SOP, fileUrl: 'https://example.com/foto_sop.jpg' },
-    { fileName: 'foto_kegiatan_bongkar_muat.jpg', documentType: TipeDokumen.FOTO_KEGIATAN_BONGKAR_MUAT, fileUrl: 'https://example.com/foto_kegiatan_bongkar_muat.jpg' },
-    { fileName: 'foto_kemasan_b3.jpg', documentType: TipeDokumen.FOTO_KEMASAN_B3, fileUrl: 'https://example.com/foto_kemasan_b3.jpg' },
-    { fileName: 'foto_alat_pelindung_diri.jpg', documentType: TipeDokumen.FOTO_ALAT_PELINDUNG_DIRI, fileUrl: 'https://example.com/foto_alat_pelindung_diri.jpg' },
-    { fileName: 'bukti_pelatihan.pdf', documentType: TipeDokumen.BUKTI_PELATIHAN, fileUrl: 'https://example.com/bukti_pelatihan.pdf' },
-    { fileName: 'hasil_pengujian_tangki_ukur.pdf', documentType: TipeDokumen.SURAT_KETERANGAN_HASIL_PENGUJIAN_TANGKI_UKUR, fileUrl: 'https://example.com/hasil_pengujian_tangki_ukur.pdf' },
-    { fileName: 'bejana_tekan.pdf', documentType: TipeDokumen.SURAT_KETERANGAN_BEJANA_TEKAN, fileUrl: 'https://example.com/bejana_tekan.pdf' },
-    { fileName: 'it_ip_prekursor.pdf', documentType: TipeDokumen.IT_IP_PREKURSOR, fileUrl: 'https://example.com/it_ip_prekursor.pdf' },
-    { fileName: 'alat_komunikasi.pdf', documentType: TipeDokumen.INFORMASI_KETERSEDIAAN_ALAT_KOMUNIKASI, fileUrl: 'https://example.com/alat_komunikasi.pdf' },
-    { fileName: 'pemeliharaan_kendaraan.pdf', documentType: TipeDokumen.INFORMASI_PEMELIHARAAN_KENDARAAN, fileUrl: 'https://example.com/pemeliharaan_kendaraan.pdf' },
-    { fileName: 'pencucian_tangki.pdf', documentType: TipeDokumen.INFORMASI_PENCUCIAN_TANGKI, fileUrl: 'https://example.com/pencucian_tangki.pdf' },
-    { fileName: 'surat_rekomendasi_sebelumnya.pdf', documentType: TipeDokumen.SURAT_REKOMENDASI_B3_SEBELUMNYA, fileUrl: 'https://example.com/surat_rekomendasi_sebelumnya.pdf' },
-    { fileName: 'sk_dirjen_perhubungan_darat.pdf', documentType: TipeDokumen.SK_DIRJEN_PERHUBUNGAN_DARAT, fileUrl: 'https://example.com/sk_dirjen_perhubungan_darat.pdf' },
-    { fileName: 'other_document.pdf', documentType: TipeDokumen.Other, fileUrl: 'https://example.com/other_document.pdf' },
-  ];
-
+         const documentData = [
+          { fileName: 'akte_perusahaan.pdf', documentType: TipeDokumen.AKTE_PERUSAHAAN, fileUrl: 'https://example.com/akte_perusahaan.pdf' },
+          { fileName: 'pengesahan_akta_perusahaan.pdf', documentType: TipeDokumen.PENGESAHAN_AKTA_PERUSAHAAN, fileUrl: 'https://example.com/pengesahan_akta_perusahaan.pdf' },
+          { fileName: 'sds_or_ldk.pdf', documentType: TipeDokumen.MSDS_LDK_B3, fileUrl: 'https://example.com/sds_or_ldk.pdf' },
+          { fileName: 'bukti_kepemilikan_alat_angkut.pdf', documentType: TipeDokumen.BUKTI_KEPEMILIKAN_ALAT_ANGKUT, fileUrl: 'https://example.com/bukti_kepemilikan_alat_angkut.pdf' },
+          { fileName: 'sop_bongkar_muat.pdf', documentType: TipeDokumen.SOP_BONGKAR_MUAT, fileUrl: 'https://example.com/sop_bongkar_muat.pdf' },
+          { fileName: 'sop_tanggap_darurat.pdf', documentType: TipeDokumen.SOP_TANGGAP_DARURAT, fileUrl: 'https://example.com/sop_tanggap_darurat.pdf' },
+          { fileName: 'foto_kendaraan.jpg', documentType: TipeDokumen.FOTO_KENDARAAN, fileUrl: 'https://example.com/foto_kendaraan.jpg' },
+          { fileName: 'foto_sop.jpg', documentType: TipeDokumen.FOTO_SOP_BONGKAR_MUAT_DARURAT_SDS, fileUrl: 'https://example.com/foto_sop.jpg' },
+          { fileName: 'foto_kegiatan_bongkar_muat.jpg', documentType: TipeDokumen.FOTO_KEGIATAN_BONGKAR_MUAT, fileUrl: 'https://example.com/foto_kegiatan_bongkar_muat.jpg' },
+          { fileName: 'foto_kemasan_b3.jpg', documentType: TipeDokumen.FOTO_KEMASAN_B3, fileUrl: 'https://example.com/foto_kemasan_b3.jpg' },
+          { fileName: 'foto_alat_apd_tanggap_darurat.jpg', documentType: TipeDokumen.FOTO_ALAT_APD_TANGGAP_DARURAT, fileUrl: 'https://example.com/foto_alat_apd_tanggap_darurat.jpg' },
+          { fileName: 'bukti_pelatihan_b3.pdf', documentType: TipeDokumen.BUKTI_PELATIHAN_B3, fileUrl: 'https://example.com/bukti_pelatihan_b3.pdf' },
+          { fileName: 'hasil_pengujian_tangki_ukur.pdf', documentType: TipeDokumen.TANGKI_UKUR_MOBIL, fileUrl: 'https://example.com/hasil_pengujian_tangki_ukur.pdf' },
+          { fileName: 'bejana_tekan.pdf', documentType: TipeDokumen.BEJANA_TEKAN, fileUrl: 'https://example.com/bejana_tekan.pdf' },
+          { fileName: 'ip_prekursor.pdf', documentType: TipeDokumen.IP_PREKURSOR, fileUrl: 'https://example.com/ip_prekursor.pdf' },
+          { fileName: 'alat_komunikasi.pdf', documentType: TipeDokumen.INFORMASI_ALAT_KOMUNIKASI, fileUrl: 'https://example.com/alat_komunikasi.pdf' },
+          { fileName: 'surat_rekomendasi_sebelumnya.pdf', documentType: TipeDokumen.SURAT_REKOMENDASI_SEBELUMNYA, fileUrl: 'https://example.com/surat_rekomendasi_sebelumnya.pdf' },
+          { fileName: 'sk_dirjen_perhubungan_darat.pdf', documentType: TipeDokumen.IZIN_PENGANGKUTAN_B3_SEBELUMNYA, fileUrl: 'https://example.com/sk_dirjen_perhubungan_darat.pdf' }
+        ];
   // Iterate over each document entry and seed it into the database
   for (const document of documentData) {
     await prisma.documentRekomendasiB3.create({
@@ -615,16 +625,21 @@ const vehicles = await prisma.vehicle.findMany({
   });
 
   // Seed NotifikasiStatusHistory
-  await prisma.notifikasiStatusHistory.create({
-    data: {
-      notifikasiId: notifikasi.id,
-      oldStatus: 'RECEIVED',
-      newStatus: 'PROCESSED',
-      tanggalPerubahan: new Date(),
-      changedBy: 'admin',
-      notes: 'Processing started',
-    },
-  });
+  try{
+    await prisma.notifikasiStatusHistory.create({
+      data: {
+        notifikasiId: notifikasi.id,
+        oldStatus: 'RECEIVED',
+        newStatus: 'PROCESSED',
+        tanggalPerubahan: new Date(),
+        changedBy: 'admin',
+        notes: 'Processing started',
+      },
+    });
+  }catch{
+
+  }
+
 
   // Seed DraftSurat
   const draftSurat = await prisma.draftSurat.create({
@@ -635,7 +650,6 @@ const vehicles = await prisma.vehicle.findMany({
       kodeDBKlh: 'KLH-001',
       pejabatId: getRandomPejabat(allPejabat), // Random Pejabat
       applicationId: application.id,
-      tembusan:  {connect: getRandomTembusan(allTembusan, 3)}, // Multiple Tembusan
     },
   });
 
@@ -659,8 +673,7 @@ const vehicles = await prisma.vehicle.findMany({
       tanggalSurat: new Date(),
       tipeSurat: 'Kebenaran Import',
       pejabatId: getRandomPejabat(allPejabat), // Random Pejabat
-      notifikasiId: notifikasi.id,
-      tembusan: {connect: getRandomTembusan(allTembusan, 3)}, // Multiple Tembusan
+      notifikasiId: notifikasi.id
     },
   });
 
@@ -753,7 +766,7 @@ const vehicles = await prisma.vehicle.findMany({
       dnaContactName: 'Dr. John Doe',
       dnaTelephone: '1234567890',
       dnaTelefax: '0987654321',
-      dnaEmail: 'contact@dep.gov',
+      dnaEmail: ['contact@dep.gov'],
       dnaDate: new Date(),
     },
   });

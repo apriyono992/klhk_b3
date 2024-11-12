@@ -9,11 +9,9 @@ import { SWRConfig } from 'swr';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-    <React.StrictMode>
         <SWRConfig value={{ revalidateOnFocus: false, revalidateOnReconnect: true, keepPreviousData: true }}>
             <NextUIProvider>
                 <RouterProvider router={router} />
             </NextUIProvider>
         </SWRConfig>
-    </React.StrictMode>
 );

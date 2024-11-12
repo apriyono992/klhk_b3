@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explicit Consent Form (ECHA)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    p {
+      margin: 10px 0;
+    }
+    .section-header {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    .data-field {
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="font-weight: bold; text-align: center;">IMPORTING COUNTRY RESPONSE TO REQUEST FOR EXPLICIT CONSENT</h1>
+
+  <!-- Section 1A -->
+  <p class="section-header">SECTION 1A. CHEMICAL IDENTITY, IF IN FORM OF SUBSTANCE</p>
+  <p>
+    Name of chemical: <span class="data-field"><%= nameOfChemicalSubstance || 'N/A' %></span><br>
+    CAS No.: <span class="data-field"><%= casNumberSubstance || 'N/A' %></span>
+  </p>
+
+  <!-- Section 1B -->
+  <p class="section-header">SECTION 1B. CHEMICAL IDENTITY, IF IN FORM OF PREPARATION</p>
+  <p>
+    Name of preparation: <strong><%= nameOfPreparation || 'N/A' %></strong><br>
+    Name of chemical and % concentration: <strong><%= nameOfChemicalInPreparation || 'N/A' %> - <%= concentrationInPreparation || 'N/A' %></strong><br>
+    CAS No.: <strong><%= casNumberPreparation || 'N/A' %></strong>
+  </p>
+
+  <!-- Section 2 -->
+  <p class="section-header">SECTION 2. RESPONSE TO THE REQUEST FOR EXPLICIT CONSENT</p>
+  <p>
+    Do you consent to import? <strong><%= consentToImport ? 'YES' : 'NO' %></strong>
+  </p>
+
+  <!-- Section 3 -->
+  <p class="section-header">SECTION 3. TO WHICH OF THE FOLLOWING USE CATEGORIES DOES YOUR RESPONSE APPLY?</p>
+  <p>
+    (A) Pesticide <strong><%= useCategoryPesticide ? 'Yes' : 'No' %></strong><br>
+    (B) Industrial chemical <strong><%= useCategoryIndustrial ? 'Yes' : 'No' %></strong>
+  </p>
+
+  <!-- Section 4 -->
+  <p class="section-header">SECTION 4. DOES CONSENT GO WIDER THAN THE SPECIFIC PREPARATION LISTED IN SECTION 1B?</p>
+  <p>
+    Is consent valid for other preparations containing the same chemical at different concentrations? <strong><%= consentForOtherPreparations ? 'Yes' : 'No' %></strong><br>
+    The concentrations that are allowed are: <span class="data-field"><%= allowedConcentrations || 'N/A' %></span><br>
+    Does consent extend to the chemical in the form of a pure substance? <strong><%= consentForPureSubstance ? 'Yes' : 'No' %></strong>
+  </p>
+
+  <!-- Section 5 -->
+  <p class="section-header">SECTION 5. RESTRICTIONS/CONDITIONS</p>
+  <p>
+    Are there any restrictions or conditions attached to consent? <strong><%= hasRestrictions ? 'Yes' : 'No' %></strong><br>
+    Restriction details: <span class="data-field"><%= restrictionDetails || 'N/A' %></span>
+  </p>
+
+  <!-- Section 6 -->
+  <p class="section-header">SECTION 6. TIME LIMIT</p>
+  <p>
+    Is the consent time-limited? <strong><%= isTimeLimited ? 'Yes' : 'No' %></strong><br>
+    Time limit applies until: <span class="data-field"><%= timeLimitDetails ? timeLimitDetails.toDateString() : 'N/A' %></span>
+  </p>
+
+  <!-- Section 7 -->
+  <p class="section-header">SECTION 7. SAME TREATMENT FOR DOMESTIC AND IMPORTED CHEMICALS</p>
+  <p>
+    Is chemical from all sources treated the same as imported chemicals? <strong><%= sameTreatment ? 'Yes' : 'No' %></strong><br>
+    If No, provide details: <span class="data-field"><%= differentTreatmentDetails || 'N/A' %></span>
+  </p>
+
+  <!-- Section 8 -->
+  <p class="section-header">SECTION 8. ANY OTHER RELEVANT INFORMATION</p>
+  <p><span class="data-field"><%= otherRelevantInformation || 'N/A' %></span></p>
+
+  <!-- Section 9 -->
+  <p class="section-header">SECTION 9. NAME AND ADDRESS OF IMPORTING DNA</p>
+  <p>
+    Institution: <strong><%= dnaInstitutionName || 'Directorate of Hazardous Substances Management, Ministry of Environment and Forestry' %></strong><br>
+    Address: <strong><%= dnaInstitutionAddress || 'C Building 2nd Floor, DI Panjaitan Street Kav. 24, Kebon Nanas, Jakarta Timur 13410, Indonesia' %></strong><br>
+    Contact name: <strong><%= dnaContactName || 'Sugasri (Director of Hazardous Substances Management)' %></strong><br>
+    Telephone: <strong><%= dnaTelephone || '+62-21-8590 5639' %></strong><br>
+    Telefax: <strong><%= dnaTelefax || '+62-21-8590 6679' %></strong><br>
+    E-mail address: <strong><%= dnaEmail || 'notifikasi_b3@yahoo.com, indahrsari@yahoo.co.id, registrasi.b3@gmail.com, indahrahmisari@menlhk.go.id' %></strong><br>
+    Date: <strong><%= dnaDate ? dnaDate.toDateString() : 'July 2024' %></strong>
+  </p>
+</body>
+</html>

@@ -16,4 +16,9 @@ export class ValidateDocumentDto {
   @IsString()
   @IsOptional()
   validationNotes?: string;
+
+  @ApiProperty({ description: 'Optional user ID of the admin validating the document' })
+  @IsOptional()
+  @IsString()
+  userId?: string;
 }

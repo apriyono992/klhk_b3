@@ -6,28 +6,8 @@
     "deleteOutDir": true,
     "assets": [
       {
-        "include": "**/*.env",
+        "include": "**/*",
         "outDir": "dist/src"
-      },
-      {
-        "include": "**/*.conf",
-        "outDir": "dist/src"
-      },
-      {
-        "include": "seed/*.json",
-        "outDir": "dist/src/seed"
-      },
-      {
-        "include": "**/*.html",
-        "outDir": "dist/src"
-      },
-      {
-        "include": "**/*.css",
-        "outDir": "dist/src"
-      },
-      {
-        "include": "pdf/*",
-        "outDir": "dist/src/pdf"
       }
     ]
   }

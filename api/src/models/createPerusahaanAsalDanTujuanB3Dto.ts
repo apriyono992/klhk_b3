@@ -1,4 +1,10 @@
-import { IsUUID, IsString, IsNumber, IsLatitude, IsLongitude, IsNotEmpty } from 'class-validator';
+import { IsUUID, IsString, IsNumber, IsLatitude, IsLongitude, IsNotEmpty, IsEnum, ArrayNotEmpty, IsArray, IsOptional, Validate } from 'class-validator';
+import { TipeLokasiMuatDanBongkar } from './enums/tipeLokasiMuatDanBongkar';
+import { IsVillageValid } from 'src/validators/village.validator';
+import { IsDistrictValid } from 'src/validators/district.validator';
+import { IsRegencyValid } from 'src/validators/regency.validator';
+import { IsProvinceExist } from 'src/validators/province.validator';
+import { Transform } from 'class-transformer';
 
 export class CreatePerusahaanAsalMuatDanTujuanDto {
   @IsUUID()
@@ -13,14 +19,38 @@ export class CreatePerusahaanAsalMuatDanTujuanDto {
   @IsNotEmpty()
   alamat: string;
 
-  @IsLatitude()
-  @IsNotEmpty()
-  latitude: number;
-
+  @IsOptional()
+  @Transform(({ value }) => parseFloat(value))
   @IsLongitude()
-  @IsNotEmpty()
-  longitude: number;
+  longitude?: number;
+
+  @IsOptional() 
+  @Transform(({ value }) => parseFloat(value))
+  @IsLatitude()
+  latitude?: number;
 
   @IsString()
-  locationType: string;
+  @IsProvinceExist() // Ensure province exists
+  provinceId: string;
+
+  @IsString()
+  @Validate(IsRegencyValid, ['provinceId']) // Ensure regency belongs 
+  regencyId: string;
+
+  @IsString()
+  @Validate(IsDistrictValid, ['regencyId']) // Ensure district 
+  districtId: string;
+
+  @IsString()
+  @Validate(IsVillageValid, ['districtId']) // Ensure village belongs 
+  villageId: string;
+
+  @IsArray()
+  @IsOptional() 
+  @IsUUID(undefined, { each: true })
+  dataPICIds: string[];
+
+  @IsOptional()
+  @IsEnum(TipeLokasiMuatDanBongkar)
+  locationType: TipeLokasiMuatDanBongkar;
 }

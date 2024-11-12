@@ -7,6 +7,7 @@ import { UploadResult } from 'src/models/uploadResult';
 import { getMimeType } from 'src/utils/helpers';
 import { RequiredDocumentsStatus } from 'src/models/types/tipeDokumen';
 import { ValidateDocumentDto } from 'src/models/validateDocumentDto';
+import { TipeDokumenTelaah } from 'src/models/enums/tipeDokumenTelaah';
 
 @Injectable()
 export class DocumentService {
@@ -188,20 +189,21 @@ export class DocumentService {
   }
 
    // Validate a document by an admin
-   async validateTelaahDocument(documentId: string, isValid: boolean, validationNotes?: string) {
-    const document = await this.prisma.documentRekomendasiB3.findUnique({
-      where: { id: documentId },
+   async validateTelaahDocument(id: string, isValid: boolean, validationNotes?: string) {
+
+    const telaahTeknisRekomendasiB3 = await this.prisma.telaahTeknisDocumentNotesRekomendasiB3.findUnique({
+      where: { id: id },
     });
 
-    if (!document) {
-      throw new NotFoundException(`Document with ID ${documentId} not found`);
+    if (!telaahTeknisRekomendasiB3){
+      throw new NotFoundException(`TelaahTeknisRekomendasiB3 not found`);
     }
 
-    return this.prisma.documentRekomendasiB3.update({
-      where: { id: documentId },
+    return this.prisma.telaahTeknisDocumentNotesRekomendasiB3.update({
+      where: { id :id },
       data: {
-        isValidTelaah : isValid,
-        telaahNotes: validationNotes,
+        isValid: isValid,
+        notes: validationNotes,
       },
     });
   }

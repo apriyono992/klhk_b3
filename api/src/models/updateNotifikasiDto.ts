@@ -2,6 +2,7 @@ import { IsString, IsEnum, IsDate, IsUUID, IsOptional, IsBoolean, ValidateIf } f
 import { Type } from 'class-transformer';
 import { StatusNotifikasi } from './enums/statusNotifikasi';
 import { IsCompanyExists } from 'src/validators/isCompanyExists.validator';
+import { TipeSuratNotifikasi } from './enums/tipeSuratNotifikasi';
 
 export class UpdateNotifikasiDto {
   @IsOptional()
@@ -12,6 +13,10 @@ export class UpdateNotifikasiDto {
   @IsOptional()
   @IsEnum(StatusNotifikasi)
   status?: StatusNotifikasi;
+
+  @IsOptional()
+  @IsEnum(TipeSuratNotifikasi)
+  tipeSurat?: TipeSuratNotifikasi;
 
   @IsOptional()
   @Type(() => Date)

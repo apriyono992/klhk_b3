@@ -111,6 +111,15 @@ export async function getSelectFetcher(url) {
     })
 }
 
+export async function getSelectPejabatFetcher(url) {
+    return await axiosInstanceAuth.get(url).then(res => {
+        return res.data.data.map((item) => ({
+            value: item.id,
+            label: item.nama && item.jabatan ? `${item.nama} - ${item.jabatan}`  : item.nama  ? item.nama : null,
+        }))
+    })
+}
+
 export async function postFetcher(url, data) {
     return await axiosInstanceAuth.post(url, data).then(res => res.data)
 }
@@ -137,5 +146,26 @@ export async function deleteFetcher(url, id) {
 
 export async function deleteWithFormFetcher(url, data) {
     return await axiosInstanceAuth.delete(url, data).then(res => res.data)
+}
+
+export async function getPdfUrl(url) {
+    try {
+        const response = await axiosInstanceAuth.get(url, {
+            responseType: 'blob', // Important to handle the PDF file correctly
+        });
+        
+        // Create a URL for the PDF file from the blob
+        const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        // Open the PDF in a new tab
+        window.open(pdfUrl, '_blank');
+
+        // Optional: Revoke the object URL after some time to free up memory
+        setTimeout(() => URL.revokeObjectURL(pdfUrl), 10000);
+    } catch (error) {
+        console.error("Failed to open PDF:", error);
+        throw new Error('Failed to open PDF');
+    }
 }
 

@@ -20,6 +20,7 @@ import { DocumentService } from 'src/services/document.services';
 import { uploadFilesToDisk } from 'src/utils/uploadDocumentFileToDisk';
 import { IsDocumentValidFile } from 'src/validators/documentFileType.validator';
 import * as fs from 'fs';
+import { ValidateTelaahDocumentDto } from 'src/models/validateDocumentTelaahDto';
 
 @ApiTags('DocumentRekomendasiB3')
 @Controller('documents')
@@ -194,16 +195,18 @@ export class DocumentController {
     description: 'Document validated successfully.',
     schema: {
       example: {
-        documentId: 'doc123',
+        telaahId: '123e4567-e89b-12d3-a456-426614174000',
+        tipeDocumentTelaah: 'MSDS_LDK_B3',
         isValid: true,
-        validationNotes: 'Valid document',
+        validationNotes: 'Document is valid and meets all requirements.',
       },
     },
   })
-  @ApiResponse({ status: 404, description: 'Document not found.' })
-  async validateTelaahDocument(@Body() validateDocumentDto: ValidateDocumentDto) {
+  @ApiResponse({ status: 404, description: 'Telaah document not found.' })
+  @ApiResponse({ status: 400, description: 'Invalid input data.' })
+  async validateTelaahDocument(@Body() validateDocumentDto: ValidateTelaahDocumentDto) {
     return this.documentService.validateTelaahDocument(
-      validateDocumentDto.documentId,
+      validateDocumentDto.documenttelaahId,
       validateDocumentDto.isValid,
       validateDocumentDto.validationNotes,
     );

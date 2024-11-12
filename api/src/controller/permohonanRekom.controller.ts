@@ -333,7 +333,7 @@ export class PermohonanRekomendasiB3Controller {
     };
   }
 
-  @Patch('rekom/permohonan/:applicationId')
+  @Patch('update-telaah/:applicationId')
   @ApiOperation({ summary: 'Upsert Telaah Teknis Rekomendasi B3 for a given application ID' })
   @ApiParam({
     name: 'applicationId',

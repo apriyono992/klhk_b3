@@ -1,7 +1,10 @@
-import { IsOptional, IsString, IsDate, IsEnum, IsBoolean, IsUUID } from 'class-validator';
+import { IsOptional, IsString, IsDate, IsEnum, IsBoolean, IsUUID, IsEmail } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { JenisExplicitConsent } from './enums/jenisExplicitConsent';
 import { IsNotifikasiExists } from 'src/validators/notifikasi.validator';
+import { Type } from 'class-transformer';
+import { IsTembusanExist } from 'src/validators/dataTembusan.validator';
+import { IsPejabatNipExist } from 'src/validators/dataPejabat.validator';
 
 export class UpdateDraftSuratExplicitConsentDto {
   @IsOptional()
@@ -10,6 +13,7 @@ export class UpdateDraftSuratExplicitConsentDto {
   nomorSurat?: string;
 
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   @ApiPropertyOptional({ description: 'Tanggal Surat' })
   tanggalSurat?: Date;
@@ -36,8 +40,24 @@ export class UpdateDraftSuratExplicitConsentDto {
 
   @IsOptional()
   @IsString()
+  @ApiPropertyOptional({ description: 'Nama Importer' })
+  namaImpoter?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ description: 'Tujuan Penggunaan' })
+  tujuanPenggunaan?: string;
+
+  @IsOptional()
+  @IsString()
   @ApiPropertyOptional({ description: 'Tujuan Import' })
   tujuanImport?: string;
+
+  
+  @IsOptional()
+  @IsString()
+  @ApiPropertyOptional({ description: 'Tujuan Surat' })
+  tujuanSurat?: string;
 
   @IsOptional()
   @IsString()
@@ -75,6 +95,7 @@ export class UpdateDraftSuratExplicitConsentDto {
   additionalInfo?: string;
 
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   @ApiPropertyOptional({ description: 'Validitas Surat' })
   validitasSurat?: Date;
@@ -169,6 +190,7 @@ export class UpdateDraftSuratExplicitConsentDto {
   isTimeLimited?: boolean;
 
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   @ApiPropertyOptional({ description: 'Time Limit Details' })
   timeLimitDetails?: Date;
@@ -214,11 +236,12 @@ export class UpdateDraftSuratExplicitConsentDto {
   dnaTelefax?: string;
 
   @IsOptional()
-  @IsString()
-  @ApiPropertyOptional({ description: 'DNA Email' })
-  dnaEmail?: string;
+  @IsEmail({}, { each: true })
+  @ApiPropertyOptional({ description: 'DNA Email(s)' })
+  dnaEmail?: string[];
 
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   @ApiPropertyOptional({ description: 'DNA Date' })
   dnaDate?: Date;
@@ -227,4 +250,14 @@ export class UpdateDraftSuratExplicitConsentDto {
   @IsUUID()
   @IsNotifikasiExists()
   notifikasiId?: string;  // Optional Notifikasi ID
+
+  @IsOptional()
+  @IsTembusanExist({ each: true })
+  @IsUUID('4', { each: true })
+  tembusanIds?: string[];  // Array of Tembusan IDs (can be set later)
+
+  @IsOptional()
+  @IsUUID()
+  @IsPejabatNipExist()
+  pejabatId?: string;  // Optional Pejabat ID
 }

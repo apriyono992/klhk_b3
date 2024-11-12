@@ -34,6 +34,8 @@ import { NotifikasiModule } from './module/notifikasi.module';
 import { DraftNotifikasiModule } from './module/draftNotifikasi.module';
 import { PelaporanPengakutanB3Module } from './module/pelaporanPengakutanB3.module';
 import { PelaporanPengakutanStatistikB3Module } from './module/pelaporanPengakutanStatistikB3.module';
+import { CountryModule } from './module/country.module';
+import { PenyimpananB3Module } from './module/penyimpananB3.module';
 
 @Module({
   imports: [
@@ -68,7 +70,9 @@ import { PelaporanPengakutanStatistikB3Module } from './module/pelaporanPengakut
     NotifikasiModule,
     DraftNotifikasiModule,
     PelaporanPengakutanB3Module,
-    PelaporanPengakutanStatistikB3Module
+    PelaporanPengakutanStatistikB3Module,
+    CountryModule,
+    PenyimpananB3Module
   ],
   controllers: [AppController, AuthController],
   providers: [

@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsOptional, IsString, IsDate, IsArray, IsUUID } from 'class-validator';
 import { IsDraftExists } from 'src/validators/isDraftSuratExists.validator';
 
@@ -29,6 +30,7 @@ export class DraftSuratDto {
   tipeSurat?: string;
 
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   @ApiProperty({ description: 'Tanggal surat', required: false, type: 'string', format: 'date-time' })
   tanggalSurat?: Date;

@@ -247,10 +247,7 @@ export class DataMasterService {
           return prisma.dataTembusan.create({
             data: {
               nama: data.nama,
-              tipe: data.tipe,
-              DraftSurat: {
-                connect: { id: draftSurat.id } // Hubungkan dengan draftSurat
-              }
+              tipe: data.tipe
             },
           });
         }else{

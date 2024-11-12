@@ -12,19 +12,23 @@ export default function useValidationForm({ mutate }) {
     const {isOpen: isOpenModalAlert, onOpenChange: onOpenChangeModalAlert} = useDisclosure();
     const [editId, setEditId] = useState(null);
 
-    const schema =  yup.object().shape({
+    const schema = yup.object({
         isValid: yup.boolean().oneOf([true, false], 'Isi harus valid atau tidak valid'),
-        validationNotes: yup.string().required('Harus diisi'),   
-    }).required()
-
-    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({resolver: yupResolver(schema)});
+        validationNotes: yup.string().when('isValid', (isValid, schema) => {
+            if (isValid[0] === true) {
+                return schema.notRequired();
+            }
+            return schema.required('Catatan harus diisi jika dokumen tidak valid');
+        }),
+    }).required();
+    
+    
+    const { register, handleSubmit, reset, watch, formState: { errors, isSubmitting } } = useForm({resolver: yupResolver(schema)});
     const { data: user } = useAuth()
 
     async function onSubmitForm(data) {
         try {
-            console.log(editId);
             data.documentId = editId;
-            console.log(data);
             await postFetcher('/api/documents/validate', data);
             mutate()
             toast.success('Status dokumen berhasil diubah!');
@@ -54,7 +58,7 @@ export default function useValidationForm({ mutate }) {
     function onCloseForm() {
         setEditId(null);
         reset({
-            isValid: '',
+            isValid: false,
             validationNotes: '',   
         });
         onCloseModalForm();
@@ -77,6 +81,7 @@ export default function useValidationForm({ mutate }) {
         hookForm: {
             register,
             handleSubmit,
+            watch,
             formState: {errors,isSubmitting}
         },
         onCloseForm, 

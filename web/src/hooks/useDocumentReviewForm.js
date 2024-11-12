@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as yup from 'yup';
-import { patchFetcherWithoutId } from "../services/api";
+import { patchFetcherWithoutId, postFetcher } from "../services/api";
 import useAuth from "./useAuth";
 
 export default function useDucumentReviewForm({ mutate }) {
@@ -12,21 +12,25 @@ export default function useDucumentReviewForm({ mutate }) {
     const {isOpen: isOpenModalAlert, onOpenChange: onOpenChangeModalAlert} = useDisclosure();
     const [editId, setEditId] = useState(null);
 
-    const schema =  yup.object().shape({
+    const schema = yup.object({
         isValid: yup.boolean().oneOf([true, false], 'Isi harus valid atau tidak valid'),
-        telaahNotes: yup.string().required('Harus diisi'),   
-    }).required()
+        validationNotes: yup.string().when('isValid', (isValid, schema) => {
+            if (isValid[0] === true) {
+                return schema.notRequired();
+            }
+            return schema.required('Catatan harus diisi jika dokumen tidak valid');
+        }),
+    }).required();
 
-    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({resolver: yupResolver(schema)});
+    const { register, handleSubmit, reset, watch, formState: { errors, isSubmitting } } = useForm({resolver: yupResolver(schema)});
     const { data: user } = useAuth()
 
     async function onSubmitForm(data) {
         try {
-            console.log(editId);
-            data.documentId = editId;
+            data.documenttelaahId = editId;
             console.log(data);
-            // await postFetcher('/api/documents/validateTelaah', data);
-            // mutate()
+            await postFetcher('/api/documents/validateTelaah', data);
+            mutate()
             toast.success('Status dokumen berhasil diubah!');
             onCloseForm();
         } catch (error) {
@@ -79,6 +83,7 @@ export default function useDucumentReviewForm({ mutate }) {
             handleSubmit,
             formState: {errors,isSubmitting}
         },
+        watch,
         onCloseForm, 
         onSubmitForm,
         onClickEdit,

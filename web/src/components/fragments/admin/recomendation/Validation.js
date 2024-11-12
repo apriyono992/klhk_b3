@@ -8,13 +8,14 @@ export default function Validation({ data, isLoading, mutate }) {
     const { 
         modalForm: { isOpenModalForm, onOpenChangeModalForm },
         modalAlert: { isOpenModalAlert, onOpenChangeModalAlert },
-        hookForm: { register, handleSubmit, formState: { errors, isSubmitting } },
+        hookForm: { register, handleSubmit, watch, formState: { errors, isSubmitting } },
         onCloseForm,
         onSubmitForm,
         onClickEdit,
-        onValidate 
+        onValidate,
     } = useValidationForm({ mutate });
-
+    // Watch for changes on 'isValid' checkbox
+    const isValid = watch('isValid');
     const areAllDocumentValid = data?.documents?.every(
         document => document.isValid
     );
@@ -75,8 +76,10 @@ export default function Validation({ data, isLoading, mutate }) {
                                             Dokumen valid
                                         </Checkbox>
                                         <Textarea
-                                            {...register('validationNotes')}
-                                            isRequired
+                                            {...register('validationNotes', {
+                                                required: !isValid ? 'Catatan harus diisi jika dokumen tidak valid' : false,
+                                            })}
+                                            isRequired={!isValid}
                                             variant="faded" 
                                             type="text" 
                                             label="Catatan" 

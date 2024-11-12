@@ -7,6 +7,7 @@ import { UpdateDraftSuratPersetujuanImportDto } from 'src/models/updateDraftSura
 import { CreateDraftSuratExplicitConsentDto } from 'src/models/createDraftExplicitConsentDto';
 import { UpdateDraftSuratExplicitConsentDto } from 'src/models/updateDraftExplicitConsentDto';
 import { JenisExplicitConsent } from 'src/models/enums/jenisExplicitConsent';
+import { TipeSuratNotifikasi } from 'src/models/enums/tipeSuratNotifikasi';
 
 @Injectable()
 export class DraftSuratNotifikasiService {
@@ -29,7 +30,14 @@ export class DraftSuratNotifikasiService {
               tanggalPengiriman: dto.tanggalPengiriman || undefined,
               pejabat: dto.pejabatId ? { connect: { id: dto.pejabatId } } : undefined,
               notifikasi: dto.notifikasiId ? { connect: { id: dto.notifikasiId } } : null,
-              tembusan: dto.tembusanIds ? { connect: dto.tembusanIds.map((tembusanId) => ({ id: tembusanId })) } : undefined,
+              NotifikasiTembusan: {
+                create: dto.tembusanIds
+                      ? dto.tembusanIds.map((tembusanId, index) => ({
+                            dataTembusanId: tembusanId,
+                            index: index,
+                        }))
+                      : [],
+              },
               createdAt: new Date(),
               updatedAt: new Date(),
             },
@@ -84,9 +92,16 @@ export class DraftSuratNotifikasiService {
               emailPenerima: dto.emailPenerima ?? existingDraftSurat.emailPenerima,
               tanggalPengiriman: dto.tanggalPengiriman ?? existingDraftSurat.tanggalPengiriman,
               pejabat: dto.pejabatId ? { connect: { id: dto.pejabatId } } : undefined,
-              tembusan: dto.tembusanIds
-                ? { set: dto.tembusanIds.map((tembusanId) => ({ id: tembusanId })) }
-                : undefined,
+              NotifikasiTembusan: {
+                deleteMany: dto.tembusanIds
+                ?  {} : undefined, // Remove existing tembusan entries
+                create: dto.tembusanIds
+                      ? dto.tembusanIds.map((tembusanId, index) => ({
+                            dataTembusanId: tembusanId,
+                            index: index,
+                        }))
+                      : undefined,
+              },
               updatedAt: new Date(),
               referenceNumber: dto.referenceNumber ?? existingDraftSurat.notifikasi.referenceNumber,
               negaraAsal: dto.negaraAsal ?? existingDraftSurat.notifikasi.negaraAsal,
@@ -132,7 +147,15 @@ export class DraftSuratNotifikasiService {
               emailPenerima: dto.emailPenerima || undefined,
               tanggalPengiriman: dto.tanggalPengiriman || undefined,
               pejabat: dto.pejabatId ? { connect: { id: dto.pejabatId } } : undefined,
-              tembusan: dto.tembusanIds ? { connect: dto.tembusanIds.map((tembusanId) => ({ id: tembusanId })) } : undefined,
+              NotifikasiTembusan: {
+                create: dto.tembusanIds
+                      ? dto.tembusanIds.map((tembusanId, index) => ({
+                            dataTembusanId: tembusanId,
+                            index: index,
+                        }))
+                      : [],
+              },
+              notifikasi: dto.notifikasiId ? { connect: { id: dto.notifikasiId } } : null,
               createdAt: new Date(),
               updatedAt: new Date(),
             },
@@ -175,7 +198,7 @@ export class DraftSuratNotifikasiService {
       }
 
       const updatedDraftSurat = await prisma.persetujuanImport.update({
-        where: { id },
+        where: { id: existingDraftSurat.PersetujuanImport[0].id },
         data: {
           baseSurat: {
             update: {
@@ -186,12 +209,28 @@ export class DraftSuratNotifikasiService {
               emailPenerima: dto.emailPenerima ?? existingDraftSurat.emailPenerima,
               tanggalPengiriman: dto.tanggalPengiriman ?? existingDraftSurat.tanggalPengiriman,
               pejabat: dto.pejabatId ? { connect: { id: dto.pejabatId } } : undefined,
-              tembusan: dto.tembusanIds ? { set: dto.tembusanIds.map((tembusanId) => ({ id: tembusanId })) } : undefined,
+              NotifikasiTembusan: {
+                deleteMany: dto.tembusanIds
+                ? {} : undefined, // Remove existing tembusan entries
+                create: dto.tembusanIds
+                      ? dto.tembusanIds.map((tembusanId, index) => ({
+                            dataTembusanId: tembusanId,
+                            index: index,
+                        }))
+                      : undefined,
+              },
               updatedAt: new Date(),
               referenceNumber: dto.referenceNumber ?? existingDraftSurat.notifikasi.referenceNumber,
               negaraAsal: dto.negaraAsal ?? existingDraftSurat.notifikasi.negaraAsal,
             },
           },
+          regulation: dto.regulation ?? existingDraftSurat.PersetujuanImport[0].regulation,
+          nomorSuratKebenaranImport: dto.nomorSuratKebenaranImport ?? existingDraftSurat.PersetujuanImport[0].nomorSuratKebenaranImport,
+          tanggalKebenaranImport: dto.tanggalSuratKebenaranImport ?? existingDraftSurat.PersetujuanImport[0].tanggalKebenaranImport,
+          nomorSuratPerusahaanPengimpor: dto.nomorSuratPerusahaanPengimpor ?? existingDraftSurat.PersetujuanImport[0].nomorSuratPerusahaanPengimpor,
+          tanggalDiterimaKebenaranImport: dto.tanggalDiterimaKebenaranImport ?? existingDraftSurat.PersetujuanImport[0].tanggalDiterimaKebenaranImport,
+          nomorSuratExplicitConsent: dto.nomorSuratExplicitConsent ?? existingDraftSurat.PersetujuanImport[0].nomorSuratExplicitConsent,
+          tanggalSuratExplicitConsent: dto.tanggalSuratExplicitConsent ?? existingDraftSurat.PersetujuanImport[0].tanggalSuratExplicitConsent,
           point1: dto.customPoint1 ?? existingDraftSurat.PersetujuanImport[0].point1,
           point2: dto.customPoint2 ?? existingDraftSurat.PersetujuanImport[0].point2,
           point3: dto.customPoint3 ?? existingDraftSurat.PersetujuanImport[0].point3,
@@ -222,7 +261,9 @@ export class DraftSuratNotifikasiService {
       include: {
         dataBahanB3: true, // Include chemical details
         pejabat: true, // Include pejabat details
-        tembusan: true, // Include tembusan details
+        NotifikasiTembusan: {include:{
+          DataTembusan: true, // Include tembusan details
+        }}, // Include tembusan details
         ExplicitConsent: {include: {
           ExplicitConsentDetails: true, // Include related ExplicitConsentDetails
         }}, // Include Explicit Consent specific fields
@@ -248,7 +289,7 @@ export class DraftSuratNotifikasiService {
     return await this.prisma.$transaction(async (prisma) => {
       // Fetch an active PDFHeader
       const activePdfHeader = await prisma.pDFHeader.findFirst({
-        where: { status: 'active' },
+        where: { status: 'Active' },
       });
 
       if (!activePdfHeader) {
@@ -259,27 +300,27 @@ export class DraftSuratNotifikasiService {
         data: {
           baseSurat: {
             create: {
-              nomorSurat: dto.nomorSurat || null,
-              tanggalSurat: dto.tanggalSurat || null,
+              nomorSurat: dto.nomorSurat || undefined,
+              tanggalSurat: dto.tanggalSurat || undefined,
               tipeSurat: dto.tipeSuratNotifikasi,
-              kodeDBKlh: dto.kodeDBKlh || null,
-              sifatSurat: dto.sifatSurat || null,
-              emailPenerima: dto.emailPenerima || null,
-              referenceNumber: dto.referenceNumber || null,
-              negaraAsal: dto.negaraAsal || null,
+              kodeDBKlh: dto.kodeDBKlh || undefined,
+              sifatSurat: dto.sifatSurat || undefined,
+              emailPenerima: dto.emailPenerima || undefined,
+              referenceNumber: dto.referenceNumber || undefined,
+              negaraAsal: dto.negaraAsal || undefined,
+              notifikasi: dto.notifikasiId ? { connect: { id: dto.notifikasiId } } : null,
               createdAt: new Date(),
               updatedAt: new Date(),
             },
           },
-          point1: dto.customPoint1 || null,
-          point2: dto.customPoint2 || null,
-          point3: dto.customPoint3 || null,
-          point4: dto.customPoint4 || null,
-          namaExporter: dto.namaExporter || null,
-          tujuanImport: dto.tujuanImport || null,
-          additionalInfo: dto.additionalInfo || null,
+          point1: dto.customPoint1 || undefined,
+          point2: dto.customPoint2 || undefined,
+          point3: dto.customPoint3 || undefined,
+          point4: dto.customPoint4 || undefined,
+          namaExporter: dto.namaExporter || undefined,
+          tujuanImport: dto.tujuanImport || undefined,
           pdfHeader:  { connect: { id: activePdfHeader.id } } , // Link to the active PDFHeader
-          validitasSurat: dto.validitasSurat || null,
+          validitasSurat: dto.validitasSurat || undefined,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
@@ -292,8 +333,17 @@ export class DraftSuratNotifikasiService {
   async updateDraftSuratExplicitConsent(id: string, dto: UpdateDraftSuratExplicitConsentDto) {
     return await this.prisma.$transaction(async (prisma) => {
       // Fetch the existing draft
-      const existingDraftSurat = await prisma.explicitConsent.findUnique({
+      const existingDraftSurat = await prisma.baseSuratNotfikasi.findUnique({
         where: { id },
+        include: { notifikasi: true, ExplicitConsent: {include: {pdfHeader: true}} },
+      });
+
+      if (!existingDraftSurat) {
+        throw new NotFoundException(`Draft Surat with ID ${id} not found`);
+      }
+
+      const existingExplitcit = await prisma.explicitConsent.findUnique({
+        where: { id: existingDraftSurat.ExplicitConsent[0].id },
         include: {
           baseSurat: true,
           pdfHeader: true,
@@ -301,15 +351,11 @@ export class DraftSuratNotifikasiService {
         },
       });
   
-      if (!existingDraftSurat) {
-        throw new NotFoundException(`Draft Surat with ID ${id} not found`);
-      }
-  
       // Fetch an active PDFHeader if not already linked or if explicitly provided in DTO
       let pdfHeaderUpdate = {};
-      if (!existingDraftSurat.pdfHeader || dto.pdfHeaderId) {
+      if (!existingExplitcit.pdfHeader || dto.pdfHeaderId) {
         const activePdfHeader = await prisma.pDFHeader.findFirst({
-          where: { status: 'active' },
+          where: { status: 'Active' },
         });
   
         if (!activePdfHeader) {
@@ -321,40 +367,40 @@ export class DraftSuratNotifikasiService {
   
       // Handle ECHA-specific logic: create or update ExplicitConsentDetails
       let echaDetailsUpdate = {};
-      if (dto.jenisExplicitConsent === JenisExplicitConsent.ECHA) {
-        if (existingDraftSurat.ExplicitConsentDetails?.length) {
+      if (existingDraftSurat.tipeSurat === TipeSuratNotifikasi.EXPLICIT_CONSENT_AND_PERSETUJUAN_ECHA) {
+        if (existingExplitcit.ExplicitConsentDetails?.length) {
           // Update existing ExplicitConsentDetails
           echaDetailsUpdate = {
             ExplicitConsentDetails: {
               update: {
-                where: { explicitConsentId: existingDraftSurat.id },
+                where: { id: existingExplitcit.ExplicitConsentDetails[0]?.id },
                 data: {
-                  nameOfChemicalSubstance: dto.nameOfChemicalSubstance ?? existingDraftSurat.ExplicitConsentDetails[0]?.nameOfChemicalSubstance,
-                  casNumberSubstance: dto.casNumberSubstance ?? existingDraftSurat.ExplicitConsentDetails[0]?.casNumberSubstance,
-                  nameOfPreparation: dto.nameOfPreparation ?? existingDraftSurat.ExplicitConsentDetails[0]?.nameOfPreparation,
-                  nameOfChemicalInPreparation: dto.nameOfChemicalInPreparation ?? existingDraftSurat.ExplicitConsentDetails[0]?.nameOfChemicalInPreparation,
-                  concentrationInPreparation: dto.concentrationInPreparation ?? existingDraftSurat.ExplicitConsentDetails[0]?.concentrationInPreparation,
-                  casNumberPreparation: dto.casNumberPreparation ?? existingDraftSurat.ExplicitConsentDetails[0]?.casNumberPreparation,
-                  consentToImport: dto.consentToImport ?? existingDraftSurat.ExplicitConsentDetails[0]?.consentToImport,
-                  useCategoryPesticide: dto.useCategoryPesticide ?? existingDraftSurat.ExplicitConsentDetails[0]?.useCategoryPesticide,
-                  useCategoryIndustrial: dto.useCategoryIndustrial ?? existingDraftSurat.ExplicitConsentDetails[0]?.useCategoryIndustrial,
-                  consentForOtherPreparations: dto.consentForOtherPreparations ?? existingDraftSurat.ExplicitConsentDetails[0]?.consentForOtherPreparations,
-                  allowedConcentrations: dto.allowedConcentrations ?? existingDraftSurat.ExplicitConsentDetails[0]?.allowedConcentrations,
-                  consentForPureSubstance: dto.consentForPureSubstance ?? existingDraftSurat.ExplicitConsentDetails[0]?.consentForPureSubstance,
-                  hasRestrictions: dto.hasRestrictions ?? existingDraftSurat.ExplicitConsentDetails[0]?.hasRestrictions,
-                  restrictionDetails: dto.restrictionDetails ?? existingDraftSurat.ExplicitConsentDetails[0]?.restrictionDetails,
-                  isTimeLimited: dto.isTimeLimited ?? existingDraftSurat.ExplicitConsentDetails[0]?.isTimeLimited,
-                  timeLimitDetails: dto.timeLimitDetails ?? existingDraftSurat.ExplicitConsentDetails[0]?.timeLimitDetails,
-                  sameTreatment: dto.sameTreatment ?? existingDraftSurat.ExplicitConsentDetails[0]?.sameTreatment,
-                  differentTreatmentDetails: dto.differentTreatmentDetails ?? existingDraftSurat.ExplicitConsentDetails[0]?.differentTreatmentDetails,
-                  otherRelevantInformation: dto.otherRelevantInformation ?? existingDraftSurat.ExplicitConsentDetails[0]?.otherRelevantInformation,
-                  dnaInstitutionName: dto.dnaInstitutionName ?? existingDraftSurat.ExplicitConsentDetails[0]?.dnaInstitutionName,
-                  dnaInstitutionAddress: dto.dnaInstitutionAddress ?? existingDraftSurat.ExplicitConsentDetails[0]?.dnaInstitutionAddress,
-                  dnaContactName: dto.dnaContactName ?? existingDraftSurat.ExplicitConsentDetails[0]?.dnaContactName,
-                  dnaTelephone: dto.dnaTelephone ?? existingDraftSurat.ExplicitConsentDetails[0]?.dnaTelephone,
-                  dnaTelefax: dto.dnaTelefax ?? existingDraftSurat.ExplicitConsentDetails[0]?.dnaTelefax,
-                  dnaEmail: dto.dnaEmail ?? existingDraftSurat.ExplicitConsentDetails[0]?.dnaEmail,
-                  dnaDate: dto.dnaDate ?? existingDraftSurat.ExplicitConsentDetails[0]?.dnaDate,
+                  nameOfChemicalSubstance: dto.nameOfChemicalSubstance ?? existingExplitcit.ExplicitConsentDetails[0]?.nameOfChemicalSubstance,
+                  casNumberSubstance: dto.casNumberSubstance ?? existingExplitcit.ExplicitConsentDetails[0]?.casNumberSubstance,
+                  nameOfPreparation: dto.nameOfPreparation ?? existingExplitcit.ExplicitConsentDetails[0]?.nameOfPreparation,
+                  nameOfChemicalInPreparation: dto.nameOfChemicalInPreparation ?? existingExplitcit.ExplicitConsentDetails[0]?.nameOfChemicalInPreparation,
+                  concentrationInPreparation: dto.concentrationInPreparation ?? existingExplitcit.ExplicitConsentDetails[0]?.concentrationInPreparation,
+                  casNumberPreparation: dto.casNumberPreparation ?? existingExplitcit.ExplicitConsentDetails[0]?.casNumberPreparation,
+                  consentToImport: dto.consentToImport ?? existingExplitcit.ExplicitConsentDetails[0]?.consentToImport,
+                  useCategoryPesticide: dto.useCategoryPesticide ?? existingExplitcit.ExplicitConsentDetails[0]?.useCategoryPesticide,
+                  useCategoryIndustrial: dto.useCategoryIndustrial ?? existingExplitcit.ExplicitConsentDetails[0]?.useCategoryIndustrial,
+                  consentForOtherPreparations: dto.consentForOtherPreparations ?? existingExplitcit.ExplicitConsentDetails[0]?.consentForOtherPreparations,
+                  allowedConcentrations: dto.allowedConcentrations ?? existingExplitcit.ExplicitConsentDetails[0]?.allowedConcentrations,
+                  consentForPureSubstance: dto.consentForPureSubstance ?? existingExplitcit.ExplicitConsentDetails[0]?.consentForPureSubstance,
+                  hasRestrictions: dto.hasRestrictions ?? existingExplitcit.ExplicitConsentDetails[0]?.hasRestrictions,
+                  restrictionDetails: dto.restrictionDetails ?? existingExplitcit.ExplicitConsentDetails[0]?.restrictionDetails,
+                  isTimeLimited: dto.isTimeLimited ?? existingExplitcit.ExplicitConsentDetails[0]?.isTimeLimited,
+                  timeLimitDetails: dto.timeLimitDetails ?? existingExplitcit.ExplicitConsentDetails[0]?.timeLimitDetails,
+                  sameTreatment: dto.sameTreatment ?? existingExplitcit.ExplicitConsentDetails[0]?.sameTreatment,
+                  differentTreatmentDetails: dto.differentTreatmentDetails ?? existingExplitcit.ExplicitConsentDetails[0]?.differentTreatmentDetails,
+                  otherRelevantInformation: dto.otherRelevantInformation ?? existingExplitcit.ExplicitConsentDetails[0]?.otherRelevantInformation,
+                  dnaInstitutionName: dto.dnaInstitutionName ?? existingExplitcit.ExplicitConsentDetails[0]?.dnaInstitutionName,
+                  dnaInstitutionAddress: dto.dnaInstitutionAddress ?? existingExplitcit.ExplicitConsentDetails[0]?.dnaInstitutionAddress,
+                  dnaContactName: dto.dnaContactName ?? existingExplitcit.ExplicitConsentDetails[0]?.dnaContactName,
+                  dnaTelephone: dto.dnaTelephone ?? existingExplitcit.ExplicitConsentDetails[0]?.dnaTelephone,
+                  dnaTelefax: dto.dnaTelefax ?? existingExplitcit.ExplicitConsentDetails[0]?.dnaTelefax,
+                  dnaEmail: dto.dnaEmail ?? existingExplitcit.ExplicitConsentDetails[0]?.dnaEmail,
+                  dnaDate: dto.dnaDate ?? existingExplitcit.ExplicitConsentDetails[0]?.dnaDate,
                 },
               },
             },
@@ -364,32 +410,32 @@ export class DraftSuratNotifikasiService {
           echaDetailsUpdate = {
             ExplicitConsentDetails: {
               create: {
-                nameOfChemicalSubstance: dto.nameOfChemicalSubstance || null,
-                casNumberSubstance: dto.casNumberSubstance || null,
-                nameOfPreparation: dto.nameOfPreparation || null,
-                nameOfChemicalInPreparation: dto.nameOfChemicalInPreparation || null,
-                concentrationInPreparation: dto.concentrationInPreparation || null,
-                casNumberPreparation: dto.casNumberPreparation || null,
-                consentToImport: dto.consentToImport || null,
-                useCategoryPesticide: dto.useCategoryPesticide || null,
-                useCategoryIndustrial: dto.useCategoryIndustrial || null,
-                consentForOtherPreparations: dto.consentForOtherPreparations || null,
-                allowedConcentrations: dto.allowedConcentrations || null,
-                consentForPureSubstance: dto.consentForPureSubstance || null,
-                hasRestrictions: dto.hasRestrictions || null,
-                restrictionDetails: dto.restrictionDetails || null,
-                isTimeLimited: dto.isTimeLimited || null,
-                timeLimitDetails: dto.timeLimitDetails || null,
-                sameTreatment: dto.sameTreatment || null,
-                differentTreatmentDetails: dto.differentTreatmentDetails || null,
-                otherRelevantInformation: dto.otherRelevantInformation || null,
-                dnaInstitutionName: dto.dnaInstitutionName || null,
-                dnaInstitutionAddress: dto.dnaInstitutionAddress || null,
-                dnaContactName: dto.dnaContactName || null,
-                dnaTelephone: dto.dnaTelephone || null,
-                dnaTelefax: dto.dnaTelefax || null,
-                dnaEmail: dto.dnaEmail || null,
-                dnaDate: dto.dnaDate || null,
+                nameOfChemicalSubstance: dto.nameOfChemicalSubstance || undefined,
+                casNumberSubstance: dto.casNumberSubstance || undefined,
+                nameOfPreparation: dto.nameOfPreparation || undefined,
+                nameOfChemicalInPreparation: dto.nameOfChemicalInPreparation || undefined,
+                concentrationInPreparation: dto.concentrationInPreparation || undefined,
+                casNumberPreparation: dto.casNumberPreparation || undefined,
+                consentToImport: dto.consentToImport || undefined,
+                useCategoryPesticide: dto.useCategoryPesticide || undefined,
+                useCategoryIndustrial: dto.useCategoryIndustrial || undefined,
+                consentForOtherPreparations: dto.consentForOtherPreparations || undefined,
+                allowedConcentrations: dto.allowedConcentrations || undefined,
+                consentForPureSubstance: dto.consentForPureSubstance || undefined,
+                hasRestrictions: dto.hasRestrictions || undefined,
+                restrictionDetails: dto.restrictionDetails || undefined,
+                isTimeLimited: dto.isTimeLimited || undefined,
+                timeLimitDetails: dto.timeLimitDetails || undefined,
+                sameTreatment: dto.sameTreatment || undefined,
+                differentTreatmentDetails: dto.differentTreatmentDetails || undefined,
+                otherRelevantInformation: dto.otherRelevantInformation || undefined,
+                dnaInstitutionName: dto.dnaInstitutionName || undefined,
+                dnaInstitutionAddress: dto.dnaInstitutionAddress || undefined,
+                dnaContactName: dto.dnaContactName || undefined,
+                dnaTelephone: dto.dnaTelephone || undefined,
+                dnaTelefax: dto.dnaTelefax || undefined,
+                dnaEmail: dto.dnaEmail || [],
+                dnaDate: dto.dnaDate || undefined,
               },
             },
           };
@@ -398,28 +444,41 @@ export class DraftSuratNotifikasiService {
   
       // Update the Explicit Consent Draft
       const updatedDraftSurat = await prisma.explicitConsent.update({
-        where: { id },
+        where: { id: existingExplitcit.id },
         data: {
           baseSurat: {
             update: {
-              nomorSurat: dto.nomorSurat ?? existingDraftSurat.baseSurat.nomorSurat,
-              tanggalSurat: dto.tanggalSurat ?? existingDraftSurat.baseSurat.tanggalSurat,
-              kodeDBKlh: dto.kodeDBKlh ?? existingDraftSurat.baseSurat.kodeDBKlh,
-              sifatSurat: dto.sifatSurat ?? existingDraftSurat.baseSurat.sifatSurat,
-              emailPenerima: dto.emailPenerima ?? existingDraftSurat.baseSurat.emailPenerima,
-              referenceNumber: dto.referenceNumber ?? existingDraftSurat.baseSurat.referenceNumber,
-              negaraAsal: dto.negaraAsal ?? existingDraftSurat.baseSurat.negaraAsal,
+              nomorSurat: dto.nomorSurat ?? existingExplitcit.baseSurat.nomorSurat,
+              tanggalSurat: dto.tanggalSurat ?? existingExplitcit.baseSurat.tanggalSurat,
+              kodeDBKlh: dto.kodeDBKlh ?? existingExplitcit.baseSurat.kodeDBKlh,
+              sifatSurat: dto.sifatSurat ?? existingExplitcit.baseSurat.sifatSurat,
+              emailPenerima: dto.emailPenerima ?? existingExplitcit.baseSurat.emailPenerima,
+              referenceNumber: dto.referenceNumber ?? existingExplitcit.baseSurat.referenceNumber,
+              negaraAsal: dto.negaraAsal ?? existingExplitcit.baseSurat.negaraAsal,
+              pejabat: dto.pejabatId ? { connect: { id: dto.pejabatId } } : undefined,
+              NotifikasiTembusan: {
+                deleteMany: dto.tembusanIds
+                ?  {} : undefined, // Remove existing tembusan entries
+                create: dto.tembusanIds
+                      ? dto.tembusanIds.map((tembusanId, index) => ({
+                            dataTembusanId: tembusanId,
+                            index: index,
+                        }))
+                      : undefined,
+              },
               updatedAt: new Date(),
             },
           },
-          point1: dto.customPoint1 ?? existingDraftSurat.point1,
-          point2: dto.customPoint2 ?? existingDraftSurat.point2,
-          point3: dto.customPoint3 ?? existingDraftSurat.point3,
-          point4: dto.customPoint4 ?? existingDraftSurat.point4,
-          namaExporter: dto.namaExporter ?? existingDraftSurat.namaExporter,
-          tujuanImport: dto.tujuanImport ?? existingDraftSurat.tujuanImport,
-          additionalInfo: dto.additionalInfo ?? existingDraftSurat.additionalInfo,
-          validitasSurat: dto.validitasSurat ?? existingDraftSurat.validitasSurat,
+          point1: dto.customPoint1 ?? existingExplitcit.point1,
+          point2: dto.customPoint2 ?? existingExplitcit.point2,
+          point3: dto.customPoint3 ?? existingExplitcit.point3,
+          point4: dto.customPoint4 ?? existingExplitcit.point4,
+          namaExporter: dto.namaExporter ?? existingExplitcit.namaExporter,
+          tujuanImport: dto.tujuanImport ?? existingExplitcit.tujuanImport,
+          namaImpoter: dto.namaImpoter ?? existingExplitcit.namaImpoter,
+          tujuanPenggunaan: dto.tujuanPenggunaan ?? existingExplitcit.tujuanPenggunaan,
+          tujuanSurat: dto.tujuanSurat ?? existingExplitcit.tujuanSurat,
+          validitasSurat: dto.validitasSurat ?? existingExplitcit.validitasSurat,
           updatedAt: new Date(),
           ...pdfHeaderUpdate,  // Link to the active PDFHeader if not already linked
           ...echaDetailsUpdate, // Handle ECHA-specific details creation or update

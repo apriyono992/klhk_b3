@@ -13,65 +13,197 @@
       text-align: center;
       margin-bottom: 20px;
     }
-    .content {
-      margin: 20px;
+    .header img {
+      width: 80px;
+      vertical-align: middle;
     }
-    .signature {
+    .header .title {
+      display: inline-block;
+      width: calc(100% - 100px);
+      vertical-align: middle;
+      text-align: center;
+      line-height: 1.2;
+    }
+    .header h3, .header h4 {
+      margin: 5px 0;
+      font-weight: bold;
+    }
+    .header h3 {
+      font-size: 18px;
+    }
+    .header h4 {
+      font-size: 16px;
+    }
+    .header p {
+      margin: 2px 0;
+      font-size: 12px;
+    }
+    .header hr {
+      border: none;
+      border-top: 2px solid black;
+      margin-top: 10px;
+    }
+    .details {
+      display: flex;
+      justify-content: space-between;
+    }
+    .details-left {
+      width: 70%;
+      display: flex;
+      flex-direction: column;
+    }
+    .details-row {
+      display: flex;
+    }
+    .details-label {
+      width: 80px;
+    }
+    .details-separator {
+      width: 10px;
+      text-align: center;
+    }
+    .details-value {
+      flex: 1;
+    }
+    .details-right {
+      width: 30%;
+      text-align: right;
+      vertical-align: top;
+    }
+    .content {
+      margin-top: 20px;
+    }
+    .content p {
+      margin: 0;
+    }
+    .content ol {
+      margin-left: 20px;
+      padding-left: 15px;
+    }
+    .content ol li {
+      margin-bottom: 10px;
+      text-align: justify;
+    }
+    .content ol li ul {
+      list-style-type: lower-alpha;
+      margin-top: 5px;
+      padding-left: 20px;
+    }
+    .content ol li ul li {
+      margin-bottom: 5px;
+      text-align: justify;
+    }
+    .content .emphasis {
+      font-style: italic;
+    }
+    .signature-container {
+      display: flex;
+      justify-content: flex-end;
       margin-top: 60px;
     }
+    .signature {
+      text-align: left;
+      margin-right: 50px; /* Adjust to align with other content if needed */
+    }
+    .position {
+      line-height: 1.2px;
+    }
+    .signature-space {
+      margin-bottom: 120px; /* Space for the signature */
+    }
+    .name {
+      line-height: 1.2;
+    }
     .tembusan {
-      margin-top: 40px;
+      margin-top: 20px; /* Adjust this if more space is needed */
+    }
+    .tembusan p {
+      margin-bottom: 2px;
+    }
+    .tembusan ol {
+      margin: 0;
+      padding-left: 20px;
     }
   </style>
 </head>
 <body>
 
   <div class="header">
-    <h1>KEMENTERIAN LINGKUNGAN HIDUP DAN KEHUTANAN</h1>
-    <h2>DIREKTORAT JENDERAL PENGELOLAAN SAMPAH, LIMBAH DAN BAHAN BERBAHAYA DAN BERACUN</h2>
-    <p>Jl. Gatot Subroto, Jakarta 10270</p>
-    <p>Telp. 021-5704 501/04 Ext. 4112, Fax. 021-5790 2750</p>
+    <img src="<%= base64Image %>" alt="Logo KLHK">
+    <div class="title">
+      <h3>KEMENTERIAN LINGKUNGAN HIDUP DAN KEHUTANAN</h3>
+      <h4>DIREKTORAT JENDERAL PENGELOLAAN SAMPAH, LIMBAH DAN BAHAN BERBAHAYA DAN BERACUN</h4>
+      <p>Gedung Manggala Wanabakti Blok 4 Lantai 5 - Jl. Gatot Subroto, Jakarta 10270</p>
+      <p>Telp. 021-5704 501/04 Ext. 4112, Fax. 021-5790 2750; Indonesia – Kotak Pos 6505</p>
+    </div>
+    <hr>
+  </div>
+
+  <div class="details">
+    <div class="details-left">
+      <div class="details-row">
+        <div class="details-label">Nomor</div>
+        <div class="details-separator">:</div>
+        <div class="details-value"><%= nomorSurat %></div>
+      </div>
+      <div class="details-row">
+        <div class="details-label">Sifat</div>
+        <div class="details-separator">:</div>
+        <div class="details-value"><%= sifatSurat %></div>
+      </div>
+      <div class="details-row">
+        <div class="details-label">Lampiran</div>
+        <div class="details-separator">:</div>
+        <div class="details-value">1 (satu) berkas</div>
+      </div>
+      <div class="details-row">
+        <div class="details-label">Hal</div>
+        <div class="details-separator">:</div>
+        <div class="details-value">Konfirmasi Kebenaran Impor<br>Bahan Berbahaya dan Beracun</div>
+      </div>
+    </div>
+    <div class="details-right">
+      <p><%= tanggalSurat || 'N/A' %></p>
+    </div>
   </div>
 
   <div class="content">
-    <p><strong>Nomor:</strong> <%= nomorSurat %></p>
-    <p><strong>Sifat:</strong> <%= sifatSurat %></p>
-    <p><strong>Lampiran:</strong> 1 (satu) berkas</p>
-    <p><strong>Hal:</strong> Konfirmasi Kebenaran Impor Bahan Berbahaya dan Beracun</p>
-
-    <p>Yth. Direktur <%= company.name %></p>
+    <p>Yth. Direktur <span class="emphasis"><%= company?.name %></span></p>
     <p>di Tempat</p>
 
     <p>Bersama ini dengan hormat disampaikan hal-hal sebagai berikut:</p>
     <ol>
-      <li><%= customPoint1 %></li>
-      <li><%= customPoint2 %></li>
+      <li>Email dari <span class="emphasis"><%= draftSurat?.namaPengirimNotifikasi %></span>, tentang Export of <span class="emphasis"><%= bahanKimia %></span>;</li>
+      <li>Perusahaan Saudara yang berencana untuk mengimpor bahan kimia <span class="emphasis"><%= namaDagang %></span> <strong>(Reference Number <%= draftSurat?.notifikasi?.referenceNumber %>)</strong>, dari <span class="emphasis"><%= perusahaanAsal %></span> yang berkedudukan di <span class="emphasis"><%= negaraAsal %></span>;</li>
       <li>Agar Saudara segera menyampaikan:
         <ul>
           <li>Surat resmi konfirmasi rencana impor dan rencana penggunaan bahan kimia tersebut</li>
           <li>Melengkapi formulir konfirmasi impor B3 sesuai format terlampir</li>
           <li>Fotokopi Surat Keputusan Menteri Pertanian tentang merk terdaftar</li>
-          <li>Dikirimkan paling lambat tanggal <%= tanggalPengiriman %></li>
+          <li>Dikirimkan paling lambat tanggal <strong><%= tanggalPengiriman %></strong> melalui email ke <span class="emphasis">notifikasi_b3@yahoo.com</span></li>
         </ul>
       </li>
     </ol>
+    <p>Atas perhatian dan kerjasama yang baik diucapkan terima kasih.</p>
   </div>
 
-  <div class="signature">
-    <p>a.n. Direktur Jenderal,</p>
-    <p>Direktur Pengelolaan B3</p>
-    <br>
-    <p><strong><%= pejabat?.nama || 'N/A' %></strong></p>
-    <p>NIP. <%= pejabat?.nip || 'N/A' %></p>
+  <div class="signature-container">
+    <div class="signature">
+      <p class="position">a.n. Direktur Jenderal,</p>
+      <p class="position">Direktur Pengelolaan B3</p>
+      <p class="signature-space"></p> <!-- Space for signature -->
+      <p class="name"><%= pejabat?.nama || 'Sugasri' %></p>
+      <p class="name">NIP. <%= pejabat?.nip || '19690827 199803 1 001' %></p>
+    </div>
   </div>
 
   <div class="tembusan">
-    <p><strong>Tembusan:</strong></p>
-    <ul>
-      <% tembusan.forEach(t => { %>
-        <li><%= t.nama %> - <%= t.tipe %></li>
+    <p>Tembusan:</p>
+    <ol>
+      <% tembusan.forEach((t, index) => { %>
+        <li><%= t.nama %></li>
       <% }) %>
-    </ul>
+    </ol>
   </div>
 
 </body>

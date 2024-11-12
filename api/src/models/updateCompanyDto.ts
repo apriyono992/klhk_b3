@@ -1,4 +1,5 @@
-import { IsString, IsOptional, IsArray } from 'class-validator';
+import { IsString, IsOptional, IsArray, IsEnum } from 'class-validator';
+import { TipePerusahaan } from './enums/tipePerusahaan';
 
 export class UpdateCompanyDto {
   @IsOptional()
@@ -45,4 +46,9 @@ export class UpdateCompanyDto {
   @IsOptional()
   @IsString()
   bidangUsaha?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsEnum(TipePerusahaan, { each: true })
+  tipePerusahaan?: TipePerusahaan[];
 }

@@ -288,6 +288,15 @@ model Province {
 
   @@map("reg_provinces") // Maps to the existing table "reg_provinces"
   Location  Location[]
+  LocationDetails LocationDetails[]
+  DataSupplier DataSupplier[]
+  DataCustomer DataCustomer[]
+  DataTransporter DataTransporter[]
+  PerusahaanAsalMuat PerusahaanAsalMuat[]
+  PerusahaanTujuanBongkar PerusahaanTujuanBongkar[]
+  DataSupplierOnPelaporanPenggunaanB3Final DataSupplierOnPelaporanPenggunaanB3Final[]
+  DataPerusahaanAsalMuatOnPengakutanDetailFinal DataPerusahaanAsalMuatOnPengakutanDetailFinal[]
+  DataPerusahaanTujuanBongkarOnPengakutanDetailFinal DataPerusahaanTujuanBongkarOnPengakutanDetailFinal[]
 }
 
 model Regencies {
@@ -300,6 +309,15 @@ model Regencies {
   @@map("reg_regencies") // Maps to the existing table "reg_regencies"
   Location Location[]
   users    User[]
+  LocationDetails LocationDetails[]
+  DataSupplier DataSupplier[]
+  DataCustomer DataCustomer[]
+  DataTransporter DataTransporter[]
+  PerusahaanAsalMuat PerusahaanAsalMuat[]
+  PerusahaanTujuanBongkar PerusahaanTujuanBongkar[]
+  DataSupplierOnPelaporanPenggunaanB3Final DataSupplierOnPelaporanPenggunaanB3Final[]
+  DataPerusahaanAsalMuatOnPengakutanDetailFinal DataPerusahaanAsalMuatOnPengakutanDetailFinal[]
+  DataPerusahaanTujuanBongkarOnPengakutanDetailFinal DataPerusahaanTujuanBongkarOnPengakutanDetailFinal[]
 }
 
 model Districts {
@@ -311,6 +329,15 @@ model Districts {
   Location  Location[]
 
   @@map("reg_districts") // Maps to the existing table "req_districts"
+  LocationDetails LocationDetails[]
+  DataSupplier DataSupplier[]
+  DataCustomer DataCustomer[]
+  DataTransporter DataTransporter[]
+  PerusahaanAsalMuat PerusahaanAsalMuat[]
+  PerusahaanTujuanBongkar PerusahaanTujuanBongkar[]
+  DataSupplierOnPelaporanPenggunaanB3Final DataSupplierOnPelaporanPenggunaanB3Final[]
+  DataPerusahaanAsalMuatOnPengakutanDetailFinal DataPerusahaanAsalMuatOnPengakutanDetailFinal[]
+  DataPerusahaanTujuanBongkarOnPengakutanDetailFinal DataPerusahaanTujuanBongkarOnPengakutanDetailFinal[]
 }
 
 model Village {
@@ -321,6 +348,15 @@ model Village {
   Location   Location[]
 
   @@map("reg_village") // Maps to the existing table "reg_villages"
+  LocationDetails LocationDetails[]
+  DataSupplier DataSupplier[]
+  DataCustomer DataCustomer[]
+  DataTransporter DataTransporter[]
+  PerusahaanAsalMuat PerusahaanAsalMuat[]
+  PerusahaanTujuanBongkar PerusahaanTujuanBongkar[]
+  DataSupplierOnPelaporanPenggunaanB3Final DataSupplierOnPelaporanPenggunaanB3Final[]
+  DataPerusahaanAsalMuatOnPengakutanDetailFinal DataPerusahaanAsalMuatOnPengakutanDetailFinal[]
+  DataPerusahaanTujuanBongkarOnPengakutanDetailFinal DataPerusahaanTujuanBongkarOnPengakutanDetailFinal[]
 }
 
 model Company {
@@ -329,6 +365,7 @@ model Company {
   penanggungJawab String
   alamatKantor    String
   telpKantor      String
+  skalaPerusahaan String?
   faxKantor       String? // Optional fax number
   emailKantor     String? // Optional email address
   npwp            String?       @unique // Optional NPWP (Tax ID)
@@ -339,7 +376,7 @@ model Company {
   vehicles        Vehicle[] // One-to-many relationship: A company can have multiple vehicles
   applications    Application[] // One-to-many: A company can submit multiple applications
   registrasi      Registrasi[] // One-to-many: A company can have multiple registration sk
-  tipePerusahaan  String? // Tipe perusahaan
+  tipePerusahaan  String[] // Tipe perusahaan
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -355,6 +392,36 @@ model Company {
   LaporanPengangkutanFinal LaporanPengangkutanFinal[]
 
   TelaahTeknisRekomendasiB3 TelaahTeknisRekomendasiB3[]
+
+  PenyimpananB3 PenyimpananB3[]
+
+  DataBahanB3Company DataBahanB3Company[]
+
+  PelaporanPenggunaanBahanB3 PelaporanPenggunaanBahanB3[]
+
+  DataSupplier DataSupplier[]
+
+  PelaporanB3Dihasilkan PelaporanB3Dihasilkan[]
+
+  StokB3AddRequest StokB3AddRequest[]
+
+  DataCustomer DataCustomer[]
+
+  PelaporanPenggunaanBahanB3Final PelaporanPenggunaanBahanB3Final[]
+
+  PelaporanB3DihasilkanFinal PelaporanB3DihasilkanFinal[]
+
+  DataTransporter DataTransporter[]
+
+  PelaporanBahanB3Distribusi PelaporanBahanB3Distribusi[]
+
+  PelaporanBahanB3DistribusiFinal PelaporanBahanB3DistribusiFinal[]
+
+  DataSupplierOnPelaporanPenggunaanB3Final DataSupplierOnPelaporanPenggunaanB3Final[]
+
+  DataPerusahaanAsalMuatOnPengakutanDetailFinal DataPerusahaanAsalMuatOnPengakutanDetailFinal[]
+
+  DataPerusahaanTujuanBongkarOnPengakutanDetailFinal DataPerusahaanTujuanBongkarOnPengakutanDetailFinal[]
 }
 
 model Vehicle {
@@ -488,13 +555,13 @@ model DraftSurat {
   tanggalSurat  DateTime? // Nullable
   tipeSurat     String // NOT NULL, wajib diisi
   kodeDBKlh     String? // Nullable
-  tembusan      DataTembusan[] // Many-to-many relation, nullable (optional relation)
   pejabatId     String? // Nullable, foreign key for Pejabat
   pejabat       DataPejabat?   @relation(fields: [pejabatId], references: [id]) // Nullable relation
   applicationId String?        @unique // Foreign key for Application (one-to-one relation)
   application   Application?   @relation(fields: [applicationId], references: [id])
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+  PermohonanRekomendasiTembusan PermohonanRekomendasiTembusan[]
 }
 
 model FinalSurat {
@@ -532,6 +599,14 @@ model DataBahanB3 {
   BaseSuratNotfikasi BaseSuratNotfikasi[]
 
   @@unique([casNumber, namaDagang]) // Compound unique constraint
+  DataBahanB3Company DataBahanB3Company[]
+  PelaporanPenggunaanBahanB3 PelaporanPenggunaanBahanB3[]
+  PelaporanB3Dihasilkan PelaporanB3Dihasilkan[]
+  StokB3AddRequest StokB3AddRequest[]
+  PelaporanPenggunaanBahanB3Final PelaporanPenggunaanBahanB3Final[]
+  PelaporanB3DihasilkanFinal PelaporanB3DihasilkanFinal[]
+  PelaporanBahanB3Distribusi PelaporanBahanB3Distribusi[]
+  PelaporanBahanB3DistribusiFinal PelaporanBahanB3DistribusiFinal[]
 }
 
 model DataPejabat {
@@ -547,7 +622,7 @@ model DataPejabat {
   DraftSurat           DraftSurat[]
   FinalSurat           FinalSurat[]
   DraftSuratNotifikasi BaseSuratNotfikasi[]
-  TelaahTeknisRekomendasiB3 TelaahTeknisRekomendasiB3[]
+  TelaahTeknisPejabat TelaahTeknisPejabat[]
 }
 
 model DataTembusan {
@@ -557,11 +632,11 @@ model DataTembusan {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Implicit many-to-many relations with DraftSurat and FinalSurat
-  DraftSurat           DraftSurat[]
+
   FinalSurat           FinalSurat[]
   Registrasi           Registrasi[]
-  DraftSuratNotifikasi BaseSuratNotfikasi[]
+  NotifikasiTembusan   NotifikasiTembusan[]
+  PermohonanRekomendasiTembusan PermohonanRekomendasiTembusan[]
 }
 
 model Notifikasi {
@@ -573,7 +648,7 @@ model Notifikasi {
   tanggalDiterima        DateTime // Date when the notifikasi was received
   tanggalSelesai         DateTime? // Date when the notifikasi was done
   tanggalPerubahan       DateTime                  @default(now()) // Timestamp of the status change
-  referenceNumber        String? // EU reference number for the chemical
+  referenceNumber        String? @unique// EU reference number for the chemical
   negaraAsal             String? // Country of origin for the chemical
   dataBahanB3Id          String? // Foreign key for DataBahanB3
   dataBahanB3            DataBahanB3?              @relation(fields: [dataBahanB3Id], references: [id])
@@ -601,23 +676,22 @@ model NotifikasiStatusHistory {
 }
 
 model BaseSuratNotfikasi {
-  id                String              @id @default(uuid())
-  nomorSurat        String? // Nomor surat for either type
-  tanggalSurat      DateTime? // Tanggal surat
-  tipeSurat         String // Could be 'Kebenaran Import' or 'Persetujuan Import' or 'Explicit Consent'
-  kodeDBKlh         String? // Kode DBKLH, if applicable
-  sifatSurat        String? // Sifat surat, e.g., 'Biasa'
-  emailPenerima     String? // Email penerima
-  tanggalPengiriman DateTime? // Tanggal pengiriman
-  pejabatId         String? // Foreign key for Pejabat
-  pejabat           DataPejabat?        @relation(fields: [pejabatId], references: [id])
-  notifikasiId      String? // Foreign key for Notifikasi
-  notifikasi        Notifikasi?         @relation(fields: [notifikasiId], references: [id])
-  tembusan          DataTembusan[] // Many-to-many relation with DataTembusan
-  referenceNumber   String? // EU reference number for the chemical
-  negaraAsal        String? // Country of origin for the chemical
+  id                           String              @id @default(uuid())
+  nomorSurat                   String? // Nomor surat for either type
+  tanggalSurat                 DateTime? // Tanggal surat
+  tipeSurat                    String // Could be 'Kebenaran Import' or 'Persetujuan Import' or 'Explicit Consent'
+  kodeDBKlh                    String? // Kode DBKLH, if applicable
+  sifatSurat                   String? // Sifat surat, e.g., 'Biasa'
+  emailPenerima                String? // Email penerima
+  tanggalPengiriman            DateTime? // Tanggal pengiriman
+  pejabatId                    String? // Foreign key for Pejabat
+  pejabat                      DataPejabat?        @relation(fields: [pejabatId], references: [id])
+  notifikasiId                 String? // Foreign key for Notifikasi
+  notifikasi                   Notifikasi?         @relation(fields: [notifikasiId], references: [id])
+  referenceNumber              String? // EU reference number for the chemical
+  negaraAsal                   String? // Country of origin for the chemical
   namaPengirimNotifikasi       String? // Email pengirim
-  perusaahaanAsal  String? // Perusahaan pengirim
+  perusaahaanAsal   String? // Perusahaan pengirim
   dataBahanB3Id     String? // Foreign key for DataBahanB3
   dataBahanB3       DataBahanB3?        @relation(fields: [dataBahanB3Id], references: [id])
   createdAt         DateTime            @default(now())
@@ -627,6 +701,7 @@ model BaseSuratNotfikasi {
   PersetujuanImport PersetujuanImport[]
   KebenaranImport   KebenaranImport[]
   ExplicitConsent   ExplicitConsent[]
+  NotifikasiTembusan NotifikasiTembusan[]
 }
 
 model PersetujuanImport {
@@ -640,6 +715,14 @@ model PersetujuanImport {
   point2           String? // Custom Point 2 for ECHA
   point3           String? // Custom Point 3 for ECHA
   point4           String? // Custom Point 4 for ECHA
+  regulation       String? // Regulation for the import
+  nomorSuratKebenaranImport String? // Nomor surat kebenaran import
+  tanggalKebenaranImport DateTime? // Tanggal kebenaran import
+  nomorSuratPerusahaanPengimpor String? // Nomor surat perusahaan pengimpor
+  tanggalDiterimaKebenaranImport DateTime? // Tanggal diterima kebenaran import
+  nomorSuratExplicitConsent  String? // Nomor surat explicit consent
+  tanggalSuratExplicitConsent DateTime? // Tanggal surat explicit consent
+  
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
 
@@ -690,8 +773,11 @@ model ExplicitConsent {
 
   // Newly added fields
   namaExporter           String? // Name of the exporter
+  namaImpoter            String? // Name of the importer
+  tujuanPenggunaan       String? // Purpose of the chemical
   tujuanImport           String? // Destination of the import
-  additionalInfo         String? // Additional information
+  tujuanSurat            String? // Additional information
+  negaraAsal             String? // Country of origin
   pdfHeaderId            String? // Foreign key for PDFHeader
   pdfHeader              PDFHeader?               @relation(fields: [pdfHeaderId], references: [id]) // Relation to PDFHeader
   // Relation to multiple sections (page content)
@@ -782,7 +868,7 @@ model ExplicitConsentDetails {
   dnaContactName        String? // Contact name at DNA institution
   dnaTelephone          String? // Telephone of the DNA institution
   dnaTelefax            String? // Telefax of the DNA institution
-  dnaEmail              String? // Email address of the DNA institution
+  dnaEmail              String[] // Email address of the DNA institution
   dnaDate               DateTime? // Date of the DNA section
 
   createdAt DateTime @default(now())
@@ -794,6 +880,18 @@ model LocationDetails {
   name   String // Name of the company or entity
   alamat String // Address
 
+  // Relations for the hierarchical structure
+  provinceId String? // Foreign key to Province
+  province   Province? @relation(fields: [provinceId], references: [id])
+
+  regencyId String? // Foreign key to Regencies
+  regency   Regencies? @relation(fields: [regencyId], references: [id])
+
+  districtId String? // Foreign key to Districts
+  district   Districts? @relation(fields: [districtId], references: [id])
+
+  villageId String? // Foreign key to Village
+  village   Village? @relation(fields: [villageId], references: [id])
   // New longitude and latitude fields to store pin point location
   longitude Float // Longitude of the location
   latitude  Float // Latitude of the location
@@ -825,7 +923,11 @@ model PelaporanPengangkutan {
   pengangkutanDetails PengangkutanDetail[] // One-to-many relation to PengangkutanDetail
   periodId            String // Foreign key to Period
   period              Period               @relation(fields: [periodId], references: [id])
-  isDraft             Boolean              @default(true) // Report is a draft until finalized
+  
+  isDraft            Boolean    @default(true)
+  isFinalized        Boolean    @default(false)
+  isApproved         Boolean    @default(false)
+
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
 
@@ -838,21 +940,24 @@ model PengangkutanDetail {
   pelaporanPengangkutan   PelaporanPengangkutan     @relation(fields: [pelaporanPengangkutanId], references: [id])
   b3SubstanceId           String // Foreign key to B3Substance
   b3Substance             B3Substance               @relation(fields: [b3SubstanceId], references: [id]) // Relation to B3Substance to get name, CAS number, etc.
-  jumlahB3                Float // Amount of B3 transported (kg)
-  perusahaanAsalMuat      PerusahaanAsalMuat[] // One-to-many relation to PerusahaanAsalMuat
-  perusahaanTujuanBongkar PerusahaanTujuanBongkar[] // One-to-many relation to PerusahaanTujuanBongkar
+  jumlahB3                Float? // Amount of B3 transported (kg)
   createdAt               DateTime                  @default(now())
   updatedAt               DateTime                  @updatedAt
 
+    
+  isDraft            Boolean    @default(true)
+  isFinalized        Boolean    @default(false)
+  isApproved         Boolean    @default(false)
+
   @@unique([b3SubstanceId, pelaporanPengangkutanId]) // Ensures each B3 substance is reported only once per month and year
+  DataPerusahaanAsalMuatOnPengakutanDetail DataPerusahaanAsalMuatOnPengakutanDetail[]
+  DataPerusahaanTujuanBongkarOnPengakutanDetail DataPerusahaanTujuanBongkarOnPengakutanDetail[]
 }
 
 model PerusahaanAsalMuat {
   id                   String             @id @default(uuid())
   companyId            String // Foreign key to Company
   company              Company            @relation(fields: [companyId], references: [id])
-  pengangkutanDetailId String // Foreign key to PengangkutanDetail
-  pengangkutanDetail   PengangkutanDetail @relation(fields: [pengangkutanDetailId], references: [id])
   namaPerusahaan       String // Name of the loading company
   alamat               String // Loading origin address
   latitude             Float // Loading origin latitude
@@ -860,20 +965,38 @@ model PerusahaanAsalMuat {
   locationType         String // Type of location: Gudang or Pelabuhan
   createdAt            DateTime           @default(now())
   updatedAt            DateTime           @updatedAt
+  provinceId String
+  province Province @relation(fields: [provinceId], references: [id])
+  regencyId String
+  regency Regencies @relation(fields: [regencyId], references: [id])
+  districtId String
+  district Districts @relation(fields: [districtId], references: [id])
+  villageId String
+  village Village @relation(fields: [villageId], references: [id])
+
+  DataPerusahaanAsalMuatOnPengakutanDetail DataPerusahaanAsalMuatOnPengakutanDetail[]
 }
 
 model PerusahaanTujuanBongkar {
   id                   String             @id @default(uuid())
   companyId            String // Foreign key to Company
   company              Company            @relation(fields: [companyId], references: [id])
-  pengangkutanDetailId String // Foreign key to PengangkutanDetail
-  pengangkutanDetail   PengangkutanDetail @relation(fields: [pengangkutanDetailId], references: [id])
   namaPerusahaan       String // Name of the unloading company
   alamat               String // Unloading destination address
   latitude             Float // Unloading destination latitude
   longitude            Float // Unloading destination longitude
+  provinceId String
+  province Province @relation(fields: [provinceId], references: [id])
+  regencyId String
+  regency Regencies @relation(fields: [regencyId], references: [id])
+  districtId String
+  district Districts @relation(fields: [districtId], references: [id])
+  villageId String
+  village Village @relation(fields: [villageId], references: [id])
   createdAt            DateTime           @default(now())
   updatedAt            DateTime           @updatedAt
+
+  DataPerusahaanTujuanBongkarOnPengakutanDetail DataPerusahaanTujuanBongkarOnPengakutanDetail[]
 }
 
 model Period {
@@ -887,6 +1010,18 @@ model Period {
   updatedAt            DateTime @updatedAt
 
   pelaporanPengangkutans PelaporanPengangkutan[]
+
+  PelaporanPenggunaanBahanB3 PelaporanPenggunaanBahanB3[]
+
+  PelaporanB3Dihasilkan PelaporanB3Dihasilkan[]
+
+  PelaporanPenggunaanBahanB3Final PelaporanPenggunaanBahanB3Final[]
+
+  PelaporanB3DihasilkanFinal PelaporanB3DihasilkanFinal[]
+
+  PelaporanBahanB3Distribusi PelaporanBahanB3Distribusi[]
+
+  PelaporanBahanB3DistribusiFinal PelaporanBahanB3DistribusiFinal[]
 }
 
 model Persyaratan {
@@ -930,6 +1065,10 @@ model User {
    NotifikasiStatusHistory NotifikasiStatusHistory[]
 
    Notifikasi Notifikasi[]
+
+   TelaahTeknisDocumentNotesRekomendasiB3 TelaahTeknisDocumentNotesRekomendasiB3[]
+
+   Approval Approval[]
 }
 
 model ResetPassword {
@@ -970,6 +1109,9 @@ model LaporanPengangkutanFinalDetail {
   jumlahB3                Float                  // Jumlah total untuk jenis B3 ini
 
   @@unique([laporanPengangkutanFinalId, b3SubstanceId]) // Memastikan satu record per jenis B3 di setiap laporan final
+  DataPerusahaanAsalMuatOnPengakutanDetailFinal DataPerusahaanAsalMuatOnPengakutanDetailFinal[]
+  DataPerusahaanTujuanBongkarOnPengakutanDetailFinal DataPerusahaanTujuanBongkarOnPengakutanDetailFinal[]
+
 }
 
 model TelaahTeknisRekomendasiB3{
@@ -983,7 +1125,609 @@ model TelaahTeknisRekomendasiB3{
   kronologi_permohonan String[]
   lain_lain String[]
   tindak_lanjut String
-  pejabat DataPejabat[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  TelaahTeknisDocumentNotesRekomendasiB3 TelaahTeknisDocumentNotesRekomendasiB3[]
+
+  TelaahTeknisPejabat TelaahTeknisPejabat[]
+}
+
+model TelaahTeknisDocumentNotesRekomendasiB3 {
+  id                          String  @id @default(uuid())
+  telaahTeknisRekomendasiB3Id String
+  telaahTeknisRekomendasiB3   TelaahTeknisRekomendasiB3 @relation(fields: [telaahTeknisRekomendasiB3Id], references: [id])
+  tipeDokumen                 String
+  isValid                     Boolean @default(false)
+  notes                       String?
+  changedBy                   String? // Optional field to track the user who changed the status
+  User                        User? @relation(fields: [changedBy], references: [id])
+
+  @@unique([telaahTeknisRekomendasiB3Id, tipeDokumen]) // Composite unique constraint
+}
+
+model PenyimpananB3 {
+  id                    String      @id @default(uuid())
+  alamatGudang          String
+  longitude             Float
+  latitude              Float
+  luasArea              Float
+  companyId             String
+  isApproved            Boolean?
+  approvedAt            DateTime?
+  status                String
+  
+  company               Company     @relation(fields: [companyId], references: [id])
+  approval              Approval?   @relation(fields: [approvedById], references: [id])
+  approvedById          String?
+
+  PenyimpananB3Persyaratan PenyimpananB3Persyaratan[]
+}
+
+model PenyimpananB3Persyaratan{
+  id String @id @default(uuid())
+  
+  tipeDokumen           String
+  notes                 String?
+
+  isApproved            Boolean?
+  approval              Approval?   @relation(fields: [approvedById], references: [id])
+  approvedById          String?
+  penyimpananB3Id       String?
+  penyimpananB3 PenyimpananB3? @relation(fields: [penyimpananB3Id], references: [id])
+
+  photosPenyimpananB3 PhotoPenyimpananB3[]
+}
+
+
+model PhotoPenyimpananB3 {
+  id                    String      @id @default(uuid())
+  fileUrl               String
+  originalFileName      String
+  fileName              String
+  penyimpananB3PersyaratanId       String
+  penyimpananB3Persyaratan PenyimpananB3Persyaratan @relation(fields: [penyimpananB3PersyaratanId], references: [id])
+}
+
+model Approval {
+  id                    String      @id @default(uuid())
+  approvedById          String
+  approvedAt            DateTime
+  approvedBy            User?        @relation(fields: [approvedById], references: [id])
+
+  penyimpananB3Approval PenyimpananB3[]
+
+  PenyimpananB3Persyaratan PenyimpananB3Persyaratan[]
+
+  StokB3UpdateRequest StokB3UpdateRequest[]
+
+  StokB3AddRequest StokB3AddRequest[]
+}
+
+model TelaahTeknisPejabat {
+  id                       String               @id @default(uuid())
+  telaahTeknisId           String
+  dataPejabatId            String
+  index                    Int                  // Index of pejabat in the array
+
+  TelaahTeknisRekomendasiB3 TelaahTeknisRekomendasiB3 @relation(fields: [telaahTeknisId], references: [id])
+  DataPejabat              DataPejabat          @relation(fields: [dataPejabatId], references: [id])
+
+  @@unique([telaahTeknisId, dataPejabatId])    // Ensure uniqueness for each relation
+}
+
+model PermohonanRekomendasiTembusan {
+  id                       String               @id @default(uuid())
+  draftSuratId           String
+  dataTembusanId            String
+  index                    Int                  // Index of pejabat in the array
+
+  DraftSurat DraftSurat @relation(fields: [draftSuratId], references: [id])
+  DataTembusan              DataTembusan          @relation(fields: [dataTembusanId], references: [id])
+
+  @@unique([draftSuratId, dataTembusanId])    // Ensure uniqueness for each relation
+}
+
+model NotifikasiTembusan {
+  id                       String               @id @default(uuid())
+  baseSuratNotifikasiId           String
+  dataTembusanId            String
+  index                    Int                  // Index of pejabat in the array
+
+  BaseSuratNotifikasi BaseSuratNotfikasi @relation(fields: [baseSuratNotifikasiId], references: [id])
+  DataTembusan              DataTembusan          @relation(fields: [dataTembusanId], references: [id])
+
+  @@unique([baseSuratNotifikasiId, dataTembusanId])    // Ensure uniqueness for each relation
+}
+
+model DataBahanB3Company {
+  id             String        @id @default(uuid())
+  companyId      String
+  company        Company       @relation(fields: [companyId], references: [id])
+  dataBahanB3Id  String
+  dataBahanB3    DataBahanB3   @relation(fields: [dataBahanB3Id], references: [id])
+  stokB3         Float
+
+  stokHistory    StokB3History[]
+  updateRequests StokB3UpdateRequest[]
+}
+
+model StokB3History {
+  id                    String      @id @default(uuid())
+  dataBahanB3CompanyId  String
+  dataBahanB3Company    DataBahanB3Company @relation(fields: [dataBahanB3CompanyId], references: [id])
+  previousStokB3        Float
+  newStokB3             Float
+  changeDate            DateTime    @default(now())
+}
+
+model StokB3UpdateRequest {
+  id                    String      @id @default(uuid())
+  dataBahanB3CompanyId  String
+  dataBahanB3Company    DataBahanB3Company @relation(fields: [dataBahanB3CompanyId], references: [id])
+  requestedStokB3       Float
+  requestDate           DateTime    @default(now())
+  approved              Boolean     @default(false)
+  approvalId            String?
+  approval              Approval?   @relation(fields: [approvalId], references: [id])
+}
+
+model StokB3AddRequest {
+  id                    String      @id @default(uuid())
+  companyId      String
+  company        Company       @relation(fields: [companyId], references: [id])
+  dataBahanB3Id  String
+  dataBahanB3    DataBahanB3   @relation(fields: [dataBahanB3Id], references: [id])
+  requestedStokB3       Float
+  requestDate           DateTime    @default(now())
+  approved              Boolean     @default(false)
+  approvalId            String?
+  approval              Approval?   @relation(fields: [approvalId], references: [id])
+}
+
+model DataSupplier {
+  id String @id @default(uuid())
+  namaSupplier String
+  alamat String
+  email String?
+  telepon String?
+  fax String?
+  longitude Float?
+  latitude Float?
+  provinceId String
+  province Province @relation(fields: [provinceId], references: [id])
+  regencyId String
+  regency Regencies @relation(fields: [regencyId], references: [id])
+  districtId String
+  district Districts @relation(fields: [districtId], references: [id])
+  villageId String
+  village Village @relation(fields: [villageId], references: [id])
+  companyId String
+  company Company @relation(fields: [companyId], references: [id])
+  DataPic DataPIC[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  DataSupplierOnPelaporanPenggunaanB3 DataSupplierOnPelaporanPenggunaanB3[]
+}
+
+model PelaporanB3Dihasilkan{
+  id String @id @default(uuid())
+  tipeProduk String //B3 atau Non B3
+  companyId String
+  company Company @relation(fields: [companyId], references: [id])
+  periodId String
+  period Period @relation(fields: [periodId], references: [id])
+  bulan Int
+  tahun Int
+  prosesProduksi String?
+  dataBahanB3Id String?
+  dataBahanB3 DataBahanB3? @relation(fields: [dataBahanB3Id], references: [id])
+  jumlahB3Dihasilkan Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  isDraft            Boolean    @default(true)
+  isFinalized        Boolean    @default(false)
+  isApproved         Boolean    @default(false)
+
+  PelaporanB3DihasilkanHistory PelaporanB3DihasilkanHistory[]
+
+  @@unique([companyId, dataBahanB3Id, bulan, tahun])
+}
+
+model PelaporanB3DihasilkanHistory {
+  id                        String   @id @default(uuid())
+  pelaporanB3DihasilkanId   String
+  pelaporanB3Dihasilkan     PelaporanB3Dihasilkan @relation(fields: [pelaporanB3DihasilkanId], references: [id])
+
+  statusPengajuan           String // Enum untuk status pengajuan
+  tanggalPengajuan          DateTime
+  tanggalPenyelesaian       DateTime?
+  catatanAdmin              String?
+
+  createdAt                 DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+}
+
+model PelaporanB3DihasilkanFinal {
+  id                 String     @id @default(uuid())
+  tipeProduk         String     // B3 atau Non B3
+  companyId          String
+  company            Company    @relation(fields: [companyId], references: [id])
+  periodId           String
+  period             Period     @relation(fields: [periodId], references: [id])
+  bulan              Int
+  tahun              Int
+  namaProduk         String?
+  prosesProduksi     String?
+  dataBahanB3Id      String?
+  dataBahanB3        DataBahanB3? @relation(fields: [dataBahanB3Id], references: [id])
+  jumlahB3Dihasilkan Float
+  approvedAt         DateTime   // Waktu saat laporan disetujui
+
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+
+  @@unique([companyId, dataBahanB3Id, bulan, tahun])
+}
+
+model DataCustomer {
+  id String @id @default(uuid())
+  namaCustomer String
+  alamat String
+  email String
+  telepon String
+  fax String?
+  longitude Float
+  latitude Float
+  companyId String
+  company Company @relation(fields: [companyId], references: [id])
+  provinceId String
+  province Province @relation(fields: [provinceId], references: [id])
+  regencyId String
+  regency Regencies @relation(fields: [regencyId], references: [id])
+  districtId String
+  district Districts @relation(fields: [districtId], references: [id])
+  villageId String
+  village Village @relation(fields: [villageId], references: [id])
+  DataPic DataPIC[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  DataCustomerOnPelaporanDistribusiBahanB3 DataCustomerOnPelaporanDistribusiBahanB3[]
+}
+
+model DataPIC {
+  id String @id @default(uuid())
+  namaPIC String?
+  jabatan String?
+  email String?
+  telepon String?
+  fax String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  DataCustomer DataCustomer[]
+
+  DataSupplier DataSupplier[]
+
+  DataTransporter DataTransporter[]
+}
+
+model PelaporanPenggunaanBahanB3 {
+  id                  String               @id @default(uuid())
+  companyId           String // Foreign key to Company
+  company             Company              @relation(fields: [companyId], references: [id])
+  
+  bulan               Int // Month of the report (1 for January, 2 for February, etc.)
+  tahun               Int // Year of the report
+  dataBahanB3Id       String // Foreign key to DataBahanB3
+  dataBahanB3         DataBahanB3          @relation(fields: [dataBahanB3Id], references: [id]) // Relation to track reports per B3 substance
+  periodId            String // Foreign key to Period
+  period              Period               @relation(fields: [periodId], references: [id])
+  tipePembelian       String // Type of purchase (e.g., 'Import', 'Local')
+  jumlahPembelianB3  Float // Amount of B3 purchased (kg)
+  jumlahB3Digunakan   Float // Amount of B3 used (kg)
+
+  isDraft            Boolean    @default(true)
+  isFinalized        Boolean    @default(false)
+  isApproved         Boolean    @default(false)
+
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  @@unique([dataBahanB3Id, bulan, tahun]) // Ensures each vehicle is reported only once per month and year
+  DataSupplierOnPelaporanPenggunaanB3 DataSupplierOnPelaporanPenggunaanB3[]
+  PelaporanPenggunaanBahanB3History PelaporanPenggunaanBahanB3History[]
+}
+
+model DataSupplierOnPelaporanPenggunaanB3{
+  id String @id @default(uuid())
+  pelaporanPenggunaanB3Id String
+  pelaporanPenggunaanB3 PelaporanPenggunaanBahanB3 @relation(fields: [pelaporanPenggunaanB3Id], references: [id])
+  dataSupplierId String
+  dataSupplier DataSupplier @relation(fields: [dataSupplierId], references: [id])
+}
+
+model PelaporanPenggunaanBahanB3Final {
+  id                  String               @id @default(uuid())
+  companyId           String // Foreign key to Company
+  company             Company              @relation(fields: [companyId], references: [id])
+
+  bulan               Int // Month of the report (1 for January, 2 for February, etc.)
+  tahun               Int // Year of the report
+  dataBahanB3Id       String // Foreign key to DataBahanB3
+  dataBahanB3         DataBahanB3          @relation(fields: [dataBahanB3Id], references: [id])
+  periodId            String // Foreign key to Period
+  period              Period               @relation(fields: [periodId], references: [id])
+  tipePembelian       String // Type of purchase (e.g., 'Import', 'Local')
+  jumlahPembelianB3   Float // Amount of B3 purchased (kg)
+  jumlahB3Digunakan   Float // Amount of B3 used (kg)
+  approvedAt          DateTime // The date when the report was approved
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  // Relation to DataSupplierOnPelaporanPenggunaanB3Final
+  DataSupplierOnPelaporanPenggunaanB3Final DataSupplierOnPelaporanPenggunaanB3Final[]
+
+  @@unique([dataBahanB3Id, bulan, tahun]) // Ensures each B3 substance is reported only once per month and year
+}
+
+model DataSupplierOnPelaporanPenggunaanB3Final {
+  id                       String @id @default(uuid())
+  pelaporanPenggunaanB3FinalId String
+  pelaporanPenggunaanB3Final   PelaporanPenggunaanBahanB3Final @relation(fields: [pelaporanPenggunaanB3FinalId], references: [id])
+  namaSupplier String
+  alamat String
+  email String?
+  telepon String?
+  fax String?
+  longitude Float?
+  latitude Float?
+  provinceId String
+  province Province @relation(fields: [provinceId], references: [id])
+  regencyId String
+  regency Regencies @relation(fields: [regencyId], references: [id])
+  districtId String
+  district Districts @relation(fields: [districtId], references: [id])
+  villageId String
+  village Village @relation(fields: [villageId], references: [id])
+  companyId String
+  company Company @relation(fields: [companyId], references: [id])
+  DataPic DataPICFinal[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PelaporanPenggunaanBahanB3History {
+  id                        String              @id @default(uuid())
+  pelaporanPenggunaanBahanB3Id String           // Foreign key ke PelaporanPenggunaanBahanB3
+  pelaporanPenggunaanBahanB3   PelaporanPenggunaanBahanB3 @relation(fields: [pelaporanPenggunaanBahanB3Id], references: [id])
+  
+  statusPengajuan             String            // Status pengajuan ("Menunggu Persetujuan", "Disetujui", "Ditolak")
+  tanggalPengajuan            DateTime          // Tanggal ketika laporan diajukan
+  tanggalPenyelesaian         DateTime?         // Tanggal ketika laporan disetujui atau ditolak
+  catatanAdmin                String?           // Catatan atau alasan dari admin
+  createdAt                   DateTime          @default(now())
+  updatedAt                   DateTime          @updatedAt
+}
+
+model PelaporanBahanB3Distribusi{
+  id String @id @default(uuid())
+  companyId String
+  company Company @relation(fields: [companyId], references: [id])
+  periodId String
+  period Period @relation(fields: [periodId], references: [id])
+  bulan Int
+  tahun Int
+  dataBahanB3Id String
+  dataBahanB3 DataBahanB3 @relation(fields: [dataBahanB3Id], references: [id])
+  jumlahB3Distribusi Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  isDraft            Boolean    @default(true)
+  isFinalized        Boolean    @default(false)
+  isApproved         Boolean    @default(false)
+
+  PelaporanBahanB3DistribusiHistory PelaporanBahanB3DistribusiHistory[]
+
+  @@unique([companyId, dataBahanB3Id, bulan, tahun])
+  DataCustomerOnPelaporanDistribusiBahanB3 DataCustomerOnPelaporanDistribusiBahanB3[]
+  DataTransporterOnPelaporanDistribusiBahanB3 DataTransporterOnPelaporanDistribusiBahanB3[]
+}
+
+model DataCustomerOnPelaporanDistribusiBahanB3{
+  id String @id @default(uuid())
+  pelaporanBahanB3DistribusiId String
+  pelaporanBahanB3Distribusi PelaporanBahanB3Distribusi @relation(fields: [pelaporanBahanB3DistribusiId], references: [id])
+  dataCustomerId String
+  dataCustomer DataCustomer @relation(fields: [dataCustomerId], references: [id])
+}
+
+model DataTransporterOnPelaporanDistribusiBahanB3{
+  id String @id @default(uuid())
+  pelaporanBahanB3DistribusiId String
+  pelaporanBahanB3Distribusi PelaporanBahanB3Distribusi @relation(fields: [pelaporanBahanB3DistribusiId], references: [id])
+  dataTransporterId String
+  dataTransporter DataTransporter @relation(fields: [dataTransporterId], references: [id])
+}
+
+model PelaporanBahanB3DistribusiFinal {
+  id String @id @default(uuid())
+  companyId String
+  company Company @relation(fields: [companyId], references: [id])
+  periodId String
+  period Period @relation(fields: [periodId], references: [id])
+  bulan Int
+  tahun Int
+  dataBahanB3Id String
+  dataBahanB3 DataBahanB3 @relation(fields: [dataBahanB3Id], references: [id])
+  jumlahB3Distribusi Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  approveAt DateTime @default(now())
+
+
+  @@unique([dataBahanB3Id, bulan, tahun]) // Ensures each B3 substance is reported only once per month and year
+  DataTransporterFinal DataTransporterFinal[]
+  DataCustomerFinal DataCustomerFinal[]
+}
+
+model PelaporanBahanB3DistribusiHistory {
+  id                        String              @id @default(uuid())
+  pelaporanBahanB3DistribusiId String
+  pelaporanBahanB3Distribusi PelaporanBahanB3Distribusi @relation(fields: [pelaporanBahanB3DistribusiId], references: [id])
+  statusPengajuan             String            // Status pengajuan ("Menunggu Persetujuan", "Disetujui", "Ditolak")
+  tanggalPengajuan            DateTime          // Tanggal ketika laporan diajukan
+  tanggalPenyelesaian         DateTime?         // Tanggal ketika laporan disetujui atau ditolak
+  catatanAdmin                String?           // Catatan atau alasan dari admin
+  createdAt                   DateTime          @default(now())
+  updatedAt                   DateTime          @updatedAt
+}
+
+model DataTransporter {
+  id String @id @default(uuid())
+  namaTransPorter String
+  alamat String
+  email String
+  telepon String
+  fax String?
+  longitude Float
+  latitude Float
+  companyId String
+  company Company @relation(fields: [companyId], references: [id])
+  provinceId String
+  province Province @relation(fields: [provinceId], references: [id])
+  regencyId String
+  regency Regencies @relation(fields: [regencyId], references: [id])
+  districtId String
+  district Districts @relation(fields: [districtId], references: [id])
+  villageId String
+  village Village @relation(fields: [villageId], references: [id])
+  DataPic DataPIC[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  DataTransporterOnPelaporanDistribusiBahanB3 DataTransporterOnPelaporanDistribusiBahanB3[]
+}
+
+model DataCustomerFinal {
+  id String @id @default(uuid())
+  pelaporanId String
+  pelaporanBahanB3DistribusiFinal PelaporanBahanB3DistribusiFinal @relation(fields: [pelaporanId], references: [id])
+
+  namaCustomer String
+  alamat String
+  email String
+  telepon String
+  fax String?
+  longitude Float
+  latitude Float
+  companyId String
+  provinceId String
+  regencyId String
+  districtId String
+  villageId String
+  createdAt DateTime @default(now())
+}
+
+model DataTransporterFinal {
+  id String @id @default(uuid())
+  pelaporanId String
+  pelaporanBahanB3DistribusiFinal PelaporanBahanB3DistribusiFinal @relation(fields: [pelaporanId], references: [id])
+
+  namaTransporter String
+  alamat String
+  email String
+  telepon String
+  fax String?
+  longitude Float
+  latitude Float
+  companyId String
+  provinceId String
+  regencyId String
+  districtId String
+  villageId String
+  createdAt DateTime @default(now())
+}
+
+model DataPerusahaanAsalMuatOnPengakutanDetail{
+  id String @id @default(uuid())
+  pengangkutanDetailId String
+  pengangkutanDetail PengangkutanDetail @relation(fields: [pengangkutanDetailId], references: [id])
+  perusahaanAsalMuatId String
+  perusahaanAsalMuat PerusahaanAsalMuat @relation(fields: [perusahaanAsalMuatId], references: [id])
+}
+
+model DataPerusahaanTujuanBongkarOnPengakutanDetail{
+  id String @id @default(uuid())
+  pengangkutanDetailId String
+  pengangkutanDetail PengangkutanDetail @relation(fields: [pengangkutanDetailId], references: [id])
+  perusahaanTujuanBongkarId String
+  perusahaanTujuanBongkar PerusahaanTujuanBongkar @relation(fields: [perusahaanTujuanBongkarId], references: [id])
+}
+
+model DataPerusahaanAsalMuatOnPengakutanDetailFinal{
+  id String @id @default(uuid())
+  pengangkutanDetailId String
+  pengangkutanDetail LaporanPengangkutanFinalDetail @relation(fields: [pengangkutanDetailId], references: [id])
+  companyId            String // Foreign key to Company
+  company              Company            @relation(fields: [companyId], references: [id])
+  namaPerusahaan       String // Name of the loading company
+  alamat               String // Loading origin address
+  latitude             Float // Loading origin latitude
+  longitude            Float // Loading origin longitude
+  locationType         String // Type of location: Gudang or Pelabuhan
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  provinceId String
+  province Province @relation(fields: [provinceId], references: [id])
+  regencyId String
+  regency Regencies @relation(fields: [regencyId], references: [id])
+  districtId String
+  district Districts @relation(fields: [districtId], references: [id])
+  villageId String
+  village Village @relation(fields: [villageId], references: [id])
+
+}
+
+model DataPerusahaanTujuanBongkarOnPengakutanDetailFinal{
+  id String @id @default(uuid())
+  pengangkutanDetailId String
+  pengangkutanDetail LaporanPengangkutanFinalDetail @relation(fields: [pengangkutanDetailId], references: [id])
+   companyId            String // Foreign key to Company
+  company              Company            @relation(fields: [companyId], references: [id])
+  namaPerusahaan       String // Name of the loading company
+  alamat               String // Loading origin address
+  latitude             Float // Loading origin latitude
+  longitude            Float // Loading origin longitude
+  locationType         String // Type of location: Gudang or Pelabuhan
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  provinceId String
+  province Province @relation(fields: [provinceId], references: [id])
+  regencyId String
+  regency Regencies @relation(fields: [regencyId], references: [id])
+  districtId String
+  district Districts @relation(fields: [districtId], references: [id])
+  villageId String
+  village Village @relation(fields: [villageId], references: [id])
+
+}
+
+
+model DataPICFinal {
+  id String @id @default(uuid())
+  namaPIC String?
+  jabatan String?
+  email String?
+  telepon String?
+  fax String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  DataSupplierOnPelaporanPenggunaanB3Final DataSupplierOnPelaporanPenggunaanB3Final[]
 }

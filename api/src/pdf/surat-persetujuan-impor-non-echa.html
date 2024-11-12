@@ -8,14 +8,72 @@
     <style>
         body {
             font-family: 'Times New Roman', Times, serif;
-            line-height: 1.5;
+            font-size: 15px;
+            line-height: 1.2;
         }
-        .header, .footer {
-            text-align: center;
-            font-size: 12px;
+        .header {
+        text-align: center;
+        margin-bottom: 20px;
         }
-        .content {
-            margin: 20px;
+        .header img {
+        width: 80px;
+        vertical-align: middle;
+        }
+        .header .title {
+        display: inline-block;
+        width: calc(100% - 100px);
+        vertical-align: middle;
+        text-align: center;
+        line-height: 1.2;
+        }
+        .header h3, .header h4 {
+        margin: 5px 0;
+        font-weight: bold;
+        }
+        .header h3 {
+        font-size: 18px;
+        }
+        .header h4 {
+        font-size: 16px;
+        }
+        .header p {
+        margin: 2px 0;
+        font-size: 12px;
+        }
+        .header hr {
+        border: none;
+        border-top: 2px solid black;
+        margin-top: 10px;
+        }
+        .details {
+          display: flex;
+          justify-content: space-between;
+        }
+        .details-left {
+          width: 70%;
+          display: flex;
+          flex-direction: column;
+        }
+        .details-row {
+          display: flex;
+        }
+        .details-label {
+        width: 80px;
+        }
+        .details-separator {
+        width: 10px;
+        text-align: center;
+        }
+        .details-value {
+        flex: 1;
+        }
+        .details-right {
+        width: 30%;
+        text-align: right;
+        vertical-align: top;
+        }
+        .content{
+        margin-top: 20px;
         }
         .content p {
             margin-bottom: 10px;
@@ -23,59 +81,118 @@
         .content .date {
             text-align: right;
         }
+        .signature-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 30px;
+        line-height: 1.2; /* Adjust line height for even closer spacing */
+        }
         .signature {
-            margin-top: 50px;
+        text-align: left;
+        margin-right: 50px; /* Adjust to align with other content if needed */
+        }
+        .position {
+        margin-bottom: 0px;
+        line-height: 1.2; /* Adjust line height for even closer spacing */
+        }
+        .signature-space {
+        margin-bottom: 80px; /* Space for the signature */
+        }
+        .name {
+        margin-bottom: 0px;
+        font-weight: bold;
+        line-height: 1.2; /* Adjust line height for even closer spacing */
+        }
+        .tembusan {
+        margin-top: 20px; /* Adjust this if more space is needed */
+        line-height: 1.2; /* Adjust line height for even closer spacing */
+        }
+        .tembusan p {
+        margin-bottom: 2px;
+        }
+        .tembusan ol {
+        margin: 0;
+        padding-left: 20px;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <p><strong>KEMENTERIAN LINGKUNGAN HIDUP DAN KEHUTANAN</strong></p>
-        <p><strong>DIREKTORAT JENDERAL PENGELOLAAN SAMPAH, LIMBAH DAN BAHAN BERBAHAYA DAN BERACUN</strong></p>
-        <p>Gedung Manggala Wanabakti Blok 4 Lantai 5 – Jl. Gatot Subroto, Jakarta 10270</p>
-        <p>Telp. 021-5704501/04 Ext. 4112, Fax. 021-57902750; Indonesia – Kotak Pos 6505</p>
-    </div>
+        <img src="<%= base64Image %>" alt="Logo KLHK">
+        <div class="title">
+          <h3>KEMENTERIAN LINGKUNGAN HIDUP DAN KEHUTANAN</h3>
+          <h4>DIREKTORAT JENDERAL PENGELOLAAN SAMPAH, LIMBAH DAN BAHAN BERBAHAYA DAN BERACUN</h4>
+          <p>Gedung Manggala Wanabakti Blok 4 Lantai 5 - Jl. Gatot Subroto, Jakarta 10270</p>
+          <p>Telp. 021-5704 501/04 Ext. 4112, Fax. 021-5790 2750; Indonesia – Kotak Pos 6505</p>
+        </div>
+        <hr>
+      </div>
+      <div class="details">
+        <div class="details-left">
+          <div class="details-row">
+            <div class="details-label">Nomor</div>
+            <div class="details-separator">:</div>
+            <div class="details-value"><%= nomorSurat %></div>
+          </div>
+          <div class="details-row">
+            <div class="details-label">Sifat</div>
+            <div class="details-separator">:</div>
+            <div class="details-value"><%= sifatSurat %></div>
+          </div>
+          <div class="details-row">
+            <div class="details-label">Lampiran</div>
+            <div class="details-separator">:</div>
+            <div class="details-value">1 (satu) berkas</div>
+          </div>
+          <div class="details-row">
+            <div class="details-label">Hal</div>
+            <div class="details-separator">:</div>
+            <div class="details-value">Surat Pemberitahuan<br>Persetujuan Notifikasi</div>
+          </div>
+        </div>
+        <div class="details-right">
+          <p><%= draftSurat?.tanggalSurat || 'N/A' %></p>
+        </div>
+      </div>
 
     <div class="content">
-        <p class="date">{{tanggalSurat}}</p>
-        <p>Nomor: {{nomorSurat}}</p>
-        <p>Sifat: {{sifatSurat}}</p>
-        <p>Lampiran: 1 (satu) berkas</p>
-        <p>Hal: Surat Pemberitahuan Persetujuan Notifikasi</p>
         <p>Yth. Direktur {{companyName}}</p>
         <p>di Tempat</p>
 
         <p>1. Memperhatikan:</p>
         <ul>
-            <li>{{customPoint1}}</li> <!-- Customizable Point 1 (e.g., Notifikasi via email) -->
-            <li>Surat Pemberitahuan Konfirmasi Kebenaran Impor Bahan Berbahaya dan Beracun dari Kementerian Lingkungan Hidup dan Kehutanan, Nomor: {{nomorKonfirmasi}}, tanggal {{tanggalKonfirmasi}};</li>
-            <li>Surat Jawaban Konfirmasi Kebenaran Impor dari {{companyName}}, Nomor: {{nomorJawaban}}, tanggal {{tanggalJawaban}} tentang Konfirmasi Kebenaran Impor B3;</li>
+            <li>Notifikasi melalui email dari <span class="emphasis"><%= draftSurat?.namaPengirimNotifikasi %></span></li> <!-- Customizable Point 1 (e.g., Notifikasi via email) -->
+            <li>Surat Pemberitahuan Konfirmasi Kebenaran Impor Bahan Berbahaya dan Beracun dari Kementerian Lingkungan Hidup dan Kehutanan, Nomor: <%= nomorSuratKebenaranImport|| 'N/A' %> tanggal <%= tanggalKebenaranImport|| 'N/A' %>;</li>
+            <li>Surat Jawaban Konfirmasi Kebenaran Impor dari <%= company?.name %> Nomor: <%= nomorSuratPerusahaanPengimpor|| 'N/A' %>, tanggal <%= tanggalDiterimaKebenaranImport|| 'N/A' %> tentang Konfirmasi Kebenaran Impor B3;</li>
         </ul>
 
-        <p>2. Surat Explicit Consent for Exporting Severely Restricted Chemicals to Indonesia Nomor {{nomorExplicitConsent}}, tanggal {{tanggalExplicitConsent}};</p>
+        <p>2. Surat Explicit Consent for Exporting Severely Restricted Chemicals to Indonesia Nomor <%= nomorSuratExplicitConsent|| 'N/A' %>, tanggal <%= tanggalSuratExplicitConsent|| 'N/A' %>;</p>
 
-        <p>3. Berdasarkan rujukan di atas, maka disampaikan bahwa prosedur notifikasi untuk impor bahan kimia {{namaKimia}} atau {{namaDagang}} (Reference Number {{referenceNumber}}) dari {{negaraAsal}}, telah selesai. Persetujuan notifikasi ini berlaku sampai dengan tanggal {{validUntil}}.</p>
+        <p>Berdasarkan rujukan di atas, maka disampaikan bahwa prosedur notifikasi untuk impor bahan kimia <span class="emphasis"><%= bahanKimia %></span> dengan nama dagang <%= namaDagang|| 'N/A' %> <strong>(Reference Number <%= referenceNumber %>)</strong>, dari negara <span class="emphasis"><%= draftSurat?.negaraAsal %></span> telah selesai. 
+          Persetujuan notifikasi ini berlaku sampai dengan tanggal <%= validitasSurat %>.</p>
 
         <p>4. Selanjutnya, agar Saudara melakukan Registrasi Bahan Berbahaya dan Beracun (B3) yang dimaksud ke Kementerian Lingkungan Hidup dan Kehutanan sesegera mungkin.</p>
 
         <p>Atas perhatian dan kerjasama yang baik diucapkan terima kasih.</p>
-
-        <div class="signature">
-            <p>a.n Direktur Jenderal,</p>
-            <p>Direktur Pengelolaan B3</p>
-            <br><br><br>
-            <p>{{pejabatName}}</p>
-            <p>NIP. {{pejabatNIP}}</p>
-        </div>
     </div>
 
-    <div class="footer">
-        <p>Tembusan:</p>
-        <ul>
-            {{#tembusanList}}
-            <li>{{this}}</li>
-            {{/tembusanList}}
-        </ul>
+    <div class="signature-container">
+        <div class="signature">
+          <p class="position">a.n. Direktur Jenderal,</p>
+          <p class="position">Direktur Pengelolaan B3</p>
+          <p class="signature-space"></p> <!-- Space for signature -->
+          <p class="name"><%= pejabat?.nama || 'Sugasri' %></p>
+          <p>NIP. <%= pejabat?.nip || '19690827 199803 1 001' %></p>
+        </div>
+      </div>
+  
+    <div class="tembusan">
+      <p>Tembusan:</p>
+      <ol>
+        <% tembusan.forEach((t, index) => { %>
+          <li><%= t.nama %> - <%= t.tipe %></li>
+        <% }) %>
+      </ol>
     </div>
 </body>
 </html>

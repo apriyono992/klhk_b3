@@ -5,6 +5,8 @@ export enum StatusPermohonan {
   ValidasiPemohonan = 'VALIDASI_PEMOHONAN',
   ValidasiPemohonanSelesai = 'VALIDASI_PEMOHONAN_SELESAI',
   ValidasiPemohonanDitolak = 'VALIDASI_PEMOHONAN_DITOLAK',
+  TelaahTeknisSelesai = 'VALIDASI_PEMOHONAN_SELESAI',
+  TelaahTeknisDitolak = 'VALIDASI_PEMOHONAN_DITOLAK',
   MenungguProsesDraftSK = 'MENUNGGU_PROSES_DRAFT_SK',
   PembuatanDraftSK = 'PEMBUATAN_DRAFT_SK',
   DraftSKTandaTanganDirektur = 'DRAFT_SK_TANDA_TANGAN_DIREKTUR',

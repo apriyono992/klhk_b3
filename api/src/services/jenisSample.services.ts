@@ -25,7 +25,7 @@ export class JenisSampleService {
           jenisSampleType = await this.prisma.jenisSampleType.create({
             data: {
               type: type,
-              deskripsi: deskripsi ?? null,  // Optionally add description
+              deskripsi: deskripsi ?? undefined,  // Optionally add description
             },
           });
         }

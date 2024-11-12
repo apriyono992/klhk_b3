@@ -4,14 +4,17 @@ import TableMaterial from './TableMaterial'
 import OtherSection from './OtherSection'
 import DocumentReview from './DocumentReview'
 import ChronologySection from './ChronologySection'
+import PejabatSelectorTable from './DataPejabat';
 import { Button, useDisclosure } from '@nextui-org/react'
 import ModalAlert from '../../../../elements/ModalAlert'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
 import toast from 'react-hot-toast'
 import FollowUp from './FollowUp'
+import { useForm } from 'react-hook-form';
 
 export default function Review({ data, isLoading, mutate }) {
     const {isOpen: isOpenModalAlert, onOpenChange: onOpenChangeModalAlert} = useDisclosure();
+    const { control, handleSubmit, formState: { errors }, setValue } = useForm();
 
     async function onReviewed() {
         try {
@@ -27,12 +30,13 @@ export default function Review({ data, isLoading, mutate }) {
             <div className=''>
                 <Button onPress={onOpenChangeModalAlert} color='warning' size='sm' startContent={<ArrowPathIcon className="size-4"/>}>Submit Telaah</Button>
             </div>
-            <ChronologySection/>
+            <ChronologySection existingData={data}/>
             <DocumentReview data={data} isLoading={isLoading} mutate={mutate}/>
             <TableVehicle data={data} isLoading={isLoading} mutate={mutate} />
             <TableMaterial data={data} isLoading={isLoading} mutate={mutate}/>
-            <OtherSection/>
-            <FollowUp/>
+            <OtherSection existingOther={data}/>
+            <FollowUp existingData={data}/>
+            <PejabatSelectorTable existingPejabat={data} control={control} errors={errors} />
             <ModalAlert
                 heading="Submit Telaah?"
                 description="Pastikan semua bagian sudah ditelaah"

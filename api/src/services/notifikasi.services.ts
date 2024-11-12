@@ -57,6 +57,7 @@ export class NotifikasiService {
           tanggalDiterima: dto.tanggalDiterima || new Date(),
           exceedsThreshold: dto.exceedsThreshold || false,
           createdById: dto.changeBy || undefined, // Directly assign the user ID as a string here
+          negaraAsal: dto.negaraAsal
         },
       });
 
@@ -125,10 +126,10 @@ export class NotifikasiService {
       });
 
       // If the status is being updated to "Kirim Surat Kebenaran Import", create a base DraftSurat
-      if (dto.status === StatusNotifikasi.KIRIM_SURAT_KEBENARAN_IMPORT) {
+      if (dto.status === StatusNotifikasi.KIRIM_SURAT_KEBENARAN_IMPORT && dto.status !== notifikasi.status) {
         await this.draftSuratNotifikasiService.createDraftSuratKebenaranImport({
           notifikasiId: id,              // Link to the notifikasi
-          tipeSurat: TipeSuratNotifikasi.KEBENARAN_IMPORT_BIASA, // Required field
+          tipeSurat: dto.tipeSurat ?? TipeSuratNotifikasi.KEBENARAN_IMPORT_BIASA, // Required field
           nomorSurat: null,              // Default to null (can be filled later)
           tanggalSurat: null,            // Default to null (can be filled later)
           kodeDBKlh: null,               // Default to null (can be filled later)
@@ -144,10 +145,10 @@ export class NotifikasiService {
         });
       }
       // If the status is being updated to "Kirim Surat Kebenaran Import", create a base DraftSurat
-      if (dto.status === StatusNotifikasi.ADA_RENCANA_IMPOR) {
+      if (dto.status === StatusNotifikasi.ADA_RENCANA_IMPOR && dto.status !== notifikasi.status) {
         await this.draftSuratNotifikasiService.createDraftSuratPersetujuanImport({
           notifikasiId: id,              // Link to the notifikasi
-          tipeSurat: TipeSuratNotifikasi.EXPLICIT_CONSENT_AND_PERSETUJUAN_ECHA, // Required field
+          tipeSurat: dto.tipeSurat ?? TipeSuratNotifikasi.EXPLICIT_CONSENT_AND_PERSETUJUAN_ECHA, // Required field
           nomorSurat: null,              // Default to null (can be filled later)
           tanggalSurat: null,            // Default to null (can be filled later)
           kodeDBKlh: null,               // Default to null (can be filled later)
@@ -164,7 +165,7 @@ export class NotifikasiService {
 
         await this.draftSuratNotifikasiService.createDraftSuratExplicitConsent({
           notifikasiId: id,              // Link to the notifikasi
-          tipeSuratNotifikasi: TipeSuratNotifikasi.EXPLICIT_CONSENT_AND_PERSETUJUAN_ECHA, // Required field
+          tipeSuratNotifikasi: dto.tipeSurat ?? TipeSuratNotifikasi.EXPLICIT_CONSENT_AND_PERSETUJUAN_ECHA, // Required field
         });
       }
         
@@ -194,7 +195,8 @@ export class NotifikasiService {
       include: {
         statusHistory: { include: { User: true } },
         company: true,
-        draftSuratNotifikasiId: true,
+        draftSuratNotifikasiId: {include: {
+          NotifikasiTembusan: {include: {DataTembusan:true}}, pejabat: true, ExplicitConsent: {include:{ExplicitConsentDetails:true}}, KebenaranImport: true, PersetujuanImport: true}},
         dataBahanB3: true,
         User: true,
       },

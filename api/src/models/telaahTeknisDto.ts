@@ -25,7 +25,7 @@ export class TelaahTeknisUpsertDto {
 
   @IsOptional()
   @IsUUID('4', { each: true })
-  pejabat?: { id: string }[];  // Array of objects with pejabat IDs
+  pejabat?:string[];  // Array of objects with pejabat IDs
 
   @IsOptional()
   @IsUUID()

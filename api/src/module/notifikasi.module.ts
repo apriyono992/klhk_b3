@@ -4,9 +4,10 @@ import { DraftSuratNotifikasiService } from 'src/services/draftSuratNotifikasi.s
 import { NotifikasiService } from 'src/services/notifikasi.services';
 import { PrismaService } from 'src/services/prisma.services';
 import { DraftNotifikasiModule } from './draftNotifikasi.module';
+import { CountryModule } from './country.module';
 
 @Module({
-    imports: [DraftNotifikasiModule],
+    imports: [DraftNotifikasiModule, CountryModule],
     providers: [PrismaService, NotifikasiService],
     controllers: [ NotifikasiController],
 })

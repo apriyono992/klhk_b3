@@ -33,9 +33,6 @@ export const registerUserSchema =  yup.object().shape({
 }).required()
 
 export const draftRecomendationLetter = yup.object().shape({
-        tembusanIds: yup.array().min(1, 'Minimal 1 tembusan').required('Harus diisi'),
-        nomorSurat: yup.string().required('harus diisi'),
-        tipeSurat: yup.string().required('harus diisi'),
         pejabatId: yup.string().required('harus diisi'),
 }).required()
 
