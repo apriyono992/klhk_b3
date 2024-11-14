@@ -366,6 +366,9 @@ model Company {
   alamatKantor    String
   telpKantor      String
   skalaPerusahaan String?
+  kota            String?
+  kdPos           String?
+  provinsi        String?
   faxKantor       String? // Optional fax number
   emailKantor     String? // Optional email address
   npwp            String?       @unique // Optional NPWP (Tax ID)
@@ -523,8 +526,6 @@ model B3Substance {
   tujuanPenggunaan       String // Purpose of the B3 (e.g., Mengatur PH air Limbah Industri)
   applicationId          String // Foreign key to the Application model
   application            Application       @relation(fields: [applicationId], references: [id])
-  registrasiId           String? // Foreign key to the Registrasi sk model
-  registrasi             Registrasi?       @relation(fields: [registrasiId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -555,6 +556,7 @@ model DraftSurat {
   tanggalSurat  DateTime? // Nullable
   tipeSurat     String // NOT NULL, wajib diisi
   kodeDBKlh     String? // Nullable
+  tembusan      DataTembusan[] // Many-to-many relation, nullable (optional relation)
   pejabatId     String? // Nullable, foreign key for Pejabat
   pejabat       DataPejabat?   @relation(fields: [pejabatId], references: [id]) // Nullable relation
   applicationId String?        @unique // Foreign key for Application (one-to-one relation)
@@ -632,11 +634,13 @@ model DataTembusan {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-
+  // Implicit many-to-many relations with DraftSurat and FinalSurat
+  DraftSurat           DraftSurat[]
   FinalSurat           FinalSurat[]
   Registrasi           Registrasi[]
   NotifikasiTembusan   NotifikasiTembusan[]
   PermohonanRekomendasiTembusan PermohonanRekomendasiTembusan[]
+  DraftSuratNotifikasi BaseSuratNotfikasi[]
 }
 
 model Notifikasi {
@@ -699,6 +703,7 @@ model BaseSuratNotfikasi {
   printed           Boolean             @default(false) // Flag to track if the surat has been printed
   printedAt         DateTime? // Tanggal cetak surat
   PersetujuanImport PersetujuanImport[]
+  tembusan          DataTembusan[] // Many-to-many relation with DataTembusan
   KebenaranImport   KebenaranImport[]
   ExplicitConsent   ExplicitConsent[]
   NotifikasiTembusan NotifikasiTembusan[]
@@ -722,7 +727,7 @@ model PersetujuanImport {
   tanggalDiterimaKebenaranImport DateTime? // Tanggal diterima kebenaran import
   nomorSuratExplicitConsent  String? // Nomor surat explicit consent
   tanggalSuratExplicitConsent DateTime? // Tanggal surat explicit consent
-  
+
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
 
@@ -737,26 +742,33 @@ model Registrasi {
   companyId String // foreign key company
   company   Company? @relation(fields: [companyId], references: [id])
 
-  nomor                  String
-  tahun                  Int
-  status_izin            String
-  keterangan_sk          String
-  tanggal_terbit         DateTime
-  berlaku_dari           DateTime
-  berlaku_sampai         DateTime
-  nomor_notifikasi_impor String
-  kode_db_klh_perusahaan String
-  nama_perusahaan        String
-  alamat_perusahaan      String
-  status                 String
-  is_draft               Boolean        @default(true)
-  approved_by            String         @default("")
-  approval_status        String         @default("created")
-  no_reg_bahanb3         String?
+  nama_pengurus           String?
+  jabatan_pengurus        String?
+  tanggal_pengajuan       DateTime                  @default(now())
+  tanggal_surat           DateTime                  @default(now())
+  nomor                   String
+  tahun                   Int
+  status_izin             String
+  keterangan_sk           String
+  tanggal_terbit          DateTime
+  berlaku_dari            DateTime
+  berlaku_sampai          DateTime
+  nomor_notifikasi_impor  String
+  kode_db_klh_perusahaan  String
+  nama_perusahaan         String
+  alamat_perusahaan       String
+  status                  String
+  bulan                   String
+  is_draft                Boolean                   @default(true)
+  approved_by             String                    @default("")
+  approval_status         String                    @default("created")
+  no_reg                  String?
+  sub_layanan             String?
   // Implicit many-to-many relations with Tembusan and bahanB3
-  tembusan               DataTembusan[]
-  B3Substance            B3Substance[]
-  persyaratan            Persyaratan[]
+  tembusan                DataTembusan[]
+  BahanB3Registrasi       BahanB3Registrasi[]
+  persyaratan             Persyaratan[]
+  historyStatusRegistrasi HistoryStatusRegistrasi[]
 }
 
 model ExplicitConsent {
@@ -923,7 +935,7 @@ model PelaporanPengangkutan {
   pengangkutanDetails PengangkutanDetail[] // One-to-many relation to PengangkutanDetail
   periodId            String // Foreign key to Period
   period              Period               @relation(fields: [periodId], references: [id])
-  
+
   isDraft            Boolean    @default(true)
   isFinalized        Boolean    @default(false)
   isApproved         Boolean    @default(false)
@@ -944,7 +956,7 @@ model PengangkutanDetail {
   createdAt               DateTime                  @default(now())
   updatedAt               DateTime                  @updatedAt
 
-    
+
   isDraft            Boolean    @default(true)
   isFinalized        Boolean    @default(false)
   isApproved         Boolean    @default(false)
@@ -1058,6 +1070,7 @@ model User {
   cityId      String
   provinceId  String
   regency       Regencies   @relation(fields: [cityId], references: [id])
+  rolesId     String
   idNumber    String // no KTP
    idPhotoUrl  String?
   resetPassword ResetPassword[]
@@ -1083,6 +1096,69 @@ model ResetPassword {
 model Secret {
   clientId    String @id
   clientSecret String
+}
+
+model BahanB3Registrasi {
+  id                         String               @id @default(uuid())
+  createdAt                  DateTime             @default(now())
+  updatedAt                  DateTime             @updatedAt
+  deletedAt                  DateTime?
+  no_reg_bahan               String
+  nama_bahan                 String
+  nama_dagang                String
+  cas_number                 String
+  hs_code                    String
+  klasifikasi_b3             String
+  negara_muat                String
+  penghasil_bahan_kimia      String
+  penggunaan                 String
+  kategori_b3                String
+  karakteristik_b3           String
+  tujuan_penggunaan          String
+  jumlah_impor               Decimal              @db.Decimal(15, 2)
+  jumlah_impor_per_tahun     Decimal              @db.Decimal(15, 2)
+  pelaksanaan_rencana_impor  Int
+  asal_negara                String
+  alamat_penghasil_b3        String
+  pelabuhan_asal             String[]
+  pelabuhan_muat             String[]
+  pelabuhan_bongkar          String[]
+  provinsi_pelabuhan_bongkar String[]
+  registrasiId               String?
+  registrasi                 Registrasi?          @relation(fields: [registrasiId], references: [id])
+  SektorPenggunaanB3         SektorPenggunaanB3[]
+}
+
+model SektorPenggunaanB3 {
+  id                  String            @id @default(uuid())
+  bahanB3RegistrasiId String
+  bahanB3Registrasi   BahanB3Registrasi @relation(fields: [bahanB3RegistrasiId], references: [id])
+  name                String
+  keterangan          String            @db.Text()
+}
+
+model HistoryStatusRegistrasi {
+  id           String      @id @default(uuid())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  registrasiId String?
+  registrasi   Registrasi? @relation(fields: [registrasiId], references: [id])
+  status       String
+}
+
+model Roles {
+   id          String                   @id @default(uuid())
+   name        String
+   createdAt DateTime          @default(now())
+   updatedAt DateTime          @updatedAt
+}
+
+model TempatInstalasi {
+  id        String   @id @default(uuid())
+  name      String
+  alamat    String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model LaporanPengangkutanFinal {
@@ -1156,7 +1232,7 @@ model PenyimpananB3 {
   isApproved            Boolean?
   approvedAt            DateTime?
   status                String
-  
+
   company               Company     @relation(fields: [companyId], references: [id])
   approval              Approval?   @relation(fields: [approvedById], references: [id])
   approvedById          String?
@@ -1166,7 +1242,7 @@ model PenyimpananB3 {
 
 model PenyimpananB3Persyaratan{
   id String @id @default(uuid())
-  
+
   tipeDokumen           String
   notes                 String?
 
@@ -1326,7 +1402,7 @@ model PelaporanB3Dihasilkan{
   jumlahB3Dihasilkan Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   isDraft            Boolean    @default(true)
   isFinalized        Boolean    @default(false)
   isApproved         Boolean    @default(false)
@@ -1419,7 +1495,7 @@ model PelaporanPenggunaanBahanB3 {
   id                  String               @id @default(uuid())
   companyId           String // Foreign key to Company
   company             Company              @relation(fields: [companyId], references: [id])
-  
+
   bulan               Int // Month of the report (1 for January, 2 for February, etc.)
   tahun               Int // Year of the report
   dataBahanB3Id       String // Foreign key to DataBahanB3
@@ -1504,7 +1580,7 @@ model PelaporanPenggunaanBahanB3History {
   id                        String              @id @default(uuid())
   pelaporanPenggunaanBahanB3Id String           // Foreign key ke PelaporanPenggunaanBahanB3
   pelaporanPenggunaanBahanB3   PelaporanPenggunaanBahanB3 @relation(fields: [pelaporanPenggunaanBahanB3Id], references: [id])
-  
+
   statusPengajuan             String            // Status pengajuan ("Menunggu Persetujuan", "Disetujui", "Ditolak")
   tanggalPengajuan            DateTime          // Tanggal ketika laporan diajukan
   tanggalPenyelesaian         DateTime?         // Tanggal ketika laporan disetujui atau ditolak
@@ -1731,3 +1807,12 @@ model DataPICFinal {
 
   DataSupplierOnPelaporanPenggunaanB3Final DataSupplierOnPelaporanPenggunaanB3Final[]
 }
+
+model DataPelabuhan {
+    id String @id @default(uuid())
+    id_lokasi   String
+    nm_lokasi   String
+    kd_kantor   String
+    nm_kantor_pendek String
+}
+

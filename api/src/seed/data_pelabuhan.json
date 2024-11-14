@@ -1,0 +1,2865 @@
+[
+  {
+    "id": "1",
+    "id_lokasi": "IDJEP",
+    "nm_lokasi": "Jepara",
+    "kd_kantor": "60300",
+    "nm_kantor_pendek": "KPPBC TMC KUDUS"
+  },
+  {
+    "id": "2",
+    "id_lokasi": "IDREM",
+    "nm_lokasi": "Rembang",
+    "kd_kantor": "60300",
+    "nm_kantor_pendek": "KPPBC TMC KUDUS"
+  },
+  {
+    "id": "3",
+    "id_lokasi": "IDMLG",
+    "nm_lokasi": "Malang / Abdulrachman Saleh (u)",
+    "kd_kantor": "70600",
+    "nm_kantor_pendek": "KPPBC TMC MALANG"
+  },
+  {
+    "id": "4",
+    "id_lokasi": "IDBDO",
+    "nm_lokasi": "Bandung / Husein Sastranegara (u)",
+    "kd_kantor": "50500",
+    "nm_kantor_pendek": "KPPBC TMP A BANDUNG"
+  },
+  {
+    "id": "5",
+    "id_lokasi": "IDBND",
+    "nm_lokasi": "Bandung (ptt/gede Bage)",
+    "kd_kantor": "50500",
+    "nm_kantor_pendek": "KPPBC TMP A BANDUNG"
+  },
+  {
+    "id": "6",
+    "id_lokasi": "IDBKA",
+    "nm_lokasi": "Bekasi",
+    "kd_kantor": "50900",
+    "nm_kantor_pendek": "KPPBC TMP A BEKASI"
+  },
+  {
+    "id": "7",
+    "id_lokasi": "IDBOG",
+    "nm_lokasi": "BOGOR",
+    "kd_kantor": "50300",
+    "nm_kantor_pendek": "KPPBC TMP A BOGOR"
+  },
+  {
+    "id": "8",
+    "id_lokasi": "IDSUK",
+    "nm_lokasi": "Sukabumi",
+    "kd_kantor": "50300",
+    "nm_kantor_pendek": "KPPBC TMP A BOGOR"
+  },
+  {
+    "id": "9",
+    "id_lokasi": "IDBUG",
+    "nm_lokasi": "Buleleng, Bali",
+    "kd_kantor": "80200",
+    "nm_kantor_pendek": "KPPBC TMP A DENPASAR"
+  },
+  {
+    "id": "10",
+    "id_lokasi": "IDCEB",
+    "nm_lokasi": "Celukan Bawang, Bl",
+    "kd_kantor": "80200",
+    "nm_kantor_pendek": "KPPBC TMP A DENPASAR"
+  },
+  {
+    "id": "11",
+    "id_lokasi": "IDMGB",
+    "nm_lokasi": "Manggis",
+    "kd_kantor": "80200",
+    "nm_kantor_pendek": "KPPBC TMP A DENPASAR"
+  },
+  {
+    "id": "12",
+    "id_lokasi": "IDBOA",
+    "nm_lokasi": "Beida/loloan",
+    "kd_kantor": "80200",
+    "nm_kantor_pendek": "KPPBC TMP A DENPASAR"
+  },
+  {
+    "id": "13",
+    "id_lokasi": "IDGIL",
+    "nm_lokasi": "Gilimanuk",
+    "kd_kantor": "80200",
+    "nm_kantor_pendek": "KPPBC TMP A DENPASAR"
+  },
+  {
+    "id": "14",
+    "id_lokasi": "IDHLP",
+    "nm_lokasi": "Halim Perdana Kusuma (u)",
+    "kd_kantor": "40400",
+    "nm_kantor_pendek": "KPPBC TMP A JAKARTA"
+  },
+  {
+    "id": "15",
+    "id_lokasi": "IDWID",
+    "nm_lokasi": "Widuri",
+    "kd_kantor": "160200",
+    "nm_kantor_pendek": "KPPBC TMP A MARUNDA"
+  },
+  {
+    "id": "16",
+    "id_lokasi": "IDAJN",
+    "nm_lokasi": "Arjuna, Java",
+    "kd_kantor": "160200",
+    "nm_kantor_pendek": "KPPBC TMP A MARUNDA"
+  },
+  {
+    "id": "17",
+    "id_lokasi": "IDCIN",
+    "nm_lokasi": "Cinta, Java",
+    "kd_kantor": "160200",
+    "nm_kantor_pendek": "KPPBC TMP A MARUNDA"
+  },
+  {
+    "id": "18",
+    "id_lokasi": "IDKLB",
+    "nm_lokasi": "Kalibaru",
+    "kd_kantor": "160200",
+    "nm_kantor_pendek": "KPPBC TMP A MARUNDA"
+  },
+  {
+    "id": "19",
+    "id_lokasi": "IDPAZ",
+    "nm_lokasi": "Pasuruan",
+    "kd_kantor": "71300",
+    "nm_kantor_pendek": "KPPBC TMP A PASURUAN"
+  },
+  {
+    "id": "20",
+    "id_lokasi": "IDPUR",
+    "nm_lokasi": "Purwakarta",
+    "kd_kantor": "50800",
+    "nm_kantor_pendek": "KPPBC TMP A PURWAKARTA"
+  },
+  {
+    "id": "21",
+    "id_lokasi": "IDSBN",
+    "nm_lokasi": "Subang",
+    "kd_kantor": "50800",
+    "nm_kantor_pendek": "KPPBC TMP A PURWAKARTA"
+  },
+  {
+    "id": "22",
+    "id_lokasi": "IDPMB",
+    "nm_lokasi": "Patimban",
+    "kd_kantor": "50800",
+    "nm_kantor_pendek": "KPPBC TMP A PURWAKARTA"
+  },
+  {
+    "id": "23",
+    "id_lokasi": "IDSMR",
+    "nm_lokasi": "Semarang (ptt)",
+    "kd_kantor": "60800",
+    "nm_kantor_pendek": "KPPBC TMP A SEMARANG"
+  },
+  {
+    "id": "24",
+    "id_lokasi": "IDTNG",
+    "nm_lokasi": "Tangerang",
+    "kd_kantor": "150300",
+    "nm_kantor_pendek": "KPPBC TMP A TANGERANG"
+  },
+  {
+    "id": "25",
+    "id_lokasi": "IDABU",
+    "nm_lokasi": "Atambua",
+    "kd_kantor": "81400",
+    "nm_kantor_pendek": "KPPBC TMP B ATAMBUA"
+  },
+  {
+    "id": "26",
+    "id_lokasi": "IDATA",
+    "nm_lokasi": "Atapupu",
+    "kd_kantor": "81400",
+    "nm_kantor_pendek": "KPPBC TMP B ATAMBUA"
+  },
+  {
+    "id": "27",
+    "id_lokasi": "IDKBH",
+    "nm_lokasi": "Kalabahi",
+    "kd_kantor": "81400",
+    "nm_kantor_pendek": "KPPBC TMP B ATAMBUA"
+  },
+  {
+    "id": "28",
+    "id_lokasi": "IDKRG",
+    "nm_lokasi": "Kariangau",
+    "kd_kantor": "100300",
+    "nm_kantor_pendek": "KPPBC TMP B BALIKPAPAN"
+  },
+  {
+    "id": "29",
+    "id_lokasi": "IDLLA",
+    "nm_lokasi": "Lawe-Lawe, Kl",
+    "kd_kantor": "100300",
+    "nm_kantor_pendek": "KPPBC TMP B BALIKPAPAN"
+  },
+  {
+    "id": "30",
+    "id_lokasi": "IDSZH",
+    "nm_lokasi": "Senipah",
+    "kd_kantor": "100300",
+    "nm_kantor_pendek": "KPPBC TMP B BALIKPAPAN"
+  },
+  {
+    "id": "31",
+    "id_lokasi": "IDTNB",
+    "nm_lokasi": "Tanah Grogot",
+    "kd_kantor": "100300",
+    "nm_kantor_pendek": "KPPBC TMP B BALIKPAPAN"
+  },
+  {
+    "id": "32",
+    "id_lokasi": "IDADB",
+    "nm_lokasi": "Adang Bay",
+    "kd_kantor": "100300",
+    "nm_kantor_pendek": "KPPBC TMP B BALIKPAPAN"
+  },
+  {
+    "id": "33",
+    "id_lokasi": "IDBPP",
+    "nm_lokasi": "Balikpapan",
+    "kd_kantor": "100300",
+    "nm_kantor_pendek": "KPPBC TMP B BALIKPAPAN"
+  },
+  {
+    "id": "34",
+    "id_lokasi": "IDBPN",
+    "nm_lokasi": "Balikpapan /sepinggan (u)",
+    "kd_kantor": "100300",
+    "nm_kantor_pendek": "KPPBC TMP B BALIKPAPAN"
+  },
+  {
+    "id": "35",
+    "id_lokasi": "IDTGR",
+    "nm_lokasi": "Pasir/tanah Grogot",
+    "kd_kantor": "100300",
+    "nm_kantor_pendek": "KPPBC TMP B BALIKPAPAN"
+  },
+  {
+    "id": "36",
+    "id_lokasi": "IDKTA",
+    "nm_lokasi": "Kota Agung",
+    "kd_kantor": "30700",
+    "nm_kantor_pendek": "KPPBC TMP B BANDAR LAMPUNG"
+  },
+  {
+    "id": "37",
+    "id_lokasi": "IDPJG",
+    "nm_lokasi": "Panjang (lampung, Sumatra)",
+    "kd_kantor": "30700",
+    "nm_kantor_pendek": "KPPBC TMP B BANDAR LAMPUNG"
+  },
+  {
+    "id": "38",
+    "id_lokasi": "IDSMB",
+    "nm_lokasi": "Semangka Bay, St",
+    "kd_kantor": "30700",
+    "nm_kantor_pendek": "KPPBC TMP B BANDAR LAMPUNG"
+  },
+  {
+    "id": "39",
+    "id_lokasi": "IDTRH",
+    "nm_lokasi": "Tarahan",
+    "kd_kantor": "30700",
+    "nm_kantor_pendek": "KPPBC TMP B BANDAR LAMPUNG"
+  },
+  {
+    "id": "40",
+    "id_lokasi": "IDBKH",
+    "nm_lokasi": "Bakauheni",
+    "kd_kantor": "30700",
+    "nm_kantor_pendek": "KPPBC TMP B BANDAR LAMPUNG"
+  },
+  {
+    "id": "41",
+    "id_lokasi": "IDTKG",
+    "nm_lokasi": "Tanjung Karang / Branti (u)",
+    "kd_kantor": "30700",
+    "nm_kantor_pendek": "KPPBC TMP B BANDAR LAMPUNG"
+  },
+  {
+    "id": "42",
+    "id_lokasi": "IDWSP",
+    "nm_lokasi": "Way Seputih",
+    "kd_kantor": "30700",
+    "nm_kantor_pendek": "KPPBC TMP B BANDAR LAMPUNG"
+  },
+  {
+    "id": "43",
+    "id_lokasi": "IDIAM",
+    "nm_lokasi": "Asam Asam",
+    "kd_kantor": "100100",
+    "nm_kantor_pendek": "KPPBC TMP B BANJARMASIN"
+  },
+  {
+    "id": "44",
+    "id_lokasi": "IDJOR",
+    "nm_lokasi": "Jorong Anchorage",
+    "kd_kantor": "100100",
+    "nm_kantor_pendek": "KPPBC TMP B BANJARMASIN"
+  },
+  {
+    "id": "45",
+    "id_lokasi": "IDTJG",
+    "nm_lokasi": "Tanjung Warukin",
+    "kd_kantor": "100100",
+    "nm_kantor_pendek": "KPPBC TMP B BANJARMASIN"
+  },
+  {
+    "id": "46",
+    "id_lokasi": "IDTWR",
+    "nm_lokasi": "Tanjung/warukin (u)",
+    "kd_kantor": "100100",
+    "nm_kantor_pendek": "KPPBC TMP B BANJARMASIN"
+  },
+  {
+    "id": "47",
+    "id_lokasi": "IDBAN",
+    "nm_lokasi": "Banjarmasin",
+    "kd_kantor": "100100",
+    "nm_kantor_pendek": "KPPBC TMP B BANJARMASIN"
+  },
+  {
+    "id": "48",
+    "id_lokasi": "IDBDJ",
+    "nm_lokasi": "Banjar Masin /samsudin idor (u)",
+    "kd_kantor": "100100",
+    "nm_kantor_pendek": "KPPBC TMP B BANJARMASIN"
+  },
+  {
+    "id": "49",
+    "id_lokasi": "IDPAI",
+    "nm_lokasi": "Panipahan",
+    "kd_kantor": "20900",
+    "nm_kantor_pendek": "KPPBC TMP B DUMAI"
+  },
+  {
+    "id": "50",
+    "id_lokasi": "IDSNB",
+    "nm_lokasi": "Sinaboi",
+    "kd_kantor": "20900",
+    "nm_kantor_pendek": "KPPBC TMP B DUMAI"
+  },
+  {
+    "id": "51",
+    "id_lokasi": "IDBAG",
+    "nm_lokasi": "Bagan Siapi-api",
+    "kd_kantor": "20900",
+    "nm_kantor_pendek": "KPPBC TMP B DUMAI"
+  },
+  {
+    "id": "52",
+    "id_lokasi": "IDTLL",
+    "nm_lokasi": "Tanjung Lumba-lumba",
+    "kd_kantor": "20900",
+    "nm_kantor_pendek": "KPPBC TMP B DUMAI"
+  },
+  {
+    "id": "53",
+    "id_lokasi": "IDTMD",
+    "nm_lokasi": "Tanjung Medang",
+    "kd_kantor": "20900",
+    "nm_kantor_pendek": "KPPBC TMP B DUMAI"
+  },
+  {
+    "id": "54",
+    "id_lokasi": "IDDUM",
+    "nm_lokasi": "Dumai",
+    "kd_kantor": "20900",
+    "nm_kantor_pendek": "KPPBC TMP B DUMAI"
+  },
+  {
+    "id": "55",
+    "id_lokasi": "IDPOL",
+    "nm_lokasi": "Poleng",
+    "kd_kantor": "70300",
+    "nm_kantor_pendek": "KPPBC TMP B GRESIK"
+  },
+  {
+    "id": "56",
+    "id_lokasi": "IDSAK",
+    "nm_lokasi": "Sangkapura / Bawean",
+    "kd_kantor": "70300",
+    "nm_kantor_pendek": "KPPBC TMP B GRESIK"
+  },
+  {
+    "id": "57",
+    "id_lokasi": "IDTMB",
+    "nm_lokasi": "Tambak",
+    "kd_kantor": "70300",
+    "nm_kantor_pendek": "KPPBC TMP B GRESIK"
+  },
+  {
+    "id": "58",
+    "id_lokasi": "IDGRE",
+    "nm_lokasi": "Gresik",
+    "kd_kantor": "70300",
+    "nm_kantor_pendek": "KPPBC TMP B GRESIK"
+  },
+  {
+    "id": "59",
+    "id_lokasi": "IDKTK",
+    "nm_lokasi": "Kuala Tungkal",
+    "kd_kantor": "30600",
+    "nm_kantor_pendek": "KPPBC TMP B JAMBI"
+  },
+  {
+    "id": "60",
+    "id_lokasi": "IDMSK",
+    "nm_lokasi": "Muara Sabak",
+    "kd_kantor": "30600",
+    "nm_kantor_pendek": "KPPBC TMP B JAMBI"
+  },
+  {
+    "id": "61",
+    "id_lokasi": "IDNIP",
+    "nm_lokasi": "Nipah Panjang",
+    "kd_kantor": "30600",
+    "nm_kantor_pendek": "KPPBC TMP B JAMBI"
+  },
+  {
+    "id": "62",
+    "id_lokasi": "IDKPL",
+    "nm_lokasi": "Kampung Laut",
+    "kd_kantor": "30600",
+    "nm_kantor_pendek": "KPPBC TMP B JAMBI"
+  },
+  {
+    "id": "63",
+    "id_lokasi": "IDSNK",
+    "nm_lokasi": "Simbur Naik",
+    "kd_kantor": "30600",
+    "nm_kantor_pendek": "KPPBC TMP B JAMBI"
+  },
+  {
+    "id": "64",
+    "id_lokasi": "IDTTI",
+    "nm_lokasi": "Tebingtinggi",
+    "kd_kantor": "30600",
+    "nm_kantor_pendek": "KPPBC TMP B JAMBI"
+  },
+  {
+    "id": "65",
+    "id_lokasi": "IDDJM",
+    "nm_lokasi": "Jambi",
+    "kd_kantor": "30600",
+    "nm_kantor_pendek": "KPPBC TMP B JAMBI"
+  },
+  {
+    "id": "66",
+    "id_lokasi": "IDDJB",
+    "nm_lokasi": "Jambi /palmerah/ Sulatan Taha (u)",
+    "kd_kantor": "30600",
+    "nm_kantor_pendek": "KPPBC TMP B JAMBI"
+  },
+  {
+    "id": "67",
+    "id_lokasi": "IDKLA",
+    "nm_lokasi": "Kamp. Laut",
+    "kd_kantor": "30600",
+    "nm_kantor_pendek": "KPPBC TMP B JAMBI"
+  },
+  {
+    "id": "68",
+    "id_lokasi": "IDKid",
+    "nm_lokasi": "Bandara Internasional Kuala Namu",
+    "kd_kantor": "10100",
+    "nm_kantor_pendek": "KPPBC TMP B KUALANAMU"
+  },
+  {
+    "id": "69",
+    "id_lokasi": "IDUPG",
+    "nm_lokasi": "Ujung Pandang / Hasanuddin (u)",
+    "kd_kantor": "110100",
+    "nm_kantor_pendek": "KPPBC TMP B MAKASSAR"
+  },
+  {
+    "id": "70",
+    "id_lokasi": "IDBIR",
+    "nm_lokasi": "Biringkassi",
+    "kd_kantor": "110100",
+    "nm_kantor_pendek": "KPPBC TMP B MAKASSAR"
+  },
+  {
+    "id": "71",
+    "id_lokasi": "IDMAK",
+    "nm_lokasi": "Makassar",
+    "kd_kantor": "110100",
+    "nm_kantor_pendek": "KPPBC TMP B MAKASSAR"
+  },
+  {
+    "id": "72",
+    "id_lokasi": "IDBKM",
+    "nm_lokasi": "Bulukumba",
+    "kd_kantor": "110100",
+    "nm_kantor_pendek": "KPPBC TMP B MAKASSAR"
+  },
+  {
+    "id": "73",
+    "id_lokasi": "IDUJU",
+    "nm_lokasi": "Ujungpandang",
+    "kd_kantor": "110100",
+    "nm_kantor_pendek": "KPPBC TMP B MAKASSAR"
+  },
+  {
+    "id": "74",
+    "id_lokasi": "IDBAJ",
+    "nm_lokasi": "Bajo'e",
+    "kd_kantor": "110100",
+    "nm_kantor_pendek": "KPPBC TMP B MAKASSAR"
+  },
+  {
+    "id": "75",
+    "id_lokasi": "IDMES",
+    "nm_lokasi": "Medan / Polonia (u)",
+    "kd_kantor": "10800",
+    "nm_kantor_pendek": "KPPBC TMP B MEDAN"
+  },
+  {
+    "id": "76",
+    "id_lokasi": "IDPKR",
+    "nm_lokasi": "Pangkalan Brandan",
+    "kd_kantor": "10800",
+    "nm_kantor_pendek": "KPPBC TMP B MEDAN"
+  },
+  {
+    "id": "77",
+    "id_lokasi": "IDPKS",
+    "nm_lokasi": "Pangkalan Susu, Sumatra",
+    "kd_kantor": "10800",
+    "nm_kantor_pendek": "KPPBC TMP B MEDAN"
+  },
+  {
+    "id": "78",
+    "id_lokasi": "IDTPR",
+    "nm_lokasi": "Tanjung Pura",
+    "kd_kantor": "10800",
+    "nm_kantor_pendek": "KPPBC TMP B MEDAN"
+  },
+  {
+    "id": "79",
+    "id_lokasi": "IDPSU",
+    "nm_lokasi": "Pangkalan Susu",
+    "kd_kantor": "10800",
+    "nm_kantor_pendek": "KPPBC TMP B MEDAN"
+  },
+  {
+    "id": "80",
+    "id_lokasi": "IDPDU",
+    "nm_lokasi": "Pangkal Duri",
+    "kd_kantor": "30100",
+    "nm_kantor_pendek": "KPPBC TMP B PALEMBANG"
+  },
+  {
+    "id": "81",
+    "id_lokasi": "IDPLA",
+    "nm_lokasi": "Palembang - Plaju",
+    "kd_kantor": "30100",
+    "nm_kantor_pendek": "KPPBC TMP B PALEMBANG"
+  },
+  {
+    "id": "82",
+    "id_lokasi": "IDPLM",
+    "nm_lokasi": "Palembang/sm.badaruddin(u)",
+    "kd_kantor": "30100",
+    "nm_kantor_pendek": "KPPBC TMP B PALEMBANG"
+  },
+  {
+    "id": "83",
+    "id_lokasi": "IDPLS",
+    "nm_lokasi": "Palembang -  Kertapati",
+    "kd_kantor": "30100",
+    "nm_kantor_pendek": "KPPBC TMP B PALEMBANG"
+  },
+  {
+    "id": "84",
+    "id_lokasi": "IDSUG",
+    "nm_lokasi": "Sungai Gerong",
+    "kd_kantor": "30100",
+    "nm_kantor_pendek": "KPPBC TMP B PALEMBANG"
+  },
+  {
+    "id": "85",
+    "id_lokasi": "IDAIR",
+    "nm_lokasi": "AIR SUGIHAN",
+    "kd_kantor": "30100",
+    "nm_kantor_pendek": "KPPBC TMP B PALEMBANG"
+  },
+  {
+    "id": "86",
+    "id_lokasi": "IDPAK",
+    "nm_lokasi": "Pekan Baru",
+    "kd_kantor": "21200",
+    "nm_kantor_pendek": "KPPBC TMP B PEKANBARU"
+  },
+  {
+    "id": "87",
+    "id_lokasi": "IDPEK",
+    "nm_lokasi": "Pekanbaru (rumbai)",
+    "kd_kantor": "21200",
+    "nm_kantor_pendek": "KPPBC TMP B PEKANBARU"
+  },
+  {
+    "id": "88",
+    "id_lokasi": "IDPKU",
+    "nm_lokasi": "Pekan Baru / Simpang Tiga (u)",
+    "kd_kantor": "21200",
+    "nm_kantor_pendek": "KPPBC TMP B PEKANBARU"
+  },
+  {
+    "id": "89",
+    "id_lokasi": "IDFTG",
+    "nm_lokasi": "Pelabuhan Futong Terminal",
+    "kd_kantor": "21200",
+    "nm_kantor_pendek": "KPPBC TMP B PEKANBARU"
+  },
+  {
+    "id": "90",
+    "id_lokasi": "IDSSI",
+    "nm_lokasi": "Siak Sri Indrapura",
+    "kd_kantor": "21200",
+    "nm_kantor_pendek": "KPPBC TMP B PEKANBARU"
+  },
+  {
+    "id": "91",
+    "id_lokasi": "IDPER",
+    "nm_lokasi": "Perawang",
+    "kd_kantor": "21200",
+    "nm_kantor_pendek": "KPPBC TMP B PEKANBARU"
+  },
+  {
+    "id": "92",
+    "id_lokasi": "IDPWG",
+    "nm_lokasi": "Perawang, Sumatra",
+    "kd_kantor": "21200",
+    "nm_kantor_pendek": "KPPBC TMP B PEKANBARU"
+  },
+  {
+    "id": "93",
+    "id_lokasi": "IDSAP",
+    "nm_lokasi": "Sungai Apit",
+    "kd_kantor": "21200",
+    "nm_kantor_pendek": "KPPBC TMP B PEKANBARU"
+  },
+  {
+    "id": "94",
+    "id_lokasi": "IDBUN",
+    "nm_lokasi": "Buatan",
+    "kd_kantor": "21200",
+    "nm_kantor_pendek": "KPPBC TMP B PEKANBARU"
+  },
+  {
+    "id": "95",
+    "id_lokasi": "IDPON",
+    "nm_lokasi": "Pontianak",
+    "kd_kantor": "90100",
+    "nm_kantor_pendek": "KPPBC TMP B PONTIANAK"
+  },
+  {
+    "id": "96",
+    "id_lokasi": "IDPNK",
+    "nm_lokasi": "Pontianak / Supadio (u)",
+    "kd_kantor": "90100",
+    "nm_kantor_pendek": "KPPBC TMP B PONTIANAK"
+  },
+  {
+    "id": "97",
+    "id_lokasi": "IDTKA",
+    "nm_lokasi": "Telok Air",
+    "kd_kantor": "90100",
+    "nm_kantor_pendek": "KPPBC TMP B PONTIANAK"
+  },
+  {
+    "id": "98",
+    "id_lokasi": "IDSRD",
+    "nm_lokasi": "Samarinda",
+    "kd_kantor": "100500",
+    "nm_kantor_pendek": "KPPBC TMP B SAMARINDA"
+  },
+  {
+    "id": "99",
+    "id_lokasi": "IDSRI",
+    "nm_lokasi": "Samarinda / Temindung (u)",
+    "kd_kantor": "100500",
+    "nm_kantor_pendek": "KPPBC TMP B SAMARINDA"
+  },
+  {
+    "id": "100",
+    "id_lokasi": "IDSAT",
+    "nm_lokasi": "Santan Terminal, Kl",
+    "kd_kantor": "100500",
+    "nm_kantor_pendek": "KPPBC TMP B SAMARINDA"
+  },
+  {
+    "id": "101",
+    "id_lokasi": "IDTJT",
+    "nm_lokasi": "Tanjungbatu",
+    "kd_kantor": "100500",
+    "nm_kantor_pendek": "KPPBC TMP B SAMARINDA"
+  },
+  {
+    "id": "102",
+    "id_lokasi": "IDSEN",
+    "nm_lokasi": "Senipah",
+    "kd_kantor": "100500",
+    "nm_kantor_pendek": "KPPBC TMP B SAMARINDA"
+  },
+  {
+    "id": "103",
+    "id_lokasi": "IDSDJ",
+    "nm_lokasi": "Sidoarjo",
+    "kd_kantor": "71500",
+    "nm_kantor_pendek": "KPPBC TMP B SIDOARJO"
+  },
+  {
+    "id": "104",
+    "id_lokasi": "IDSKT",
+    "nm_lokasi": "Surakarta",
+    "kd_kantor": "60600",
+    "nm_kantor_pendek": "KPPBC TMP B SURAKARTA"
+  },
+  {
+    "id": "105",
+    "id_lokasi": "IDSOC",
+    "nm_lokasi": "Solo / Jebres / Adi Sumarmo (u)",
+    "kd_kantor": "60600",
+    "nm_kantor_pendek": "KPPBC TMP B SURAKARTA"
+  },
+  {
+    "id": "106",
+    "id_lokasi": "IDTBK",
+    "nm_lokasi": "Tanjung Balai Karimun",
+    "kd_kantor": "20100",
+    "nm_kantor_pendek": "KPPBC TMP B TANJUNG BALAI KARIMUN"
+  },
+  {
+    "id": "107",
+    "id_lokasi": "IDTBT",
+    "nm_lokasi": "Tanjung Batu, Riau",
+    "kd_kantor": "20100",
+    "nm_kantor_pendek": "KPPBC TMP B TANJUNG BALAI KARIMUN"
+  },
+  {
+    "id": "108",
+    "id_lokasi": "IDPNG",
+    "nm_lokasi": "Penuba",
+    "kd_kantor": "20500",
+    "nm_kantor_pendek": "KPPBC TMP B TANJUNGPINANG"
+  },
+  {
+    "id": "109",
+    "id_lokasi": "IDBET",
+    "nm_lokasi": "Belida Terminal",
+    "kd_kantor": "20500",
+    "nm_kantor_pendek": "KPPBC TMP B TANJUNGPINANG"
+  },
+  {
+    "id": "110",
+    "id_lokasi": "IDKIJ",
+    "nm_lokasi": "Kijang",
+    "kd_kantor": "20500",
+    "nm_kantor_pendek": "KPPBC TMP B TANJUNGPINANG"
+  },
+  {
+    "id": "111",
+    "id_lokasi": "IDKNT",
+    "nm_lokasi": "Kakap Natuna Terminal",
+    "kd_kantor": "20500",
+    "nm_kantor_pendek": "KPPBC TMP B TANJUNGPINANG"
+  },
+  {
+    "id": "112",
+    "id_lokasi": "IDLBM",
+    "nm_lokasi": "Lobam",
+    "kd_kantor": "20500",
+    "nm_kantor_pendek": "KPPBC TMP B TANJUNGPINANG"
+  },
+  {
+    "id": "113",
+    "id_lokasi": "IDMWK",
+    "nm_lokasi": "Matak",
+    "kd_kantor": "20500",
+    "nm_kantor_pendek": "KPPBC TMP B TANJUNGPINANG"
+  },
+  {
+    "id": "114",
+    "id_lokasi": "IDNTX",
+    "nm_lokasi": "Natuna Ranai",
+    "kd_kantor": "20500",
+    "nm_kantor_pendek": "KPPBC TMP B TANJUNGPINANG"
+  },
+  {
+    "id": "115",
+    "id_lokasi": "IDSIQ",
+    "nm_lokasi": "Singkep/ Dabo (u)",
+    "kd_kantor": "20500",
+    "nm_kantor_pendek": "KPPBC TMP B TANJUNGPINANG"
+  },
+  {
+    "id": "116",
+    "id_lokasi": "IDTAN",
+    "nm_lokasi": "Tanjung Uban",
+    "kd_kantor": "20500",
+    "nm_kantor_pendek": "KPPBC TMP B TANJUNGPINANG"
+  },
+  {
+    "id": "117",
+    "id_lokasi": "IDTER",
+    "nm_lokasi": "Terempa",
+    "kd_kantor": "20500",
+    "nm_kantor_pendek": "KPPBC TMP B TANJUNGPINANG"
+  },
+  {
+    "id": "118",
+    "id_lokasi": "IDTPN",
+    "nm_lokasi": "Tanjung Pinang",
+    "kd_kantor": "20500",
+    "nm_kantor_pendek": "KPPBC TMP B TANJUNGPINANG"
+  },
+  {
+    "id": "119",
+    "id_lokasi": "IDTNJ",
+    "nm_lokasi": "Tanjung Pinang / Kijang (u)",
+    "kd_kantor": "20500",
+    "nm_kantor_pendek": "KPPBC TMP B TANJUNGPINANG"
+  },
+  {
+    "id": "120",
+    "id_lokasi": "IDBNT",
+    "nm_lokasi": "Belanak Terminal",
+    "kd_kantor": "20500",
+    "nm_kantor_pendek": "KPPBC TMP B TANJUNGPINANG"
+  },
+  {
+    "id": "121",
+    "id_lokasi": "IDDAS",
+    "nm_lokasi": "Singkep - Dabo",
+    "kd_kantor": "20500",
+    "nm_kantor_pendek": "KPPBC TMP B TANJUNGPINANG"
+  },
+  {
+    "id": "122",
+    "id_lokasi": "IDLIN",
+    "nm_lokasi": "Lingkas Tarakan",
+    "kd_kantor": "100800",
+    "nm_kantor_pendek": "KPPBC TMP B TARAKAN"
+  },
+  {
+    "id": "123",
+    "id_lokasi": "IDTRK",
+    "nm_lokasi": "Tarakan (u)",
+    "kd_kantor": "100800",
+    "nm_kantor_pendek": "KPPBC TMP B TARAKAN"
+  },
+  {
+    "id": "124",
+    "id_lokasi": "IDBYQ",
+    "nm_lokasi": "Bunyu",
+    "kd_kantor": "100800",
+    "nm_kantor_pendek": "KPPBC TMP B TARAKAN"
+  },
+  {
+    "id": "125",
+    "id_lokasi": "IDJUA",
+    "nm_lokasi": "Juata Tarakan",
+    "kd_kantor": "100800",
+    "nm_kantor_pendek": "KPPBC TMP B TARAKAN"
+  },
+  {
+    "id": "126",
+    "id_lokasi": "IDTJS",
+    "nm_lokasi": "Tanjung Selor",
+    "kd_kantor": "100800",
+    "nm_kantor_pendek": "KPPBC TMP B TARAKAN"
+  },
+  {
+    "id": "127",
+    "id_lokasi": "IDTRD",
+    "nm_lokasi": "Tanjung Redep",
+    "kd_kantor": "100800",
+    "nm_kantor_pendek": "KPPBC TMP B TARAKAN"
+  },
+  {
+    "id": "128",
+    "id_lokasi": "IDBEJ",
+    "nm_lokasi": "Berau",
+    "kd_kantor": "100800",
+    "nm_kantor_pendek": "KPPBC TMP B TARAKAN"
+  },
+  {
+    "id": "129",
+    "id_lokasi": "IDMBS",
+    "nm_lokasi": "Muara Bungus",
+    "kd_kantor": "11500",
+    "nm_kantor_pendek": "KPPBC TMP B TELUK BAYUR"
+  },
+  {
+    "id": "130",
+    "id_lokasi": "IDMPA",
+    "nm_lokasi": "Muara Padang",
+    "kd_kantor": "11500",
+    "nm_kantor_pendek": "KPPBC TMP B TELUK BAYUR"
+  },
+  {
+    "id": "131",
+    "id_lokasi": "IDPDG",
+    "nm_lokasi": "Padang / Minangkabau (u)",
+    "kd_kantor": "11500",
+    "nm_kantor_pendek": "KPPBC TMP B TELUK BAYUR"
+  },
+  {
+    "id": "132",
+    "id_lokasi": "IDTBR",
+    "nm_lokasi": "Teluk Bayur",
+    "kd_kantor": "11500",
+    "nm_kantor_pendek": "KPPBC TMP B TELUK BAYUR"
+  },
+  {
+    "id": "133",
+    "id_lokasi": "IDYIA",
+    "nm_lokasi": "Yogyakarta International Airport",
+    "kd_kantor": "60700",
+    "nm_kantor_pendek": "KPPBC TMP B YOGYAKARTA"
+  },
+  {
+    "id": "134",
+    "id_lokasi": "IDJOG",
+    "nm_lokasi": "Yogyakarta / Adi Sucipto (u)",
+    "kd_kantor": "60700",
+    "nm_kantor_pendek": "KPPBC TMP B YOGYAKARTA"
+  },
+  {
+    "id": "135",
+    "id_lokasi": "IDBLW",
+    "nm_lokasi": "Belawan",
+    "kd_kantor": "10700",
+    "nm_kantor_pendek": "KPPBC TMP BELAWAN"
+  },
+  {
+    "id": "136",
+    "id_lokasi": "IDRPA",
+    "nm_lokasi": "Rantau Panjang",
+    "kd_kantor": "10700",
+    "nm_kantor_pendek": "KPPBC TMP BELAWAN"
+  },
+  {
+    "id": "137",
+    "id_lokasi": "IDNAM",
+    "nm_lokasi": "Namlea",
+    "kd_kantor": "120100",
+    "nm_kantor_pendek": "KPPBC TMP C AMBON"
+  },
+  {
+    "id": "138",
+    "id_lokasi": "IDWAI",
+    "nm_lokasi": "Wainibe",
+    "kd_kantor": "120100",
+    "nm_kantor_pendek": "KPPBC TMP C AMBON"
+  },
+  {
+    "id": "139",
+    "id_lokasi": "IDBUA",
+    "nm_lokasi": "Bula",
+    "kd_kantor": "120100",
+    "nm_kantor_pendek": "KPPBC TMP C AMBON"
+  },
+  {
+    "id": "140",
+    "id_lokasi": "IDTUL",
+    "nm_lokasi": "Tulehu",
+    "kd_kantor": "120100",
+    "nm_kantor_pendek": "KPPBC TMP C AMBON"
+  },
+  {
+    "id": "141",
+    "id_lokasi": "IDGAL",
+    "nm_lokasi": "Galala",
+    "kd_kantor": "120100",
+    "nm_kantor_pendek": "KPPBC TMP C AMBON"
+  },
+  {
+    "id": "142",
+    "id_lokasi": "IDWSS",
+    "nm_lokasi": "Waisarisa",
+    "kd_kantor": "120100",
+    "nm_kantor_pendek": "KPPBC TMP C AMBON"
+  },
+  {
+    "id": "143",
+    "id_lokasi": "IDAMB",
+    "nm_lokasi": "Ambon",
+    "kd_kantor": "120100",
+    "nm_kantor_pendek": "KPPBC TMP C AMBON"
+  },
+  {
+    "id": "144",
+    "id_lokasi": "IDAMQ",
+    "nm_lokasi": "Ambon / Pattimura/laha (u)",
+    "kd_kantor": "120100",
+    "nm_kantor_pendek": "KPPBC TMP C AMBON"
+  },
+  {
+    "id": "145",
+    "id_lokasi": "IDGSR",
+    "nm_lokasi": "Geser",
+    "kd_kantor": "120100",
+    "nm_kantor_pendek": "KPPBC TMP C AMBON"
+  },
+  {
+    "id": "146",
+    "id_lokasi": "IDKRU",
+    "nm_lokasi": "Krueng Raja Malahayati",
+    "kd_kantor": "130100",
+    "nm_kantor_pendek": "KPPBC TMP C BANDA ACEH"
+  },
+  {
+    "id": "147",
+    "id_lokasi": "IDLHJ",
+    "nm_lokasi": "Labuhan Haji Aceh",
+    "kd_kantor": "130100",
+    "nm_kantor_pendek": "KPPBC TMP C BANDA ACEH"
+  },
+  {
+    "id": "148",
+    "id_lokasi": "IDLHK",
+    "nm_lokasi": "Lhok Nga",
+    "kd_kantor": "130100",
+    "nm_kantor_pendek": "KPPBC TMP C BANDA ACEH"
+  },
+  {
+    "id": "149",
+    "id_lokasi": "IDBTJ",
+    "nm_lokasi": "Aceh / Blang Bintang (u)",
+    "kd_kantor": "130100",
+    "nm_kantor_pendek": "KPPBC TMP C BANDA ACEH"
+  },
+  {
+    "id": "150",
+    "id_lokasi": "IDSIG",
+    "nm_lokasi": "Sigli",
+    "kd_kantor": "130100",
+    "nm_kantor_pendek": "KPPBC TMP C BANDA ACEH"
+  },
+  {
+    "id": "151",
+    "id_lokasi": "IDKTP",
+    "nm_lokasi": "Ketapang Jawa Timur",
+    "kd_kantor": "160700",
+    "nm_kantor_pendek": "KPPBC TMP C BANYUWANGI"
+  },
+  {
+    "id": "152",
+    "id_lokasi": "IDMUN",
+    "nm_lokasi": "Muncar",
+    "kd_kantor": "160700",
+    "nm_kantor_pendek": "KPPBC TMP C BANYUWANGI"
+  },
+  {
+    "id": "153",
+    "id_lokasi": "IDBJU",
+    "nm_lokasi": "Banyuwangi",
+    "kd_kantor": "160700",
+    "nm_kantor_pendek": "KPPBC TMP C BANYUWANGI"
+  },
+  {
+    "id": "154",
+    "id_lokasi": "IDLAT",
+    "nm_lokasi": "Lalang Terminal, St",
+    "kd_kantor": "21100",
+    "nm_kantor_pendek": "KPPBC TMP C BENGKALIS"
+  },
+  {
+    "id": "155",
+    "id_lokasi": "IDSIA",
+    "nm_lokasi": "Siak Yechil, Riau",
+    "kd_kantor": "21100",
+    "nm_kantor_pendek": "KPPBC TMP C BENGKALIS"
+  },
+  {
+    "id": "156",
+    "id_lokasi": "IDSPA",
+    "nm_lokasi": "Selat Panjang",
+    "kd_kantor": "21100",
+    "nm_kantor_pendek": "KPPBC TMP C BENGKALIS"
+  },
+  {
+    "id": "157",
+    "id_lokasi": "IDTGK",
+    "nm_lokasi": "Tanjung Kedabu",
+    "kd_kantor": "21100",
+    "nm_kantor_pendek": "KPPBC TMP C BENGKALIS"
+  },
+  {
+    "id": "158",
+    "id_lokasi": "IDSEQ",
+    "nm_lokasi": "Sungai Pakning",
+    "kd_kantor": "21100",
+    "nm_kantor_pendek": "KPPBC TMP C BENGKALIS"
+  },
+  {
+    "id": "159",
+    "id_lokasi": "IDSKE",
+    "nm_lokasi": "Sungai Kembung",
+    "kd_kantor": "21100",
+    "nm_kantor_pendek": "KPPBC TMP C BENGKALIS"
+  },
+  {
+    "id": "160",
+    "id_lokasi": "IDTSM",
+    "nm_lokasi": "Tanjung Samak",
+    "kd_kantor": "21100",
+    "nm_kantor_pendek": "KPPBC TMP C BENGKALIS"
+  },
+  {
+    "id": "161",
+    "id_lokasi": "IDBDL",
+    "nm_lokasi": "Bandul",
+    "kd_kantor": "21100",
+    "nm_kantor_pendek": "KPPBC TMP C BENGKALIS"
+  },
+  {
+    "id": "162",
+    "id_lokasi": "IDBLS",
+    "nm_lokasi": "Bengkalis",
+    "kd_kantor": "21100",
+    "nm_kantor_pendek": "KPPBC TMP C BENGKALIS"
+  },
+  {
+    "id": "163",
+    "id_lokasi": "IDPBA",
+    "nm_lokasi": "Pulau Baai",
+    "kd_kantor": "30200",
+    "nm_kantor_pendek": "KPPBC TMP C BENGKULU"
+  },
+  {
+    "id": "164",
+    "id_lokasi": "IDMPC",
+    "nm_lokasi": "Muko-Muko",
+    "kd_kantor": "30200",
+    "nm_kantor_pendek": "KPPBC TMP C BENGKULU"
+  },
+  {
+    "id": "165",
+    "id_lokasi": "IDBKU",
+    "nm_lokasi": "Bengkulu",
+    "kd_kantor": "30200",
+    "nm_kantor_pendek": "KPPBC TMP C BENGKULU"
+  },
+  {
+    "id": "166",
+    "id_lokasi": "IDBKS",
+    "nm_lokasi": "Bengkulu / Padang Kemiling (u)",
+    "kd_kantor": "30200",
+    "nm_kantor_pendek": "KPPBC TMP C BENGKULU"
+  },
+  {
+    "id": "167",
+    "id_lokasi": "IDNBX",
+    "nm_lokasi": "Nabire , Irian Jaya",
+    "kd_kantor": "120900",
+    "nm_kantor_pendek": "KPPBC TMP C BIAK"
+  },
+  {
+    "id": "168",
+    "id_lokasi": "IDZRI",
+    "nm_lokasi": "Serui",
+    "kd_kantor": "120900",
+    "nm_kantor_pendek": "KPPBC TMP C BIAK"
+  },
+  {
+    "id": "169",
+    "id_lokasi": "IDBIK",
+    "nm_lokasi": "Biak / Frans Kasiepo (u)",
+    "kd_kantor": "120900",
+    "nm_kantor_pendek": "KPPBC TMP C BIAK"
+  },
+  {
+    "id": "170",
+    "id_lokasi": "IDBIT",
+    "nm_lokasi": "Bitung",
+    "kd_kantor": "111100",
+    "nm_kantor_pendek": "KPPBC TMP C BITUNG"
+  },
+  {
+    "id": "171",
+    "id_lokasi": "IDBTR",
+    "nm_lokasi": "Blitar",
+    "kd_kantor": "70700",
+    "nm_kantor_pendek": "KPPBC TMP C BLITAR"
+  },
+  {
+    "id": "172",
+    "id_lokasi": "IDBOJ",
+    "nm_lokasi": "Bojonegoro",
+    "kd_kantor": "70400",
+    "nm_kantor_pendek": "KPPBC TMP C BOJONEGORO"
+  },
+  {
+    "id": "173",
+    "id_lokasi": "IDTBN",
+    "nm_lokasi": "Tuban, Jv",
+    "kd_kantor": "70400",
+    "nm_kantor_pendek": "KPPBC TMP C BOJONEGORO"
+  },
+  {
+    "id": "174",
+    "id_lokasi": "IDBTG",
+    "nm_lokasi": "Bontang",
+    "kd_kantor": "100600",
+    "nm_kantor_pendek": "KPPBC TMP C BONTANG"
+  },
+  {
+    "id": "175",
+    "id_lokasi": "IDCXP",
+    "nm_lokasi": "Cilacap",
+    "kd_kantor": "60400",
+    "nm_kantor_pendek": "KPPBC TMP C CILACAP"
+  },
+  {
+    "id": "176",
+    "id_lokasi": "IDBLG",
+    "nm_lokasi": "Balongan",
+    "kd_kantor": "50700",
+    "nm_kantor_pendek": "KPPBC TMP C CIREBON"
+  },
+  {
+    "id": "177",
+    "id_lokasi": "IDCBN",
+    "nm_lokasi": "Cirebon",
+    "kd_kantor": "50700",
+    "nm_kantor_pendek": "KPPBC TMP C CIREBON"
+  },
+  {
+    "id": "178",
+    "id_lokasi": "IDERT",
+    "nm_lokasi": "Eretan",
+    "kd_kantor": "50700",
+    "nm_kantor_pendek": "KPPBC TMP C CIREBON"
+  },
+  {
+    "id": "179",
+    "id_lokasi": "IDENT",
+    "nm_lokasi": "Entikong",
+    "kd_kantor": "90200",
+    "nm_kantor_pendek": "KPPBC TMP C ENTIKONG"
+  },
+  {
+    "id": "180",
+    "id_lokasi": "IDNTI",
+    "nm_lokasi": "Bintuni, Irian Jaya",
+    "kd_kantor": "122300",
+    "nm_kantor_pendek": "KPPBC TMP C FAKFAK"
+  },
+  {
+    "id": "181",
+    "id_lokasi": "IDFKQ",
+    "nm_lokasi": "Fak-fak",
+    "kd_kantor": "122300",
+    "nm_kantor_pendek": "KPPBC TMP C FAKFAK"
+  },
+  {
+    "id": "182",
+    "id_lokasi": "IDGOR",
+    "nm_lokasi": "Gorontalo",
+    "kd_kantor": "111300",
+    "nm_kantor_pendek": "KPPBC TMP C GORONTALO"
+  },
+  {
+    "id": "183",
+    "id_lokasi": "IDGTO",
+    "nm_lokasi": "Gorontalo / Jalaluddin(u)",
+    "kd_kantor": "111300",
+    "nm_kantor_pendek": "KPPBC TMP C GORONTALO"
+  },
+  {
+    "id": "184",
+    "id_lokasi": "IDBKY",
+    "nm_lokasi": "BENGKAYANG",
+    "kd_kantor": "92000",
+    "nm_kantor_pendek": "KPPBC TMP C JAGOI BABANG"
+  },
+  {
+    "id": "185",
+    "id_lokasi": "IDZRM",
+    "nm_lokasi": "Sarmi",
+    "kd_kantor": "120600",
+    "nm_kantor_pendek": "KPPBC TMP C JAYAPURA"
+  },
+  {
+    "id": "186",
+    "id_lokasi": "IDDMA",
+    "nm_lokasi": "Demta",
+    "kd_kantor": "120600",
+    "nm_kantor_pendek": "KPPBC TMP C JAYAPURA"
+  },
+  {
+    "id": "187",
+    "id_lokasi": "IDWAR",
+    "nm_lokasi": "Waris",
+    "kd_kantor": "120600",
+    "nm_kantor_pendek": "KPPBC TMP C JAYAPURA"
+  },
+  {
+    "id": "188",
+    "id_lokasi": "IDDJJ",
+    "nm_lokasi": "Jayapura / Sentani (u)",
+    "kd_kantor": "120600",
+    "nm_kantor_pendek": "KPPBC TMP C JAYAPURA"
+  },
+  {
+    "id": "189",
+    "id_lokasi": "IDPRN",
+    "nm_lokasi": "Panarukan",
+    "kd_kantor": "71100",
+    "nm_kantor_pendek": "KPPBC TMP C JEMBER"
+  },
+  {
+    "id": "190",
+    "id_lokasi": "IDKSO",
+    "nm_lokasi": "Kalbut Situbondo",
+    "kd_kantor": "71100",
+    "nm_kantor_pendek": "KPPBC TMP C JEMBER"
+  },
+  {
+    "id": "191",
+    "id_lokasi": "IDPSB",
+    "nm_lokasi": "Jakarta / Pos Pasar Baru (ptt)",
+    "kd_kantor": "40600",
+    "nm_kantor_pendek": "KPPBC TMP C KANTOR POS PASAR BARU"
+  },
+  {
+    "id": "192",
+    "id_lokasi": "IDKDR",
+    "nm_lokasi": "Kendari",
+    "kd_kantor": "110600",
+    "nm_kantor_pendek": "KPPBC TMP C KENDARI"
+  },
+  {
+    "id": "193",
+    "id_lokasi": "IDKDI",
+    "nm_lokasi": "Kendari / Wolter Monginsidi (u)",
+    "kd_kantor": "110600",
+    "nm_kantor_pendek": "KPPBC TMP C KENDARI"
+  },
+  {
+    "id": "194",
+    "id_lokasi": "IDBUW",
+    "nm_lokasi": "Bau-bau",
+    "kd_kantor": "110600",
+    "nm_kantor_pendek": "KPPBC TMP C KENDARI"
+  },
+  {
+    "id": "195",
+    "id_lokasi": "IDPUM",
+    "nm_lokasi": "Pomalaa",
+    "kd_kantor": "110600",
+    "nm_kantor_pendek": "KPPBC TMP C KENDARI"
+  },
+  {
+    "id": "196",
+    "id_lokasi": "IDRAQ",
+    "nm_lokasi": "Raha, Sul.tengg.",
+    "kd_kantor": "110600",
+    "nm_kantor_pendek": "KPPBC TMP C KENDARI"
+  },
+  {
+    "id": "197",
+    "id_lokasi": "IDKTG",
+    "nm_lokasi": "Ketapang Kalimantan Barat",
+    "kd_kantor": "90400",
+    "nm_kantor_pendek": "KPPBC TMP C KETAPANG"
+  },
+  {
+    "id": "198",
+    "id_lokasi": "IDTMO",
+    "nm_lokasi": "Telok Melaid",
+    "kd_kantor": "90400",
+    "nm_kantor_pendek": "KPPBC TMP C KETAPANG"
+  },
+  {
+    "id": "199",
+    "id_lokasi": "IDKDW",
+    "nm_lokasi": "Kendawangan",
+    "kd_kantor": "90400",
+    "nm_kantor_pendek": "KPPBC TMP C KETAPANG"
+  },
+  {
+    "id": "200",
+    "id_lokasi": "IDKBU",
+    "nm_lokasi": "Kotabaru",
+    "kd_kantor": "100200",
+    "nm_kantor_pendek": "KPPBC TMP C KOTABARU"
+  },
+  {
+    "id": "201",
+    "id_lokasi": "IDIBT",
+    "nm_lokasi": "Indonesia Bulk Terminal",
+    "kd_kantor": "100200",
+    "nm_kantor_pendek": "KPPBC TMP C KOTABARU"
+  },
+  {
+    "id": "202",
+    "id_lokasi": "IDBTW",
+    "nm_lokasi": "Batulicin",
+    "kd_kantor": "100200",
+    "nm_kantor_pendek": "KPPBC TMP C KOTABARU"
+  },
+  {
+    "id": "203",
+    "id_lokasi": "IDNPL",
+    "nm_lokasi": "idrth Pulau Laut",
+    "kd_kantor": "100200",
+    "nm_kantor_pendek": "KPPBC TMP C KOTABARU"
+  },
+  {
+    "id": "204",
+    "id_lokasi": "IDPUT",
+    "nm_lokasi": "Pulau Laut",
+    "kd_kantor": "100200",
+    "nm_kantor_pendek": "KPPBC TMP C KOTABARU"
+  },
+  {
+    "id": "205",
+    "id_lokasi": "IDSTU",
+    "nm_lokasi": "Satui",
+    "kd_kantor": "100200",
+    "nm_kantor_pendek": "KPPBC TMP C KOTABARU"
+  },
+  {
+    "id": "206",
+    "id_lokasi": "IDTAR",
+    "nm_lokasi": "Tarjun",
+    "kd_kantor": "100200",
+    "nm_kantor_pendek": "KPPBC TMP C KOTABARU"
+  },
+  {
+    "id": "207",
+    "id_lokasi": "IDKTJ",
+    "nm_lokasi": "Kuala Tanjung",
+    "kd_kantor": "11200",
+    "nm_kantor_pendek": "KPPBC TMP C KUALA TANJUNG"
+  },
+  {
+    "id": "208",
+    "id_lokasi": "IDPDO",
+    "nm_lokasi": "Pangkalan Dode",
+    "kd_kantor": "11200",
+    "nm_kantor_pendek": "KPPBC TMP C KUALA TANJUNG"
+  },
+  {
+    "id": "209",
+    "id_lokasi": "IDBAR",
+    "nm_lokasi": "Bandar Khalipah",
+    "kd_kantor": "11200",
+    "nm_kantor_pendek": "KPPBC TMP C KUALA TANJUNG"
+  },
+  {
+    "id": "210",
+    "id_lokasi": "IDTMU",
+    "nm_lokasi": "Teluk Mengkudu",
+    "kd_kantor": "11200",
+    "nm_kantor_pendek": "KPPBC TMP C KUALA TANJUNG"
+  },
+  {
+    "id": "211",
+    "id_lokasi": "IDKOE",
+    "nm_lokasi": "Kupang / El-tari (u)",
+    "kd_kantor": "80500",
+    "nm_kantor_pendek": "KPPBC TMP C KUPANG"
+  },
+  {
+    "id": "212",
+    "id_lokasi": "IDTMC",
+    "nm_lokasi": "Tambolaka",
+    "kd_kantor": "80500",
+    "nm_kantor_pendek": "KPPBC TMP C KUPANG"
+  },
+  {
+    "id": "213",
+    "id_lokasi": "IDWGP",
+    "nm_lokasi": "Waingapu",
+    "kd_kantor": "80500",
+    "nm_kantor_pendek": "KPPBC TMP C KUPANG"
+  },
+  {
+    "id": "214",
+    "id_lokasi": "IDTEN",
+    "nm_lokasi": "Tenau",
+    "kd_kantor": "80500",
+    "nm_kantor_pendek": "KPPBC TMP C KUPANG"
+  },
+  {
+    "id": "215",
+    "id_lokasi": "IDWKL",
+    "nm_lokasi": "Waikelo",
+    "kd_kantor": "80500",
+    "nm_kantor_pendek": "KPPBC TMP C KUPANG"
+  },
+  {
+    "id": "216",
+    "id_lokasi": "IDBAA",
+    "nm_lokasi": "Baa",
+    "kd_kantor": "80500",
+    "nm_kantor_pendek": "KPPBC TMP C KUPANG"
+  },
+  {
+    "id": "217",
+    "id_lokasi": "IDLKA",
+    "nm_lokasi": "Larantuka",
+    "kd_kantor": "80700",
+    "nm_kantor_pendek": "KPPBC TMP C LABUAN BAJO"
+  },
+  {
+    "id": "218",
+    "id_lokasi": "IDMOF",
+    "nm_lokasi": "Maumere",
+    "kd_kantor": "80700",
+    "nm_kantor_pendek": "KPPBC TMP C LABUAN BAJO"
+  },
+  {
+    "id": "219",
+    "id_lokasi": "IDLBJ",
+    "nm_lokasi": "Labuanbajo",
+    "kd_kantor": "80700",
+    "nm_kantor_pendek": "KPPBC TMP C LABUAN BAJO"
+  },
+  {
+    "id": "220",
+    "id_lokasi": "IDENE",
+    "nm_lokasi": "Ende / H.hasan Aroeboesman(u)",
+    "kd_kantor": "80700",
+    "nm_kantor_pendek": "KPPBC TMP C LABUAN BAJO"
+  },
+  {
+    "id": "221",
+    "id_lokasi": "IDEND",
+    "nm_lokasi": "Ende/ipi",
+    "kd_kantor": "80700",
+    "nm_kantor_pendek": "KPPBC TMP C LABUAN BAJO"
+  },
+  {
+    "id": "222",
+    "id_lokasi": "IDKUA",
+    "nm_lokasi": "KUALA LANGSA",
+    "kd_kantor": "130600",
+    "nm_kantor_pendek": "KPPBC TMP C LANGSA"
+  },
+  {
+    "id": "223",
+    "id_lokasi": "IDLSW",
+    "nm_lokasi": "Lhok Seumawe",
+    "kd_kantor": "130500",
+    "nm_kantor_pendek": "KPPBC TMP C LHOKSEUMAWE"
+  },
+  {
+    "id": "224",
+    "id_lokasi": "IDKGH",
+    "nm_lokasi": "Krueng Geukueh",
+    "kd_kantor": "130500",
+    "nm_kantor_pendek": "KPPBC TMP C LHOKSEUMAWE"
+  },
+  {
+    "id": "225",
+    "id_lokasi": "IDBLL",
+    "nm_lokasi": "Blang Lancang, St",
+    "kd_kantor": "130500",
+    "nm_kantor_pendek": "KPPBC TMP C LHOKSEUMAWE"
+  },
+  {
+    "id": "226",
+    "id_lokasi": "IDAUN",
+    "nm_lokasi": "Blang Lancang (arun)",
+    "kd_kantor": "130500",
+    "nm_kantor_pendek": "KPPBC TMP C LHOKSEUMAWE"
+  },
+  {
+    "id": "227",
+    "id_lokasi": "IDLSX",
+    "nm_lokasi": "Lhok Sukon",
+    "kd_kantor": "130500",
+    "nm_kantor_pendek": "KPPBC TMP C LHOKSEUMAWE"
+  },
+  {
+    "id": "228",
+    "id_lokasi": "IDLUW",
+    "nm_lokasi": "Luwuk",
+    "kd_kantor": "111000",
+    "nm_kantor_pendek": "KPPBC TMP C LUWUK"
+  },
+  {
+    "id": "229",
+    "id_lokasi": "IDAPN",
+    "nm_lokasi": "Ampana",
+    "kd_kantor": "111000",
+    "nm_kantor_pendek": "KPPBC TMP C LUWUK"
+  },
+  {
+    "id": "230",
+    "id_lokasi": "IDPGM",
+    "nm_lokasi": "Pagimana",
+    "kd_kantor": "111000",
+    "nm_kantor_pendek": "KPPBC TMP C LUWUK"
+  },
+  {
+    "id": "231",
+    "id_lokasi": "IDBGG",
+    "nm_lokasi": "Banggai",
+    "kd_kantor": "111000",
+    "nm_kantor_pendek": "KPPBC TMP C LUWUK"
+  },
+  {
+    "id": "232",
+    "id_lokasi": "IDPAC",
+    "nm_lokasi": "Pacitan",
+    "kd_kantor": "71000",
+    "nm_kantor_pendek": "KPPBC TMP C MADIUN"
+  },
+  {
+    "id": "233",
+    "id_lokasi": "IDKAT",
+    "nm_lokasi": "Kalianget",
+    "kd_kantor": "70200",
+    "nm_kantor_pendek": "KPPBC TMP C MADURA"
+  },
+  {
+    "id": "234",
+    "id_lokasi": "IDPGA",
+    "nm_lokasi": "Pagerungan",
+    "kd_kantor": "70200",
+    "nm_kantor_pendek": "KPPBC TMP C MADURA"
+  },
+  {
+    "id": "235",
+    "id_lokasi": "IDSPD",
+    "nm_lokasi": "Sapudi",
+    "kd_kantor": "70200",
+    "nm_kantor_pendek": "KPPBC TMP C MADURA"
+  },
+  {
+    "id": "236",
+    "id_lokasi": "IDKGN",
+    "nm_lokasi": "Kangean",
+    "kd_kantor": "70200",
+    "nm_kantor_pendek": "KPPBC TMP C MADURA"
+  },
+  {
+    "id": "237",
+    "id_lokasi": "IDMAG",
+    "nm_lokasi": "Magelang",
+    "kd_kantor": "61100",
+    "nm_kantor_pendek": "KPPBC TMP C MAGELANG"
+  },
+  {
+    "id": "238",
+    "id_lokasi": "IDMLI",
+    "nm_lokasi": "Malili, Sulawesi",
+    "kd_kantor": "110400",
+    "nm_kantor_pendek": "KPPBC TMP C MALILI"
+  },
+  {
+    "id": "239",
+    "id_lokasi": "IDMXB",
+    "nm_lokasi": "Masamba",
+    "kd_kantor": "110400",
+    "nm_kantor_pendek": "KPPBC TMP C MALILI"
+  },
+  {
+    "id": "240",
+    "id_lokasi": "IDPPO",
+    "nm_lokasi": "Palopo",
+    "kd_kantor": "110400",
+    "nm_kantor_pendek": "KPPBC TMP C MALILI"
+  },
+  {
+    "id": "241",
+    "id_lokasi": "IDSQR",
+    "nm_lokasi": "Soroako",
+    "kd_kantor": "110400",
+    "nm_kantor_pendek": "KPPBC TMP C MALILI"
+  },
+  {
+    "id": "242",
+    "id_lokasi": "IDBAL",
+    "nm_lokasi": "Balantang/malili",
+    "kd_kantor": "110400",
+    "nm_kantor_pendek": "KPPBC TMP C MALILI"
+  },
+  {
+    "id": "243",
+    "id_lokasi": "IDLIR",
+    "nm_lokasi": "Lirung",
+    "kd_kantor": "111200",
+    "nm_kantor_pendek": "KPPBC TMP C MANADO"
+  },
+  {
+    "id": "244",
+    "id_lokasi": "IDLUK",
+    "nm_lokasi": "Labuhan Uki",
+    "kd_kantor": "111200",
+    "nm_kantor_pendek": "KPPBC TMP C MANADO"
+  },
+  {
+    "id": "245",
+    "id_lokasi": "IDMDC",
+    "nm_lokasi": "Menado / Sam Ratulangi (u)",
+    "kd_kantor": "111200",
+    "nm_kantor_pendek": "KPPBC TMP C MANADO"
+  },
+  {
+    "id": "246",
+    "id_lokasi": "IDMND",
+    "nm_lokasi": "Manado",
+    "kd_kantor": "111200",
+    "nm_kantor_pendek": "KPPBC TMP C MANADO"
+  },
+  {
+    "id": "247",
+    "id_lokasi": "IDNAH",
+    "nm_lokasi": "Tahuna / Naha (u) - Sulut",
+    "kd_kantor": "111200",
+    "nm_kantor_pendek": "KPPBC TMP C MANADO"
+  },
+  {
+    "id": "248",
+    "id_lokasi": "IDPET",
+    "nm_lokasi": "Petta",
+    "kd_kantor": "111200",
+    "nm_kantor_pendek": "KPPBC TMP C MANADO"
+  },
+  {
+    "id": "249",
+    "id_lokasi": "IDTZD",
+    "nm_lokasi": "Amurang",
+    "kd_kantor": "111200",
+    "nm_kantor_pendek": "KPPBC TMP C MANADO"
+  },
+  {
+    "id": "250",
+    "id_lokasi": "IDIid",
+    "nm_lokasi": "Iidbonto",
+    "kd_kantor": "111200",
+    "nm_kantor_pendek": "KPPBC TMP C MANADO"
+  },
+  {
+    "id": "251",
+    "id_lokasi": "IDTGD",
+    "nm_lokasi": "Tagulandang",
+    "kd_kantor": "111200",
+    "nm_kantor_pendek": "KPPBC TMP C MANADO"
+  },
+  {
+    "id": "252",
+    "id_lokasi": "IDHLS",
+    "nm_lokasi": "Hulu Siau",
+    "kd_kantor": "111200",
+    "nm_kantor_pendek": "KPPBC TMP C MANADO"
+  },
+  {
+    "id": "253",
+    "id_lokasi": "IDMKW",
+    "nm_lokasi": "Maidkwari",
+    "kd_kantor": "120400",
+    "nm_kantor_pendek": "KPPBC TMP C MAidKWARI"
+  },
+  {
+    "id": "254",
+    "id_lokasi": "IDLEM",
+    "nm_lokasi": "Lembar",
+    "kd_kantor": "80300",
+    "nm_kantor_pendek": "KPPBC TMP C MATARAM"
+  },
+  {
+    "id": "255",
+    "id_lokasi": "IDLHA",
+    "nm_lokasi": "Labuhan Haji, Ntb",
+    "kd_kantor": "80300",
+    "nm_kantor_pendek": "KPPBC TMP C MATARAM"
+  },
+  {
+    "id": "256",
+    "id_lokasi": "IDLOM",
+    "nm_lokasi": "Lombok",
+    "kd_kantor": "80300",
+    "nm_kantor_pendek": "KPPBC TMP C MATARAM"
+  },
+  {
+    "id": "257",
+    "id_lokasi": "IDLMB",
+    "nm_lokasi": "Lombok Strait",
+    "kd_kantor": "80300",
+    "nm_kantor_pendek": "KPPBC TMP C MATARAM"
+  },
+  {
+    "id": "258",
+    "id_lokasi": "IDLOP",
+    "nm_lokasi": "Bandara Internasional Lombok",
+    "kd_kantor": "80300",
+    "nm_kantor_pendek": "KPPBC TMP C MATARAM"
+  },
+  {
+    "id": "259",
+    "id_lokasi": "IDAMI",
+    "nm_lokasi": "Mataram  / Selaparang (u)",
+    "kd_kantor": "80300",
+    "nm_kantor_pendek": "KPPBC TMP C MATARAM"
+  },
+  {
+    "id": "260",
+    "id_lokasi": "IDKMM",
+    "nm_lokasi": "Kimam, Irian Jaya",
+    "kd_kantor": "120700",
+    "nm_kantor_pendek": "KPPBC TMP C MERAUKE"
+  },
+  {
+    "id": "261",
+    "id_lokasi": "IDMKQ",
+    "nm_lokasi": "Merauke",
+    "kd_kantor": "120700",
+    "nm_kantor_pendek": "KPPBC TMP C MERAUKE"
+  },
+  {
+    "id": "262",
+    "id_lokasi": "IDASI",
+    "nm_lokasi": "Asike",
+    "kd_kantor": "120700",
+    "nm_kantor_pendek": "KPPBC TMP C MERAUKE"
+  },
+  {
+    "id": "263",
+    "id_lokasi": "IDBXD",
+    "nm_lokasi": "Bade, Irian Jaya",
+    "kd_kantor": "120700",
+    "nm_kantor_pendek": "KPPBC TMP C MERAUKE"
+  },
+  {
+    "id": "264",
+    "id_lokasi": "IDMEQ",
+    "nm_lokasi": "Meulaboh",
+    "kd_kantor": "130400",
+    "nm_kantor_pendek": "KPPBC TMP C MEULABOH"
+  },
+  {
+    "id": "265",
+    "id_lokasi": "IDPBN",
+    "nm_lokasi": "Pulau Banyak",
+    "kd_kantor": "130400",
+    "nm_kantor_pendek": "KPPBC TMP C MEULABOH"
+  },
+  {
+    "id": "266",
+    "id_lokasi": "IDCLG",
+    "nm_lokasi": "Calang",
+    "kd_kantor": "130400",
+    "nm_kantor_pendek": "KPPBC TMP C MEULABOH"
+  },
+  {
+    "id": "267",
+    "id_lokasi": "IDSIN",
+    "nm_lokasi": "Sinabang",
+    "kd_kantor": "130400",
+    "nm_kantor_pendek": "KPPBC TMP C MEULABOH"
+  },
+  {
+    "id": "268",
+    "id_lokasi": "IDKNL",
+    "nm_lokasi": "Koloiddale",
+    "kd_kantor": "110900",
+    "nm_kantor_pendek": "KPPBC TMP C MOROWALI"
+  },
+  {
+    "id": "269",
+    "id_lokasi": "IDKLD",
+    "nm_lokasi": "Kolonedale (u)",
+    "kd_kantor": "110900",
+    "nm_kantor_pendek": "KPPBC TMP C MOROWALI"
+  },
+  {
+    "id": "270",
+    "id_lokasi": "IDPSJ",
+    "nm_lokasi": "Posso",
+    "kd_kantor": "110900",
+    "nm_kantor_pendek": "KPPBC TMP C MOROWALI"
+  },
+  {
+    "id": "271",
+    "id_lokasi": "IDMOW",
+    "nm_lokasi": "Morowali",
+    "kd_kantor": "110900",
+    "nm_kantor_pendek": "KPPBC TMP C MOROWALI"
+  },
+  {
+    "id": "272",
+    "id_lokasi": "IDBAH",
+    "nm_lokasi": "Bahudopi",
+    "kd_kantor": "110900",
+    "nm_kantor_pendek": "KPPBC TMP C MOROWALI"
+  },
+  {
+    "id": "273",
+    "id_lokasi": "IDSQG",
+    "nm_lokasi": "Sintang",
+    "kd_kantor": "91000",
+    "nm_kantor_pendek": "KPPBC TMP C NANGA BADAU"
+  },
+  {
+    "id": "274",
+    "id_lokasi": "IDNBF",
+    "nm_lokasi": "Nangau Badau",
+    "kd_kantor": "91000",
+    "nm_kantor_pendek": "KPPBC TMP C NANGA BADAU"
+  },
+  {
+    "id": "275",
+    "id_lokasi": "IDNNX",
+    "nm_lokasi": "Nunukan",
+    "kd_kantor": "100900",
+    "nm_kantor_pendek": "KPPBC TMP C NUNUKAN"
+  },
+  {
+    "id": "276",
+    "id_lokasi": "IDSEI",
+    "nm_lokasi": "Sebuku Island",
+    "kd_kantor": "100900",
+    "nm_kantor_pendek": "KPPBC TMP C NUNUKAN"
+  },
+  {
+    "id": "277",
+    "id_lokasi": "IDLBW",
+    "nm_lokasi": "Long Bawan",
+    "kd_kantor": "100900",
+    "nm_kantor_pendek": "KPPBC TMP C NUNUKAN"
+  },
+  {
+    "id": "278",
+    "id_lokasi": "IDPKY",
+    "nm_lokasi": "Palangkaraya/ Panarung (u)/ Tjilik  Riwut (u)",
+    "kd_kantor": "90900",
+    "nm_kantor_pendek": "KPPBC TMP C PALANGKARAYA"
+  },
+  {
+    "id": "279",
+    "id_lokasi": "IDPPS",
+    "nm_lokasi": "Pulang Pisau",
+    "kd_kantor": "90900",
+    "nm_kantor_pendek": "KPPBC TMP C PALANGKARAYA"
+  },
+  {
+    "id": "280",
+    "id_lokasi": "IDKKA",
+    "nm_lokasi": "Kuala Kapuas, Kl",
+    "kd_kantor": "90900",
+    "nm_kantor_pendek": "KPPBC TMP C PALANGKARAYA"
+  },
+  {
+    "id": "281",
+    "id_lokasi": "IDKUM",
+    "nm_lokasi": "Kumai",
+    "kd_kantor": "90800",
+    "nm_kantor_pendek": "KPPBC TMP C PANGKALAN BUN"
+  },
+  {
+    "id": "282",
+    "id_lokasi": "IDPKN",
+    "nm_lokasi": "Pangkalan Bun",
+    "kd_kantor": "90800",
+    "nm_kantor_pendek": "KPPBC TMP C PANGKALAN BUN"
+  },
+  {
+    "id": "283",
+    "id_lokasi": "IDSKM",
+    "nm_lokasi": "Sukamara",
+    "kd_kantor": "90800",
+    "nm_kantor_pendek": "KPPBC TMP C PANGKALAN BUN"
+  },
+  {
+    "id": "284",
+    "id_lokasi": "IDKJL",
+    "nm_lokasi": "Kuala Jelai",
+    "kd_kantor": "90800",
+    "nm_kantor_pendek": "KPPBC TMP C PANGKALAN BUN"
+  },
+  {
+    "id": "285",
+    "id_lokasi": "IDLUB",
+    "nm_lokasi": "Lubuk Besar Bangka",
+    "kd_kantor": "30300",
+    "nm_kantor_pendek": "KPPBC TMP C PANGKALPINANG"
+  },
+  {
+    "id": "286",
+    "id_lokasi": "IDMUO",
+    "nm_lokasi": "Muntok",
+    "kd_kantor": "30300",
+    "nm_kantor_pendek": "KPPBC TMP C PANGKALPINANG"
+  },
+  {
+    "id": "287",
+    "id_lokasi": "IDPGK",
+    "nm_lokasi": "Pangkal Pinang (u)",
+    "kd_kantor": "30300",
+    "nm_kantor_pendek": "KPPBC TMP C PANGKALPINANG"
+  },
+  {
+    "id": "288",
+    "id_lokasi": "IDPGX",
+    "nm_lokasi": "Pangkal Balam /pkl.pinang",
+    "kd_kantor": "30300",
+    "nm_kantor_pendek": "KPPBC TMP C PANGKALPINANG"
+  },
+  {
+    "id": "289",
+    "id_lokasi": "IDBLJ",
+    "nm_lokasi": "Belinju",
+    "kd_kantor": "30300",
+    "nm_kantor_pendek": "KPPBC TMP C PANGKALPINANG"
+  },
+  {
+    "id": "290",
+    "id_lokasi": "IDSLI",
+    "nm_lokasi": "Sungai Liat",
+    "kd_kantor": "30300",
+    "nm_kantor_pendek": "KPPBC TMP C PANGKALPINANG"
+  },
+  {
+    "id": "291",
+    "id_lokasi": "IDTOL",
+    "nm_lokasi": "Toboali",
+    "kd_kantor": "30300",
+    "nm_kantor_pendek": "KPPBC TMP C PANGKALPINANG"
+  },
+  {
+    "id": "292",
+    "id_lokasi": "IDLOL",
+    "nm_lokasi": "Loli",
+    "kd_kantor": "110800",
+    "nm_kantor_pendek": "KPPBC TMP C PANTOLOAN"
+  },
+  {
+    "id": "293",
+    "id_lokasi": "IDPAL",
+    "nm_lokasi": "Palu / Mutiara (u)",
+    "kd_kantor": "110800",
+    "nm_kantor_pendek": "KPPBC TMP C PANTOLOAN"
+  },
+  {
+    "id": "294",
+    "id_lokasi": "IDPTL",
+    "nm_lokasi": "Pantoloan, Sv",
+    "kd_kantor": "110800",
+    "nm_kantor_pendek": "KPPBC TMP C PANTOLOAN"
+  },
+  {
+    "id": "295",
+    "id_lokasi": "IDPLW",
+    "nm_lokasi": "Palimanan",
+    "kd_kantor": "110800",
+    "nm_kantor_pendek": "KPPBC TMP C PANTOLOAN"
+  },
+  {
+    "id": "296",
+    "id_lokasi": "IDPRG",
+    "nm_lokasi": "Parigi",
+    "kd_kantor": "110800",
+    "nm_kantor_pendek": "KPPBC TMP C PANTOLOAN"
+  },
+  {
+    "id": "297",
+    "id_lokasi": "IDDGG",
+    "nm_lokasi": "Donggala",
+    "kd_kantor": "110800",
+    "nm_kantor_pendek": "KPPBC TMP C PANTOLOAN"
+  },
+  {
+    "id": "298",
+    "id_lokasi": "IDDOG",
+    "nm_lokasi": "Donggala (u)",
+    "kd_kantor": "110800",
+    "nm_kantor_pendek": "KPPBC TMP C PANTOLOAN"
+  },
+  {
+    "id": "299",
+    "id_lokasi": "IDSAB",
+    "nm_lokasi": "Sabang - Sulawesi",
+    "kd_kantor": "110800",
+    "nm_kantor_pendek": "KPPBC TMP C PANTOLOAN"
+  },
+  {
+    "id": "300",
+    "id_lokasi": "IDWAN",
+    "nm_lokasi": "Wani",
+    "kd_kantor": "110800",
+    "nm_kantor_pendek": "KPPBC TMP C PANTOLOAN"
+  },
+  {
+    "id": "301",
+    "id_lokasi": "IDMJU",
+    "nm_lokasi": "Mamuju",
+    "kd_kantor": "110300",
+    "nm_kantor_pendek": "KPPBC TMP C PAREPARE"
+  },
+  {
+    "id": "302",
+    "id_lokasi": "IDPAP",
+    "nm_lokasi": "Pare-pare",
+    "kd_kantor": "110300",
+    "nm_kantor_pendek": "KPPBC TMP C PAREPARE"
+  },
+  {
+    "id": "303",
+    "id_lokasi": "IDPMT",
+    "nm_lokasi": "Pematangsiantar",
+    "kd_kantor": "11000",
+    "nm_kantor_pendek": "KPPBC TMP C PEMATANGSIANTAR"
+  },
+  {
+    "id": "304",
+    "id_lokasi": "IDSTR",
+    "nm_lokasi": "Siantar",
+    "kd_kantor": "11000",
+    "nm_kantor_pendek": "KPPBC TMP C PEMATANGSIANTAR"
+  },
+  {
+    "id": "305",
+    "id_lokasi": "IDSMK",
+    "nm_lokasi": "Sei Mangkei Dry Port",
+    "kd_kantor": "11000",
+    "nm_kantor_pendek": "KPPBC TMP C PEMATANGSIANTAR"
+  },
+  {
+    "id": "306",
+    "id_lokasi": "IDPRO",
+    "nm_lokasi": "Probolinggo/ Tg. Tembaga",
+    "kd_kantor": "71200",
+    "nm_kantor_pendek": "KPPBC TMP C PROBOLINGGO"
+  },
+  {
+    "id": "307",
+    "id_lokasi": "IDPWL",
+    "nm_lokasi": "Purwokerto",
+    "kd_kantor": "62000",
+    "nm_kantor_pendek": "KPPBC TMP C PURWOKERTO"
+  },
+  {
+    "id": "308",
+    "id_lokasi": "IDSBG",
+    "nm_lokasi": "Aceh - Sabang",
+    "kd_kantor": "130300",
+    "nm_kantor_pendek": "KPPBC TMP C SABANG"
+  },
+  {
+    "id": "309",
+    "id_lokasi": "IDKPB",
+    "nm_lokasi": "Kuala Pembuang",
+    "kd_kantor": "90700",
+    "nm_kantor_pendek": "KPPBC TMP C SAMPIT"
+  },
+  {
+    "id": "310",
+    "id_lokasi": "IDPMA",
+    "nm_lokasi": "Pegatan Mendawai",
+    "kd_kantor": "90700",
+    "nm_kantor_pendek": "KPPBC TMP C SAMPIT"
+  },
+  {
+    "id": "311",
+    "id_lokasi": "IDSMQ",
+    "nm_lokasi": "Sampit",
+    "kd_kantor": "90700",
+    "nm_kantor_pendek": "KPPBC TMP C SAMPIT"
+  },
+  {
+    "id": "312",
+    "id_lokasi": "IDSGQ",
+    "nm_lokasi": "Sanggata",
+    "kd_kantor": "101000",
+    "nm_kantor_pendek": "KPPBC TMP C SANGATTA"
+  },
+  {
+    "id": "313",
+    "id_lokasi": "IDTBA",
+    "nm_lokasi": "Tanjung Bara, Kl",
+    "kd_kantor": "101000",
+    "nm_kantor_pendek": "KPPBC TMP C SANGATTA"
+  },
+  {
+    "id": "314",
+    "id_lokasi": "IDTSG",
+    "nm_lokasi": "Tanjung Sangata",
+    "kd_kantor": "101000",
+    "nm_kantor_pendek": "KPPBC TMP C SANGATTA"
+  },
+  {
+    "id": "315",
+    "id_lokasi": "IDKLR",
+    "nm_lokasi": "Kaliorang",
+    "kd_kantor": "101000",
+    "nm_kantor_pendek": "KPPBC TMP C SANGATTA"
+  },
+  {
+    "id": "316",
+    "id_lokasi": "IDSKI",
+    "nm_lokasi": "Sangkulirang, Kalimantan",
+    "kd_kantor": "101000",
+    "nm_kantor_pendek": "KPPBC TMP C SANGATTA"
+  },
+  {
+    "id": "317",
+    "id_lokasi": "IDNAT",
+    "nm_lokasi": "Natal",
+    "kd_kantor": "11300",
+    "nm_kantor_pendek": "KPPBC TMP C SIBOLGA"
+  },
+  {
+    "id": "318",
+    "id_lokasi": "IDDTB",
+    "nm_lokasi": "Silangit",
+    "kd_kantor": "11300",
+    "nm_kantor_pendek": "KPPBC TMP C SIBOLGA"
+  },
+  {
+    "id": "319",
+    "id_lokasi": "IDGNS",
+    "nm_lokasi": "Gunung Sitoli",
+    "kd_kantor": "11300",
+    "nm_kantor_pendek": "KPPBC TMP C SIBOLGA"
+  },
+  {
+    "id": "320",
+    "id_lokasi": "IDPTE",
+    "nm_lokasi": "Pulau Tello",
+    "kd_kantor": "11300",
+    "nm_kantor_pendek": "KPPBC TMP C SIBOLGA"
+  },
+  {
+    "id": "321",
+    "id_lokasi": "IDSLG",
+    "nm_lokasi": "Sibolga",
+    "kd_kantor": "11300",
+    "nm_kantor_pendek": "KPPBC TMP C SIBOLGA"
+  },
+  {
+    "id": "322",
+    "id_lokasi": "IDTDL",
+    "nm_lokasi": "Teluk Dalam",
+    "kd_kantor": "11300",
+    "nm_kantor_pendek": "KPPBC TMP C SIBOLGA"
+  },
+  {
+    "id": "323",
+    "id_lokasi": "IDPEM",
+    "nm_lokasi": "Pemangkat",
+    "kd_kantor": "90500",
+    "nm_kantor_pendek": "KPPBC TMP C SINTETE"
+  },
+  {
+    "id": "324",
+    "id_lokasi": "IDARK",
+    "nm_lokasi": "Aruk",
+    "kd_kantor": "90500",
+    "nm_kantor_pendek": "KPPBC TMP C SINTETE"
+  },
+  {
+    "id": "325",
+    "id_lokasi": "IDSTT",
+    "nm_lokasi": "Sintete",
+    "kd_kantor": "90500",
+    "nm_kantor_pendek": "KPPBC TMP C SINTETE"
+  },
+  {
+    "id": "326",
+    "id_lokasi": "IDSOR",
+    "nm_lokasi": "Sorong",
+    "kd_kantor": "120300",
+    "nm_kantor_pendek": "KPPBC TMP C SORONG"
+  },
+  {
+    "id": "327",
+    "id_lokasi": "IDSOQ",
+    "nm_lokasi": "Sorong / Jefman (u)",
+    "kd_kantor": "120300",
+    "nm_kantor_pendek": "KPPBC TMP C SORONG"
+  },
+  {
+    "id": "328",
+    "id_lokasi": "IDTKS",
+    "nm_lokasi": "Teluk Kasim/salawati",
+    "kd_kantor": "120300",
+    "nm_kantor_pendek": "KPPBC TMP C SORONG"
+  },
+  {
+    "id": "329",
+    "id_lokasi": "IDLAL",
+    "nm_lokasi": "Labuhan Alas",
+    "kd_kantor": "80400",
+    "nm_kantor_pendek": "KPPBC TMP C SUMBAWA"
+  },
+  {
+    "id": "330",
+    "id_lokasi": "IDPOT",
+    "nm_lokasi": "Poto Taid",
+    "kd_kantor": "80400",
+    "nm_kantor_pendek": "KPPBC TMP C SUMBAWA"
+  },
+  {
+    "id": "331",
+    "id_lokasi": "IDSPH",
+    "nm_lokasi": "Sapeh",
+    "kd_kantor": "80400",
+    "nm_kantor_pendek": "KPPBC TMP C SUMBAWA"
+  },
+  {
+    "id": "332",
+    "id_lokasi": "IDCLI",
+    "nm_lokasi": "Calabai",
+    "kd_kantor": "80400",
+    "nm_kantor_pendek": "KPPBC TMP C SUMBAWA"
+  },
+  {
+    "id": "333",
+    "id_lokasi": "IDBEN",
+    "nm_lokasi": "Benete",
+    "kd_kantor": "80400",
+    "nm_kantor_pendek": "KPPBC TMP C SUMBAWA"
+  },
+  {
+    "id": "334",
+    "id_lokasi": "IDBMT",
+    "nm_lokasi": "Bima Terminal, Jv",
+    "kd_kantor": "80400",
+    "nm_kantor_pendek": "KPPBC TMP C SUMBAWA"
+  },
+  {
+    "id": "335",
+    "id_lokasi": "IDPBW",
+    "nm_lokasi": "Palibelo",
+    "kd_kantor": "80400",
+    "nm_kantor_pendek": "KPPBC TMP C SUMBAWA"
+  },
+  {
+    "id": "336",
+    "id_lokasi": "IDSWQ",
+    "nm_lokasi": "Sumbawa/ Brang-biji (u)",
+    "kd_kantor": "80400",
+    "nm_kantor_pendek": "KPPBC TMP C SUMBAWA"
+  },
+  {
+    "id": "337",
+    "id_lokasi": "IDBMU",
+    "nm_lokasi": "Bima",
+    "kd_kantor": "80400",
+    "nm_kantor_pendek": "KPPBC TMP C SUMBAWA"
+  },
+  {
+    "id": "338",
+    "id_lokasi": "IDBDS",
+    "nm_lokasi": "Badas Sumbawa",
+    "kd_kantor": "80400",
+    "nm_kantor_pendek": "KPPBC TMP C SUMBAWA"
+  },
+  {
+    "id": "339",
+    "id_lokasi": "IDMAN",
+    "nm_lokasi": "Manggar",
+    "kd_kantor": "30500",
+    "nm_kantor_pendek": "KPPBC TMP C TANJUNGPANDAN"
+  },
+  {
+    "id": "340",
+    "id_lokasi": "IDBLT",
+    "nm_lokasi": "Belitung",
+    "kd_kantor": "30500",
+    "nm_kantor_pendek": "KPPBC TMP C TANJUNGPANDAN"
+  },
+  {
+    "id": "341",
+    "id_lokasi": "IDTPD",
+    "nm_lokasi": "Tanjung Pandan",
+    "kd_kantor": "30500",
+    "nm_kantor_pendek": "KPPBC TMP C TANJUNGPANDAN"
+  },
+  {
+    "id": "342",
+    "id_lokasi": "IDTJQ",
+    "nm_lokasi": "Tanjung Pandan / Buluh Tumbang (u)",
+    "kd_kantor": "30500",
+    "nm_kantor_pendek": "KPPBC TMP C TANJUNGPANDAN"
+  },
+  {
+    "id": "343",
+    "id_lokasi": "IDTSY",
+    "nm_lokasi": "Tasikmalaya",
+    "kd_kantor": "50600",
+    "nm_kantor_pendek": "KPPBC TMP C TASIKMALAYA"
+  },
+  {
+    "id": "344",
+    "id_lokasi": "IDPEX",
+    "nm_lokasi": "Pekalongan",
+    "kd_kantor": "61000",
+    "nm_kantor_pendek": "KPPBC TMP C TEGAL"
+  },
+  {
+    "id": "345",
+    "id_lokasi": "IDCOM",
+    "nm_lokasi": "Comal",
+    "kd_kantor": "61000",
+    "nm_kantor_pendek": "KPPBC TMP C TEGAL"
+  },
+  {
+    "id": "346",
+    "id_lokasi": "IDTEG",
+    "nm_lokasi": "Tegal",
+    "kd_kantor": "61000",
+    "nm_kantor_pendek": "KPPBC TMP C TEGAL"
+  },
+  {
+    "id": "347",
+    "id_lokasi": "IDLBI",
+    "nm_lokasi": "Labuhan Bilik",
+    "kd_kantor": "11100",
+    "nm_kantor_pendek": "KPPBC TMP C TELUK NIBUNG"
+  },
+  {
+    "id": "348",
+    "id_lokasi": "IDLEI",
+    "nm_lokasi": "Leidong",
+    "kd_kantor": "11100",
+    "nm_kantor_pendek": "KPPBC TMP C TELUK NIBUNG"
+  },
+  {
+    "id": "349",
+    "id_lokasi": "IDTJB",
+    "nm_lokasi": "Tanjung Balai Asahan",
+    "kd_kantor": "11100",
+    "nm_kantor_pendek": "KPPBC TMP C TELUK NIBUNG"
+  },
+  {
+    "id": "350",
+    "id_lokasi": "IDTTM",
+    "nm_lokasi": "Tanjung Tiram",
+    "kd_kantor": "11100",
+    "nm_kantor_pendek": "KPPBC TMP C TELUK NIBUNG"
+  },
+  {
+    "id": "351",
+    "id_lokasi": "IDPRA",
+    "nm_lokasi": "Perigi Raja",
+    "kd_kantor": "21500",
+    "nm_kantor_pendek": "KPPBC TMP C TEMBILAHAN"
+  },
+  {
+    "id": "352",
+    "id_lokasi": "IDMBK",
+    "nm_lokasi": "Muara Bangkong",
+    "kd_kantor": "21500",
+    "nm_kantor_pendek": "KPPBC TMP C TEMBILAHAN"
+  },
+  {
+    "id": "353",
+    "id_lokasi": "IDEid",
+    "nm_lokasi": "Kuala Eidk",
+    "kd_kantor": "21500",
+    "nm_kantor_pendek": "KPPBC TMP C TEMBILAHAN"
+  },
+  {
+    "id": "354",
+    "id_lokasi": "IDRGA",
+    "nm_lokasi": "Rengat",
+    "kd_kantor": "21500",
+    "nm_kantor_pendek": "KPPBC TMP C TEMBILAHAN"
+  },
+  {
+    "id": "355",
+    "id_lokasi": "IDRGT",
+    "nm_lokasi": "Rengat/ Japura (u)",
+    "kd_kantor": "21500",
+    "nm_kantor_pendek": "KPPBC TMP C TEMBILAHAN"
+  },
+  {
+    "id": "356",
+    "id_lokasi": "IDKID",
+    "nm_lokasi": "Pulau Kijang",
+    "kd_kantor": "21500",
+    "nm_kantor_pendek": "KPPBC TMP C TEMBILAHAN"
+  },
+  {
+    "id": "357",
+    "id_lokasi": "IDKGD",
+    "nm_lokasi": "Kuala Gaung",
+    "kd_kantor": "21500",
+    "nm_kantor_pendek": "KPPBC TMP C TEMBILAHAN"
+  },
+  {
+    "id": "358",
+    "id_lokasi": "IDSUQ",
+    "nm_lokasi": "Sungai Guntung",
+    "kd_kantor": "21500",
+    "nm_kantor_pendek": "KPPBC TMP C TEMBILAHAN"
+  },
+  {
+    "id": "359",
+    "id_lokasi": "IDTEM",
+    "nm_lokasi": "Tembilahan",
+    "kd_kantor": "21500",
+    "nm_kantor_pendek": "KPPBC TMP C TEMBILAHAN"
+  },
+  {
+    "id": "360",
+    "id_lokasi": "IDKEN",
+    "nm_lokasi": "Kuala Eidk",
+    "kd_kantor": "21500",
+    "nm_kantor_pendek": "KPPBC TMP C TEMBILAHAN"
+  },
+  {
+    "id": "361",
+    "id_lokasi": "IDLAB",
+    "nm_lokasi": "Labuha Maluku",
+    "kd_kantor": "120200",
+    "nm_kantor_pendek": "KPPBC TMP C TERNATE"
+  },
+  {
+    "id": "362",
+    "id_lokasi": "IDMOR",
+    "nm_lokasi": "Moridpo",
+    "kd_kantor": "120200",
+    "nm_kantor_pendek": "KPPBC TMP C TERNATE"
+  },
+  {
+    "id": "363",
+    "id_lokasi": "IDOBI",
+    "nm_lokasi": "Obi Island",
+    "kd_kantor": "120200",
+    "nm_kantor_pendek": "KPPBC TMP C TERNATE"
+  },
+  {
+    "id": "364",
+    "id_lokasi": "IDGEB",
+    "nm_lokasi": "Gebe",
+    "kd_kantor": "120200",
+    "nm_kantor_pendek": "KPPBC TMP C TERNATE"
+  },
+  {
+    "id": "365",
+    "id_lokasi": "IDTBU",
+    "nm_lokasi": "Tanjung Buli",
+    "kd_kantor": "120200",
+    "nm_kantor_pendek": "KPPBC TMP C TERNATE"
+  },
+  {
+    "id": "366",
+    "id_lokasi": "IDWED",
+    "nm_lokasi": "Weda",
+    "kd_kantor": "120200",
+    "nm_kantor_pendek": "KPPBC TMP C TERNATE"
+  },
+  {
+    "id": "367",
+    "id_lokasi": "IDPKL",
+    "nm_lokasi": "Pulau Pakal",
+    "kd_kantor": "120200",
+    "nm_kantor_pendek": "KPPBC TMP C TERNATE"
+  },
+  {
+    "id": "368",
+    "id_lokasi": "IDTAX",
+    "nm_lokasi": "Taliabu, Celebes",
+    "kd_kantor": "120200",
+    "nm_kantor_pendek": "KPPBC TMP C TERNATE"
+  },
+  {
+    "id": "369",
+    "id_lokasi": "IDSQN",
+    "nm_lokasi": "Sanana",
+    "kd_kantor": "120200",
+    "nm_kantor_pendek": "KPPBC TMP C TERNATE"
+  },
+  {
+    "id": "370",
+    "id_lokasi": "IDTBO",
+    "nm_lokasi": "Tobelo",
+    "kd_kantor": "120200",
+    "nm_kantor_pendek": "KPPBC TMP C TERNATE"
+  },
+  {
+    "id": "371",
+    "id_lokasi": "IDTTE",
+    "nm_lokasi": "Ternate",
+    "kd_kantor": "120200",
+    "nm_kantor_pendek": "KPPBC TMP C TERNATE"
+  },
+  {
+    "id": "372",
+    "id_lokasi": "IDGLX",
+    "nm_lokasi": "Galela , Maluku",
+    "kd_kantor": "120200",
+    "nm_kantor_pendek": "KPPBC TMP C TERNATE"
+  },
+  {
+    "id": "373",
+    "id_lokasi": "IDAMA",
+    "nm_lokasi": "Amamapare, Ij",
+    "kd_kantor": "120800",
+    "nm_kantor_pendek": "KPPBC TMP C TIMIKA"
+  },
+  {
+    "id": "374",
+    "id_lokasi": "IDTUA",
+    "nm_lokasi": "Tual",
+    "kd_kantor": "121000",
+    "nm_kantor_pendek": "KPPBC TMP C TUAL"
+  },
+  {
+    "id": "375",
+    "id_lokasi": "IDDOB",
+    "nm_lokasi": "Dobo",
+    "kd_kantor": "121000",
+    "nm_kantor_pendek": "KPPBC TMP C TUAL"
+  },
+  {
+    "id": "376",
+    "id_lokasi": "IDLRT",
+    "nm_lokasi": "Larat",
+    "kd_kantor": "121000",
+    "nm_kantor_pendek": "KPPBC TMP C TUAL"
+  },
+  {
+    "id": "377",
+    "id_lokasi": "IDSXK",
+    "nm_lokasi": "Saumlaki",
+    "kd_kantor": "121000",
+    "nm_kantor_pendek": "KPPBC TMP C TUAL"
+  },
+  {
+    "id": "378",
+    "id_lokasi": "IDJBK",
+    "nm_lokasi": "Jababeka",
+    "kd_kantor": "51000",
+    "nm_kantor_pendek": "KPPBC TMP CIKARANG"
+  },
+  {
+    "id": "379",
+    "id_lokasi": "IDSUB",
+    "nm_lokasi": "Surabaya /juanda (u)",
+    "kd_kantor": "70500",
+    "nm_kantor_pendek": "KPPBC TMP JUANDA"
+  },
+  {
+    "id": "380",
+    "id_lokasi": "IDMRK",
+    "nm_lokasi": "Merak",
+    "kd_kantor": "50400",
+    "nm_kantor_pendek": "KPPBC TMP MERAK"
+  },
+  {
+    "id": "381",
+    "id_lokasi": "IDBYH",
+    "nm_lokasi": "Bayah",
+    "kd_kantor": "50400",
+    "nm_kantor_pendek": "KPPBC TMP MERAK"
+  },
+  {
+    "id": "382",
+    "id_lokasi": "XZTGR",
+    "nm_lokasi": "Tandjung Gerem",
+    "kd_kantor": "50400",
+    "nm_kantor_pendek": "KPPBC TMP MERAK"
+  },
+  {
+    "id": "383",
+    "id_lokasi": "IDCIG",
+    "nm_lokasi": "Cigading",
+    "kd_kantor": "50400",
+    "nm_kantor_pendek": "KPPBC TMP MERAK"
+  },
+  {
+    "id": "384",
+    "id_lokasi": "IDCIW",
+    "nm_lokasi": "Ciwandan",
+    "kd_kantor": "50400",
+    "nm_kantor_pendek": "KPPBC TMP MERAK"
+  },
+  {
+    "id": "385",
+    "id_lokasi": "IDTLN",
+    "nm_lokasi": "Tanjung Leneng",
+    "kd_kantor": "50400",
+    "nm_kantor_pendek": "KPPBC TMP MERAK"
+  },
+  {
+    "id": "386",
+    "id_lokasi": "IDTSO",
+    "nm_lokasi": "Tanjung Sekong",
+    "kd_kantor": "50400",
+    "nm_kantor_pendek": "KPPBC TMP MERAK"
+  },
+  {
+    "id": "387",
+    "id_lokasi": "IDPDB",
+    "nm_lokasi": "Padang Baai",
+    "kd_kantor": "80100",
+    "nm_kantor_pendek": "KPPBC TMP NGURAH RAI"
+  },
+  {
+    "id": "388",
+    "id_lokasi": "IDDPS",
+    "nm_lokasi": "Denpasar / Ngurah Rai (u)",
+    "kd_kantor": "80100",
+    "nm_kantor_pendek": "KPPBC TMP NGURAH RAI"
+  },
+  {
+    "id": "389",
+    "id_lokasi": "IDSRG",
+    "nm_lokasi": "Semarang / Achmad Yani (u)",
+    "kd_kantor": "60100",
+    "nm_kantor_pendek": "KPPBC TMP TANJUNG EMAS"
+  },
+  {
+    "id": "390",
+    "id_lokasi": "IDTES",
+    "nm_lokasi": "Tanjung Emas",
+    "kd_kantor": "60100",
+    "nm_kantor_pendek": "KPPBC TMP TANJUNG EMAS"
+  },
+  {
+    "id": "391",
+    "id_lokasi": "IDKML",
+    "nm_lokasi": "Kamal",
+    "kd_kantor": "70100",
+    "nm_kantor_pendek": "KPPBC TMP TANJUNG PERAK"
+  },
+  {
+    "id": "392",
+    "id_lokasi": "IDTPE",
+    "nm_lokasi": "Tanjung Perak",
+    "kd_kantor": "70100",
+    "nm_kantor_pendek": "KPPBC TMP TANJUNG PERAK"
+  },
+  {
+    "id": "393",
+    "id_lokasi": "IDSUR",
+    "nm_lokasi": "Surabaya (ptt)",
+    "kd_kantor": "70100",
+    "nm_kantor_pendek": "KPPBC TMP TANJUNG PERAK"
+  },
+  {
+    "id": "394",
+    "id_lokasi": "IDBKL",
+    "nm_lokasi": "Bangkalan",
+    "kd_kantor": "70100",
+    "nm_kantor_pendek": "KPPBC TMP TANJUNG PERAK"
+  },
+  {
+    "id": "395",
+    "id_lokasi": "IDJKT",
+    "nm_lokasi": "Jakarta / Pasar Ikan",
+    "kd_kantor": "40300",
+    "nm_kantor_pendek": "KPU BEA DAN CUKAI TIPE A TANJUNG PRIOK"
+  },
+  {
+    "id": "396",
+    "id_lokasi": "IDTPP",
+    "nm_lokasi": "Tanjung Priok",
+    "kd_kantor": "40300",
+    "nm_kantor_pendek": "KPU BEA DAN CUKAI TIPE A TANJUNG PRIOK"
+  },
+  {
+    "id": "397",
+    "id_lokasi": "IDidN",
+    "nm_lokasi": "idngsa",
+    "kd_kantor": "20400",
+    "nm_kantor_pendek": "KPU BEA DAN CUKAI TIPE B BATAM"
+  },
+  {
+    "id": "398",
+    "id_lokasi": "IDPBL",
+    "nm_lokasi": "Pulau Buluh",
+    "kd_kantor": "20400",
+    "nm_kantor_pendek": "KPU BEA DAN CUKAI TIPE B BATAM"
+  },
+  {
+    "id": "399",
+    "id_lokasi": "IDPSS",
+    "nm_lokasi": "Pulau Sambu",
+    "kd_kantor": "20400",
+    "nm_kantor_pendek": "KPU BEA DAN CUKAI TIPE B BATAM"
+  },
+  {
+    "id": "400",
+    "id_lokasi": "IDNTA",
+    "nm_lokasi": "Nipah",
+    "kd_kantor": "20400",
+    "nm_kantor_pendek": "KPU BEA DAN CUKAI TIPE B BATAM"
+  },
+  {
+    "id": "401",
+    "id_lokasi": "IDBTM",
+    "nm_lokasi": "Batam Island",
+    "kd_kantor": "20400",
+    "nm_kantor_pendek": "KPU BEA DAN CUKAI TIPE B BATAM"
+  },
+  {
+    "id": "402",
+    "id_lokasi": "IDQJB",
+    "nm_lokasi": "Jatty Baru",
+    "kd_kantor": "20400",
+    "nm_kantor_pendek": "KPU BEA DAN CUKAI TIPE B BATAM"
+  },
+  {
+    "id": "403",
+    "id_lokasi": "IDSKP",
+    "nm_lokasi": "Sekupang",
+    "kd_kantor": "20400",
+    "nm_kantor_pendek": "KPU BEA DAN CUKAI TIPE B BATAM"
+  },
+  {
+    "id": "404",
+    "id_lokasi": "IDBPD",
+    "nm_lokasi": "Belakang Padang",
+    "kd_kantor": "20400",
+    "nm_kantor_pendek": "KPU BEA DAN CUKAI TIPE B BATAM"
+  },
+  {
+    "id": "405",
+    "id_lokasi": "IDBTH",
+    "nm_lokasi": "Batam / Hang Nadim (u)",
+    "kd_kantor": "20400",
+    "nm_kantor_pendek": "KPU BEA DAN CUKAI TIPE B BATAM"
+  },
+  {
+    "id": "406",
+    "id_lokasi": "IDBTU",
+    "nm_lokasi": "Batu Ampar",
+    "kd_kantor": "20400",
+    "nm_kantor_pendek": "KPU BEA DAN CUKAI TIPE B BATAM"
+  },
+  {
+    "id": "407",
+    "id_lokasi": "IDKAB",
+    "nm_lokasi": "Kabil/panau",
+    "kd_kantor": "20400",
+    "nm_kantor_pendek": "KPU BEA DAN CUKAI TIPE B BATAM"
+  },
+  {
+    "id": "408",
+    "id_lokasi": "IDCEN",
+    "nm_lokasi": "Cengkareng",
+    "kd_kantor": "50100",
+    "nm_kantor_pendek": "KPU BEA DAN CUKAI TIPE C SOEKARid-HATTA"
+  },
+  {
+    "id": "409",
+    "id_lokasi": "IDCGK",
+    "nm_lokasi": "Cengkareng / Soekarid Hatta (u)",
+    "kd_kantor": "50100",
+    "nm_kantor_pendek": "KPU BEA DAN CUKAI TIPE C SOEKARid-HATTA"
+  }
+]

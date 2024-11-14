@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Registrasi" ADD COLUMN     "tanggal_surat" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

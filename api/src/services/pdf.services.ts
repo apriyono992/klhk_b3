@@ -10,16 +10,18 @@ import { Test } from '@nestjs/testing';
 import { TipeDokumenTelaah } from 'src/models/enums/tipeDokumenTelaah';
 import { CountryService } from './country.service';
 import { Logger } from '@nestjs/common';
+import { RegistrasiServices } from './registrasi.services';
 
 @Injectable()
 export class PdfService {
-  
+
   private readonly logger = new Logger(PdfService.name)
   constructor(
     private readonly prisma: PrismaService,
     private readonly countryService: CountryService,
+    private readonly registrasiService: RegistrasiServices,
     ) {}
-  
+
   async generateRekomendasiB3Pdf(applicationId: string) {
     // Fetch application, company, pejabat, tembusan, and identitasPemohon details
     const application = await this.prisma.application.findUnique({
@@ -32,25 +34,27 @@ export class PdfService {
             PermohonanRekomendasiTembusan: {include: {DataTembusan: true}},
           },
         },
-        identitasPemohon: true,  // Include Identitas Pemohon
+        identitasPemohon: true, // Include Identitas Pemohon
         vehicles: {
           include:{vehicle:true}
         },
         b3Substances: {include: {dataBahanB3:true, asalMuatLocations: true, tujuanBongkarLocations: true}},
       },
     });
-  
+
     if (!application) {
-      throw new NotFoundException(`Application with ID ${applicationId} not found.`);
+      throw new NotFoundException(
+        `Application with ID ${applicationId} not found.`,
+      );
     }
-  
+
     // Resolve the path to the main EJS template
     const templatePath = path.resolve(__dirname, '../pdf/rekomendasiB3.html');
-  
+
     // Read binary file (logo image) and convert it to base64
     const base64Logo = fs.readFileSync(path.resolve(__dirname, '../pdf/logo_klhk.png')).toString('base64');
     const base64Image = `data:image/png;base64,${base64Logo}`;
-    
+
     // Read the template
     const template = fs.readFileSync(templatePath, 'utf-8');
     // Render the EJS template and pass dynamic data
@@ -67,12 +71,12 @@ export class PdfService {
     }, {
       views: [path.resolve(__dirname, '../pdf')],
     });
-  
+
     const browser = await puppeteer.launch({ headless: 'shell' });
     const page = await browser.newPage();
-  
+
     await page.setContent(renderedHtml, { waitUntil: 'networkidle0' });
-  
+
     // Generate the PDF
     const pdfBuffer = await page.pdf({
       format: 'A4',
@@ -83,29 +87,82 @@ export class PdfService {
         right: '20mm',
       },
     });
-  
+
     await browser.close();
-  
+
     return pdfBuffer;
   }
 
-  async generateRegistrasiB3Pdf() {
+  async generateRegistrasiB3Pdf(registrasiId: string) {
+    const registrasi = await this.registrasiService.getRegistrasiById(registrasiId);
+
     // Resolve the path to the main EJS template
-    const templatePath = path.resolve(__dirname, '../pdf/registrasiB3.html');
+    const templatePath = path.resolve(process.cwd(), 'src/pdf/registrasiB3.html',);
+    let tembusanListHTML = '';
+
+    if (registrasi.tembusan.length > 0) {
+      tembusanListHTML = registrasi.tembusan
+        .map((item) => `<li>${item.nama}</li>`)
+        .join('\n');
+    }
 
     // Read binary file (logo image) and convert it to base64
-    const base64Logo = fs.readFileSync(path.resolve(__dirname, '../pdf/logo_klhk.png')).toString('base64');
+    const base64Logo = fs
+      .readFileSync(path.resolve(process.cwd(), 'src/pdf/logo_klhk.png'))
+      .toString('base64');
     const base64Image = `data:image/png;base64,${base64Logo}`; // Base64 string for the logo image
 
     // Read the template
     const template = fs.readFileSync(templatePath, 'utf-8');
+    const currentMonth = new Date().toLocaleDateString('en-US', {
+      month: '2-digit',
+    });
+    const currentYear = new Date().getFullYear();
+
+    const month = currentMonth;
+    const year = currentYear;
+
+    const nomorSurat = `S.${registrasi.nomor || ''}/PBSLB3-PB3/PPI/PLB.4.4/B/${month}/${year}`;
+    const nomorSuratBahanB3 = `S.${registrasi.BahanB3Registrasi[0].no_reg_bahan || ''}/PBSLB3-PB3/PPI/PLB.4.4/B/${month}/${year}`;
 
     // Render the EJS template and pass the base64 image to the template
-    const renderedHtml = ejs.render(template, { base64Image }, {
-      views: [path.resolve(__dirname, '../pdf')] // Ensure EJS looks for included files in the pdf folder
-    });
+    const renderedHtml = ejs.render(
+      template,
+      {
+        base64Image,
+        nomor_surat: nomorSurat,
+        tanggal_surat: new Intl.DateTimeFormat('id-ID', {
+          year: 'numeric',
+          month: 'long',
+        }).format(new Date()),
+        company_name: registrasi.nama_perusahaan,
+        company_address: registrasi.alamat_perusahaan,
+        phone_number_fax: `${registrasi.company?.telpKantor} / ${registrasi.company?.faxKantor}`,
+        npwp: registrasi.company.npwp,
+        nib: registrasi.company.nomorInduk,
+        kode_db_klh: registrasi.company.kodeDBKlh,
+        hs_code: registrasi.BahanB3Registrasi[0]?.hs_code,
+        nama_dagang: registrasi.BahanB3Registrasi[0].nama_dagang,
+        nama_bahan_kimia: registrasi.BahanB3Registrasi[0].nama_bahan,
+        negara_asal: registrasi.BahanB3Registrasi[0].asal_negara,
+        pelabuhan_bongkar:
+          registrasi.BahanB3Registrasi[0].pelabuhan_bongkar.join(','),
+        nomor_registrasi: registrasi.BahanB3Registrasi[0].no_reg_bahan,
+        director_name: 'Sugasri',
+        director_nip: '19690827 199803 1 001',
+        nomor_surat_b3: nomorSuratBahanB3,
+        tanggal_surat_b3: new Intl.DateTimeFormat('id-ID', {
+          year: 'numeric',
+          month: 'long',
+        }).format(new Date()),
+        tembusan: tembusanListHTML,
+      },
+      {
+        views: [path.resolve(__dirname, '../pdf')], // Ensure EJS looks for included files in the pdf folder
+      },
+    );
 
-    const browser = await puppeteer.launch({headless: 'shell'});
+    const browser = await puppeteer.launch({ headless: 'shell' });
     const page = await browser.newPage();
 
     await page.setContent(renderedHtml, { waitUntil: 'networkidle0' });
@@ -133,7 +190,7 @@ export class PdfService {
   ) {
     // Fetch the DraftSuratNotifikasi with related data
     const draftSurat = await this.prisma.baseSuratNotfikasi.findFirst({
-      where: { 
+      where: {
         notifikasi: {
           referenceNumber: referenceId  // Check for a specific reference number in the related notifikasi
         },
@@ -148,7 +205,7 @@ export class PdfService {
         notifikasi: {
           include: {
             dataBahanB3: true,
-            company: true,  // Include company details
+            company: true, // Include company details
           },
         },
       },
@@ -159,25 +216,31 @@ export class PdfService {
     }
 
     // Determine the template path based on the type
-    const templatePath = draftSurat.tipeSurat === TipeSuratNotifikasi.KEBENARAN_IMPORT_PESTISIDA
-      ? path.resolve(__dirname, '../pdf/surat-kebenaran-impor-pestisida.html')
-      : path.resolve(__dirname, '../pdf/surat-kebenaran-impor-non-pestisida.html');
+    const templatePath =
+      draftSurat.tipeSurat === TipeSuratNotifikasi.KEBENARAN_IMPORT_PESTISIDA
+        ? path.resolve(__dirname, '../pdf/surat-kebenaran-impor-pestisida.html')
+        : path.resolve(
+            __dirname,
+            '../pdf/surat-kebenaran-impor-non-pestisida.html',
+          );
 
     // Load the KLHK logo image and convert it to base64
-    const base64Logo = fs.readFileSync(path.resolve(__dirname, '../pdf/logo_klhk.png')).toString('base64');
+    const base64Logo = fs
+      .readFileSync(path.resolve(__dirname, '../pdf/logo_klhk.png'))
+      .toString('base64');
     const base64Image = `data:image/png;base64,${base64Logo}`;
 
     // Read the EJS template
     const template = fs.readFileSync(templatePath, 'utf-8');
     const currentMonth = new Date().toLocaleDateString('id-ID', { month: '2-digit' });
     const currentYear = new Date().getFullYear();
-    
+
     const currentMonthYear = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long' });
     const tanggalSurat = draftSurat.tanggalSurat?.toLocaleDateString('id-ID', { year: 'numeric', month: 'long' }) || currentMonthYear;
-    
+
     const month = draftSurat.tanggalSurat ? draftSurat.tanggalSurat.getMonth() : currentMonth;
     const year = draftSurat.tanggalSurat ? draftSurat.tanggalSurat.getFullYear() : currentYear;
-    
+
     const nomorSurat = `S.${draftSurat.nomorSurat || ''}/PBSLB3-PB3/PPI/PLB.4.4/B/${month}/${year}`;
     // Render the template with dynamic data
     const renderedHtml = ejs.render(template, {
@@ -226,8 +289,8 @@ export class PdfService {
     await this.prisma.baseSuratNotfikasi.update({
       where: { id: draftSurat.id },
       data: {
-        printed: true,  // Update the 'printed' flag to true
-        printedAt: new Date(),  // Set the 'printedAt' timestamp
+        printed: true, // Update the 'printed' flag to true
+        printedAt: new Date(), // Set the 'printedAt' timestamp
       },
     });
 
@@ -243,12 +306,12 @@ export class PdfService {
         PersetujuanImport: true,
         notifikasi: {
           include: {
-            dataBahanB3: true,  // Include DataBahanB3 to get namaBahanKimia and namaDagang
-            company: true,  // Include company details
+            dataBahanB3: true, // Include DataBahanB3 to get namaBahanKimia and namaDagang
+            company: true, // Include company details
           },
         },
       },
-      where: { 
+      where: {
         notifikasi: {
           referenceNumber: referenceId  // Check for a specific reference number in the related notifikasi
         },
@@ -257,20 +320,27 @@ export class PdfService {
         }
       },
     });
-  
+
     if (!draftSurat) {
       throw new NotFoundException(`DraftSuratNotifikasi with ID ${referenceId} not found`);
     }
-  
+
     // Determine the template path based on the type of Persetujuan Import
-    const templatePath = draftSurat.tipeSurat === TipeSuratNotifikasi.EXPLICIT_CONSENT_AND_PERSETUJUAN_ECHA
-      ? path.resolve(__dirname, '../pdf/surat-persetujuan-impor-echa.html')
-      : path.resolve(__dirname, '../pdf/surat-persetujuan-impor-non-echa.html');
-  
+    const templatePath =
+      draftSurat.tipeSurat ===
+      TipeSuratNotifikasi.EXPLICIT_CONSENT_AND_PERSETUJUAN_ECHA
+        ? path.resolve(__dirname, '../pdf/surat-persetujuan-impor-echa.html')
+        : path.resolve(
+            __dirname,
+            '../pdf/surat-persetujuan-impor-non-echa.html',
+          );
+
     // Load the KLHK logo image and convert it to base64
-    const base64Logo = fs.readFileSync(path.resolve(__dirname, '../pdf/logo_klhk.png')).toString('base64');
+    const base64Logo = fs
+      .readFileSync(path.resolve(__dirname, '../pdf/logo_klhk.png'))
+      .toString('base64');
     const base64Image = `data:image/png;base64,${base64Logo}`;
-    
+
         // Read the EJS template
     const template = fs.readFileSync(templatePath, 'utf-8');
 
@@ -279,12 +349,12 @@ export class PdfService {
 
     const currentMonthYear = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long' });
     const tanggalSurat = draftSurat.tanggalSurat?.toLocaleDateString('id-ID', { year: 'numeric', month: 'long' }) || currentMonthYear;
-    
+
     const month = draftSurat.tanggalSurat ? draftSurat.tanggalSurat.getMonth() : currentMonth;
     const year = draftSurat.tanggalSurat ? draftSurat.tanggalSurat.getFullYear() : currentYear;
 
     const nomorSurat = `S.${draftSurat.nomorSurat || ''}/PBSLB3-PB3/PPI/PLB.4.4/B/${month}/${year}`;
-  
+
     // Render the template with null-safe checks
     const renderedHtml = ejs.render(template, {
       base64Image,
@@ -311,18 +381,18 @@ export class PdfService {
       nomorSuratKebenaranImport: draftSurat.PersetujuanImport[0]?.nomorSuratKebenaranImport || 'Nomor Surat Kebenaran Import Tidak Diketahui',
       tanggalKebenaranImport: draftSurat.PersetujuanImport[0]?.tanggalKebenaranImport.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) ? draftSurat.PersetujuanImport[0]?.tanggalKebenaranImport.toDateString() : 'Tanggal Kebenaran Import Tidak Diketahui',
       nomorSuratExplicitConsent: draftSurat.PersetujuanImport[0]?.nomorSuratExplicitConsent || 'Nomor Surat Explicit Consent Tidak Diketahui',
-      tanggalSuratExplicitConsent: draftSurat.PersetujuanImport[0]?.tanggalSuratExplicitConsent.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) ? draftSurat.PersetujuanImport[0]?.tanggalSuratExplicitConsent.toDateString() : 'Tanggal Explicit Consent Tidak Diketahui', 
+      tanggalSuratExplicitConsent: draftSurat.PersetujuanImport[0]?.tanggalSuratExplicitConsent.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) ? draftSurat.PersetujuanImport[0]?.tanggalSuratExplicitConsent.toDateString() : 'Tanggal Explicit Consent Tidak Diketahui',
       nomorSuratPerusahaanPengimpor: draftSurat.PersetujuanImport[0]?.nomorSuratPerusahaanPengimpor || 'Nomor Surat Perusahaan Pengimpor Tidak Diketahui',
       tanggalDiterimaKebenaranImport: draftSurat.PersetujuanImport[0]?.tanggalDiterimaKebenaranImport.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) ? draftSurat.PersetujuanImport[0]?.tanggalDiterimaKebenaranImport.toDateString() : 'Tanggal Surat Perusahaan Pengimpor Tidak Diketahui',
     });
-  
+
     // Generate the PDF using Puppeteer
     const browser = await puppeteer.launch({ headless: 'shell' });
     const page = await browser.newPage();
-  
+
     // Set the content for the PDF generation
     await page.setContent(renderedHtml, { waitUntil: 'networkidle0' });
-  
+
     // Generate the PDF
     const pdfBuffer = await page.pdf({
       format: 'A4',
@@ -333,8 +403,9 @@ export class PdfService {
         right: '20mm',
       },
     });
-  
+
     await browser.close();
+
 
     // Mark the Notifikasi as having generated a Surat Kebenaran Impor and update the printedAt timestamp
     await this.prisma.baseSuratNotfikasi.update({
@@ -345,15 +416,15 @@ export class PdfService {
     },
   });
 
-  
+
     return pdfBuffer;
   }
-  
+
    // Generate Explicit Consent PDF (Non ECHA)
    async generateExplicitConsentPdf(referenceId: string) {
     // Fetch the DraftSuratNotifikasi with related data, including DataBahanB3, PDFHeader, and Explicit Consent details
     const draftSurat = await this.prisma.baseSuratNotfikasi.findFirst({
-      where: { 
+      where: {
         notifikasi: {
           referenceNumber: referenceId  // Check for a specific reference number in the related notifikasi
         },
@@ -383,15 +454,17 @@ export class PdfService {
       throw new NotFoundException(`DraftSuratNotifikasi with ID ${referenceId} not found`);
     }
 
-  
+
     // Determine the template path based on the type of Persetujuan Import
     const templatePath = draftSurat.tipeSurat === TipeSuratNotifikasi.EXPLICIT_CONSENT_AND_PERSETUJUAN_ECHA
       ? path.resolve(__dirname, '../pdf/surat-explicit-consent-echa.html')
       : path.resolve(__dirname, '../pdf/surat-explicit-consent-non-echa.html');
-  
+
 
     // Load the KLHK logo image and convert it to base64
-    const base64Logo = fs.readFileSync(path.resolve(__dirname, '../pdf/logo_klhk.png')).toString('base64');
+    const base64Logo = fs
+      .readFileSync(path.resolve(__dirname, '../pdf/logo_klhk.png'))
+      .toString('base64');
     const base64Image = `data:image/png;base64,${base64Logo}`;
 
     // Read the EJS template
@@ -402,7 +475,7 @@ export class PdfService {
 
     const currentMonthYear = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long' });
     const tanggalSurat = draftSurat.tanggalSurat?.toLocaleDateString('id-ID', { year: 'numeric', month: 'long' }) || currentMonthYear;
-    
+
     const month = draftSurat.tanggalSurat ? draftSurat.tanggalSurat.getMonth() : currentMonth;
     const year = draftSurat.tanggalSurat ? draftSurat.tanggalSurat.getFullYear() : currentYear;
 
@@ -421,10 +494,18 @@ export class PdfService {
       namaKimia: draftSurat.notifikasi.dataBahanB3?.namaBahanKimia || 'Nama Bahan Kimia Tidak Diketahui',
       namaDagang: draftSurat.notifikasi.dataBahanB3?.namaDagang || 'Nama Dagang Tidak Diketahui',
       // PDF Header fields (from active PDFHeader)
-      header: draftSurat.ExplicitConsent[0]?.pdfHeader.header || 'KEMENTERIAN LINGKUNGAN HIDUP DAN KEHUTANAN',
-      subHeader: draftSurat.ExplicitConsent[0]?.pdfHeader?.subHeader || 'DIREKTORAT JENDERAL PENGELOLAAN SAMPAH, LIMBAH DAN BAHAN BERBAHAYA DAN BERACUN',
-      alamatHeader: draftSurat.ExplicitConsent[0]?.pdfHeader?.alamatHeader || 'Gedung Manggala Wanabakti Blok 4 Lantai 5 – Jl. Gatot Subroto, Jakarta 10270',
-      telp: draftSurat.ExplicitConsent[0]?.pdfHeader?.telp || '021-5704 501/04 Ext. 4112',
+      header:
+        draftSurat.ExplicitConsent[0]?.pdfHeader.header ||
+        'KEMENTERIAN LINGKUNGAN HIDUP DAN KEHUTANAN',
+      subHeader:
+        draftSurat.ExplicitConsent[0]?.pdfHeader?.subHeader ||
+        'DIREKTORAT JENDERAL PENGELOLAAN SAMPAH, LIMBAH DAN BAHAN BERBAHAYA DAN BERACUN',
+      alamatHeader:
+        draftSurat.ExplicitConsent[0]?.pdfHeader?.alamatHeader ||
+        'Gedung Manggala Wanabakti Blok 4 Lantai 5 – Jl. Gatot Subroto, Jakarta 10270',
+      telp:
+        draftSurat.ExplicitConsent[0]?.pdfHeader?.telp ||
+        '021-5704 501/04 Ext. 4112',
       fax: draftSurat.ExplicitConsent[0]?.pdfHeader?.fax || '021-5790 2750',
       kotakPos: draftSurat.ExplicitConsent[0]?.pdfHeader?.kotakPos || '6505',
       // Content fields from Explicit Consent and Notifikasi
@@ -434,19 +515,23 @@ export class PdfService {
       negaraAsal: this.countryService.getCountryByCode2(draftSurat.notifikasi.negaraAsal)?.name?.common || 'Tidak Diketahui',
       casNumber: draftSurat.notifikasi?.dataBahanB3?.casNumber || '75-21-8',
       namaImporter: draftSurat.notifikasi?.company?.name || 'PT. Samator Tomoe',
-      tujuanSurat : draftSurat.ExplicitConsent[0]?.tujuanSurat || 'Tujuan Surat Tidak Diketahui',  
-      namaImpoter : draftSurat.notifikasi.company.name || 'Nama Importer Tidak Diketahui',  
-      tujuanPenggunaan : draftSurat.ExplicitConsent[0]?.tujuanPenggunaan || 'Tujuan Penggunaan Tidak Diketahui',  
+      tujuanSurat : draftSurat.ExplicitConsent[0]?.tujuanSurat || 'Tujuan Surat Tidak Diketahui',
+      namaImpoter : draftSurat.notifikasi.company.name || 'Nama Importer Tidak Diketahui',
+      tujuanPenggunaan : draftSurat.ExplicitConsent[0]?.tujuanPenggunaan || 'Tujuan Penggunaan Tidak Diketahui',
 
       namaExporter: draftSurat.ExplicitConsent[0]?.namaExporter || 'Tomoe Asia Co., Ltd',
       tujuanImport: draftSurat.ExplicitConsent[0]?.tujuanImport || 'Industrial use (Industrial sterilization of medical devices)',
       validUntil: draftSurat.ExplicitConsent[0]?.validitasSurat?.toLocaleDateString() || 'Oktober 31, 2025',
 
       // Custom points for Explicit Consent
-      point1: draftSurat.ExplicitConsent[0]?.point1 || 'Point 1 Tidak Diketahui',
-      point2: draftSurat.ExplicitConsent[0]?.point2 || 'Point 2 Tidak Diketahui',
-      point3: draftSurat.ExplicitConsent[0]?.point3 || 'Point 3 Tidak Diketahui',
-      point4: draftSurat.ExplicitConsent[0]?.point4 || 'Point 4 Tidak Diketahui',
+      point1:
+        draftSurat.ExplicitConsent[0]?.point1 || 'Point 1 Tidak Diketahui',
+      point2:
+        draftSurat.ExplicitConsent[0]?.point2 || 'Point 2 Tidak Diketahui',
+      point3:
+        draftSurat.ExplicitConsent[0]?.point3 || 'Point 3 Tidak Diketahui',
+      point4:
+        draftSurat.ExplicitConsent[0]?.point4 || 'Point 4 Tidak Diketahui',
 
       nameOfChemicalSubstance: draftSurat.ExplicitConsent[0]?.ExplicitConsentDetails[0]?.nameOfChemicalSubstance || 'Name Chemical Substance Tidak Diketahui',
       casNumberSubstance: draftSurat.ExplicitConsent[0]?.ExplicitConsentDetails[0]?.casNumberSubstance || 'CAS Number Tidak Diketahui',
@@ -508,14 +593,14 @@ export class PdfService {
 
     return pdfBuffer;
   }
-  
+
   async generateTelaahTeknisPdf(applicationId: string) {
     // Fetch data from TelaahTeknisRekomendasiB3 with related Application, Company, and Pejabat
     const telaahTeknis = await this.prisma.telaahTeknisRekomendasiB3.findFirst({
       where: { applicationId: applicationId },
       include: {
         application: {
-          include: { 
+          include: {
             company: true,
             vehicles:{ include:{vehicle:true}},
             b3Substances: {include: {asalMuatLocations: true, tujuanBongkarLocations: true, dataBahanB3:true}},

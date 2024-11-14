@@ -1,23 +1,28 @@
 {
     "private": true,
     "workspaces": [
-      "web",
-      "api"
+        "web",
+        "api"
     ],
     "scripts": {
-      "dev:web": "cd web && npm start",
-      "dev:api": "cd api && nest start",
-      "dev": "concurrently \"yarn dev:web\" \"yarn dev:api\"",
-      "db:start": "docker-compose up -d",
-      "db:migrate": "yarn prisma migrate dev",
-      "db:up": "yarn db:start && yarn db:migrate",
-      "db:seed": "yarn prisma db seed"
+        "dev:web": "cd web && npm start",
+        "dev:api": "cd api && nest start",
+        "dev": "concurrently \"yarn dev:web\" \"yarn dev:api\"",
+        "db:start": "docker-compose up -d",
+        "db:migrate": "yarn prisma migrate dev",
+        "db:up": "yarn db:start && yarn db:migrate",
+        "db:seed": "yarn prisma db seed"
     },
     "devDependencies": {
-      "concurrently": "^7.0.0"
+        "concurrently": "^7.0.0",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.6.3"
     },
-  "prisma": {
-    "seed": "ts-node --transpile-only ./api/seed.ts" 
-  }
+    "prisma": {
+        "seed": "ts-node --transpile-only ./api/seed.ts"
+    },
+    "dependencies": {
+        "@nestjs/axios": "^3.1.1",
+        "axios": "^1.7.7"
+    }
 }
-  

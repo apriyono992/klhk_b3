@@ -4,7 +4,16 @@ import { LOGIN_PATH } from './routes';
 import toast from 'react-hot-toast';
 import { jwtDecode } from "jwt-decode";
 
+const BASE_URL_DEV = 'https://dummyjson.com';
 const BASE_URL = 'http://localhost:3002';
+
+const instance = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': '123',
+    },
+})
 
 const axiosInstance = axios.create({
     baseURL: BASE_URL,
@@ -31,14 +40,14 @@ axiosInstanceAuth.interceptors.request.use(
 );
 
 axiosInstanceAuth.interceptors.response.use(
-    (response) => {        
+    (response) => {
         return response;
     },
-    async (error) => {     
+    async (error) => {
         if (error.code === "ERR_NETWORK") {
             return toast.error('Jaringan tidak tersedia');
         }
-           
+
         if (error.response.status === 401) {
             try {
                 const originalRequest = error.config;
@@ -46,13 +55,13 @@ axiosInstanceAuth.interceptors.response.use(
                 const rToken = Cookies.get('refreshToken');
                 const decode = jwtDecode(aToken)
                 const response = await refreshToken(decode.userId, rToken);
-                
+
                 Cookies.set('accessToken', response.accessToken, { expires: 0.5, secure: true, sameSite: 'strict' });
                 Cookies.set('refreshToken', response.refreshToken, { expires: 0.5, secure: true, sameSite: 'strict' });
                 Cookies.set('sessionExpired', response.sessionExpired, { expires: 0.5, secure: true, sameSite: 'strict' });
 
                 originalRequest.headers.Authorization = `Bearer ${response.accessToken}`;
-                        
+
                 return axiosInstanceAuth(originalRequest);
             } catch (error) {
                 Cookies.remove('accessToken');
@@ -61,13 +70,29 @@ axiosInstanceAuth.interceptors.response.use(
                 window.location.href = LOGIN_PATH
             }
         }
-  
+
         return Promise.reject(error);
     }
 );
 
+export async function login(data) {
+    return await axiosInstance.post('/api/auth/login', data).then(res => res).catch(err => err.response)
+};
+
+export async function registerUser(data) {
+    return await axiosInstance.post('/api/auth/register', data).then(res => res).catch(err => err.response)
+};
+
+export async function forgotPassword(data) {
+    return await axiosInstance.post('/api/auth/forgotPassword', data).then(res => res).catch(err => err.response)
+};
+
+export async function resetPassword(data) {
+    return await axiosInstance.post('/api/auth/resetPassword', data).then(res => res).catch(err => err.response)
+};
+
 export async function uploadPhoto(data) {
-    return await axiosInstanceAuth.post('api/upload/file', data, {
+    return await axiosInstance.post('/api/upload/file', data, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }
@@ -79,23 +104,39 @@ async function refreshToken(userId, refreshToken) {
 }
 
 export async function getListRegistrasi(data) {
-    return await axiosInstanceAuth.get('/registrasi/search?page=1&limit=10&sortBy=createdAt&sortOrder=desc',).then(res => res.data)
+    return await axiosInstanceAuth.get('/api/registrasi/search?page=1&limit=10&sortBy=createdAt&sortOrder=desc',).then(res => res.data)
 }
 
 export async function getDetailRegistrasi(data) {
-    return await axiosInstanceAuth.get(`/registrasi/${data}`,).then(res => res.data)
+    return await axiosInstanceAuth.get(`/api/registrasi/${data}`,).then(res => res.data)
 }
 
 export async function updatePerusahaan(id, data) {
-    return await axiosInstanceAuth.put(`/registrasi/update-perusahaan/${id}`, data).then(res => res.data)
+    return await axiosInstanceAuth.put(`/api/registrasi/update-perusahaan/${id}`, data).then(res => res.data)
 }
 
-export async function simpanSK(data) {
-    return await axiosInstanceAuth.post(`/registrasi/save`, data).then(res => res.data)
+export async function simpanSK(data, id) {
+    return await axiosInstanceAuth.post(`/api/registrasi/submit-draft-sk/${id}`, data).then(res => res.data)
 }
 
-export async function submitSK(id) {
-    return await axiosInstanceAuth.post(`/registrasi/submit-draft-sk/${id}`).then(res => res.data)
+export async function submitSK(id, data) {
+    return await axiosInstanceAuth.put(`/api/registrasi/update-status-approval/${id}`, data).then(res => res.data)
+}
+
+export async function sendInsw(data) {
+    return await axiosInstanceAuth.post(`/api/insw/send`, data).then(res => res.data)
+}
+
+export async function exportJsonINSW(data) {
+    return await axiosInstanceAuth.post(`/api/insw/export-json`, data).then(res => res.data)
+}
+
+export async function getPreviewSK(id) {
+    return await axiosInstance.get(`/api/pdf/generateRegistrasiB3/${id}`).then(res => res.data)
+}
+
+export async function authStateFetcher(url) {
+    return await axiosInstanceAuth.get(url).then(res => res.data)
 }
 
 export async function getFetcher(url) {
@@ -153,7 +194,7 @@ export async function getPdfUrl(url) {
         const response = await axiosInstanceAuth.get(url, {
             responseType: 'blob', // Important to handle the PDF file correctly
         });
-        
+
         // Create a URL for the PDF file from the blob
         const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
         const pdfUrl = URL.createObjectURL(pdfBlob);

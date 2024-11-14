@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../services/prisma.services';
 import { CreateDataBahanB3Dto } from 'src/models/createDataBahanB3Dto';
 import { CreateDataPejabatDto } from 'src/models/createDataPejabatDto';
@@ -8,7 +12,7 @@ import { SearchDataPejabatDto } from 'src/models/searchDataPejabatDto';
 import { SearchDataTembusanDto } from 'src/models/seatchDataTembusanDto';
 import { UpdateDataTembusanDto } from 'src/models/updateDataTembusanDto';
 import { UpdateDataBahanB3Dto } from 'src/models/updateDataBahanB3Dto';
-
+import { CreateTempatInstalasiDto } from '../models/createTempatInstalasiDto';
 
 @Injectable()
 export class DataMasterService {
@@ -20,7 +24,6 @@ export class DataMasterService {
   async createDataBahanB3(data: CreateDataBahanB3Dto) {
     try {
       return await this.prisma.$transaction(async (prisma) => {
-
         return prisma.dataBahanB3.create({ data });
       });
     } catch (error) {
@@ -28,7 +31,9 @@ export class DataMasterService {
       console.error('Transaction failed:', error);
 
       // Return a generic 400 error without exposing raw error details
-      throw new BadRequestException('Failed to create Data Bahan B3. Please try again.');
+      throw new BadRequestException(
+        'Failed to create Data Bahan B3. Please try again.',
+      );
     }
   }
 
@@ -65,7 +70,9 @@ export class DataMasterService {
       });
     } catch (error) {
       console.error('Transaction failed:', error);
-      throw new BadRequestException('Failed to update Data Bahan B3. Please try again.');
+      throw new BadRequestException(
+        'Failed to update Data Bahan B3. Please try again.',
+      );
     }
   }
 
@@ -86,7 +93,9 @@ export class DataMasterService {
       });
     } catch (error) {
       console.error('Transaction failed:', error);
-      throw new BadRequestException('Failed to delete Data Bahan B3. Please try again.');
+      throw new BadRequestException(
+        'Failed to delete Data Bahan B3. Please try again.',
+      );
     }
   }
 
@@ -96,32 +105,36 @@ export class DataMasterService {
   async createDataPejabat(data: CreateDataPejabatDto) {
     try {
       return await this.prisma.$transaction(async (prisma) => {
-        if(data.applicationId !== undefined && data.applicationId?.trim() !== '') {
-                  // Cari draftSurat berdasarkan applicationId
-        const draftSurat = await prisma.draftSurat.findUnique({
-          where: { applicationId: data.applicationId },
-        });
+        if (
+          data.applicationId !== undefined &&
+          data.applicationId?.trim() !== ''
+        ) {
+          // Cari draftSurat berdasarkan applicationId
+          const draftSurat = await prisma.draftSurat.findUnique({
+            where: { applicationId: data.applicationId },
+          });
 
-        // Validasi jika draftSurat tidak ditemukan
-        if (!draftSurat) {
-          throw new BadRequestException('Draft Surat not found for the provided Application ID.');
-        }
+          // Validasi jika draftSurat tidak ditemukan
+          if (!draftSurat) {
+            throw new BadRequestException(
+              'Draft Surat not found for the provided Application ID.',
+            );
+          }
 
-        // Buat Data Pejabat dengan data yang disediakan
-        return prisma.dataPejabat.create({
-          data: {
-            nip: data.nip,
-            nama: data.nama,
-            jabatan: data.jabatan,
-            status: data.status,
-            // Hubungkan pejabat ke draftSurat
-            DraftSurat: {
-              connect: { id: draftSurat.id }
-            }
-          },
-        });
-
-        }else{
+          // Buat Data Pejabat dengan data yang disediakan
+          return prisma.dataPejabat.create({
+            data: {
+              nip: data.nip,
+              nama: data.nama,
+              jabatan: data.jabatan,
+              status: data.status,
+              // Hubungkan pejabat ke draftSurat
+              DraftSurat: {
+                connect: { id: draftSurat.id },
+              },
+            },
+          });
+        } else {
           return prisma.dataPejabat.create({
             data: {
               nip: data.nip,
@@ -134,7 +147,9 @@ export class DataMasterService {
       });
     } catch (error) {
       console.error('Transaction failed:', error);
-      throw new BadRequestException('Failed to create Pejabat. Please try again.');
+      throw new BadRequestException(
+        'Failed to create Pejabat. Please try again.',
+      );
     }
   }
 
@@ -160,7 +175,7 @@ export class DataMasterService {
               NOT: { id: id },
             },
           });
-  
+
           if (pejabatWithSameNip) {
             throw new BadRequestException('Pejabat with NIP already exists');
           }
@@ -183,7 +198,7 @@ export class DataMasterService {
         return prisma.dataPejabat.update({
           where: { id },
           data: {
-            nip: data.nip ??  existingPejabat.nip,
+            nip: data.nip ?? existingPejabat.nip,
             nama: data.nama ?? existingPejabat.nama,
             jabatan: data.jabatan ?? existingPejabat.jabatan,
             status: data.status ?? existingPejabat.status,
@@ -192,7 +207,9 @@ export class DataMasterService {
       });
     } catch (error) {
       console.error('Transaction failed:', error);
-      throw new BadRequestException('Failed to update Pejabat. Please try again.');
+      throw new BadRequestException(
+        'Failed to update Pejabat. Please try again.',
+      );
     }
   }
 
@@ -213,7 +230,9 @@ export class DataMasterService {
       });
     } catch (error) {
       console.error('Transaction failed:', error);
-      throw new BadRequestException('Failed to delete Pejabat. Please try again.');
+      throw new BadRequestException(
+        'Failed to delete Pejabat. Please try again.',
+      );
     }
   }
 
@@ -223,8 +242,10 @@ export class DataMasterService {
   async createDataTembusan(data: CreateDataTembusanDto) {
     try {
       return await this.prisma.$transaction(async (prisma) => {
-
-        if(data.applicationId !== undefined && data.applicationId?.trim() !== '') {
+        if (
+          data.applicationId !== undefined ||
+          data.applicationId?.trim() !== ''
+        ) {
           // Cari DraftSurat berdasarkan applicationId
           const draftSurat = await prisma.draftSurat.findUnique({
             where: { applicationId: data.applicationId },
@@ -232,25 +253,32 @@ export class DataMasterService {
 
           // Validasi jika draftSurat tidak ditemukan
           if (!draftSurat) {
-            throw new BadRequestException('Draft Surat not found for the provided Application ID.');
+            throw new BadRequestException(
+              'Draft Surat not found for the provided Application ID.',
+            );
           }
-          
+
           const existingTembusan = await prisma.dataTembusan.findUnique({
             where: { nama: data.nama },
           });
 
           if (existingTembusan) {
-            throw new BadRequestException('Tembusan with this name already exists');
+            throw new BadRequestException(
+              'Tembusan with this name already exists',
+            );
           }
 
           // Buat Data Tembusan dan hubungkan dengan DraftSurat
           return prisma.dataTembusan.create({
             data: {
               nama: data.nama,
-              tipe: data.tipe
+              tipe: data.tipe,
+              DraftSurat: {
+                connect: { id: draftSurat.id }, // Hubungkan dengan draftSurat
+              },
             },
           });
-        }else{
+        } else {
           return prisma.dataTembusan.create({
             data: {
               nama: data.nama,
@@ -258,11 +286,12 @@ export class DataMasterService {
             },
           });
         }
-        
       });
     } catch (error) {
       console.error('Transaction failed:', error);
-      throw new BadRequestException('Failed to create Tembusan. Please try again.');
+      throw new BadRequestException(
+        'Failed to create Tembusan. Please try again.',
+      );
     }
   }
 
@@ -272,25 +301,27 @@ export class DataMasterService {
         const existingTembusan = await prisma.dataTembusan.findUnique({
           where: { id },
         });
-  
+
         if (!existingTembusan) {
           throw new BadRequestException('Tembusan does not exist');
         }
-  
+
         // Initialize an empty object for fields that should be updated
         const updateData: any = {};
-  
+
         // Manually check each property and add to updateData if it has a valid value
         if (data.nama !== undefined && data.nama !== null) {
           const tembusanWithSameNama = await prisma.dataTembusan.findFirst({
             where: {
               nama: data.nama,
-              NOT: { id : id },
+              NOT: { id: id },
             },
           });
-    
+
           if (tembusanWithSameNama) {
-            throw new BadRequestException('Tembusan with this name already exists');
+            throw new BadRequestException(
+              'Tembusan with this name already exists',
+            );
           }
           updateData.nama = data.nama;
         }
@@ -300,7 +331,7 @@ export class DataMasterService {
         if (data.tipe !== undefined && data.tipe !== null) {
           updateData.tipe = data.tipe;
         }
-  
+
         // Update only the fields present in updateData
         return prisma.dataTembusan.update({
           where: { id },
@@ -309,7 +340,9 @@ export class DataMasterService {
       });
     } catch (error) {
       console.error('Transaction failed:', error);
-      throw new BadRequestException('Failed to update Tembusan. Please try again.');
+      throw new BadRequestException(
+        'Failed to update Tembusan. Please try again.',
+      );
     }
   }
   async deleteDataTembusan(id: string) {
@@ -329,14 +362,25 @@ export class DataMasterService {
       });
     } catch (error) {
       console.error('Transaction failed:', error);
-      throw new BadRequestException('Failed to delete Tembusan. Please try again.');
+      throw new BadRequestException(
+        'Failed to delete Tembusan. Please try again.',
+      );
     }
   }
 
   async searchDataBahanB3(query: SearchDataBahanB3Dto) {
-    const { page, limit, sortOrder, sortBy, casNumber, namaDagang, namaBahanKimia, tipeBahan } = query;
+    const {
+      page,
+      limit,
+      sortOrder,
+      sortBy,
+      casNumber,
+      namaDagang,
+      namaBahanKimia,
+      tipeBahan,
+    } = query;
 
-    const whereClause: any = {};  // Construct a dynamic filter
+    const whereClause: any = {}; // Construct a dynamic filter
 
     // Filter by multiple CAS numbers (if provided)
     if (casNumber && casNumber.length > 0) {
@@ -379,14 +423,16 @@ export class DataMasterService {
 
   async getDataBahanB3ById(id: string) {
     const data = await this.prisma.dataBahanB3.findUnique({ where: { id } });
-    if (!data) throw new NotFoundException(`Data Bahan B3 with ID ${id} not found.`);
+    if (!data)
+      throw new NotFoundException(`Data Bahan B3 with ID ${id} not found.`);
     return data;
   }
 
   async searchDataPejabat(query: SearchDataPejabatDto) {
-    const { page, limit, sortOrder, sortBy, nip, nama, jabatan, status } = query;
+    const { page, limit, sortOrder, sortBy, nip, nama, jabatan, status } =
+      query;
 
-    const whereClause: any = {};  // Construct a dynamic filter
+    const whereClause: any = {}; // Construct a dynamic filter
 
     // Filter by multiple NIP (if provided)
     if (nip && nip.length > 0) {
@@ -429,14 +475,15 @@ export class DataMasterService {
 
   async getDataPejabatById(id: string) {
     const data = await this.prisma.dataPejabat.findUnique({ where: { id } });
-    if (!data) throw new NotFoundException(`Data Pejabat with ID ${id} not found.`);
+    if (!data)
+      throw new NotFoundException(`Data Pejabat with ID ${id} not found.`);
     return data;
   }
 
   async searchDataTembusan(query: SearchDataTembusanDto) {
     const { page, limit, sortOrder, sortBy, nama, tipe } = query;
 
-    const whereClause: any = {};  // Construct a dynamic filter
+    const whereClause: any = {}; // Construct a dynamic filter
 
     // Filter by multiple Nama Tembusan (if provided)
     if (nama && nama.length > 0) {
@@ -469,7 +516,52 @@ export class DataMasterService {
 
   async getDataTembusanById(id: string) {
     const data = await this.prisma.dataTembusan.findUnique({ where: { id } });
-    if (!data) throw new NotFoundException(`Data Tembusan with ID ${id} not found.`);
+    if (!data)
+      throw new NotFoundException(`Data Tembusan with ID ${id} not found.`);
     return data;
+  }
+
+  async createTempatInstalasi(createTempatInstalasi: CreateTempatInstalasiDto) {
+    const tempatInstalasi = await this.prisma.tempatInstalasi.create({
+      data: {
+        name: createTempatInstalasi.nama,
+        alamat: createTempatInstalasi.alamat,
+      },
+    });
+
+    return tempatInstalasi;
+  }
+
+  async updateTempatInstalasi(
+    id: string,
+    createTempatInstalasi: CreateTempatInstalasiDto,
+  ) {
+    const tempatInstalasi = await this.prisma.tempatInstalasi.update({
+      where: { id },
+      data: {
+        name: createTempatInstalasi.nama,
+        alamat: createTempatInstalasi.alamat,
+      },
+    });
+
+    return tempatInstalasi;
+  }
+
+  async tempatInstalasiById(id: string) {
+    const tempatInstalasi = await this.prisma.tempatInstalasi.findUnique({
+      where: { id },
+    });
+
+    if (!tempatInstalasi) {
+      throw new NotFoundException(`Tempat Instalasi with ID ${id} not found`);
+    }
+
+    return tempatInstalasi;
+  }
+
+  async tempatInstalasiList() {
+    const tempatInstalasi = await this.prisma.tempatInstalasi.findMany();
+
+    return tempatInstalasi;
   }
 }

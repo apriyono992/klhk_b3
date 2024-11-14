@@ -35,83 +35,83 @@ export default function TableMaterial({ className, dataB3 }) {
     const list = (item) => [
         {
             'label': 'No. Reg. Bahan Kimia',
-            'value': dataB3.no_reg_bahanb3
+            'value': item?.no_reg_bahan
         },
         {
             'label': 'Cas Number',
-            'value': item.dataBahanB3.casNumber
+            'value': item.cas_number
         },
         {
             'label': 'Nama Bahan Kimia',
-            'value': item.dataBahanB3.namaBahanKimia
+            'value': item.nama_bahan
         },
         {
             'label': 'Nama Dagang',
-            'value': item.dataBahanB3.namaDagang
+            'value': item.nama_dagang
         },
         {
             'label': 'Kategori Bahan Kimia',
-            'value': item.fasaB3
+            'value': item?.kategori_b3
         },
         {
             'label': 'HS Code',
-            'value': item.dataBahanB3.casNumber
+            'value': item?.cas_number
         },
         {
             'label': 'Klasifikasi Bahan Kimia',
-            'value': item.karakteristikB3
+            'value': item?.klasifikasi_b3
         },
         {
             'label': 'Karateristik Bahan Kimia',
-            'value': item.fasaB3
+            'value': item?.karakteristik_b3
         },
         {
             'label': 'Tujuan Penggunaan',
-            'value': item.tujuanPenggunaan
+            'value': item?.tujuan_penggunaan
         },
         {
             'label': 'Jumlah Impor',
-            'value': '0215213383'
+            'value': item.jumlah_impor
         },
         {
             'label': 'Jumlah Impor / TH',
-            'value': '0215213383'
+            'value': item.jumlah_impor_per_tahun
         },
         {
             'label': 'Rencana Impor (Kali/TH)',
-            'value': '0215213383'
+            'value': item.pelaksanaan_rencana_impor
         },
         {
             'label': 'Penggunaan',
-            'value': '0215213383'
+            'value': item.penggunaan
         },
         {
             'label': 'Penghasil Bahan Kimia',
-            'value': '0215213383'
+            'value': item.penghasil_bahan_kimia
         },
         {
             'label': 'Asal Negara',
-            'value': '0215213383'
+            'value': item.asal_negara
         },
         {
             'label': 'Negara Muat',
-            'value': '0215213383'
+            'value': item.negara_muat
         },
         {
             'label': 'Alamat Penghasil',
-            'value': '0215213383'
+            'value': item.alamat_penghasil_b3
         },
         {
             'label': 'Pelabuhan Muat',
-            'value': '0215213383'
+            'value': item.pelabuhan_muat[0]
         },
         {
             'label': 'Pelabuhan Bongkar',
-            'value': '0215213383'
+            'value': item.pelabuhan_bongkar[0]
         },
         {
             'label': 'Provinsi Tujuan',
-            'value': '0215213383'
+            'value': item.provinsi_pelabuhan_bongkar[0]
         },
     ]
 
@@ -170,13 +170,13 @@ export default function TableMaterial({ className, dataB3 }) {
                             {columns.map((item, index) => <TableColumn key={index}>{item}</TableColumn>)}
                         </TableHeader>
                         <TableBody loadingContent={<Spinner />} loadingState={isLoading ? 'loading' : 'idle'}>
-                            {dataB3?.B3Substance?.map((item, index) => (
+                            {dataB3?.BahanB3Registrasi?.map((item, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{index + 1}</TableCell>
-                                    <TableCell>{item.dataBahanB3.casNumber}</TableCell>
-                                    <TableCell>{item.dataBahanB3.namaDagang}</TableCell>
-                                    <TableCell>{item.dataBahanB3.namaBahanKimia}</TableCell>
-                                    <TableCell>{dataB3?.no_reg_bahanb3}</TableCell>
+                                    <TableCell>{item.hs_code}</TableCell>
+                                    <TableCell>{item.nama_dagang}</TableCell>
+                                    <TableCell>{item.nama_bahan}</TableCell>
+                                    <TableCell>{item?.no_reg_bahan}</TableCell>
                                     <TableCell className='flex items-center gap-1'>
                                         <ModalDetailList list={list(item)}/>
                                         <Button isIconOnly size="sm" color="warning" onPress={() => handleOnEdit(item)}><PencilSquareIcon className="size-4" /></Button>

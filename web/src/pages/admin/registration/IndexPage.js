@@ -2,24 +2,47 @@ import { Button, Card, CardBody, Chip } from "@nextui-org/react";
 import { ArrowPathIcon, CheckIcon, EyeIcon, ListBulletIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import RootAdmin from "../../../components/layouts/RootAdmin";
 import CountWidget from "../../../components/elements/CountWidget";
-import { getFetcher } from "../../../services/api";
+import {authStateFetcher, getListRegistrasi, sendInsw} from "../../../services/api";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import useSWR from "swr";
 import useCustomNavigate from "../../../hooks/useCustomNavigate";
 import { useMemo } from "react";
 import { formattedDate } from "../../../services/helpers";
-import { differenceInMonths} from 'date-fns'
+import { differenceInDays } from 'date-fns'
+import {TrashIcon} from "@heroicons/react/16/solid";
+import toast from "react-hot-toast";
 
 export default function IndexPage() {
+    const fetcher = (...args) => authStateFetcher(...args);
     const { getRegistrationDetailPath } = useCustomNavigate();
-    const { data, isLoading } = useSWR('/registrasi/search?page=1&limit=10&sortBy=createdAt&sortOrder=desc', getFetcher);
+
+    const onSubmit = async (id) => {
+        const data = {
+            id: id,
+            status: 'nonaktif data INSW',
+            jnsPengajuan: '0000000010'
+        }
+        try {
+            const response = await sendInsw(data);
+            console.log(response, 'success');
+            toast.success('Berhasil Nonaktif Data INSW')
+        } catch (error) {
+            console.log('error fetching:', error)
+            toast.error('Gagal Nonaktif Data INSW!');
+        }
+    }
+
+    const { data, isLoading } = useSWR('/api/registrasi/search?page=1&limit=10&sortBy=createdAt&sortOrder=desc', fetcher);
+    const dataWithIndex = data?.registrasi?.map((item, index) => ({
+        ...item,
+        no: index + 1 // Auto-incrementing number
+    })) || [];
 
     const columns = useMemo(() =>  [
-        { 
-            field: 'updatedAt', 
+        {
+            field: 'no',
             headerName: 'No',
             width: 70,
-            renderCell: (params) => 1,
         },
         {
             field: 'nomor',
@@ -38,7 +61,7 @@ export default function IndexPage() {
             renderCell: () => "Registrasi B3 (Baru)"
         },
         {
-            field: 'tanggal_terbit',
+            field: 'createdAt',
             headerName: 'Tanggal Masuk Data',
             width: 200,
             valueGetter: (value, row) => {
@@ -48,24 +71,27 @@ export default function IndexPage() {
         {
             field: 'shippingInformation',
             headerName: 'Lama Proses',
-            width: 200,
+            width: 150,
             valueGetter: (value, row) => {
                 let startDate = row.berlaku_dari
                 let endDate = row.berlaku_sampai
-                return `${differenceInMonths(endDate, startDate)} Bulan`
+                return `${differenceInDays(endDate, startDate)} Hari`
             }
         },
         {
-            field: 'status',
+            field: 'approval_status',
             headerName: 'Status',
             width: 150,
-            renderCell: (params) => (<Chip size='sm' color='primary' variant='faded'>{params.value}</Chip>)
+            renderCell: (params) => (<Chip size='sm' color='primary' variant='faded' className="capitalize">{params.value}</Chip>)
         },
         {
             field: 'id',
             headerName: 'Aksi',
             renderCell: (params) => (
-                <Button size='sm' color='primary' isIconOnly onClick={() => getRegistrationDetailPath(params.value)}><EyeIcon className='size-4'/></Button>
+                <div className={'flex gap-2'}>
+                    <Button size='sm' color='primary' isIconOnly onClick={() => getRegistrationDetailPath(params.value)}><EyeIcon className='size-4'/></Button>
+                    {/*<Button size='sm' color='danger' isIconOnly onClick={() => onSubmit(params.value)}><TrashIcon className='size-4'/></Button>*/}
+                </div>
             ),
         },
     ], [getRegistrationDetailPath]);
@@ -83,7 +109,7 @@ export default function IndexPage() {
             <Card className="w-full mt-3" radius="sm">
                 <CardBody className='w-full h-[550px] p-5'>
                     <DataGrid
-                        rows={data?.registrasi}
+                        rows={dataWithIndex}
                         loading={isLoading}
                         columns={columns}
                         disableDensitySelector

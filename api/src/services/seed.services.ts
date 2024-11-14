@@ -31,6 +31,12 @@ export class SeedService {
     }
 
     try {
+      await this.seedRegencies();
+    } catch (error) {
+      this.logger.error('Error while seeding regencies data', error);
+    }
+
+    try {
       await this.seedDistricts();
     } catch (error) {
       this.logger.error('Error while seeding districts data', error);
@@ -52,6 +58,12 @@ export class SeedService {
       await this.seedRegistrasi();
     } catch (error) {
       this.logger.error('Error while seeding registrasi data', error);
+    }
+
+    try {
+      await this.seedRoles();
+    } catch (error) {
+      this.logger.error('Error while seeding Roles data', error);
     }
 
     try {
@@ -85,9 +97,19 @@ export class SeedService {
     }
 
     try {
-      await this.seedB3subtance();
+      await this.seedBahanb3reg();
     } catch (error) {
       this.logger.error('Error while seeding persyaratan data', error);
+    }
+    try {
+      await this.seedSektorPenggunaanBahan();
+    } catch (error) {
+      this.logger.error('Error while seeding persyaratan data', error);
+    }
+    try {
+      await this.seedPelabuhan();
+    } catch (error) {
+      this.logger.error('Error while seeding pelabuhan data', error);
     }
 
     this.logger.log('Seeding process completed');
@@ -102,6 +124,17 @@ export class SeedService {
       skipDuplicates: true, // This ensures that existing records are skipped
     });
     this.logger.log('Provinces seeded');
+  }
+
+  private async seedPelabuhan() {
+    const filePath = path.join(process.cwd(), 'src/seed/data_pelabuhan.json');
+    const pelabuhanData = this.readJsonFile(filePath);
+
+    await this.prisma.dataPelabuhan.createMany({
+      data: pelabuhanData,
+      skipDuplicates: true, // This ensures that existing records are skipped
+    });
+    this.logger.log('Pelabuhan seeded');
   }
 
   private async seedRegencies() {
@@ -146,6 +179,17 @@ export class SeedService {
       skipDuplicates: true, // This ensures that existing records are skipped
     });
     this.logger.log('Regitrasi seeded');
+  }
+
+  private async seedRoles() {
+    const filePath = path.join(process.cwd(), 'src/seed/roles.json');
+    const rolesData = this.readJsonFile(filePath);
+
+    await this.prisma.roles.createMany({
+      data: rolesData,
+      skipDuplicates: true, // This ensures that existing records are skipped
+    });
+    this.logger.log('Roles seeded');
   }
 
   private async seedPersyaratan() {
@@ -209,12 +253,37 @@ export class SeedService {
   private async seedB3subtance() {
     const filePath = path.join(process.cwd(), 'src/seed/b3subtance.json');
     const data = this.readJsonFile(filePath);
-    
+
     await this.prisma.b3Substance.createMany({
       data,
       skipDuplicates: true, // This ensures that existing records are skipped
     });
     this.logger.log('Data b3subtance seeded');
+  }
+
+  private async seedSektorPenggunaanBahan() {
+    const filePath = path.join(
+        process.cwd(),
+        'src/seed/sektorPenggunaanBahanB3.json',
+    );
+    const data = this.readJsonFile(filePath);
+
+    await this.prisma.sektorPenggunaanB3.createMany({
+      data,
+      skipDuplicates: true, // This ensures that existing records are skipped
+    });
+    this.logger.log('Data sektorPenggunaanBahanB3 seeded');
+  }
+
+  private async seedBahanb3reg() {
+    const filePath = path.join(process.cwd(), 'src/seed/bahanb3reg.json');
+    const data = this.readJsonFile(filePath);
+
+    await this.prisma.bahanB3Registrasi.createMany({
+      data,
+      skipDuplicates: true, // This ensures that existing records are skipped
+    });
+    this.logger.log('Data bahanb3reg seeded');
   }
 
   private async seedVillages() {

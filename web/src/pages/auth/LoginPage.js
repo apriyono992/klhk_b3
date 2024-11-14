@@ -5,6 +5,7 @@ import { Button, Checkbox, Input } from '@nextui-org/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from "react";
 import { useForm } from "react-hook-form"
+import { login } from "../../services/api";
 import Cookies from 'js-cookie'
 import { DASHBOARD_PATH, FORGOT_PASSWORD_PATH, REGISTER_PATH } from '../../services/routes';
 import { isResponseErrorObject } from '../../services/helpers';
@@ -19,19 +20,24 @@ export default function LoginPage() {
     function toggleVisibility() {
         setIsVisible(!isVisible);
     }
-    
+
     async function onSubmit(data) {
         try {
             data.expiresInMins = 1
             data.clientId = "klhk-974f693f-9dcf-4b3a-b76e-eaee0da0c3a9"
             data.clientSecret= "56f3bd572037efc90b74b08f8eb3db8fa4fb28ed47270f87279613b529b225d1"
-            const response = await postFetcher('/api/auth/login',  data)
-            
-            Cookies.set('accessToken', response.accessToken, { expires: 0.5, secure: true, sameSite: 'strict' });
-            Cookies.set('refreshToken', response.refreshToken, { expires: 0.5, secure: true, sameSite: 'strict' });
-            Cookies.set('sessionExpired', response.sessionExpired, { expires: 0.5, secure: true, sameSite: 'strict' });
-            
-            navigate(DASHBOARD_PATH, { replace: true })    
+            const response = await login(data)
+
+            Cookies.set('accessToken', response.data.accessToken, { expires: 0.5, secure: true, sameSite: 'strict' });
+            Cookies.set('refreshToken', response.data.refreshToken, { expires: 0.5, secure: true, sameSite: 'strict' });
+            Cookies.set('sessionExpired', response.data.sessionExpired, { expires: 0.5, secure: true, sameSite: 'strict' });
+
+            const base64Url = response.data?.accessToken.split('.')[1];
+            const base64 = base64Url.replace('-', '+').replace('_', '/');
+            const userdata = JSON.parse(window.atob(base64));
+            Cookies.set('roles', userdata.rolesId)
+
+            navigate(DASHBOARD_PATH, { replace: true })
         } catch (error) {
             isResponseErrorObject(error.response.data.message)
                 ? Object.entries(error.response.data.message).forEach(([key, value]) => {
@@ -50,40 +56,40 @@ export default function LoginPage() {
                     <p className="text-base">Sistem Informasi Tata Kelola dan Perizinan Bahan Berbahaya dan Beracun</p>
                 </div>
                 <form className="pt-3 font-medium" onSubmit={handleSubmit(onSubmit)}>
-                    <Input 
-                        {...register('email', { required: "Email is required" })} 
-                        radius="sm" 
-                        className="pb-5" 
-                        type="text" 
+                    <Input
+                        {...register('email', { required: "Email is required" })}
+                        radius="sm"
+                        className="pb-5"
+                        type="text"
                         size="lg"
-                        color={errors.email ? 'danger' : 'default'} 
-                        placeholder="Email" 
-                        startContent={<EnvelopeIcon className="size-5" />}  
-                        isInvalid={errors.email} 
-                        errorMessage={errors.email && errors.email.message} 
+                        color={errors.email ? 'danger' : 'default'}
+                        placeholder="Email"
+                        startContent={<EnvelopeIcon className="size-5" />}
+                        isInvalid={errors.email}
+                        errorMessage={errors.email && errors.email.message}
                     />
                     <Input
                         {...register('password', { required: "Password is required" })}
-                        radius="sm" 
-                        className="pb-5" 
+                        radius="sm"
+                        className="pb-5"
                         type={ isVisible ? "text" : "password" }
                         size="lg"
-                        color={errors.password ? 'danger' : 'default'}  
-                        placeholder="Password" 
+                        color={errors.password ? 'danger' : 'default'}
+                        placeholder="Password"
                         startContent={<LockClosedIcon className="size-5" />}
                         endContent={
                             <Button isIconOnly onClick={ toggleVisibility }>
                                 { isVisible ? <EyeSlashIcon className="size-5" /> : <EyeIcon className="size-5" /> }
                             </Button>
                         }
-                        isInvalid={errors.password} 
-                        errorMessage={errors.password && errors.password.message} 
+                        isInvalid={errors.password}
+                        errorMessage={errors.password && errors.password.message}
                     />
-                            
+
                     <div className="flex items-center justify-between pb-10">
                         <Checkbox
-                            {...register('remember')} 
-                            radius="sm" 
+                            {...register('remember')}
+                            radius="sm"
                             size="md"
                         >
                             Ingat Saya

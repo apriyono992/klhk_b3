@@ -1,0 +1,22 @@
+[
+  {
+    "id": "c6575a11-dc48-45a3-8818-60d45c865938",
+    "name": "Direktur"
+  },
+  {
+    "id": "5659845c-3af8-427d-9217-416576c0b56d",
+    "name": "SuperAdmin"
+  },
+  {
+    "id": "bbe0d665-f5ba-48d5-82cc-45c6f32065cb",
+    "name": "KabSubdit"
+  },
+  {
+    "id": "152cce4c-107b-472b-9e50-0eceb69b728f",
+    "name": "PIC"
+  },
+  {
+    "id": "a6ff2d5c-aa09-4951-ad53-e52f7efdfbd1",
+    "name": "User"
+  }
+]

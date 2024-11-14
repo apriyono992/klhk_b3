@@ -18,8 +18,8 @@ export default function RegisterPage() {
     const navigate = useNavigate();
     const provinceId = watch('provinceId');
 
-    const { data: province } = useSWR('api/location/provinces', getFetcher)
-    const { data: regency } = useSWR(provinceId ? `api/location/cities?provinceId=${provinceId}` : null, getFetcher)
+    const { data: province } = useSWR('/location/provinces', getFetcher)
+    const { data: regency } = useSWR(provinceId ? `/location/cities?provinceId=${provinceId}` : null, getFetcher)
 
     const handleFileUpload = async (event) => {
         try {
@@ -45,20 +45,21 @@ export default function RegisterPage() {
             const { confirmPassword, attachments, ...newData } = data;
             const updatedData = {
                 ...newData,
-                idPhotoUrl: uploadStatus.path
-            }            
+                idPhotoUrl: uploadStatus.path,
+                rolesId: '5659845c-3af8-427d-9217-416576c0b56d'
+            }
 
-            await postFetcher('/api/auth/register', updatedData)
+            await postFetcher('/auth/register', updatedData)
             toast.success('Berhasil membuat akun silahkan masuk!')
-        
-            navigate(LOGIN_PATH, { replace: true })    
+
+            navigate(LOGIN_PATH, { replace: true })
         } catch (error) {
             isResponseErrorObject(error.response.data.message)
                 ? Object.entries(error.response.data.message).forEach(([key, value]) => {
                     toast.error(value)
                 })
                 : toast.error(error.response.data.message)
-            
+
         }
     }
 
@@ -76,51 +77,51 @@ export default function RegisterPage() {
 
                 <form className="pt-10 font-medium" onSubmit={handleSubmit(onSubmit)}>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4 mb-5">
-                        <Input 
+                        <Input
                             {...register('fullName')}
-                            color={errors.fullName ? 'danger' : 'default'} 
-                            isInvalid={errors.fullName} 
-                            errorMessage={errors.fullName && errors.fullName.message} 
-                            radius="sm" 
-                            label="Nama Lengkap" 
-                            labelPlacement="outside" 
-                            type="text" 
-                            size="md" 
-                            placeholder='Masukan nama lengkap' 
-                        />
-                        <Input 
-                            {...register('email')}
-                            color={errors.email ? 'danger' : 'default'} 
-                            isInvalid={errors.email} 
-                            errorMessage={errors.email && errors.email.message} 
+                            color={errors.fullName ? 'danger' : 'default'}
+                            isInvalid={errors.fullName}
+                            errorMessage={errors.fullName && errors.fullName.message}
                             radius="sm"
-                            label="Email" 
-                            labelPlacement="outside" 
-                            type="email" 
-                            size="md" 
-                            placeholder='Masukan email' 
+                            label="Nama Lengkap"
+                            labelPlacement="outside"
+                            type="text"
+                            size="md"
+                            placeholder='Masukan nama lengkap'
                         />
-                        <Input 
+                        <Input
+                            {...register('email')}
+                            color={errors.email ? 'danger' : 'default'}
+                            isInvalid={errors.email}
+                            errorMessage={errors.email && errors.email.message}
+                            radius="sm"
+                            label="Email"
+                            labelPlacement="outside"
+                            type="email"
+                            size="md"
+                            placeholder='Masukan email'
+                        />
+                        <Input
                             {...register('phoneNumber')}
-                            color={errors.phoneNumber ? 'danger' : 'default'} 
-                            isInvalid={errors.phoneNumber} 
+                            color={errors.phoneNumber ? 'danger' : 'default'}
+                            isInvalid={errors.phoneNumber}
                             errorMessage={errors.phoneNumber && errors.phoneNumber.message}
-                            radius="sm" 
-                            label="Telepon" 
-                            labelPlacement="outside" 
-                            type="text" 
-                            size="md" 
-                            placeholder='Masukan telepon' 
+                            radius="sm"
+                            label="Telepon"
+                            labelPlacement="outside"
+                            type="text"
+                            size="md"
+                            placeholder='Masukan telepon'
                         />
                         <Select
                             {...register('provinceId', { required: 'Province is required' })}
-                            color={errors.provinceId ? 'danger' : 'default'} 
+                            color={errors.provinceId ? 'danger' : 'default'}
                             isInvalid={errors.provinceId}
                             errorMessage={errors.provinceId && errors.provinceId.message}
-                            radius="sm" 
-                            label="Provinsi" 
-                            labelPlacement="outside" 
-                            size="md" 
+                            radius="sm"
+                            label="Provinsi"
+                            labelPlacement="outside"
+                            size="md"
                             placeholder='Pilih provinsi'
                             onChange={(e) => setValue('provinceId', e.target.value)}
                         >
@@ -128,15 +129,15 @@ export default function RegisterPage() {
                                 <SelectItem key={item.id}>{item.name}</SelectItem>
                             ))}
                         </Select>
-                        <Select 
+                        <Select
                             {...register('cityId', { required: 'City is required' })}
-                            color={errors.cityId ? 'danger' : 'default'} 
+                            color={errors.cityId ? 'danger' : 'default'}
                             isInvalid={errors.cityId}
                             errorMessage={errors.cityId && errors.cityId.message}
-                            radius="sm" 
-                            label="Kota / Kabupaten" 
-                            labelPlacement="outside" 
-                            size="md" 
+                            radius="sm"
+                            label="Kota / Kabupaten"
+                            labelPlacement="outside"
+                            size="md"
                             placeholder='Pilih kota / kabupaten'
                         >
                             {regency?.map(it => (
@@ -144,74 +145,74 @@ export default function RegisterPage() {
                             ))}
                         </Select>
                     </div>
-                    <Textarea 
+                    <Textarea
                         {...register('address', { required: "address is required" })}
-                        color={errors.address ? 'danger' : 'default'} 
-                        isInvalid={errors.address} 
+                        color={errors.address ? 'danger' : 'default'}
+                        isInvalid={errors.address}
                         errorMessage={errors.address && errors.address.message}
-                        radius="sm" 
-                        label="Alamat" 
-                        labelPlacement="outside" 
-                        fullWidth 
-                        disableAutosize 
+                        radius="sm"
+                        label="Alamat"
+                        labelPlacement="outside"
+                        fullWidth
+                        disableAutosize
                     />
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4 mt-5 mb-5">
-                        <Input 
+                        <Input
                             {...register('idNumber', { required: "idNumber is required" })}
-                            color={errors.idNumber ? 'danger' : 'default'} 
-                            isInvalid={errors.idNumber} 
+                            color={errors.idNumber ? 'danger' : 'default'}
+                            isInvalid={errors.idNumber}
                             errorMessage={errors.idNumber && errors.idNumber.message}
-                            radius="sm" 
-                            label="Nomor KTP" 
-                            labelPlacement="outside" 
-                            type="text" 
-                            size="md" 
-                            placeholder='Masukan nomor ktp' 
-                        />
-                        <Input 
-                            {...register('attachments', { required: "attachments is required" })}
-                            color={errors.attachments ? 'danger' : 'default'} 
-                            isInvalid={errors.attachments} 
-                            errorMessage={errors.attachments && errors.attachments.message}
-                            radius="sm" 
-                            label="File KTP" 
-                            labelPlacement="outside" 
-                            type="file" 
+                            radius="sm"
+                            label="Nomor KTP"
+                            labelPlacement="outside"
+                            type="text"
                             size="md"
-                            onChange={handleFileUpload} 
+                            placeholder='Masukan nomor ktp'
                         />
-                        <Input 
+                        <Input
+                            {...register('attachments', { required: "attachments is required" })}
+                            color={errors.attachments ? 'danger' : 'default'}
+                            isInvalid={errors.attachments}
+                            errorMessage={errors.attachments && errors.attachments.message}
+                            radius="sm"
+                            label="File KTP"
+                            labelPlacement="outside"
+                            type="file"
+                            size="md"
+                            onChange={handleFileUpload}
+                        />
+                        <Input
                             {...register('password', { required: "Password is required"})}
                             color={errors.password ? 'danger' : 'default'}
                             isInvalid={errors.password}
                             errorMessage={errors.password && errors.password.message}
-                            radius="sm" 
-                            className="pb-5" 
+                            radius="sm"
+                            className="pb-5"
                             type={ isVisible ? "text" : "password" }
                             size="md"
-                            label="Password" 
-                            labelPlacement="outside" 
-                            placeholder='*********' 
+                            label="Password"
+                            labelPlacement="outside"
+                            placeholder='*********'
                             endContent={
                                 <Button size='sm' isIconOnly onClick={ toggleVisibility }>
                                     { isVisible ? <EyeSlashIcon className="size-4" /> : <EyeIcon className="size-4" /> }
                                 </Button>
-                            } 
+                            }
                         />
-                        <Input 
-                            {...register('confirmPassword', { 
+                        <Input
+                            {...register('confirmPassword', {
                             required: "Confirm Password is required",
-                            validate: (value) => 
+                            validate: (value) =>
                                 value === getValues('password') || "Password do not match"
                             })}
                             color={errors.confirmPassword ? 'danger' : 'default'}
                             isInvalid={errors.confirmPassword}
                             errorMessage={errors.confirmPassword && errors.confirmPassword.message}
-                            radius="sm" 
-                            label="Konfirmasi Password" 
-                            labelPlacement="outside" 
-                            type={ isVisible ? "text" : "password" } 
-                            size="md" 
+                            radius="sm"
+                            label="Konfirmasi Password"
+                            labelPlacement="outside"
+                            type={ isVisible ? "text" : "password" }
+                            size="md"
                             placeholder='*********'
                         />
                     </div>

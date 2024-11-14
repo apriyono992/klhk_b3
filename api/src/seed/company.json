@@ -13,7 +13,11 @@
     "alamatPool": ["Jl. Pool No. 1, Jakarta", "Jl. Pool No. 2, Jakarta"],
     "bidangUsaha": "Transportasi",
     "createdAt": "2024-01-01T10:00:00.000Z",
-    "updatedAt": "2024-01-01T10:00:00.000Z"
+    "updatedAt": "2024-01-01T10:00:00.000Z",
+    "skalaPerusahaan" : "",
+    "kdPos":  "40626",
+    "kota":  "SOR",
+    "provinsi" : "IDJB"
   },
   {
     "id": "f9b54d99-64e8-4974-9899-24d6e52ada39",
@@ -29,7 +33,11 @@
     "alamatPool": ["Jl. Pool Barat No. 5, Bandung"],
     "bidangUsaha": "Konstruksi",
     "createdAt": "2024-02-01T10:00:00.000Z",
-    "updatedAt": "2024-02-01T10:00:00.000Z"
+    "updatedAt": "2024-02-01T10:00:00.000Z",
+    "skalaPerusahaan" : "",
+    "kdPos":  "40626",
+    "kota":  "SOR",
+    "provinsi" : "IDJB"
   },
   {
     "id": "89955d90-8f57-470c-b0cc-3b813460e9f2",
@@ -45,6 +53,10 @@
     "alamatPool": ["Jl. Pool Selatan No. 3, Surabaya"],
     "bidangUsaha": "Teknologi Informasi",
     "createdAt": "2024-03-01T10:00:00.000Z",
-    "updatedAt": "2024-03-01T10:00:00.000Z"
+    "updatedAt": "2024-03-01T10:00:00.000Z",
+    "skalaPerusahaan" : "",
+    "kdPos":  "40626",
+    "kota":  "SOR",
+    "provinsi" : "IDJB"
   }
 ]

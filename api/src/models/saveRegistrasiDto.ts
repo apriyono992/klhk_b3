@@ -84,7 +84,7 @@ export class SaveRegistrasiDto {
 
   @IsArray()
   @ArrayNotEmpty() // Ensure array is not empty
-  B3SubtanceIds: string[]; // Array of Bahan B3 IDs
+  BahanB3RegIds: string[]; // Array of Bahan B3 IDs
 
   @IsArray()
   @ArrayNotEmpty()

@@ -59,3 +59,9 @@ export const draftPermit = [
     'Seumur Hidup',
     'Perkecualian - Transaksional',
 ]
+
+export const roleName = {
+    admin: '5659845c-3af8-427d-9217-416576c0b56d',
+    direksi: 'c6575a11-dc48-45a3-8818-60d45c865938',
+    user: 'a6ff2d5c-aa09-4951-ad53-e52f7efdfbd1',
+}

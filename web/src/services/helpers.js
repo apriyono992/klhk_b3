@@ -1,3 +1,5 @@
+import Cookies from 'js-cookie'
+
 export const isResponseErrorObject = (response) => typeof response === 'object' && response !== null && !Array.isArray(response);
 
 export const dirtyInput = (dirtyFields, data) => Object.keys(dirtyFields).reduce((acc, key) => {
@@ -54,3 +56,8 @@ export const formDataWithParsedLocation = (data) => ({
         })),
     }),
 });
+
+export function getRoles() {
+    const getRole = Cookies.get('roles')
+    return getRole
+}

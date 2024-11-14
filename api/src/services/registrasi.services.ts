@@ -5,19 +5,22 @@ import { Prisma } from '@prisma/client';
 import { SaveRegistrasiDto } from '../models/saveRegistrasiDto';
 import { UpdateRegistrasiPerusahaanDto } from '../models/updateRegistrasiPerusahaanDto';
 import * as _ from 'lodash';
-import { BahanB3Service } from './bahanB3.services';
-import { UpdateB3PermohonanRekomDto } from '../models/updateB3PermohonanRekomDto';
 import { SavePersyaratanDto } from '../models/savePersyaratanDto';
 import { UpdateApprovalPersyaratanDto } from '../models/updateApprovalPersyaratanDto';
+import { BahanB3RegistrasiService } from './bahanB3Registrasi.services';
+import { CreateRegistrasiDto } from '../models/createRegistrasiDto';
+import { BahanB3RegistrasiDto } from '../models/createUpdateBahanB3regDTO';
+import {InswServices} from "./insw.services";
+import {CreateSubmitDraftSKDto} from "../models/createSubmitDraftSKDto";
 
 @Injectable()
 export class RegistrasiServices {
   constructor(
     private prisma: PrismaService,
-    private readonly bahanB3Service: BahanB3Service,
+    private readonly bahanB3RegService: BahanB3RegistrasiService,
   ) {}
 
-  async saveRegistrasiSKB3(saveRegistrasiDto: SaveRegistrasiDto) {
+  async update(id: string, saveRegistrasiDto: SaveRegistrasiDto) {
     // Ensure that the Company exists
     const company = await this.prisma.company.findUnique({
       where: { id: saveRegistrasiDto.companyId },
@@ -37,10 +40,10 @@ export class RegistrasiServices {
     }
 
     // Ensure that all Bahan B3 IDs exist
-    const bahanB3Exists = await this.prisma.b3Substance.findMany({
-      where: { id: { in: saveRegistrasiDto.B3SubtanceIds } },
+    const bahanB3Exists = await this.prisma.bahanB3Registrasi.findMany({
+      where: { id: { in: saveRegistrasiDto.BahanB3RegIds } },
     });
-    if (bahanB3Exists.length !== saveRegistrasiDto.B3SubtanceIds.length) {
+    if (bahanB3Exists.length !== saveRegistrasiDto.BahanB3RegIds.length) {
       throw new NotFoundException(`Some Bahan B3 IDs do not exist`);
     }
 
@@ -56,40 +59,88 @@ export class RegistrasiServices {
     }
 
     // Create the Registrasi entry with related Tembusan and b3subtance entries
-    const registrasi = await this.prisma.registrasi.upsert({
+    const registrasi = await this.prisma.registrasi.update({
       where: {
-        id: saveRegistrasiDto.id || '', // Use the provided ID or an empty string (Prisma will throw an error if the ID doesn’t exist in the database)
+        id: id || '', // Use the provided ID or an empty string (Prisma will throw an error if the ID doesn’t exist in the database)
       },
-      update: {
+      data: {
         ..._.omit(saveRegistrasiDto, [
           'tembusanIds',
-          'B3SubtanceIds',
+          'BahanB3Reg',
           'registrasiPersyaratanIds',
         ]),
         approval_status: 'updated', // Set approval_status to 'updated' if it already exists
-        no_reg_bahanb3: await this.generateNoRegBahanb3(),
+        no_reg: await this.generateNoRegBahanb3(),
         tembusan: {
           set: saveRegistrasiDto.tembusanIds.map((id) => ({ id })), // Set related Tembusan to avoid duplicate connections
         },
-        B3Substance: {
-          set: saveRegistrasiDto.B3SubtanceIds.map((id) => ({ id })), // Set related Bahan B3 to avoid duplicate connections
+        BahanB3Registrasi: {
+          set: saveRegistrasiDto.BahanB3RegIds.map((id) => ({ id })), // Set related Bahan B3 to avoid duplicate connections
         },
         persyaratan: {
           set: saveRegistrasiDto.registrasiPersyaratanIds.map((id) => ({ id })),
         },
       },
-      create: {
+      include: {
+        tembusan: true,
+        BahanB3Registrasi: true,
+        company: true,
+      },
+    });
+
+    return registrasi;
+  }
+
+  async create(saveRegistrasiDto: CreateRegistrasiDto) {
+    const { BahanB3Reg } = saveRegistrasiDto;
+    // Ensure that the Company exists
+    const company = await this.prisma.company.findUnique({
+      where: { id: saveRegistrasiDto.companyId },
+    });
+    if (!company) {
+      throw new NotFoundException(
+        `Company with ID ${saveRegistrasiDto.companyId} not found`,
+      );
+    }
+
+    // Ensure that all Tembusan IDs exist
+    const tembusanExists = await this.prisma.dataTembusan.findMany({
+      where: { id: { in: saveRegistrasiDto.tembusanIds } },
+    });
+    if (tembusanExists.length !== saveRegistrasiDto.tembusanIds.length) {
+      throw new NotFoundException(`Some Tembusan IDs do not exist`);
+    }
+
+    // Ensure that all Bahan B3 IDs exist
+    const bahanB3Exists =
+      await this.bahanB3RegService.createBahanB3Reg(BahanB3Reg);
+
+    // Ensure that all persyaratan exist
+    const persyaratanExist = await this.prisma.persyaratan.findMany({
+      where: { id: { in: saveRegistrasiDto.registrasiPersyaratanIds } },
+    });
+    if (
+      persyaratanExist.length !==
+      saveRegistrasiDto.registrasiPersyaratanIds.length
+    ) {
+      throw new NotFoundException(`Some Persyaratan IDs do not exist`);
+    }
+
+    // Create the Registrasi entry with related Tembusan and b3subtance entries
+    const registrasi = await this.prisma.registrasi.create({
+      data: {
         ..._.omit(saveRegistrasiDto, [
           'tembusanIds',
-          'B3SubtanceIds',
+          'BahanB3Reg',
           'registrasiPersyaratanIds',
         ]),
-        approval_status: 'created',
+        approval_status: 'updated', // Set approval_status to 'updated' if it already exists
+        no_reg: await this.generateNoRegBahanb3(),
         tembusan: {
-          connect: saveRegistrasiDto.tembusanIds.map((id) => ({ id })), // Connect related Tembusan on create
+          connect: saveRegistrasiDto.tembusanIds.map((id) => ({ id })), // Set related Tembusan to avoid duplicate connections
         },
-        B3Substance: {
-          connect: saveRegistrasiDto.B3SubtanceIds.map((id) => ({ id })), // Connect related Bahan B3 on create
+        BahanB3Registrasi: {
+          connect: { id: bahanB3Exists.id },
         },
         persyaratan: {
           connect: saveRegistrasiDto.registrasiPersyaratanIds.map((id) => ({
@@ -99,7 +150,7 @@ export class RegistrasiServices {
       },
       include: {
         tembusan: true,
-        B3Substance: true,
+        BahanB3Registrasi: true,
         company: true,
       },
     });
@@ -107,10 +158,51 @@ export class RegistrasiServices {
     return registrasi;
   }
 
-  async submitDraftSK(id: string) {
+  async submitDraftSK(id: string, data: CreateSubmitDraftSKDto) {
     const existingRegistrasi = await this.prisma.registrasi.findUnique({
       where: { id },
     });
+    if (!existingRegistrasi) {
+      throw new NotFoundException(`Registrasi with ID ${id} not found`);
+    }
+
+    // Create the Registrasi entry with related Tembusan and BahanB3 entries
+    const registrasi = await this.prisma.registrasi.update({
+      where: { id },
+      data: {
+        bulan:data?.bulan,
+        tahun: data?.tahun,
+        status_izin: data?.status_izin,
+        keterangan_sk: data?.keterangan_sk,
+        berlaku_dari:data?.berlaku_dari,
+        berlaku_sampai: data?.berlaku_sampai,
+        nomor_notifikasi_impor: data?.nomor_notifikasi_impor,
+        approval_status: 'pending',
+        is_draft: false,
+        tembusan: {
+          connect: data.tembusanIds.map((id) => ({ id })), // Set related Tembusan to avoid duplicate connections
+        }
+      },
+      include: {
+        tembusan: true,
+        BahanB3Registrasi: {
+          include: {
+            SektorPenggunaanB3: true,
+          },
+        },
+        company: true,
+      },
+    });
+
+    return registrasi;
+  }
+
+  async submitInsw(id: string) {
+
+    const existingRegistrasi = await this.prisma.registrasi.findUnique({
+      where: { id },
+    });
+
     if (!existingRegistrasi) {
       throw new NotFoundException(`Registrasi with ID ${id} not found`);
     }
@@ -124,20 +216,20 @@ export class RegistrasiServices {
       },
       include: {
         tembusan: true,
-        B3Substance: {
+        BahanB3Registrasi: {
           include: {
-            dataBahanB3: true,
-            application: {
-              include: {
-                identitasPemohon: true,
-              },
-            },
+            SektorPenggunaanB3: true,
           },
         },
         company: true,
       },
     });
 
+    // const sendDataInsw = this.inswService.inswSubmitData();
+
+    // console.log(sendDataInsw , "check submit insw");
+
+    console.log(registrasi, " check register");
     return registrasi;
   }
 
@@ -176,14 +268,9 @@ export class RegistrasiServices {
       where: { id },
       include: {
         tembusan: true,
-        B3Substance: {
+        BahanB3Registrasi: {
           include: {
-            dataBahanB3: true,
-            application: {
-              include: {
-                identitasPemohon: true,
-              },
-            },
+            SektorPenggunaanB3: true,
           },
         },
         company: true,
@@ -206,16 +293,30 @@ export class RegistrasiServices {
     const registrasi = await this.prisma.registrasi.update({
       where: { id },
       data: {
+        approval_status:
+          updateApprovalPersyaratanDto.status === 'approved by direksi'
+            ? updateApprovalPersyaratanDto.status
+            : '',
         approved_by: updateApprovalPersyaratanDto.approved_by,
-        approval_status: updateApprovalPersyaratanDto.status,
+        nomor: updateApprovalPersyaratanDto.nomor_surat,
+        tanggal_surat: updateApprovalPersyaratanDto.tanggal_surat
       },
     });
 
     return registrasi;
   }
 
-  async updateBahanRegistrasiB3(data: UpdateB3PermohonanRekomDto) {
-    return await this.bahanB3Service.updateB3Substance(data);
+  async updateBahanRegistrasiB3(
+    id: string,
+    data: Partial<BahanB3RegistrasiDto>,
+  ) {
+    return await this.prisma.bahanB3Registrasi.update({
+      where: { id },
+      data: {
+        nama_dagang: data.nama_dagang,
+        no_reg_bahan: data.no_reg_bahan,
+      },
+    });
   }
 
   async updatePerusahaanRegistrasiB3(

@@ -73,6 +73,14 @@ export class RegisterUserDTO {
   @IsString()
   @ApiProperty({
     example: 'e83da097-a4fb-4b29-9739-575ca83b9d10',
+    description: 'User rolesId',
+  })
+  rolesId: string;
+
+  @IsDefined()
+  @IsString()
+  @ApiProperty({
+    example: 'e83da097-a4fb-4b29-9739-575ca83b9d10',
     description: 'User address provinceId',
   })
   provinceId: string;

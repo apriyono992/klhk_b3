@@ -226,8 +226,8 @@
             <tr>
                 <td>Nomor</td>
                 <td>:</td>
-                <td>S.2494/PB3/PP/PLB.4.4/8/09/2024</td>
-                <td>September 2024</td>
+                <td><%= nomor_surat %></td>
+                <td><%= tanggal_surat %></td>
             </tr>
             <tr>
                 <td>Sifat</td>
@@ -271,42 +271,42 @@
                 <td>a.</td>
                 <td>Nama Perusahaan</td>
                 <td>:</td>
-                <td>PT. PYRAMIDA KIMIA SEMESTA</td>
+                <td><%= company_name %></td>
             </tr>
             <tr>
                 <td></td>
                 <td>b.</td>
                 <td>Alamat Kantor Pusat</td>
                 <td>:</td>
-                <td>Ruko Boulevard Taman Tekno Blok E Nomor 9-11, Setu. Bsd Sektor XI RT/RW 000/000 Setu 15314</td>
+                <td><%= company_address %></td>
             </tr>
             <tr>
                 <td></td>
                 <td>c.</td>
                 <td>Nomor Telepon/Fax</td>
                 <td>:</td>
-                <td>0812758028050 / -</td>
+                <td><%= phone_number_fax %></td>
             </tr>
             <tr>
                 <td></td>
                 <td>d.</td>
                 <td>NPWP</td>
                 <td>:</td>
-                <td>65.252.112.1-411.000</td>
+                <td><%= npwp %></td>
             </tr>
             <tr>
                 <td></td>
                 <td>e.</td>
                 <td>Nomor Induk Berusaha</td>
                 <td>:</td>
-                <td>2084020029614</td>
+                <td><%= nib %></td>
             </tr>
             <tr>
                 <td></td>
                 <td>f.</td>
                 <td>Kode DB-KLH</td>
                 <td>:</td>
-                <td>T2370</td>
+                <td><%= kode_db_klh %></td>
             </tr>
 
             <tr>
@@ -351,7 +351,7 @@
             <td>
                 <p>Direktur,</p>
                 <div class="signature-space"></div>
-                <p>Sugasri<br>NIP: 19690827 199803 1 001</p>
+                <p><%= director_name %><br>NIP: <%= director_nip %></p>
             </td>
         </tr>
     </table>
@@ -360,13 +360,7 @@
     <div class="tembusan">
         <p>Tembusan:</p>
         <ol>
-            <li>Direktur Jenderal Pengelolaan Sampah, Limbah dan Bahan Berbahaya dan Beracun (sebagai laporan);</li>
-            <li>Direktur Jenderal Perdagangan Luar Negeri, Kementerian Perdagangan;</li>
-            <li>Direktur Penindakan dan Penyidikan, Ditjen Bea dan Cukai, Kementerian Keuangan;</li>
-            <li>Gubernur Banten up Kepala Badan Lingkungan Hidup Provinsi Banten;</li>
-            <li>Walikota Tangerang Selatan up Kepala Suku Dinas Lingkungan Hidup Kota Tangerang Selatan;</li>
-            <li>Kepala Kantor Pelayanan Utama Bea dan Cukai Terlampir;</li>
-            <li>Direktur Utama PT. PYRAMIDA KIMIA SEMESTA</li>
+            <%- tembusan %>
         </ol>
     </div>
 
@@ -381,17 +375,17 @@
             <tr>
                 <td>Nomor</td>
                 <td>:</td>
-                <td>S.2494/PB3/PP/PLB.4.4/8/09/2024</td>
+                <td><%= nomor_surat_b3 %></td>
             </tr>
             <tr>
                 <td>Tanggal</td>
                 <td>:</td>
-                <td>September 2024</td>
+                <td><%= tanggal_surat_b3 %></td>
             </tr>
         </table>
 
         <h3 style="text-align: center; margin-bottom: 0;">DAFTAR BAHAN BERBAHAYA DAN BERACUN</h3>
-        <h3 style="text-align: center; margin-top: 2px;">PT. PYRAMIDA KIMIA SEMESTA</h3>
+        <h3 style="text-align: center; margin-top: 2px;"><%=  %></h3>
 
         <table class="table-container">
             <thead>
@@ -408,12 +402,12 @@
             <tbody>
                 <tr>
                     <td>1</td>
-                    <td>29031200</td>
-                    <td>Methylene Chloride</td>
-                    <td>Metilen Klorida</td>
-                    <td>China</td>
-                    <td>Balikpapan, Banjarmasin, Belawan, Dumai, Kijang, Makassar, Pontianak, Samarinda, Tanjung Emas, Tanjung Perak, Tanjung Priok, Tanjung Pura</td>
-                    <td>2024.09.75-09-2.86.05.6</td>
+                    <th><%= hs_code %></th>
+                    <th><%= nama_dagang %></th>
+                    <th><%= nama_bahan_kimia %></th>
+                    <th><%= negara_asal %></th>
+                    <th><%= pelabuhan_bongkar %></th>
+                    <th><%= nomor_registrasi %></th>
                 </tr>
             </tbody>
         </table>
@@ -428,7 +422,7 @@
                     <td>
                         <p>Direktur,</p>
                         <div class="signature-space"></div>
-                        <p>Sugasri<br>NIP: 19690827 199803 1 001</p>
+                        <p><%= director_name %><br>NIP: <%= director_nip %></p>
                     </td>
                 </tr>
             </table>

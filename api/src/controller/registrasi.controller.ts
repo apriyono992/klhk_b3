@@ -10,13 +10,34 @@ import {
 import { SearchRegistrasiDto } from '../models/searchRegistrasiDto';
 import { SaveRegistrasiDto } from '../models/saveRegistrasiDto';
 import { UpdateRegistrasiPerusahaanDto } from '../models/updateRegistrasiPerusahaanDto';
-import { UpdateB3PermohonanRekomDto } from '../models/updateB3PermohonanRekomDto';
 import { UpdateApprovalPersyaratanDto } from '../models/updateApprovalPersyaratanDto';
+import { BahanB3RegistrasiDto } from '../models/createUpdateBahanB3regDTO';
+import { CreateRegistrasiDto } from '../models/createRegistrasiDto';
+import {CreateSubmitDraftSKDto} from "../models/createSubmitDraftSKDto";
+import { UpdateB3PermohonanRekomDto } from '../models/updateB3PermohonanRekomDto';
 
 @ApiTags('Registrasi')
 @Controller('registrasi')
 export class RegistrasiController {
   constructor(private readonly registrasiService: RegistrasiServices) {}
+
+  @Put('update/:id')
+  @ApiOperation({ summary: 'Create Registrasi B3' })
+  @ApiResponse({
+    status: 200,
+    description: 'Registrasi B3 saved successfully.',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request. Invalid data.',
+  })
+  @ApiBody({ type: SaveRegistrasiDto }) // Add request body description for Swagger
+  async updateRegistrasiB3(
+    @Param('id') id: string,
+    @Body() saveRegistrasiDto: SaveRegistrasiDto,
+  ) {
+    return this.registrasiService.update(id, saveRegistrasiDto);
+  }
 
   @Post('save')
   @ApiOperation({ summary: 'Create Registrasi B3' })
@@ -29,15 +50,28 @@ export class RegistrasiController {
     description: 'Bad Request. Invalid data.',
   })
   @ApiBody({ type: SaveRegistrasiDto }) // Add request body description for Swagger
-  async createRegistrasiB3(@Body() saveRegistrasiDto: SaveRegistrasiDto) {
-    return this.registrasiService.saveRegistrasiSKB3(saveRegistrasiDto);
+  async createRegistrasiB3(@Body() craeteRegistrasiDto: CreateRegistrasiDto) {
+    return this.registrasiService.create(craeteRegistrasiDto);
   }
 
   @Post('submit-draft-sk/:id')
   @ApiOperation({ summary: 'Submit Draft SK' })
   @ApiResponse({ status: 200, description: 'Draft SK submitted successfully.' })
-  async submitDraftSK(@Param('id') id: string) {
-    return this.registrasiService.submitDraftSK(id);
+
+  async submitDraftSK(
+      @Param('id') id: string,
+      @Body() saveDraft : CreateSubmitDraftSKDto
+  ) {
+    return this.registrasiService.submitDraftSK(id, saveDraft);
+  }
+
+  @Post('submit-insw/:id')
+  @ApiOperation({ summary: 'Submit Insw' })
+  @ApiResponse({ status: 200, description: 'Draft SK submitted successfully.' })
+  async submitDraftSkToInsw(
+      @Param('id') id: string
+  ) {
+    return this.registrasiService.submitInsw(id);
   }
 
   @Put('update-status-approval/:id')
@@ -105,16 +139,17 @@ export class RegistrasiController {
     return this.registrasiService.getRegistrasiById(id);
   }
 
-  @Put('update-bahan')
+  @Put(':id/update-bahan')
   @ApiOperation({ summary: 'Update Bahan Registrasi B3' })
   @ApiResponse({
     status: 200,
     description: 'Bahan Registrasi B3 updated successfully.',
   })
   async updateBahanRegistrasiB3(
-    @Body() updateBahanB3: UpdateB3PermohonanRekomDto,
+    @Param('id') id: string,
+    @Body() updateBahanB3: Partial<BahanB3RegistrasiDto>,
   ) {
-    return this.registrasiService.updateBahanRegistrasiB3(updateBahanB3);
+    return this.registrasiService.updateBahanRegistrasiB3(id, updateBahanB3);
   }
 
   @Put('update-perusahaan/:id')

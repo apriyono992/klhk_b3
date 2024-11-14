@@ -1,0 +1,14 @@
+[
+  {
+    "id": "7ed60fb2-f2c3-4913-846e-f22079f0df6d",
+    "bahanB3RegistrasiId": "ea4a2dc6-d4d7-4a58-ae6e-fe81a466fc6a",
+    "keterangan": "Penggunaan untuk bahan baku",
+    "name": "Industri"
+  },
+  {
+    "id": "6e8a2f3e-bca5-4fad-a889-c99a6ba87f88",
+    "bahanB3RegistrasiId": "ea4a2dc6-d4d7-4a58-ae6e-fe81a466fc6a",
+    "keterangan": "Penggunaan untuk Baku",
+    "name": "Industri C"
+  }
+]

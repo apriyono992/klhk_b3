@@ -81,7 +81,7 @@ async function main() {
     ],
     skipDuplicates: true,
   });
-  
+
   // Seed User Roles
   await prisma.userRole.createMany({
     data: [
@@ -142,7 +142,7 @@ async function main() {
    // Seed News
    const newsTitle = 'AI Technology Advancements';
    const newsSlug = generateUniqueSlug(newsTitle);
- 
+
    await prisma.news.create({
      data: {
        title: newsTitle,
@@ -160,7 +160,7 @@ async function main() {
    // Seed Articles
    const articleTitle = 'The Future of Quantum Computing';
    const articleSlug = generateUniqueSlug(articleTitle);
- 
+
    await prisma.article.create({
      data: {
        title: articleTitle,
@@ -174,12 +174,12 @@ async function main() {
        categories: { connect: [{ slug: 'article'}] }, // Connect by id
      },
    });
- 
+
 
    // Seed Info
    const infoTitle = 'Climate Change Impact';
    const infoSlug = generateUniqueSlug(infoTitle);
- 
+
    await prisma.info.create({
      data: {
        title: infoTitle,
@@ -196,7 +196,7 @@ async function main() {
    // Seed Events
    const eventTitle = 'Global Environmental Summit';
    const eventSlug = generateUniqueSlug(eventTitle);
- 
+
    await prisma.event.create({
      data: {
        title: eventTitle,
@@ -306,7 +306,7 @@ async function main() {
   });
 
   try{
-    
+
   // Seed Location and other hierarchical models (Province, Regency, District, Village)
   await prisma.province.create({
     data: {
@@ -342,7 +342,7 @@ async function main() {
   }catch(error){
     console.log(error);
   }
-  
+
   const provinces = await prisma.province.findMany();
   const regencies = await prisma.regencies.findMany();
   const districts = await prisma.districts.findMany();
@@ -374,8 +374,8 @@ async function main() {
         bidangUsaha: 'Technology',
       },
     });
-  
-    
+
+
   }
   catch(error){
 
@@ -407,7 +407,7 @@ async function main() {
       kepemilikan: 'Owned',
       company: { connect: { id: company.id } }, // Connect to the company
     },
-    
+
   });
 
   // Seed IdentitasApplication
@@ -538,7 +538,7 @@ const vehicles = await prisma.vehicle.findMany({
             alamat: 'Jl. Raya Merak KM 117, Banten, Indonesia',
             latitude: -6.0247,
             longitude: 106.0157,
-            
+
             locationType: 'asalMuat',
           },
           {

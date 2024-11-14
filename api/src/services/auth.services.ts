@@ -41,10 +41,11 @@ export class AuthService {
       address,
       provinceId,
       cityId,
+      rolesId,
       idNumber,
       idPhotoUrl
     } = payload;
-    
+
     const existingCity = await this.prisma.regencies.findUnique({
       where: {
         id: cityId,
@@ -82,6 +83,7 @@ export class AuthService {
       address,
       provinceId,
       cityId,
+      rolesId,
       idNumber: hashedKTP,
       idPhotoUrl,
     };
@@ -156,6 +158,7 @@ export class AuthService {
     const payload = {
       userId: user.id,
       fullName: user.fullName,
+      rolesId: user.rolesId
     };
     const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });

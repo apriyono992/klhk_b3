@@ -36,6 +36,8 @@ import { PelaporanPengakutanB3Module } from './module/pelaporanPengakutanB3.modu
 import { PelaporanPengakutanStatistikB3Module } from './module/pelaporanPengakutanStatistikB3.module';
 import { CountryModule } from './module/country.module';
 import { PenyimpananB3Module } from './module/penyimpananB3.module';
+import { BahanB3RegistrasiModule } from './module/bahanB3Registrasi.module';
+import {InswModule} from "./module/insw.module";
 
 @Module({
   imports: [
@@ -62,6 +64,7 @@ import { PenyimpananB3Module } from './module/penyimpananB3.module';
     CompanyModule,
     VehicleModule,
     BahanB3Module,
+    InswModule,
     DocumentModule,
     PermohonanRekomendasiB3Module,
     AuthModule,
@@ -72,7 +75,13 @@ import { PenyimpananB3Module } from './module/penyimpananB3.module';
     PelaporanPengakutanB3Module,
     PelaporanPengakutanStatistikB3Module,
     CountryModule,
-    PenyimpananB3Module
+    PenyimpananB3Module,
+    BahanB3RegistrasiModule,
+    AuthModule,
+    UploadModule,
+    RegistrasiModule,
+    NotifikasiModule,
+    DraftNotifikasiModule,
   ],
   controllers: [AppController, AuthController],
   providers: [
@@ -82,6 +91,8 @@ import { PenyimpananB3Module } from './module/penyimpananB3.module';
     PermissionUtil,
     Enforcer,
     PrismaService,
+    AuthService,
+    EmailService,
     CategoriesValidationPipe,
     AuthService,
     EmailService,
