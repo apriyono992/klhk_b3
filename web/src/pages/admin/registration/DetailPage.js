@@ -44,7 +44,7 @@ export default function DetailPage() {
             toast.success('Berhasil Kirim ke INSW')
         } catch (error) {
             console.log('error fetching:', error)
-            toast.error('Gagal Kirim ke INSW!');
+            toast.error(error.response.data.message.message);
         }
     }
 
