@@ -50,11 +50,11 @@ import { PenyimpananB3Module } from './module/penyimpananB3.module';
     SeedModule,
     LocationModule,
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads/photos'), // Path to the uploads/photos folder
+      rootPath: join(__dirname, '..', '..', 'uploads/photos'), // Path to the uploads/photos folder
       serveRoot: '/uploads/photos', // Serve the files from this URL
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads/photos'), // Path to the uploads/photos folder
+      rootPath: join(__dirname, '..', '..', 'uploads/photos'), // Path to the uploads/photos folder
       serveRoot: '/uploads/documents', // Serve the files from this URL
     }),
     PDfModule,

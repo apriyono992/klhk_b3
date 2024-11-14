@@ -231,7 +231,7 @@ export class PenyimpananB3Service {
     // Update file URLs for each photo
     penyimpananB3.PenyimpananB3Persyaratan.forEach((document) => {
       document.photosPenyimpananB3.forEach((photo) => {
-        photo.fileUrl = `${process.env.API_BASE_URL}/${photo.fileUrl}`;
+        photo.fileUrl = `${photo.fileUrl}`;
       });
     });
   

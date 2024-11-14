@@ -284,7 +284,7 @@ export class ContentService {
     }
     // Log the view event in the log table
     await this.logViewEvent(news.id, CategoryType.NEWS);
-    return { ...news, photoUrls: news.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) };
+    return { ...news, photoUrls: news.photos.map(photo => `${photo.url}`) };
   }
 
   async getArticleBySlug(slug: string) {
@@ -295,7 +295,7 @@ export class ContentService {
     
     // Log the view event in the log table
     await this.logViewEvent(article.id, CategoryType.ARTICLE);
-    return { ...article, photoUrls: article.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) };
+    return { ...article, photoUrls: article.photos.map(photo => `${photo.url}`) };
   }
 
   async getInfoBySlug(slug: string) {
@@ -306,7 +306,7 @@ export class ContentService {
     
     // Log the view event in the log table
     await this.logViewEvent(info.id, CategoryType.INFO);
-    return { ...info, photoUrls: info.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) };
+    return { ...info, photoUrls: info.photos.map(photo => `${photo.url}`) };
   }
 
   async getCompanyDocumentBySlug(slug: string) {
@@ -328,7 +328,7 @@ export class ContentService {
     
     // Log the view event in the log table
     await this.logViewEvent(event.id, CategoryType.EVENT);
-    return { ...event, attachments: event.attachments.map(attachment => `${process.env.API_BASE_URL}/${attachment.documentPath}`), photoUrls: event.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) };
+    return { ...event, attachments: event.attachments.map(attachment => `${attachment.documentPath}`), photoUrls: event.photos.map(photo => `${photo.url}`) };
   }
 
   async searchContent(params: SearchContentDto) {
@@ -482,13 +482,13 @@ export class ContentService {
     const totalEvents = type && type !== 'EVENT' ? 0 : await this.prisma.event.count({ where: baseConditions as Prisma.EventWhereInput });
 
     return {
-        news: newsResults.map(news => ({ ...news, photoUrls: news.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) })),
-        articles: articleResults.map(article => ({ ...article, photoUrls: article.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) })),
-        infos: infoResults.map(info => ({ ...info, photoUrls: info.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) })),
-        documents: documentResults.map(document => ({ ...document, attachmentsUrl: document.attachments.map(attachment => `${process.env.API_BASE_URL}/${attachment.documentPath}`) })),
+        news: newsResults.map(news => ({ ...news, photoUrls: news.photos.map(photo => `${photo.url}`) })),
+        articles: articleResults.map(article => ({ ...article, photoUrls: article.photos.map(photo => `${photo.url}`) })),
+        infos: infoResults.map(info => ({ ...info, photoUrls: info.photos.map(photo => `${photo.url}`) })),
+        documents: documentResults.map(document => ({ ...document, attachmentsUrl: document.attachments.map(attachment => `${attachment.documentPath}`) })),
         event: eventResults.map(event => ({ ...event, 
-          attachmentsUrl: event.attachments.map(attachment => `${process.env.API_BASE_URL}/${attachment.documentPath}`), 
-          photoUrls: event.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) })),
+          attachmentsUrl: event.attachments.map(attachment => `${attachment.documentPath}`), 
+          photoUrls: event.photos.map(photo => `${photo.url}`) })),
         pagination: {
             page,
             limit,
@@ -545,7 +545,7 @@ export class ContentService {
       total,
       page,
       limit,
-      data: news.map(news => ({ ...news, photoUrls: news.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) })),
+      data: news.map(news => ({ ...news, photoUrls: news.photos.map(photo => `${photo.url}`) })),
     };
   }
   
@@ -592,7 +592,7 @@ export class ContentService {
       total,
       page,
       limit,
-      data: articles.map(article => ({ ...article, photoUrls: article.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) })),
+      data: articles.map(article => ({ ...article, photoUrls: article.photos.map(photo => `${photo.url}`) })),
     };
   }
   
@@ -638,7 +638,7 @@ export class ContentService {
       total,
       page,
       limit,
-      data: info.map(info => ({ ...info, photoUrls: info.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) })),
+      data: info.map(info => ({ ...info, photoUrls: info.photos.map(photo => `${photo.url}`) })),
     };
   }  
 
@@ -685,7 +685,7 @@ export class ContentService {
       total,
       page,
       limit,
-      data: documents.map(document => ({ ...document, attachmentsUrl: document.attachments.map(attachment => `${process.env.API_BASE_URL}/${attachment.documentPath}`) })),
+      data: documents.map(document => ({ ...document, attachmentsUrl: document.attachments.map(attachment => `${attachment.documentPath}`) })),
     };
   }  
 
@@ -731,8 +731,8 @@ export class ContentService {
       page,
       limit,
       data: events.map(event => ({ ...event, 
-        attachmentsUrl: event.attachments.map(attachment => `${process.env.API_BASE_URL}/${attachment.documentPath}`), 
-        photoUrls: event.photos.map(photo => `${process.env.API_BASE_URL}/${photo.url}`) })),
+        attachmentsUrl: event.attachments.map(attachment => `${attachment.documentPath}`), 
+        photoUrls: event.photos.map(photo => `${photo.url}`) })),
     };
   }
 

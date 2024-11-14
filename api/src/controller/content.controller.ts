@@ -501,7 +501,7 @@ export class ContentController {
       uploadedFiles = uploadPhotoFilesToDisk(attachments);
     }
     const attachmentData = uploadedFiles.map(file => ({
-      fileUrl: `${process.env.BASE_URL}/uploads/photos/${file.filename}`,
+      fileUrl: `/uploads/photos/${file.filename}`,
       filePath: `/uploads/photos/${file.filename}`,
     }));
 
@@ -527,7 +527,7 @@ export class ContentController {
     }
 
     const attachmentData = uploadedFiles.map(file => ({
-      fileUrl: `${process.env.BASE_URL}/uploads/documents/${file.filename}`,
+      fileUrl: `/uploads/documents/${file.filename}`,
       filePath: `/uploads/documents/${file.filename}`,
     }));
 
@@ -560,12 +560,12 @@ export class ContentController {
     }
 
     const photosData = uploadPhotoFile.map(file => ({
-      fileUrl: `${process.env.BASE_URL}/uploads/photos/${file.filename}`,
+      fileUrl: `/uploads/photos/${file.filename}`,
       filePath: `/uploads/photos/${file.filename}`,
     }));
 
     const documentsData = uploadedDocumentFiles.map(file => ({
-      fileUrl: `${process.env.BASE_URL}/uploads/documents/${file.filename}`,
+      fileUrl: `/uploads/documents/${file.filename}`,
       filePath: `/uploads/documents/${file.filename}`,
     }));
 
