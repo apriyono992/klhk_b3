@@ -1,22 +1,19 @@
 import { Button, Card, CardBody, Input, Select, SelectItem, Textarea } from '@nextui-org/react'
-import React from 'react'
+import React, { useState } from 'react'
 import { patchFetcher } from '../../../../services/api';
 import { isResponseErrorObject } from '../../../../services/helpers';
 import toast from 'react-hot-toast';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { notificationStatus } from '../../../../services/enum';
 import { XCircleIcon } from '@heroicons/react/24/outline';
 import useAuth from '../../../../hooks/useAuth';
+import { notificationStatusChangeValidation } from '../../../../services/validation';
 
 export default function Form({ data, mutate, className }) {
-    const formSchema =  yup.object().shape({
-        tanggalPerubahan: yup.date().typeError('Tanggal harus valid').required('harus diisi'),
-        notes: yup.string().required('Harus diisi'),
-        status: yup.string().required('Harus diisi'),
-    }).required()
-    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({resolver: yupResolver(formSchema)});
+    const [selectedStatus, setSelectedStatus] = useState('');
+    const { register, handleSubmit, control, reset, formState: { errors, isSubmitting } } = useForm({resolver: yupResolver(notificationStatusChangeValidation)});
     const { data: user } = useAuth();
     async function onSubmitForm(formData) {
         try {
@@ -27,10 +24,11 @@ export default function Form({ data, mutate, className }) {
             reset();
             toast.success('Riwayat notifikasi berhasil ditambah!');
         } catch (error) {
+            const objectErrorMessage = Object.entries(error.response.data.message)
+                                        .map(([key, value]) => value)
+                                        .join(', ');
             isResponseErrorObject(error.response.data.message)
-                ? Object.entries(error.response.data.message).forEach(([key, value]) => {
-                    toast.error(value);
-                })
+                ? toast.error(objectErrorMessage)
                 : toast.error(error.response.data.message)
         }
     }
@@ -68,19 +66,44 @@ export default function Form({ data, mutate, className }) {
                                         isInvalid={errors.notes} 
                                         errorMessage={errors.notes && errors.notes.message}
                                     />
-                                    <Select 
-                                        {...register('status')}
-                                        isRequired
-                                        variant="faded" 
-                                        label="Status"
-                                        color={errors.status ? 'danger' : 'default'}
-                                        isInvalid={errors.status} 
-                                        errorMessage={errors.status && errors.status.message}
-                                    >
-                                        {notificationStatus.map((item) => (
-                                            <SelectItem key={item}>{item}</SelectItem>
-                                        ))}
-                                    </Select>     
+                                    <Controller
+                                        name="status"
+                                        control={control}
+                                        render={({ field, fieldState }) => (
+                                            <Select 
+                                                {...field}
+                                                isRequired
+                                                variant="faded" 
+                                                label="Status"
+                                                color={fieldState.error ? 'danger' : 'default'}
+                                                isInvalid={fieldState.error} 
+                                                errorMessage={fieldState.error && fieldState.error.message}
+                                                onChange={(e) => {
+                                                    field.onChange(e.target.value)
+                                                    setSelectedStatus(e.target.value)
+                                                }}
+                                            >
+                                                {notificationStatus.map((item) => (
+                                                    <SelectItem key={item}>{item}</SelectItem>
+                                                ))}
+                                            </Select>   
+                                        )}
+                                    />
+                                    { 
+                                        selectedStatus === 'Ada Rencana Import' && 
+                                            <Select 
+                                                {...register('tipeSurat')}
+                                                isRequired
+                                                variant="faded" 
+                                                label="Tipe Surat"
+                                                color={errors.tipeSurat ? 'danger' : 'default'}
+                                                isInvalid={errors.tipeSurat} 
+                                                errorMessage={errors.tipeSurat && errors.tipeSurat.message}
+                                            >
+                                                <SelectItem key="Explicit Consent and Persetujuan ECHA">Explicit Consent and Persetujuan ECHA</SelectItem>
+                                                <SelectItem key="Explicit Consent and Persetujuan Non ECHA">Explicit Consent and Persetujuan Non ECHA</SelectItem>
+                                            </Select> }
+                                    
                                 </div>
                                 <Button isLoading={isSubmitting} isDisabled={isSubmitting} type='submit' color='primary'>Submit</Button>
                             </form>

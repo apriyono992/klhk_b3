@@ -16,6 +16,14 @@ import NotificationDashboardPage from "../pages/admin/notification/DashboardPage
 import NotificationIndexPage from "../pages/admin/notification/IndexPage";
 import NotificationDetailPage from "../pages/admin/notification/DetailPage";
 import NotificationImportVerficationDraftPage from "../pages/admin/notification/ImportVerficationDraftPage";
+import NotificationImportApprovalDraftPage from "../pages/admin/notification/ImportApprovalDraftPage";
+import NotificationImportEcDraftPage from "../pages/admin/notification/ImportEcDraftPage";
+import CompanyReportStorageIndexPage from "../pages/admin/report/storage/company/IndexPage";
+import CompanyReportStorageDetailPage from "../pages/admin/report/storage/company/DetailPage";
+import AdminReportStorageIndexPage from "../pages/admin/report/storage/admin/IndexPage";
+import AdminReportStorageDetailPage from "../pages/admin/report/storage/admin/DetailPage";
+import CompanyReportTransportIndexPage from "../pages/admin/report/transport/company/IndexPage";
+import CompanyReportTransportCreatePage from "../pages/admin/report/transport/company/CreatePage";
 import CarbonCopyIndexPage from "../pages/admin/carbon-copy/IndexPage";
 import MaterialIndexPage from "../pages/admin/material/IndexPage";
 import OfficialIndexPage from "../pages/admin/official/IndexPage";
@@ -23,6 +31,7 @@ import HomePage from "../pages/landing-page/home";
 import BeritaPage from "../pages/landing-page/berita";
 import ArticlePage from "../pages/landing-page/article";
 import CompanyIndexPage from "../pages/admin/company/IndexPage";
+import PeriodIndexPage from "../pages/admin/period/IndexPage";
 
 export const ROOT_PATH = '/'
 export const BERITA_PATH = '/berita'
@@ -47,12 +56,23 @@ export const RECOMENDATION_DETAIL_PATH = '/admin/rekomendasi-b3/daftar/:id'
 export const NOTIFICATION_DASHBOARD_PATH = '/admin/notifikasi/dasbor'
 export const NOTIFICATION_INDEX_PATH = '/admin/notifikasi/daftar'
 export const NOTIFICATION_DETAIL_PATH = '/admin/notifikasi/daftar/:id'
-export const NOTIFICATION_IMPORT_VERIFICATION_PATH = '/admin/notifikasi/draft-surat-kebenaran-impor/:id'
+export const NOTIFICATION_IMPORT_VERIFICATION_PATH = '/admin/notifikasi/draft-surat-kebenaran-impor/:notificationId'
+export const NOTIFICATION_IMPORT_APPROVAL_PATH = '/admin/notifikasi/draft-surat-persetujuan-impor/:notificationId'
+export const NOTIFICATION_IMPORT_EC_PATH = '/admin/notifikasi/draft-surat-explicit-consent/:notificationId'
+
+export const ADMIN_REPORT_STORAGE = '/admin/pelaporan/penyimpanan-b3/daftar'
+export const ADMIN_REPORT_STORAGE_DETAIL = '/admin/pelaporan/penyimpanan-b3/daftar/:id'
+export const COMPANY_REPORT_STORAGE = '/pelaporan/penyimpanan-b3/daftar'
+export const COMPANY_REPORT_STORAGE_DETAIL = '/pelaporan/penyimpanan-b3/daftar/:id'
+
+export const REPORT_TRANSPORT_INDEX = '/admin/pelaporan/pengangkutan-b3/daftar'
+export const REPORT_TRANSPORT_CREATE = '/pelaporan/pengangkutan-b3/buat/:applicationId'
 
 export const CARBON_COPY_INDEX_PATH = '/admin/utama/tembusan'
 export const MATERIAL_INDEX_PATH = '/admin/utama/bahan-b3'
 export const OFFICIAL_INDEX_PATH = '/admin/utama/pejabat'
 export const COMPANY_INDEX_PATH = '/admin/utama/perusahaan'
+export const PERIOD_INDEX_PATH = '/admin/utama/periode'
 
 const router = createBrowserRouter([
     { path: "/", element: <HomePage/>,},
@@ -84,11 +104,22 @@ const router = createBrowserRouter([
             { path: NOTIFICATION_INDEX_PATH, element: <NotificationIndexPage />,},
             { path: NOTIFICATION_DETAIL_PATH, element: <NotificationDetailPage />,},
             { path: NOTIFICATION_IMPORT_VERIFICATION_PATH, element: <NotificationImportVerficationDraftPage />,},
+            { path: NOTIFICATION_IMPORT_APPROVAL_PATH, element: <NotificationImportApprovalDraftPage />,},
+            { path: NOTIFICATION_IMPORT_EC_PATH, element: <NotificationImportEcDraftPage />,},
+
+            { path: COMPANY_REPORT_STORAGE, element: <CompanyReportStorageIndexPage />,},
+            { path: COMPANY_REPORT_STORAGE_DETAIL, element: <CompanyReportStorageDetailPage />,},
+            { path: ADMIN_REPORT_STORAGE, element: <AdminReportStorageIndexPage/>,},
+            { path: ADMIN_REPORT_STORAGE_DETAIL, element: <AdminReportStorageDetailPage/>,},
+
+            { path: REPORT_TRANSPORT_INDEX, element: <CompanyReportTransportIndexPage />},
+            { path: REPORT_TRANSPORT_CREATE, element: <CompanyReportTransportCreatePage />},
 
             { path: CARBON_COPY_INDEX_PATH, element: <CarbonCopyIndexPage />, },
             { path: OFFICIAL_INDEX_PATH, element: <OfficialIndexPage />,},
             { path: MATERIAL_INDEX_PATH, element: <MaterialIndexPage />,},
             { path: COMPANY_INDEX_PATH, element: <CompanyIndexPage />,},
+            { path: PERIOD_INDEX_PATH, element: <PeriodIndexPage />,},
             
         ],
     },

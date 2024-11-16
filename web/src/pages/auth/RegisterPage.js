@@ -4,7 +4,7 @@ import logo from '../../assets/images/logo.png';
 import RootAuth from '../../components/layouts/RootAuth';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
-import { getFetcher, postFetcher, uploadPhoto } from '../../services/api';
+import { getFetcher, postFetcher, registerUser, uploadPhoto } from '../../services/api';
 import { useForm } from "react-hook-form";
 import toast from 'react-hot-toast';
 import { LOGIN_PATH } from '../../services/routes';
@@ -46,10 +46,9 @@ export default function RegisterPage() {
             const updatedData = {
                 ...newData,
                 idPhotoUrl: uploadStatus.path,
-                rolesId: '5659845c-3af8-427d-9217-416576c0b56d'
             }
 
-            await postFetcher('/auth/register', updatedData)
+            await registerUser(updatedData)
             toast.success('Berhasil membuat akun silahkan masuk!')
 
             navigate(LOGIN_PATH, { replace: true })

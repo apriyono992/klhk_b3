@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie'
+import { jwtDecode } from 'jwt-decode';
 
 export const isResponseErrorObject = (response) => typeof response === 'object' && response !== null && !Array.isArray(response);
 
@@ -61,3 +62,40 @@ export function getRoles() {
     const getRole = Cookies.get('roles')
     return getRole
 }
+
+export function removeSlug(slug) {
+    var words = slug.split('-');
+  
+    for (var i = 0; i < words.length; i++) {
+      var word = words[i];
+      words[i] = word.charAt(0).toUpperCase() + word.slice(1);
+    }
+  
+    return words.join(' ');
+}
+
+// export async function isSessionExpired() {
+//     const aToken = Cookies.get('accessToken')
+//     const rToken = Cookies.get('refreshToken');
+//     const sessionExpired = Cookies.get('sessionExpired');
+
+//     const sessionExpireDate = new Date(sessionExpired * 1).toISOString();
+//     const currentDate = new Date().toISOString();
+
+//     const expired = currentDate >= sessionExpireDate;
+
+//     if (expired === true) {
+//         try {
+//             const decode = jwtDecode(aToken)
+//             const response = await refreshToken(decode.userId, rToken);
+
+//             Cookies.set('accessToken', response.accessToken, { expires: 1, secure: true, sameSite: 'strict' });
+//             Cookies.set('refreshToken', response.refreshToken, { expires: 1, secure: true, sameSite: 'strict' });
+//             Cookies.set('sessionExpired', response.sessionExpired, { expires: 1, secure: true, sameSite: 'strict' });
+//         } catch (error) {
+            
+//         }
+//     }
+    
+//     return currentDate >= sessionExpireDate;
+// };

@@ -9,12 +9,11 @@ import { login } from "../../services/api";
 import Cookies from 'js-cookie'
 import { DASHBOARD_PATH, FORGOT_PASSWORD_PATH, REGISTER_PATH } from '../../services/routes';
 import { isResponseErrorObject } from '../../services/helpers';
-import toast from 'react-hot-toast';
-import { postFetcher } from '../../services/api';
 
 export default function LoginPage() {
     const [isVisible, setIsVisible] = useState(false);
-    const { register, handleSubmit, formState: { errors, isSubmitting }, } = useForm()
+    const [loginError, setLoginError] = useState(""); // State untuk error message
+    const { register, handleSubmit, formState: { errors, isSubmitting }, } = useForm();
     const navigate = useNavigate();
 
     function toggleVisibility() {
@@ -22,28 +21,35 @@ export default function LoginPage() {
     }
 
     async function onSubmit(data) {
+        setLoginError(""); // Reset error sebelum submit
         try {
-            data.expiresInMins = 1
-            data.clientId = "klhk-974f693f-9dcf-4b3a-b76e-eaee0da0c3a9"
-            data.clientSecret= "56f3bd572037efc90b74b08f8eb3db8fa4fb28ed47270f87279613b529b225d1"
-            const response = await login(data)
+            data.expiresInMins = 1;
+            data.clientId = "klhk-974f693f-9dcf-4b3a-b76e-eaee0da0c3a9";
+            data.clientSecret = "56f3bd572037efc90b74b08f8eb3db8fa4fb28ed47270f87279613b529b225d1";
+            const response = await login(data);
 
-            Cookies.set('accessToken', response.data.accessToken, { expires: 0.5, secure: true, sameSite: 'strict' });
-            Cookies.set('refreshToken', response.data.refreshToken, { expires: 0.5, secure: true, sameSite: 'strict' });
-            Cookies.set('sessionExpired', response.data.sessionExpired, { expires: 0.5, secure: true, sameSite: 'strict' });
+            if (!response.data?.accessToken) {
+                setLoginError("Login gagal. Silakan coba lagi.");
+                return;
+            }
+            Cookies.set('accessToken', response.data?.accessToken, { expires: 0.5, secure: true, sameSite: 'strict' });
+            Cookies.set('refreshToken', response.data?.refreshToken, { expires: 0.5, secure: true, sameSite: 'strict' });
+            Cookies.set('sessionExpired', response.data?.sessionExpired, { expires: 0.5, secure: true, sameSite: 'strict' });
 
             const base64Url = response.data?.accessToken.split('.')[1];
             const base64 = base64Url.replace('-', '+').replace('_', '/');
             const userdata = JSON.parse(window.atob(base64));
-            Cookies.set('roles', userdata.rolesId)
+            Cookies.set('roles', userdata.rolesId);
 
-            navigate(DASHBOARD_PATH, { replace: true })
+            navigate(DASHBOARD_PATH, { replace: true });
         } catch (error) {
-            isResponseErrorObject(error.response.data.message)
-                ? Object.entries(error.response.data.message).forEach(([key, value]) => {
-                    toast.error(value)
-                })
-                : toast.error(error.response.data.message)
+            if (isResponseErrorObject(error?.response?.data?.message)) {
+                // Ambil pesan error pertama dari response
+                const firstError = Object.values(error?.response?.data?.message)[0];
+                setLoginError(firstError);
+            } else {
+                setLoginError(error?.response?.data?.message || "Login gagal. Silakan coba lagi.");
+            }
         }
     }
 
@@ -72,14 +78,14 @@ export default function LoginPage() {
                         {...register('password', { required: "Password is required" })}
                         radius="sm"
                         className="pb-5"
-                        type={ isVisible ? "text" : "password" }
+                        type={isVisible ? "text" : "password"}
                         size="lg"
                         color={errors.password ? 'danger' : 'default'}
                         placeholder="Password"
                         startContent={<LockClosedIcon className="size-5" />}
                         endContent={
-                            <Button isIconOnly onClick={ toggleVisibility }>
-                                { isVisible ? <EyeSlashIcon className="size-5" /> : <EyeIcon className="size-5" /> }
+                            <Button isIconOnly onClick={toggleVisibility}>
+                                {isVisible ? <EyeSlashIcon className="size-5" /> : <EyeIcon className="size-5" />}
                             </Button>
                         }
                         isInvalid={errors.password}
@@ -96,13 +102,27 @@ export default function LoginPage() {
                         </Checkbox>
                         <Link to={FORGOT_PASSWORD_PATH} className="hover:underline">Lupa Password?</Link>
                     </div>
-                    <Button isLoading={isSubmitting} isDisabled={isSubmitting} type='submit' radius="sm" color="primary" className="w-full text-lg py-5">Masuk</Button>
+
+                    <Button
+                        isLoading={isSubmitting}
+                        isDisabled={isSubmitting}
+                        type='submit'
+                        radius="sm"
+                        color="primary"
+                        className="w-full text-lg py-5"
+                    >
+                        Masuk
+                    </Button>
+
+                    {/* Menampilkan pesan error login */}
+                    {loginError && <p className="text-danger mt-3 text-center">{loginError}</p>}
                 </form>
+
                 <div className="mt-4 flex items-center gap-1 justify-center">
                     <span className="text-center">Belum Punya Akun?</span>
                     <Link to={REGISTER_PATH} className="text-primary hover:underline">Daftar Disini</Link>
                 </div>
             </div>
         </RootAuth>
-    )
+    );
 };

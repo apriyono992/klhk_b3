@@ -1,29 +1,27 @@
 import RootAdmin from '../../../components/layouts/RootAdmin';
 import { Button, Card, CardBody, CardHeader, Chip, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/react';
 import { EyeIcon, PlusIcon } from '@heroicons/react/24/outline';
-import { getFetcher, getSelectFetcher } from '../../../services/api';
+import { getFetcher, getSelectCountryFetcher, getSelectFetcher } from '../../../services/api';
 import useSWR from 'swr';
 import useCustomNavigate from '../../../hooks/useCustomNavigate';
 import { useMemo, useState } from 'react';
-import useNotification from '../../../hooks/useNotification';
-import ModalAlert from '../../../components/elements/ModalAlert';
+import useNotification from '../../../hooks/notification/useNotification';
 import { Controller } from 'react-hook-form';
 import ReactSelect from '../../../components/elements/ReactSelect';
 import CustomDataGrid from '../../../components/elements/CustomDataGrid';
-export default function IndexPage() {
+export default function IndexPage() {    
     const { getNotificationDetailPath } = useCustomNavigate();
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
     const { data, isLoading, mutate } = useSWR(`/api/notifikasi?page=${page + 1}&limit=${pageSize}`, getFetcher);
     const { data: dataCompany, isLoading: isLoadingCompany, } = useSWR(`/api/company`, getSelectFetcher);
     const { data: dataBahan, isLoading: isLoadingBahan, } = useSWR(`/api/data-master/bahan-b3`, getSelectFetcher);
-    console.log(data?.data);
+    const { data: dataCountry, isLoading: isLoadingCountry, } = useSWR(`/api/countries`, getSelectCountryFetcher);
+
     const { 
-        onSubmitDelete,
         onCloseForm,
         onSubmitForm, 
         modalForm: { onOpenModalForm, isOpenModalForm, onOpenChangeModalForm },
-        modalAlert: { isOpenModalAlert, onOpenChangeModalAlert },
         hookForm: { register, control, handleSubmit, formState: { errors, isSubmitting } }, 
     } = useNotification({ mutate });
 
@@ -74,11 +72,12 @@ export default function IndexPage() {
         {
             field: 'action',
             headerName: 'Aksi',
-            renderCell: (params) => (
-                <div className="flex items-center gap-1">
-                    <Button size='sm' color='primary' isIconOnly onClick={() => getNotificationDetailPath(params.row.id)}><EyeIcon className='size-4'/></Button>
-                </div>    
-            ),
+            renderCell: (params) => {
+                return (
+                    <div className="flex items-center gap-1">
+                        <Button size='sm' color='primary' isIconOnly onClick={() => getNotificationDetailPath(params.row.id)}><EyeIcon className='size-4'/></Button>
+                    </div>    
+                )},
             sortable: false,
             filterable: false
         }, 
@@ -118,15 +117,7 @@ export default function IndexPage() {
                 </CardBody>
             </Card>
 
-            <ModalAlert 
-                isOpen={isOpenModalAlert} 
-                onOpenChange={onOpenChangeModalAlert} 
-                onSubmit={onSubmitDelete} 
-                heading="Batalkan Notifikasi?"
-                buttonSubmitText="Ya, Batalkan"
-                icon="danger"
-            />
-            <Modal isOpen={isOpenModalForm} onOpenChange={onOpenChangeModalForm} onClose={onCloseForm} isDismissable={false} isKeyboardDismissDisabled={false}>
+            <Modal scrollBehavior='inside' isOpen={isOpenModalForm} onOpenChange={onOpenChangeModalForm} onClose={onCloseForm} isDismissable={false} isKeyboardDismissDisabled={false}>
                 <ModalContent>
                     {(onClose) => (
                         <>
@@ -140,7 +131,7 @@ export default function IndexPage() {
                                             render={({ field, fieldState }) => (
                                                 <div className='flex flex-col'>
                                                     <ReactSelect
-                                                        label="Bahan B3"
+                                                        label="Nama Dagang - Nama Jenis Bahan B3"
                                                         data={dataBahan}
                                                         isLoading={isLoadingBahan}
                                                         value={field.value}
@@ -177,7 +168,23 @@ export default function IndexPage() {
                                                     />
                                                 </div>   
                                             )}
-                                        />     
+                                        /> 
+                                        <Controller
+                                            name="negaraAsal"
+                                            control={control}
+                                            render={({ field, fieldState }) => (
+                                                <div className='flex flex-col'>
+                                                    <ReactSelect
+                                                        label="Negara Asal"
+                                                        data={dataCountry}
+                                                        isLoading={isLoadingCountry}
+                                                        value={field.value}
+                                                        onChange={(selectedOption) => field.onChange(selectedOption ? selectedOption.value : '')}
+                                                        error={fieldState.error && fieldState.error.message}
+                                                    />
+                                                </div>   
+                                            )}
+                                        />      
                                     </div>
                                     <div className='flex items-center gap-1'>
                                         <Button isLoading={isSubmitting} isDisabled={isSubmitting} type='submit' color='primary'>Tambah</Button>

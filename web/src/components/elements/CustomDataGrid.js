@@ -1,7 +1,7 @@
 import { Button, SvgIcon } from "@mui/material";
 import { DataGrid, GridToolbarColumnsButton, GridToolbarContainer, GridToolbarFilterButton, useGridApiContext, GridToolbarExport } from "@mui/x-data-grid";
 
-export default function CustomDataGrid({ data, isLoading, columns, rowCount, initialState, page, setPage, pageSize, setPageSize }) {
+export default function CustomDataGrid({ data, isLoading, columns, rowCount, initialState, page, setPage, pageSize, setPageSize, disableRowSelectionOnClick = true, onRowClick }) {
     return (
         <DataGrid
             autosizeOnMount
@@ -30,7 +30,8 @@ export default function CustomDataGrid({ data, isLoading, columns, rowCount, ini
             page={page}
             pageSize={pageSize}
             disableDensitySelector
-            disableRowSelectionOnClick
+            disableRowSelectionOnClick={disableRowSelectionOnClick}
+            onRowClick={onRowClick}
             disableColumnSorting
             disableColumnMenu
         />

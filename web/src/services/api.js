@@ -152,6 +152,15 @@ export async function getSelectFetcher(url) {
     })
 }
 
+export async function getSelectCountryFetcher(url) {
+    return await axiosInstanceAuth.get(url).then(res => {
+        return res.data.map((item) => ({
+            value: item.code2,
+            label: item.name,
+        }))
+    })
+}
+
 export async function getSelectPejabatFetcher(url) {
     return await axiosInstanceAuth.get(url).then(res => {
         return res.data.data.map((item) => ({
@@ -163,6 +172,14 @@ export async function getSelectPejabatFetcher(url) {
 
 export async function postFetcher(url, data) {
     return await axiosInstanceAuth.post(url, data).then(res => res.data)
+}
+
+export async function postMultipartFetcher(url, data) {
+    return await axiosInstanceAuth.post(url, data, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    }).then(res => res)
 }
 
 export async function putFetcher(url, id, data) {
@@ -188,6 +205,16 @@ export async function deleteFetcher(url, id) {
 export async function deleteWithFormFetcher(url, data) {
     return await axiosInstanceAuth.delete(url, data).then(res => res.data)
 }
+
+export async function deleteWithFormFetcherTest(url, data) {
+    return await axiosInstanceAuth.delete(url, {
+        data: data, // Mengirim data sebagai body
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }).then(res => res.data);
+}
+
 
 export async function getPdfUrl(url) {
     try {

@@ -28,11 +28,9 @@ export const month = [
     'Desember'
 ]
 
-export const officialStatus = [
-    'PLH',
-    'PLT',
-    'AKTIF'
-]
+export const ccType = ['UMUM', 'DIREKTUR']
+
+export const officialStatus = ['PLH', 'PLT', 'AKTIF']
 
 export const materialType = [
     'DAPAT DIPERGUNAKAN',
@@ -58,6 +56,34 @@ export const draftPermit = [
     'Trasaksional',
     'Seumur Hidup',
     'Perkecualian - Transaksional',
+]
+
+export const storageImageType = [
+    "Papan Nama Gudang",
+    "Sirkulasi Udara",
+    "Pengaturan Suhu",
+    "Penerangan",
+    "Log Book/Catatan Stok",
+    "Dinding",
+    "Lantai Kedap Air",
+    "Kapasitas Penyimpanan",
+    "Saluran Tumpahan dan Bak Penampungan",
+    "Penumpukan B3",
+    "Penempatan B3",
+    "Checklist Pemeriksaan Gudang",
+    "Ceklis Pemeriksaan Kemasan",
+    "Kemasan Sesuai dengan Klasifikasi B3",
+    "Kemasan dengan Palet/Rak",
+    "Simbol dan Label B3 pada Kemasan",
+    "SOP Bongkar Muat/Penanganan B3",
+    "SOP Tanggap Darurat",
+    "SOP Penyimpanan",
+    "SOP Penanganan Barang Kadaluarsa/Offspec/Bekas Kemasan",
+    "APAR/Water Sprinkle/Hydran",
+    "Eye/Hand/Body Washer",
+    "Spill Kit",
+    "APD",
+    "Kotak P3K/Klinik"
 ]
 
 export const roleName = {
