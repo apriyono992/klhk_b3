@@ -1,4 +1,4 @@
-import { Controller, Post, Put, Get, Body, Param, HttpCode, HttpStatus, NotFoundException } from '@nestjs/common';
+import { Controller, Post, Put, Get, Body, Param, HttpCode, HttpStatus, NotFoundException, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags, ApiBody, ApiParam } from '@nestjs/swagger';
 import { DraftSuratNotifikasiService } from '../services/draftSuratNotifikasi.service';
 import { CreateDraftSuratKebenaranImportDto } from '../models/createDraftSuratKebenaranImportDto';
@@ -7,7 +7,10 @@ import { UpdateDraftSuratExplicitConsentDto } from 'src/models/updateDraftExplic
 import { CreateDraftSuratExplicitConsentDto } from 'src/models/createDraftExplicitConsentDto';
 import { CreateDraftSuratPersetujuanImportDto } from 'src/models/createDraftSuratPersetujuanImportDto';
 import { UpdateDraftSuratPersetujuanImportDto } from 'src/models/updateDraftSuratPersetujuanImportDto';
+import { JwtAuthGuard } from 'src/utils/auth.guard';
+import { RolesGuard } from 'src/utils/roles.guard';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('Draft Surat Kebenaran Import')
 @Controller('draft-surat-notifikasi')
 export class DraftSuratNotifikasiController {

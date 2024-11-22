@@ -3,9 +3,14 @@ import { RolesService } from '../services/roles.services';
 import { Source } from '../models/enums/source';
 import { Action } from '../models/enums/action';
 import { JwtProvider } from '../provider/auth.provider';
-import { JwtAuthGuard } from '../utils/authGuard';
+import { JwtAuthGuard } from '../utils/auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { PublicApiGuard } from 'src/utils/public.guard';
+import { Public } from 'src/utils/public.decorator';
+import { Roles } from 'src/utils/roles.decorator';
+import { RolesGuard } from 'src/utils/roles.guard';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('roles')
 export class RolesController {
   constructor(
@@ -13,6 +18,9 @@ export class RolesController {
     ) {}
 
   @Post('assign')
+  @ApiBearerAuth() // Dokumentasi untuk token
+  @Public()
+  @UseGuards(PublicApiGuard)
   async assignRoleToUser(
     @Body('userId') userId: string,
     @Body('roleName') roleName: string,
@@ -23,6 +31,8 @@ export class RolesController {
   }
 
   @Get('policies')
+  @ApiBearerAuth() // Dokumentasi untuk token
+  @Roles('user', 'admin') // Pengguna dengan role 'user' atau 'admin' dapat mengakses
   async getPolicies(@Headers('authorization') authHeader: string,) {
     const requestUserId = (authHeader as any).userId;
     return this.rolesService.getPolicies(requestUserId);

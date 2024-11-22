@@ -2,12 +2,18 @@ import {
   Controller,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { RolesGuard } from 'src/utils/roles.guard';
+import { JwtAuthGuard } from 'src/utils/auth.guard';
+import { RolesAccess } from 'src/models/enums/roles';
+import { Roles } from 'src/utils/roles.decorator';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('upload')
 export class UploadController {
   @Post('file')

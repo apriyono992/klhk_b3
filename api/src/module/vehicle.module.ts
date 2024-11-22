@@ -8,8 +8,11 @@ import { CompanyService } from "src/services/company.services";
 import { PrismaService } from "src/services/prisma.services";
 import { VehicleService } from "src/services/vehicle.services";
 import { PermissionUtil } from "src/utils/permission";
+import { PrismaModule } from "./prisma.module";
+import { AuthModule } from "./auth.module";
 
 @Module({
+  imports: [PrismaModule, AuthModule],
   controllers: [VehicleController],  // No controllers in this module
   providers: [        
     PrismaService,// Shared Prisma service

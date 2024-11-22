@@ -1,10 +1,13 @@
 import { ApiTags } from '@nestjs/swagger';
-import {Body, Controller, Get, Param, Post, Query, Res} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Query, Res, UseGuards} from '@nestjs/common';
 import { InswServices } from '../services/insw.services';
 import {LoginRequestDTO} from "../models/auth/loginRequest.dto";
 import {RequestInswDto} from "../models/requestInswDto";
 import { Response } from 'express';
+import { JwtAuthGuard } from 'src/utils/auth.guard';
+import { RolesGuard } from 'src/utils/roles.guard';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('INSW')
 @Controller('insw')
 export class InswController {

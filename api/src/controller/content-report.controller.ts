@@ -1,10 +1,13 @@
-import { Query, Get, Controller } from '@nestjs/common';
+import { Query, Get, Controller, UseGuards } from '@nestjs/common';
 import { TrendReportDto } from '../models/searchTrendDto';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ContentReportService } from 'src/services/content-report.services';
 import { CategoryType } from '@prisma/client';
+import { RolesGuard } from 'src/utils/roles.guard';
+import { JwtAuthGuard } from 'src/utils/auth.guard';
 
 @ApiTags('Content Report')
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('report/content')
 export class ContentReportController {
   constructor(private readonly contentReportService: ContentReportService) {}

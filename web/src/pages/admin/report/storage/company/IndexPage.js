@@ -20,7 +20,7 @@ export default function IndexPage() {
     ? `/api/penyimpananB3/company/${selectedCompanyId}`
     : null;
     // const { data, isLoading, mutate } = useSWR('/api/penyimpananB3/company/14997adf-dcdf-40c6-b67b-60b2aeec3c13', getFetcher);
-    const { data: dataCompany, isLoading: isLoadingCompany } = useSWR(`/api/company?limit=100`, getSelectFetcher);
+    const { data: dataCompany, isLoading: isLoadingCompany } = useSWR(`/api/company/search-company?limit=100`, getSelectFetcher);
     const {getCompanyStorageDetailPath}  = useCustomNavigate()
 
     // Fetch data penyimpanan B3 menggunakan endpoint dinamis

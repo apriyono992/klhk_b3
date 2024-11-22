@@ -1,4 +1,14 @@
-import { IsString, IsArray, IsOptional, IsNotEmpty, IsEnum, IsLatitude, IsLongitude, ValidateNested, MaxLength } from 'class-validator';
+import {
+  IsString,
+  IsArray,
+  IsOptional,
+  IsNotEmpty,
+  IsEnum,
+  IsLatitude,
+  IsLongitude,
+  ValidateNested,
+  MaxLength,
+} from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Status } from '@prisma/client';
 import { CreateAttachmentDto } from './createAttachmentsDto';
@@ -42,7 +52,7 @@ export class CreateEventDto {
   @ApiProperty({
     example: 40.73061,
     description: 'The latitude of the event location',
-    required: true
+    required: true,
   })
   @IsLatitude()
   latitude: number;
@@ -50,7 +60,7 @@ export class CreateEventDto {
   @ApiProperty({
     example: -73.935242,
     description: 'The longitude of the event location',
-    required: true
+    required: true,
   })
   @IsLongitude()
   longitude: number;
@@ -59,9 +69,8 @@ export class CreateEventDto {
     example: ['categoryId1', 'categoryId2'],
     description: 'An array of category IDs associated with the event',
     type: [String],
-    required: true
+    required: true,
   })
-  
   @IsOptional()
   categories?: string[]; // Array of Category IDs
 
@@ -72,7 +81,7 @@ export class CreateEventDto {
       type: 'string',
       format: 'binary',
     },
-    required: true
+    required: true,
   })
   @IsOptional()
   documents?: CreateAttachmentDto[];
@@ -84,7 +93,7 @@ export class CreateEventDto {
       type: 'string',
       format: 'binary',
     },
-    required: true
+    required: true,
   })
   @IsOptional()
   photos?: CreateAttachmentDto[];
@@ -117,4 +126,24 @@ export class CreateEventDto {
   @IsNotEmpty()
   @MaxLength(64)
   author: string;
+
+  @ApiProperty({
+    example: 'Kota',
+    description: 'The city of the event',
+    maxLength: 64,
+  })
+  @IsString()
+  @IsOptional()
+  @MaxLength(64)
+  city?: string;
+
+  @ApiProperty({
+    example: 'Provinsi',
+    description: 'The province of the event',
+    maxLength: 64,
+  })
+  @IsString()
+  @IsOptional()
+  @MaxLength(64)
+  province?: string;
 }

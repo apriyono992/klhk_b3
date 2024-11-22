@@ -1,7 +1,8 @@
-import { PrismaClient } from '@prisma/client';
 import { TipeDokumen } from './src/models/enums/TipeDokumen';
+import { createHmac, createHash } from 'crypto';
+import { v4 as uuidV4 } from 'uuid';
+import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
-
 
 function getRandomPejabat(pejabatList) {
   return pejabatList[Math.floor(Math.random() * pejabatList.length)].id;
@@ -13,9 +14,98 @@ function getRandomTembusan(tembusanList, count = 3) {
   return shuffled.slice(0, count).map(t => ({ id: t.id }));
 }
 
+const roles = [
+  { id: "c6575a11-dc48-45a3-8818-60d45c865938", name: "Direktur" },
+  { id: "5659845c-3af8-427d-9217-416576c0b56d", name: "SuperAdmin" },
+  { id: "f8c46b8c-36bc-4e82-b2ab-2d90b4e7e6e2", name: "KabSubdit Registrasi" },
+  { id: "54ae0f14-0b52-4904-951b-6b4b2d1b2437", name: "KabSubdit Rekomendasi" },
+  { id: "6b2cbb77-bc78-4d41-9f2f-56d071b4d2e3", name: "PIC Registrasi" },
+  { id: "d0843b92-60fc-48e7-baf2-03d2cc5f1762", name: "PIC Rekomendasi" },
+  { id: "4f8c2d65-1c35-4b6d-80fc-2a7891ab8b8d", name: "PIC Notifikasi" },
+  { id: "9e7e5a89-8496-49cd-b7a8-d85c3c3e0485", name: "PIC Pelaporan" },
+  { id: "85a9e912-8f7b-41e5-95b1-67a2af4cc2a5", name: "PIC CMS" },
+  { id: "a6ff2d5c-aa09-4951-ad53-e52f7efdfbd1", name: "Pengelola" },
+];
+
 function generateUniqueSlug(title) {
   const timestamp = Date.now(); // Generate a unique timestamp
   return `${title.toLowerCase().replace(/\s+/g, '-')}-${timestamp}`;
+}
+async function insertRoles(prisma) {
+  try {
+    for (const role of roles) {
+      await prisma.roles.create({
+        data: {
+          id: role.id,
+          name: role.name,
+        },
+      });
+    }
+    console.log("Roles inserted successfully!");
+  } catch (error) {
+    console.error("Error inserting roles:", error);
+  }
+}
+
+async function createSuperAdminUser(prisma) {
+  const password = 'superadmin123'; // Ganti dengan password aktual
+  const idNumber = '123456789'; // Ganti dengan nomor identitas pengguna
+  const provinces = await prisma.province.findFirst();
+  const regencies = await prisma.regencies.findFirst( {where:{
+    provinceId: provinces.id
+  }});
+  const districts = await prisma.districts.findMany();
+  const villages = await prisma.village.findMany();
+  // Buat salt
+  const salt = uuidV4();
+
+  // Hash password dengan salt
+  const hashedPassword = createHmac('sha256', salt)
+    .update(password)
+    .digest('hex');
+
+  // Hash nomor identitas (opsional, jika dibutuhkan)
+  const hashedKTP = createHash('sha256').update(idNumber).digest('hex');
+
+  try {
+    const superAdminRole = await prisma.roles.findUnique({
+      where: { name: 'SuperAdmin' },
+    });
+
+    if (!superAdminRole) {
+      throw new Error('Role SuperAdmin tidak ditemukan');
+    }
+
+    // Buat user baru
+    const user = await prisma.user.create({
+      data: {
+        id: uuidV4(), // Gunakan UUID untuk user ID
+        fullName: 'Super Admin',
+        email: 'superadmin@example.com',
+        password: hashedPassword, // Simpan password yang sudah di-hash
+        salt, // Simpan salt untuk verifikasi password di masa depan
+        phoneNumber: "12312312",
+        address: "1231312",
+        provinceId: provinces.id,
+        cityId: regencies.id,
+        idNumber: hashedKTP
+      },
+    });
+
+    // Tambahkan role SuperAdmin ke user
+    await prisma.userRoles.create({
+      data: {
+        userId: user.id,
+        roleId: superAdminRole.id,
+      },
+    });
+
+    console.log('SuperAdmin user created successfully!');
+  } catch (error) {
+    console.error('Error creating SuperAdmin user:', error);
+  } finally {
+    prisma.$disconnect();
+  }
 }
 
 async function main() {
@@ -30,6 +120,55 @@ async function main() {
  }catch(error){
 
  }
+ try{
+
+  // Seed Location and other hierarchical models (Province, Regency, District, Village)
+  await prisma.province.create({
+    data: {
+      id: '00',
+      name: 'New York',
+    },
+  });
+
+  await prisma.regencies.create({
+    data: {
+      id: '001',
+      name: 'Manhattan',
+      provinceId: '00',
+    },
+  });
+
+  await prisma.districts.create({
+    data: {
+      id: '0011',
+      name: 'Midtown',
+      regencyId: '001',
+    },
+  });
+
+  await prisma.village.create({
+    data: {
+      id: '00111',
+      name: 'Village 1',
+      districtId: '0011',
+    },
+  });
+
+  }catch(error){
+    console.log(error);
+  }
+
+  const provinces = await prisma.province.findMany();
+  const regencies = await prisma.regencies.findMany();
+  const districts = await prisma.districts.findMany();
+  const villages = await prisma.village.findMany();
+  await prisma.jenisSample.deleteMany();
+  await prisma.jenisSampleType.deleteMany();
+  await prisma.roles.deleteMany();
+
+  await insertRoles(prisma)
+
+  await createSuperAdminUser(prisma);
 
   // Seed Multiple DataBahanB3
   const dataBahanB3 = await prisma.dataBahanB3.createMany({
@@ -226,26 +365,131 @@ async function main() {
   });
   let jenisSampleType;
   let jenisSample;
-  try{
-      // Seed JenisSampleType
-       jenisSampleType = await prisma.jenisSampleType.create({
-        data: {
-          type: 'Air Quality',
-          deskripsi: 'Samples for air quality monitoring',
-        },
+
+  const jenisSampleTypes = [
+    { type: 'JNS_01', deskripsi: 'Tanah' },
+    { type: 'JNS_02', deskripsi: 'Air Permukaan' },
+    { type: 'JNS_03', deskripsi: 'Air Bersih' },
+    { type: 'JNS_04', deskripsi: 'Sedimen' },
+    { type: 'JNS_05', deskripsi: 'Udara' },
+    { type: 'JNS_06', deskripsi: 'Biota' },
+    { type: 'JNS_07', deskripsi: 'Padi' },
+    { type: 'JNS_08', deskripsi: 'Tanaman Lainnya' },
+  ];
+
+  try {
+    // Loop untuk memasukkan data jenisSampleTypes
+    for (const sampleType of jenisSampleTypes) {
+      try {
+        // Seed JenisSampleType
+        jenisSampleType = await prisma.jenisSampleType.upsert({
+          where: { type: sampleType.type },
+          update: {},
+          create: {
+            type: sampleType.type,
+            deskripsi: sampleType.deskripsi,
+          },
+        });
+        console.log(`Inserted or updated: ${sampleType.type} - ${sampleType.deskripsi}`);
+      } catch (error: any) {
+        if (error.code === 'P2002') {
+          console.error(`Duplicate entry for type ${sampleType.type}. Skipping...`);
+        } else {
+          console.error(`Error processing ${sampleType.type}: ${error.message}`);
+        }
+      }
+    }
+  } catch (error) {
+    console.error('An error occurred during seeding:', error);
+  }
+
+  const jenisSamples = [
+    { jenis: 'Air & sedimen', type: 'JNS_02' },
+    { jenis: 'Air Bersih', type: 'JNS_03' },
+    { jenis: 'Air dan sedimen', type: 'JNS_02' },
+    { jenis: 'Air Gelondong', type: 'JNS_02' },
+    { jenis: 'Air limbah', type: 'JNS_02' },
+    { jenis: 'Air Minum', type: 'JNS_03' },
+    { jenis: 'Air Muara', type: 'JNS_02' },
+    { jenis: 'Air Permukaan', type: 'JNS_02' },
+    { jenis: 'Air Sumur', type: 'JNS_02' },
+    { jenis: 'Air sumur dan tanaman', type: 'JNS_02' },
+    { jenis: 'Air Sungai', type: 'JNS_02' },
+    { jenis: 'Air Tong', type: 'JNS_02' },
+    { jenis: 'Akar Kacang', type: 'JNS_08' },
+    { jenis: 'Akar Padi', type: 'JNS_07' },
+    { jenis: 'Bekas lahan pengolahan', type: 'JNS_01' },
+    { jenis: 'Benthos', type: 'JNS_06' },
+    { jenis: 'Beras', type: 'JNS_08' },
+    { jenis: 'Bulir Padi', type: 'JNS_07' },
+    { jenis: 'Daun', type: 'JNS_08' },
+    { jenis: 'Daun Kacang', type: 'JNS_08' },
+    { jenis: 'Daun Singkong', type: 'JNS_08' },
+    { jenis: 'Limbah', type: 'JNS_04' },
+    { jenis: 'Limbah dan air sumur', type: 'JNS_04' },
+    { jenis: 'Limbah Padat', type: 'JNS_04' },
+    { jenis: 'Limbah tailing dan sedimen', type: 'JNS_04' },
+    { jenis: 'N/A', type: 'JNS_08' },
+    { jenis: 'Organisme', type: 'JNS_06' },
+    { jenis: 'Rumput & air', type: 'JNS_08' },
+    { jenis: 'Sedimen', type: 'JNS_04' },
+    { jenis: 'Sedimen dan air', type: 'JNS_04' },
+    { jenis: 'Sedimen Tailing', type: 'JNS_04' },
+    { jenis: 'Singkong', type: 'JNS_08' },
+    { jenis: 'Tanah', type: 'JNS_01' },
+    { jenis: 'Tanah dan tanaman', type: 'JNS_01' },
+    { jenis: 'Tanah Kacang', type: 'JNS_01' },
+    { jenis: 'Tanah Padi', type: 'JNS_01' },
+    { jenis: 'Tanah singkong', type: 'JNS_01' },
+    { jenis: 'Tanaman', type: 'JNS_08' },
+    { jenis: 'Tanaman & air', type: 'JNS_08' },
+    { jenis: 'Tanaman Pangan', type: 'JNS_08' },
+    { jenis: 'Tanaman, air & sedimen', type: 'JNS_08' },
+    { jenis: 'Udara', type: 'JNS_05' },
+    { jenis: 'Udara Ambien / Partikel', type: 'JNS_05' },
+    { jenis: 'Udara Ambien / Uap', type: 'JNS_05' },
+    { jenis: 'Udara Ambien/Uap', type: 'JNS_05' },
+  ];
+
+  try {
+    for (const sample of jenisSamples) {
+      // Ambil typeId berdasarkan type
+      const jenisSampleType = await prisma.jenisSampleType.findUnique({
+        where: { type: sample.type },
       });
 
-      // Seed JenisSample
-      jenisSample = await prisma.jenisSample.create({
-        data: {
-          code: 'JSP001',
-          deskripsi: 'Air sample taken from the environment',
-          typeId: jenisSampleType.id, // Connect with JenisSampleType
-        },
+      if (!jenisSampleType) {
+        console.error(`JenisSampleType ${sample.type} tidak ditemukan.`);
+        continue;
+      }
+      
+      // Ambil kode terakhir untuk jenis sample yang sesuai
+      const lastSample = await prisma.jenisSample.findFirst({
+        where: { typeId: jenisSampleType.id },
+        orderBy: { code: 'desc' },
       });
 
-  }catch(error){
-    console.log(error);
+      // Hitung kode berikutnya
+      let nextCodeNumber = 1;
+      if (lastSample) {
+        const lastCode = lastSample.code.split('_').pop();
+        if (lastCode) {
+          nextCodeNumber = parseInt(lastCode) + 1;
+        }
+      }
+      const nextCode = `${sample.type}_${String(nextCodeNumber).padStart(3, '0')}`;
+
+      await prisma.jenisSample.create({
+        data: {
+          code: nextCode,
+          deskripsi: sample.jenis,
+          typeId: await prisma.jenisSampleType.findUnique({ where: { type: sample.type } }).then((t) => t?.id),
+        },
+      });
+      console.log(`Inserted: ${sample.jenis} as type ${sample.type} ${nextCode}`);
+    }
+  } catch (error) {
+    console.error('Error seeding data:', error);
   }
 
   const jenisample = await prisma.jenisSample.findMany();
@@ -268,20 +512,13 @@ async function main() {
           },
         ],
       },
-      peskLocation: {
+      location: {
         create: {
           latitude: 40.7128,
           longitude: -74.0060,
-          description: 'Sample taken from New York City',
+          description: 'Location in New York City',
         },
-      },
-      warehouseLocation: {
-        create: {
-          latitude: 41.8781,
-          longitude: -87.6298,
-          description: 'Stored in a Chicago warehouse',
-        },
-      },
+      }
     },
   });
 
@@ -305,48 +542,7 @@ async function main() {
     },
   });
 
-  try{
-
-  // Seed Location and other hierarchical models (Province, Regency, District, Village)
-  await prisma.province.create({
-    data: {
-      id: '00',
-      name: 'New York',
-    },
-  });
-
-  await prisma.regencies.create({
-    data: {
-      id: '001',
-      name: 'Manhattan',
-      provinceId: '00',
-    },
-  });
-
-  await prisma.districts.create({
-    data: {
-      id: '0011',
-      name: 'Midtown',
-      regencyId: '001',
-    },
-  });
-
-  await prisma.village.create({
-    data: {
-      id: '00111',
-      name: 'Village 1',
-      districtId: '0011',
-    },
-  });
-
-  }catch(error){
-    console.log(error);
-  }
-
-  const provinces = await prisma.province.findMany();
-  const regencies = await prisma.regencies.findMany();
-  const districts = await prisma.districts.findMany();
-  const villages = await prisma.village.findMany();
+  
   await prisma.location.create({
     data: {
       latitude: 40.7128,

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Patch, BadRequestException, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, BadRequestException, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { DraftSuratDto } from 'src/models/draftSuratDto';
 import { StatusPermohonan } from 'src/models/enums/statusPermohonan';
@@ -8,11 +8,19 @@ import { TelaahTeknisUpsertDto } from 'src/models/telaahTeknisDto';
 import { UpdateApplicationStatusDto } from 'src/models/updateApplicationStatusDto';
 import { PermohonanRekomendasiB3Service } from 'src/services/permohonanRekom.services';
 
+import { RolesGuard } from 'src/utils/roles.guard';
+import { JwtAuthGuard } from 'src/utils/auth.guard';
+import { RolesAccess } from 'src/models/enums/roles';
+import { Roles } from 'src/utils/roles.decorator';
+
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('Permohonan')
 @Controller('rekom/permohonan')
 export class PermohonanRekomendasiB3Controller {
   constructor(private readonly permohonanService: PermohonanRekomendasiB3Service) {}
 
+  
+  @Roles(RolesAccess.PIC_REKOMENDASI, RolesAccess.PENGELOLA, RolesAccess.SUPER_ADMIN)
   @Post()
   @ApiOperation({ summary: 'Create initial application and Identitas Pemohon for a company' })
   @ApiResponse({
@@ -203,6 +211,8 @@ export class PermohonanRekomendasiB3Controller {
     return this.permohonanService.getApplicationById(applicationId);
   }
 
+    
+  @Roles(RolesAccess.PIC_REKOMENDASI, RolesAccess.DIREKTUR, RolesAccess.PENGELOLA, RolesAccess.SUPER_ADMIN)
   @Patch('status')
   @ApiOperation({ summary: 'Update the status of an application' })
   @ApiBody({
@@ -276,6 +286,7 @@ export class PermohonanRekomendasiB3Controller {
     return this.permohonanService.getApplicationStatusHistory(applicationId);
   }
 
+  @Roles(RolesAccess.PIC_REKOMENDASI, RolesAccess.DIREKTUR, RolesAccess.PENGELOLA, RolesAccess.SUPER_ADMIN)
   @Patch('draft-surat')
   @ApiOperation({ summary: 'Update DraftSurat by ID' })
   @ApiBody({
@@ -333,6 +344,7 @@ export class PermohonanRekomendasiB3Controller {
     };
   }
 
+  @Roles(RolesAccess.PIC_REKOMENDASI, RolesAccess.DIREKTUR, RolesAccess.PENGELOLA, RolesAccess.SUPER_ADMIN)
   @Patch('update-telaah/:applicationId')
   @ApiOperation({ summary: 'Upsert Telaah Teknis Rekomendasi B3 for a given application ID' })
   @ApiParam({

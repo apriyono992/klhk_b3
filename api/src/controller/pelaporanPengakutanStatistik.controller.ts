@@ -1,7 +1,12 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags, ApiQuery } from '@nestjs/swagger';
 import { PengangkutanStatistikService } from 'src/services/pelaporanPengakutanStatistik.services';
+import { RolesGuard } from 'src/utils/roles.guard';
+import { JwtAuthGuard } from 'src/utils/auth.guard';
+import { RolesAccess } from 'src/models/enums/roles';
+import { Roles } from 'src/utils/roles.decorator';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('Pengangkutan Statistik')
 @Controller('pengangkutan-statistik')
 export class PengangkutanStatistikController {

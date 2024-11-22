@@ -147,6 +147,18 @@ export class BahanB3Service {
   async getB3SubstanceById(id: string) {
     const b3Substance = await this.prisma.b3Substance.findUnique({
       where: { id },
+      include: {
+        application: true,
+        dataBahanB3: true,
+        PengangkutanDetail: {include:{
+          DataPerusahaanAsalMuatOnPengakutanDetail: {
+            include: { perusahaanAsalMuat: true },
+          },
+          DataPerusahaanTujuanBongkarOnPengakutanDetail: {
+            include: { perusahaanTujuanBongkar: true },
+          },
+        }},
+      },
     });
 
     if (!b3Substance) {
@@ -189,6 +201,18 @@ export class BahanB3Service {
     const [b3Substances, total] = await Promise.all([
       this.prisma.b3Substance.findMany({
         where,
+        include:{
+          application: true,
+          dataBahanB3: true,
+          PengangkutanDetail: {include:{
+            DataPerusahaanAsalMuatOnPengakutanDetail: {
+              include: { perusahaanAsalMuat: true },
+            },
+            DataPerusahaanTujuanBongkarOnPengakutanDetail: {
+              include: { perusahaanTujuanBongkar: true },
+            },
+          }},
+        },
         orderBy: { [sortBy]: sortOrder },
         skip: (page - 1) * limit,
         take: limit,

@@ -1,7 +1,10 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiOperation } from '@nestjs/swagger';
 import { CountryService } from 'src/services/country.service';
+import { JwtAuthGuard } from 'src/utils/auth.guard';
+import { RolesGuard } from 'src/utils/roles.guard';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('countries')
 @Controller('countries')
 export class CountryController {

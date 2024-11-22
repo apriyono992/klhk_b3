@@ -1,5 +1,11 @@
 import Cookies from 'js-cookie'
+import i18nIsoCountries from 'i18n-iso-countries';
+import enLocale from 'i18n-iso-countries/langs/en.json';
+import idLocale from 'i18n-iso-countries/langs/id.json'; // Indonesian locale
 import { jwtDecode } from 'jwt-decode';
+
+// Register English locale
+i18nIsoCountries.registerLocale(enLocale);
 
 export const isResponseErrorObject = (response) => typeof response === 'object' && response !== null && !Array.isArray(response);
 
@@ -17,6 +23,45 @@ export function formattedDate(date) {
     }).format(initDate);
     return format
 }
+
+export function calculateNoticationProcessingDays(statusHistory) {
+    if (!statusHistory || statusHistory.length === 0) {
+      return 0; // Tidak ada data
+    }
+  
+    // Urutkan statusHistory berdasarkan tanggal perubahan (jika belum diurutkan)
+    statusHistory.sort((a, b) => new Date(a.tanggalPerubahan) - new Date(b.tanggalPerubahan));
+  
+    // Ambil tanggal awal
+    const startDate = new Date(statusHistory[0].tanggalPerubahan);
+  
+    let endDate = null;
+    console.log(startDate)
+  
+    // Cari tanggal akhir (status Selesai atau Dibatalkan)
+    for (let i = 0; i < statusHistory.length; i++) {
+      const status = statusHistory[i];
+      if (status.newStatus === "Selesai" || status.newStatus === "Dibatalkan") {
+        endDate = new Date(status.tanggalPerubahan);
+        break;
+      }
+    }
+  
+    // Jika tidak ada status Selesai atau Dibatalkan, gunakan tanggal hari ini
+    if (!endDate) {
+      endDate = new Date(); // Menggunakan tanggal hari ini
+    }
+  
+    // Normalisasi tanggal ke tengah malam (menghindari perhitungan waktu parsial)
+    const startDay = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+    const endDay = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+    console.log(startDay,endDay);
+    // Hitung selisih hari
+    const processingDays = Math.floor((endDay - startDay) / (1000 * 60 * 60 * 24));
+
+  
+    return processingDays;
+  }
 
 export function diffForHuman(datePast, dateCurrent) {
     const current = new Date(dateCurrent);
@@ -39,6 +84,17 @@ export function diffForHuman(datePast, dateCurrent) {
 
     return `${diffYears} tahun`;
 }
+
+export const getCountryName = (countryCode, locale = "en", options = {}) => {
+  try {
+    let country =  i18nIsoCountries.getName(countryCode, locale, options);
+    console.log(country)
+    return country;
+  } catch (error) {
+    console.error(`Error fetching country name for ${countryCode}:`, error);
+    return null;
+  }
+};
 
 export const formDataWithParsedLocation = (data) => ({
     ...data,
@@ -65,12 +121,12 @@ export function getRoles() {
 
 export function removeSlug(slug) {
     var words = slug.split('-');
-  
+
     for (var i = 0; i < words.length; i++) {
       var word = words[i];
       words[i] = word.charAt(0).toUpperCase() + word.slice(1);
     }
-  
+
     return words.join(' ');
 }
 
@@ -93,9 +149,9 @@ export function removeSlug(slug) {
 //             Cookies.set('refreshToken', response.refreshToken, { expires: 1, secure: true, sameSite: 'strict' });
 //             Cookies.set('sessionExpired', response.sessionExpired, { expires: 1, secure: true, sameSite: 'strict' });
 //         } catch (error) {
-            
+
 //         }
 //     }
-    
+
 //     return currentDate >= sessionExpireDate;
 // };

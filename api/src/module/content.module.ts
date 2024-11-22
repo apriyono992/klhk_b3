@@ -9,10 +9,27 @@ import { Enforcer } from 'casbin';
 import { CategoriesValidationPipe } from '../validators/category.pipe';
 import { ContentReportController } from 'src/controller/content-report.controller';
 import { ContentReportService } from 'src/services/content-report.services';
+import { AuthModule } from './auth.module';
+import { PrismaModule } from './prisma.module';
+
 
 @Module({
+  imports: [PrismaModule, AuthModule],
   controllers: [ContentController, ContentReportController],
-  providers: [ ContentService,ContentReportService, PrismaService, JwtProvider, EnforcerProvider, PermissionUtil, Enforcer, CategoriesValidationPipe  ],
-  exports: [JwtProvider, EnforcerProvider, PermissionUtil, Enforcer, CategoriesValidationPipe],
+  providers: [
+    ContentService,
+    ContentReportService,
+    PrismaService,
+    EnforcerProvider,
+    PermissionUtil,
+    Enforcer,
+    CategoriesValidationPipe,
+  ],
+  exports: [
+    EnforcerProvider,
+    PermissionUtil,
+    Enforcer,
+    CategoriesValidationPipe,
+  ],
 })
 export class ContentModule {}

@@ -5,10 +5,12 @@ import { IsDistrictValid } from 'src/validators/district.validator';
 import { IsRegencyValid } from 'src/validators/regency.validator';
 import { IsProvinceExist } from 'src/validators/province.validator';
 import { Transform } from 'class-transformer';
+import { IsCompanyExists } from 'src/validators/isCompanyExists.validator';
 
 export class CreatePerusahaanAsalMuatDanTujuanDto {
   @IsUUID()
   @IsNotEmpty()
+  @IsCompanyExists()
   companyId: string;
 
   @IsString()

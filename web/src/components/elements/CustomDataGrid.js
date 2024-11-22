@@ -3,38 +3,47 @@ import { DataGrid, GridToolbarColumnsButton, GridToolbarContainer, GridToolbarFi
 
 export default function CustomDataGrid({ data, isLoading, columns, rowCount, initialState, page, setPage, pageSize, setPageSize, disableRowSelectionOnClick = true, onRowClick }) {
     return (
-        <DataGrid
-            autosizeOnMount
-            rows={data}
-            rowCount={rowCount}
-            loading={isLoading}
-            columns={columns}
-            initialState={{
-                pagination: {
-                    paginationModel: {
-                        pageSize: 10,
-                    },
-                },
-                density: 'compact',
-                ...initialState
-            }}
-            slots={{
-                toolbar: CustomToolbar,
-            }}
-            onPaginationModelChange={(model) => {
-                setPage(model.page);
-                setPageSize(model.pageSize);
-            }}
-            paginationMode="server"
-            pageSizeOptions={[5, 10, 15, 20, 30, 50, 100]}
-            page={page}
-            pageSize={pageSize}
-            disableDensitySelector
-            disableRowSelectionOnClick={disableRowSelectionOnClick}
-            onRowClick={onRowClick}
-            disableColumnSorting
-            disableColumnMenu
-        />
+<DataGrid
+    autosizeOnMount
+    rows={data}
+    rowCount={rowCount}
+    loading={isLoading}
+    columns={columns}
+    initialState={{
+        pagination: {
+            paginationModel: {
+                pageSize: 10,
+            },
+        },
+        density: 'compact',
+        ...initialState,
+    }}
+    slots={{
+        toolbar: CustomToolbar,
+    }}
+    onPaginationModelChange={(model) => {
+        setPage(model.page);
+        setPageSize(model.pageSize);
+    }}
+    paginationMode="server"
+    pageSizeOptions={[5, 10, 15, 20, 30, 50, 100]}
+    page={page}
+    pageSize={pageSize}
+    disableDensitySelector
+    disableRowSelectionOnClick={disableRowSelectionOnClick}
+    onRowClick={onRowClick}
+    disableColumnSorting
+    autoHeight
+    disableVirtualization
+    scrollbarSize={15}
+    sx={{
+        overflow: 'auto',
+        '& .MuiDataGrid-virtualScroller': {
+            overflowX: 'auto',
+            overflowY: 'auto',
+        },
+    }}
+/>
     )
 }
 

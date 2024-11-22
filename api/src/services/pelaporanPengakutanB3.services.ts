@@ -9,6 +9,11 @@ import { UpdatePengangkutanDetailDto } from 'src/models/updatePelaporanPengakuta
 import { SearchPelaporanPengakutanDto } from 'src/models/searchPelaporanPengakutanDto';
 import { SearchBelumPelaporanPengakutanVehicleDto } from 'src/models/searchBelumPelaporanPengakutanVehicleDto';
 import { SearchPermohonanRekomBelumDilaporkanDto } from 'src/models/searchPermohonanRekomBelumDilaporkanDto';
+import { ReviewPelaporanBahanB3Dto } from 'src/models/reviewPelaporanBahanB3Dto';
+import { StatusPengajuan } from 'src/models/enums/statusPengajuanPelaporan';
+import { addMonths, format } from 'date-fns';
+import { parse } from 'path';
+import { JenisPelaporan } from 'src/models/enums/jenisPelaporan';
 
 @Injectable()
 export class PelaporanPengangkutanService {
@@ -21,52 +26,158 @@ export class PelaporanPengangkutanService {
     
         // Ensure the report is created within the allowed period
         const currentDate = new Date();
-        if (currentDate < period.startDate || currentDate > period.endDate) {
+        if (currentDate < period.startReportingDate || currentDate > period.endReportingDate) {
           throw new BadRequestException('Current date is outside the reporting period.');
         }
-        
-        // Check if a report already exists for the same vehicle, month, and year
-        const existingReport = await this.prisma.pelaporanPengangkutan.findFirst({
-        where: {
-            applicationId,
-            vehicleId,
-            bulan,
-            tahun,
-        },
-        });
 
-        if (existingReport) {
-        throw new BadRequestException('Report already exists for this application, vehicle, month, and year.');
+        if (vehicleId === undefined) {
+          // Mulai transaksi Prisma
+          await this.prisma.$transaction(async (prisma) => {
+            // 1. Periksa apakah sudah ada pelaporan untuk `applicationId` dan `periodId`
+            const existingReport = await prisma.pelaporanPengangkutan.findFirst({
+              where: {
+                applicationId,
+                periodId: period.id,
+              },
+            });
+
+            if (existingReport) {
+              throw new BadRequestException(
+                'Pelaporan sudah dibuat untuk aplikasi ini pada periode yang sama.'
+              );
+            }
+
+            // 2. Ambil semua kendaraan dari aplikasi
+            const vehicles = await prisma.vehicle.findMany({
+              where: {
+                applications: {
+                  some: { applicationId },
+                },
+              },
+              select: { id: true },
+            });
+
+            if (vehicles.length === 0) {
+              throw new BadRequestException('Tidak ada kendaraan yang ditemukan untuk aplikasi ini.');
+            }
+
+            // 3. Ambil periode dan buat array bulan
+            const { startPeriodDate, endPeriodDate } = period;
+            const months = [];
+            let current = new Date(startPeriodDate);
+
+            while (current <= endPeriodDate) {
+              const bulan = format(current, 'MM');
+              const tahun = format(current, 'yyyy');
+              months.push({ bulan, tahun });
+              current = addMonths(current, 1);
+            }
+
+            // 4. Siapkan data untuk batch insert
+            const pelaporanData = [];
+
+            for (const vehicle of vehicles) {
+              for (let { bulan, tahun } of months) {
+                bulan = parseInt(bulan);
+                tahun = parseInt(tahun);
+                pelaporanData.push({
+                  applicationId,
+                  vehicleId: vehicle.id,
+                  companyId,
+                  bulan,
+                  tahun,
+                  isDraft: true,
+                  periodId: period.id,
+                });
+              }
+            }
+
+            // 5. Lakukan insert menggunakan `createMany`
+            await prisma.pelaporanPengangkutan.createMany({
+              data: pelaporanData,
+              skipDuplicates: true,
+            });
+
+            return {mewssage: 'Pelaporan pengangkutan berhasil dibuat untuk semua kendaraan dan bulan dalam periode.'};
+          });
+        } else {
+
+                  // Check if a report already exists for the same vehicle, month, and year
+        const existingReport = await this.prisma.pelaporanPengangkutan.findFirst({
+          where: {
+              applicationId,
+              vehicleId,
+              bulan,
+              tahun,
+          },
+          });
+  
+          if (existingReport) {
+          throw new BadRequestException('Report already exists for this application, vehicle, month, and year.');
+          }
+  
+          if (pengangkutanDetails.length === 0) {
+            return this.prisma.pelaporanPengangkutan.create({
+              data: {
+                  applicationId,
+                  vehicleId,
+                  companyId,
+                  bulan,
+                  tahun,
+                  isDraft: true,
+                  periodId: data.periodId,
+              },
+            });
+  
+          }else{
+  
+            return this.prisma.pelaporanPengangkutan.create({
+              data: {
+                  applicationId,
+                  vehicleId,
+                  companyId,
+                  bulan,
+                  tahun,
+                  isDraft: true,
+                  pengangkutanDetails: {
+                    create: pengangkutanDetails.map((detail) => ({
+                      b3SubstanceId: detail.b3SubstanceId,
+                      jumlahB3: detail.jumlahB3,
+                      DataPerusahaanAsalMuatOnPengakutanDetail:
+                        detail.perusahaanAsalMuat?.length > 0
+                          ? {
+                              create: detail.perusahaanAsalMuat.map((asalMuat) => ({
+                                perusahaanAsalMuatId: asalMuat,
+                              })),
+                            }
+                          : undefined,
+                          DataPerusahaanTujuanBongkarOnPengakutanDetail:
+                          detail.perusahaanAsalMuatDanTujuanBongkar?.length > 0
+                            ? {
+                                create: detail.perusahaanAsalMuatDanTujuanBongkar.flatMap((tujuan) =>
+                                  tujuan.perusahaanTujuanBongkar.map((tujuanBongkarDetail) => ({
+                                    perusahaanAsalMuatId: tujuan.perusahaanAsalMuatId,
+                                    perusahaanTujuanBongkarId: tujuanBongkarDetail.perusahaanTujuanBongkarId,
+                                    locationTypeAsalMuat: tujuan.locationType,
+                                    longitudeAsalMuat: tujuan.longitudeAsalMuat,
+                                    latitudeAsalMuat: tujuan.latitudeAsalMuat,
+                                    locationTypeTujuan: tujuanBongkarDetail.locationType,
+                                    longitudeTujuan: tujuanBongkarDetail.longitudeTujuanBongkar,
+                                    latitudeTujuan: tujuanBongkarDetail.latitudeTujuanBokar,
+                                  }))
+                                ),
+                              }
+                            : undefined,
+                    })),                  
+                  },
+                  periodId: data.periodId,
+              },
+              });
+          }
         }
 
         // Create the report along with the related details
-        return this.prisma.pelaporanPengangkutan.create({
-        data: {
-            applicationId,
-            vehicleId,
-            companyId,
-            bulan,
-            tahun,
-            isDraft: true,
-            pengangkutanDetails: {
-            create: pengangkutanDetails.map((detail) => ({
-                b3SubstanceId: detail.b3SubstanceId,
-                jumlahB3: detail.jumlahB3,
-                DataPerusahaanAsalMuatOnPengakutanDetail: {
-                  create: detail.perusahaanAsalMuat.map((asalMuat) => ({
-                    perusahaanAsalMuatId: asalMuat,
-                  })),
-                  },
-                  DataPerusahaanTujuanBongkarOnPengakutanDetail: {
-                    create: detail.perusahaanTujuanBongkar.map((tujuanBongkar) => ({
-                      perusahaanTujuanBongkarId: tujuanBongkar,
-                    })),
-                },
-            })),
-            },
-            periodId: data.periodId,
-        },
-        });
+        
     }
 
     // Update main PelaporanPengangkutan fields with conditional updates
@@ -112,16 +223,30 @@ export class PelaporanPengangkutanService {
             pelaporanPengangkutanId,
             b3SubstanceId: detailData.b3SubstanceId,
             jumlahB3: detailData.jumlahB3,
-            DataPerusahaanAsalMuatOnPengakutanDetail: {
+            DataPerusahaanAsalMuatOnPengakutanDetail: detailData?.perusahaanAsalMuat?.length > 0 ?
+  
+            {
             create: detailData.perusahaanAsalMuat.map((asalMuat) => ({
               perusahaanAsalMuatId: asalMuat,
             })),
-            },
-            DataPerusahaanTujuanBongkarOnPengakutanDetail: {
-              create: detailData.perusahaanTujuanBongkar.map((tujuanBongkar) => ({
-                perusahaanTujuanBongkarId: tujuanBongkar,
-              })),
-            }
+            } : undefined,
+            DataPerusahaanTujuanBongkarOnPengakutanDetail:
+                detailData.perusahaanAsalMuatDanTujuanBongkar?.length > 0
+                  ? {
+                      create: detailData.perusahaanAsalMuatDanTujuanBongkar?.flatMap((tujuan) =>
+                        tujuan.perusahaanTujuanBongkar?.map((tujuanBongkarDetail) => ({
+                          perusahaanAsalMuatId: tujuan.perusahaanAsalMuatId,
+                          perusahaanTujuanBongkarId: tujuanBongkarDetail.perusahaanTujuanBongkarId,
+                          locationTypeAsalMuat: tujuan.locationType,
+                          longitudeAsalMuat: tujuan.longitudeAsalMuat,
+                          latitudeAsalMuat: tujuan.latitudeAsalMuat,
+                          locationTypeTujuan: tujuanBongkarDetail.locationType,
+                          longitudeTujuan: tujuanBongkarDetail.longitudeTujuanBongkar,
+                          latitudeTujuan: tujuanBongkarDetail.latitudeTujuanBokar,
+                        }))
+                      ),
+                    }
+                  : undefined,
         },
         });
     }
@@ -138,27 +263,34 @@ export class PelaporanPengangkutanService {
         if (data.jumlahB3) updateData.jumlahB3 = data.jumlahB3;
 
         if (data.perusahaanAsalMuat) {
-          // Check for existing PerusahaanAsalMuat records and delete them
-          await this.prisma.perusahaanAsalMuat.deleteMany({ where: { DataPerusahaanAsalMuatOnPengakutanDetail: {some: {pengangkutanDetailId: detailId}} } });
-
           // Create new PerusahaanAsalMuat records
           updateData.DataPerusahaanAsalMuatOnPengakutanDetail = {
-            create: data.perusahaanAsalMuat.map((asalMuat) => ({
-              perusahaanAsalMuatId: asalMuat,
-            })),
+            deleteMany: data.perusahaanAsalMuat
+            ? {} : undefined,
+            create: data.perusahaanAsalMuat ?  data?.perusahaanAsalMuat?.map((asalMuat) => ({
+              perusahaanAsalMuatId: asalMuat ,
+            })): undefined,
           };
         }
 
         if(data.perusahaanTujuanBongkar) {
-          // Check for existing PerusahaanTujuanBongkar records and delete them
-          await this.prisma.perusahaanTujuanBongkar.deleteMany({ where: { DataPerusahaanTujuanBongkarOnPengakutanDetail:{some: {pengangkutanDetailId: detailId}} } });
-
           // Create new PerusahaanTujuanBongkar records
-          updateData.DataPerusahaanTujuanBongkarOnPengakutanDetail = {
-            create: data.perusahaanTujuanBongkar.map((tujuanBongkar) => ({
-              perusahaanTujuanBongkarId: tujuanBongkar,
-            })),
-          };
+          updateData.DataPerusahaanTujuanBongkarOnPengakutanDetail = data.perusahaanTujuanBongkar?.length > 0
+          ? {
+              // Menghapus data berdasarkan pengangkutanDetailId
+              deleteMany: {
+                pengangkutanDetailId: detailId,
+              },
+              // Membuat data baru berdasarkan perusahaanTujuanBongkar
+              create: data.perusahaanTujuanBongkar.flatMap((tujuan) =>
+                tujuan.perusahaanTujuanBongkar?.map((tujuanBongkarId) => ({
+                  perusahaanAsalMuatId: tujuan.perusahaanAsalMuatId,
+                  perusahaanTujuanBongkarId: tujuanBongkarId,
+                }))
+              ),
+            }
+          : undefined
+        
         }
 
         // Update the PengangkutanDetail with new fields
@@ -182,83 +314,261 @@ export class PelaporanPengangkutanService {
     }
 
     // Finalize the report only if all reports for the entire period are present for all vehicles in the application
-    async finalizeReport(companyId:string, period: string) {
-      // Retrieve the report, including period and application details
-      const report = await this.prisma.pelaporanPengangkutan.findFirst({
-        where: { periodId: period, companyId:companyId },
-        include: {
-          period: true,            // Include period to check finalization deadline
-          application: {
-            include: { vehicles: true }, // Include all vehicles in the application
-          },
-          pengangkutanDetails: true,
-        },
-      });
+    async finalizeReport(companyId:string, periodId: string, applicationId: string) {
+            // 1. Mulai transaksi
+            return await this.prisma.$transaction(async (prisma) => {
+              // 2. Validasi periode
+              const period = await prisma.period.findUnique({ where: { id: periodId } });
+              if (!period) throw new NotFoundException('Periode tidak ditemukan.');
 
-      if (!report) throw new NotFoundException('Report not found.');
+              // Cek batas waktu finalisasi
+              if (new Date() > period.finalizationDeadline) {
+                throw new BadRequestException('Batas waktu finalisasi telah berakhir.');
+              }
 
-      // Check if within the finalization deadline
-      if (report?.period?.finalizationDeadline && new Date() > report.period.finalizationDeadline) {
-        throw new BadRequestException('Finalization period has expired.');
+              // 3. Ambil semua kendaraan dari aplikasi
+              const vehicles = await prisma.vehicle.findMany({
+                where: {  applications: {some:{
+                  applicationId
+                }} }
+              });
+
+              const allVehicleIds = vehicles.map((vehicle) => vehicle.id);
+
+              if (allVehicleIds.length === 0) {
+                throw new NotFoundException('Tidak ada kendaraan yang terdaftar dalam aplikasi ini.');
+              }
+
+              // 4. Ambil semua laporan berdasarkan `companyId`, `periodId`, dan `applicationId`
+              const reports = await this.prisma.pelaporanPengangkutan.findMany({
+                where: { periodId: periodId, companyId:companyId },
+                include: {
+                  period: true,            // Include period to check finalization deadline
+                  vehicle:true,
+                  company:true,
+                  application: {
+                    include: { vehicles: true }, // Include all vehicles in the application
+                  },
+                  pengangkutanDetails: {
+                    include:{
+                      b3Substance:true,
+                      DataPerusahaanAsalMuatOnPengakutanDetail:{
+                        include:{
+                          perusahaanAsalMuat:true
+                        }
+                      },
+                      DataPerusahaanTujuanBongkarOnPengakutanDetail:{
+                        include:{
+                          perusahaanTujuanBongkar:true
+                        }
+                      }
+                    }
+                  },
+                },
+              });
+
+              if (reports.length === 0) {
+                throw new NotFoundException('Laporan tidak ditemukan untuk aplikasi ini.');
+              }
+
+              // 5. Validasi apakah semua kendaraan sudah ada di laporan
+              const reportedVehicleIds = [...new Set(reports.map((report) => report.vehicleId))];
+              const missingVehicles = allVehicleIds.filter((vehicleId) => !reportedVehicleIds.includes(vehicleId));
+
+              if (missingVehicles.length > 0) {
+                const missingVehicleString = missingVehicles.join(', ');
+                throw new BadRequestException(
+                  `Kendaraan berikut belum dilaporkan: ${missingVehicleString}.`
+                );
+              }
+
+              // 6. Buat daftar semua bulan dalam periode
+              const monthsInPeriod = this.getMonthsBetweenDates(period.startPeriodDate, period.endPeriodDate);
+
+              // 7. Validasi setiap kendaraan untuk setiap bulan
+              for (const vehicleId of allVehicleIds) {
+                const vehicleReports = reports.filter((report) => report.vehicleId === vehicleId);
+                const reportedMonths = vehicleReports.map((report) => `${report.bulan}-${report.tahun}`);
+
+                const missingMonths = monthsInPeriod.filter(
+                  (month) => !reportedMonths.includes(`${month.bulan}-${month.tahun}`)
+                );
+
+                if (missingMonths.length > 0) {
+                  const missingMonthString = missingMonths
+                    .map((m) => `Bulan ${m.bulan} Tahun ${m.tahun}`)
+                    .join(', ');
+                  throw new BadRequestException(
+                    `Kendaraan dengan ID ${vehicleId} belum melaporkan untuk bulan: ${missingMonthString}.`
+                  );
+                }
+              }
+
+              // 8. Finalisasi laporan
+              await prisma.pelaporanPengangkutan.updateMany({
+                where: { periodId, companyId, applicationId },
+                data: { status: StatusPengajuan.MENUNGGU_PERSETUJUAN, isDraft: false, isFinalized: true },
+              });
+
+              // 9. Buat riwayat finalisasi
+              for (const report of reports) {
+                await prisma.pelaporanPengakutanHistory.create({
+                  data: {
+                    pelaporanPengakutanId: report.id,
+                    statusPengajuan: StatusPengajuan.MENUNGGU_PERSETUJUAN,
+                    tanggalPengajuan: new Date(),
+                  },
+                });
+              }
+
+              // 10. Kembalikan pesan sukses
+              return { message: 'Laporan dan detail berhasil difinalisasi.' };
+            });
+    }
+
+    async reviewReport(id: string, data: ReviewPelaporanBahanB3Dto) {
+      const { status, adminNote } = data;
+    
+      if (![StatusPengajuan.DISETUJUI, StatusPengajuan.DITOLAK].includes(status)) {
+        throw new BadRequestException('Status pengajuan tidak valid.');
       }
-
-      // Calculate all months within the period
-      const monthsInPeriod = this.getMonthsBetweenDates(report.period.startDate, report.period.endDate);
-
-      // Get all vehicle IDs within the application
-      const allVehicleIds = report.application.vehicles.map(vehicle => vehicle.vehicleId);
-
-      // Check if each vehicle has a report for every month in the period
-      for (const { bulan, tahun } of monthsInPeriod) {
-        const monthlyReports = await this.prisma.pelaporanPengangkutan.findMany({
-          where: {
-            applicationId: report.applicationId,
-            bulan,
-            tahun,
-          },
-          select: { vehicleId: true },
-        });
-
-        const reportedVehicleIds = monthlyReports.map(r => r.vehicleId);
-        const missingVehicles = allVehicleIds.filter(vehicleId => !reportedVehicleIds.includes(vehicleId));
-
-        if (missingVehicles.length > 0) {
-          throw new BadRequestException(`Not all vehicles have submitted reports for ${bulan}/${tahun}.`);
+    
+      return await this.prisma.$transaction(async (prisma) => {
+        const report = await prisma.pelaporanPengangkutan.findUnique({ where: { id }, include:{
+          pengangkutanDetails:{ include: { b3Substance:true, DataPerusahaanAsalMuatOnPengakutanDetail:{include: {perusahaanAsalMuat:true},
+          }, DataPerusahaanTujuanBongkarOnPengakutanDetail: {
+           include:{perusahaanTujuanBongkar:true} 
+          }}}
+        } });
+    
+        if (!report || !report.isFinalized) {
+          throw new BadRequestException('Laporan tidak valid atau belum difinalisasi.');
         }
-      }
+    
+        if (status === StatusPengajuan.DISETUJUI) {
+          const final = await prisma.laporanPengangkutanFinal.create({
+            data: {
+              companyId: report.companyId,
+              periodId: report.periodId,
+              bulan: report.bulan,
+              tahun: report.tahun,
+              applicationId: report.applicationId,
+              vehicleId: report.vehicleId,
+              status: status,
+              approvedAt: new Date(),
+            },
+          });
+  
+          for (const reportDetails of report.pengangkutanDetails) {
+              const finalDetail = await prisma.laporanPengangkutanFinalDetail.create({
+                data: {
+                  laporanPengangkutanFinalId: final.id,
+                  b3SubstanceId: reportDetails.b3SubstanceId,
+                  jumlahB3: reportDetails.jumlahB3,
+          
+                  // Salin DataPerusahaanAsalMuatOnPengakutanDetail ke DataPerusahaanAsalMuatOnPengakutanDetailFinal
+                  DataPerusahaanAsalMuatOnPengakutanDetailFinal: {
+                    create: reportDetails.DataPerusahaanAsalMuatOnPengakutanDetail.map((asalMuat) => ({
+                      companyId: asalMuat.perusahaanAsalMuat.companyId,
+                      namaPerusahaan: asalMuat.perusahaanAsalMuat.namaPerusahaan,
+                      alamat: asalMuat.perusahaanAsalMuat.alamat,
+                      latitude: asalMuat.perusahaanAsalMuat.latitude,
+                      longitude: asalMuat.perusahaanAsalMuat.longitude,
+                      provinceId: asalMuat.perusahaanAsalMuat.provinceId,
+                      regencyId: asalMuat.perusahaanAsalMuat.regencyId,
+                      districtId: asalMuat.perusahaanAsalMuat.districtId,
+                      villageId: asalMuat.perusahaanAsalMuat.villageId,
+                    })),
+                  },
+                },
+              });
+          
+              // Ambil semua data asal muat yang sudah difinalisasi
+              const asalMuatFinalList = await prisma.dataPerusahaanAsalMuatOnPengakutanDetailFinal.findMany({
+                where: {
+                  pengangkutanDetailId: finalDetail.id,
+                },
+              });
+          
+              // Salin DataPerusahaanTujuanBongkarOnPengakutanDetail ke DataPerusahaanTujuanBongkarOnPengakutanDetailFinal
+              for (const tujuanBongkar of reportDetails.DataPerusahaanTujuanBongkarOnPengakutanDetail) {
+                const asalMuatFinal = asalMuatFinalList.find(
+                  (asalFinal) => asalFinal.companyId === tujuanBongkar.perusahaanAsalMuatId
+                );
+          
+                if (!asalMuatFinal) {
+                  throw new Error('Data asal muat final tidak ditemukan untuk tujuan bongkar ini.');
+                }
+          
+                await prisma.dataPerusahaanTujuanBongkarOnPengakutanDetailFinal.create({
+                  data: {
+                    pengangkutanDetailId: finalDetail.id,
+                    companyId: tujuanBongkar.perusahaanTujuanBongkar.companyId,
+                    namaPerusahaan: tujuanBongkar.perusahaanTujuanBongkar.namaPerusahaan,
+                    alamat: tujuanBongkar.perusahaanTujuanBongkar.alamat,
+                    latitude: tujuanBongkar.perusahaanTujuanBongkar.latitude,
+                    longitude: tujuanBongkar.perusahaanTujuanBongkar.longitude,
+                    latitudeAsalMuat: tujuanBongkar.latitudeAsalMuat,
+                    longitudeAsalMuat: tujuanBongkar.longitudeAsalMuat,
+                    locationTypeAsalMuat: tujuanBongkar.locationTypeAsalMuat,
+                    locationTypeTujuan: tujuanBongkar.locationTypeTujuan,
+                    latitudeTujuan: tujuanBongkar.latitudeTujuan,
+                    longitudeTujuan: tujuanBongkar.longitudeTujuan,
+                    DataPerusahaanAsalMuatOnPengakutanDetailFinalId: asalMuatFinal.id,
+                    provinceId: tujuanBongkar.perusahaanTujuanBongkar.provinceId,
+                    regencyId: tujuanBongkar.perusahaanTujuanBongkar.regencyId,
+                    districtId: tujuanBongkar.perusahaanTujuanBongkar.districtId,
+                    villageId: tujuanBongkar.perusahaanTujuanBongkar.villageId,
+                  },
+                });
+              }
+            }
+            await prisma.pelaporanPengangkutan.update({
+            where: { id },
+            data: { isApproved: true },
+            });
+          } else {
+              await prisma.pelaporanPengangkutan.update({
+              where: { id },
+              data: { isDraft: true, isFinalized: false, status:status },
+              });
+          }
 
-      // Agregasi jumlah B3 per jenis dari detail laporan
-      const totalJumlahB3 = report.pengangkutanDetails.reduce((total, detail) => total + detail.jumlahB3, 0);
+          const kewajiban = await prisma.kewajibanPelaporanPerusahaan.findFirst(
+            {
+              where: { bulan: report.bulan, tahun: report.tahun, companyId: report.companyId, jenisLaporan: JenisPelaporan.PENGANGKUTAN_BAHAN_B3 },
+            }
+          )
+          // Tandai laporan sebagai disetujui
+          await prisma.kewajibanPelaporanPerusahaan.update({
+            where: { id: kewajiban.id},
+            data: { sudahDilaporkan: true },
+          });
 
-      // Buat laporan final di tabel LaporanPengangkutanFinal
-      const finalizedReport = await this.prisma.laporanPengangkutanFinal.create({
-        data: {
-          applicationId: report.applicationId,
-          perusahaanId: report.application.companyId,
-          bulan: report.bulan,
-          tahun: report.tahun,
-          totalJumlahB3,
-        },
+          const rekomendasiB3 = await prisma.kewajibanPelaporanAplikasi.findFirst(
+            {
+              where: { bulan: report.bulan, tahun: report.tahun, companyId: report.companyId, applicationId: report.applicationId },
+            }
+          )
+          
+          // Tandai laporan sebagai disetujui
+          await prisma.kewajibanPelaporanAplikasi.update({
+            where: { id: rekomendasiB3.id},
+            data: { sudahDilaporkan: true },
+          });
+      
+          await prisma.pelaporanPengakutanHistory.create({
+              data: {
+              pelaporanPengakutanId: id,
+              statusPengajuan: status,
+              tanggalPengajuan: report.updatedAt,
+              tanggalPenyelesaian: new Date(),
+              catatanAdmin: adminNote,
+              },
+        });
+    
+        return { message: `Laporan berhasil ${status === StatusPengajuan.DISETUJUI ? 'disetujui' : 'ditolak'}.` };
       });
-
-      // Simpan detail jenis B3 di tabel LaporanPengangkutanFinalDetail
-      for (const detail of report.pengangkutanDetails) {
-        await this.prisma.laporanPengangkutanFinalDetail.create({
-          data: {
-            laporanPengangkutanFinalId: finalizedReport.id,
-            b3SubstanceId: detail.b3SubstanceId,
-            jumlahB3: detail.jumlahB3,
-          },
-        });
-      }
-
-        // Finalize the report and mark it as non-draft if all reports are present
-        await this.prisma.pelaporanPengangkutan.updateMany({
-          where: { periodId: period, companyId:companyId },
-          data: { isDraft: false },
-        });
-
-      return { message: 'Report and details finalized successfully.' };
     }
 
     // Fetch a single report with full related data by ID, or throw an error if it doesn't exist
@@ -276,7 +586,7 @@ export class PelaporanPengangkutanService {
           vehicle: true, // Include vehicle information
           pengangkutanDetails: {
             include: {
-              b3Substance: true, // Include B3Substance details in each PengangkutanDetail, if applicable
+              b3Substance: {include:{dataBahanB3:true}}, // Include B3Substance details in each PengangkutanDetail, if applicable
               DataPerusahaanAsalMuatOnPengakutanDetail: {include:{ perusahaanAsalMuat: true }},
               DataPerusahaanTujuanBongkarOnPengakutanDetail: {include:{ perusahaanTujuanBongkar: true }},
             },
@@ -353,7 +663,7 @@ export class PelaporanPengangkutanService {
           company: true,
           pengangkutanDetails: {
             include: {
-              b3Substance: true,
+              b3Substance: {include: {dataBahanB3:true}},
               DataPerusahaanAsalMuatOnPengakutanDetail: {include:{ perusahaanAsalMuat: true }},
               DataPerusahaanTujuanBongkarOnPengakutanDetail: {include:{ perusahaanTujuanBongkar: true }},
             },
@@ -388,7 +698,7 @@ export class PelaporanPengangkutanService {
               where: { id: periodId },
           });
           if (!period) throw new NotFoundException('Period not found.');
-          monthsInPeriod = this.getMonthsBetweenDates(period.startDate, period.endDate);
+          monthsInPeriod = this.getMonthsBetweenDates(period.startPeriodDate, period.endPeriodDate);
       }
 
       // Get all vehicles in the application if applicationId is provided
@@ -435,7 +745,7 @@ export class PelaporanPengangkutanService {
                 where: { id: periodId },
             });
             if (!period) throw new NotFoundException('Period not found.');
-            monthsInPeriod = this.getMonthsBetweenDates(period.startDate, period.endDate);
+            monthsInPeriod = this.getMonthsBetweenDates(period.startPeriodDate, period.endPeriodDate);
         }
 
         // Get all reported months for the vehicle within the period
@@ -477,7 +787,7 @@ export class PelaporanPengangkutanService {
                 where: { id: periodId },
             });
             if (!period) throw new NotFoundException('Period not found.');
-            monthsInPeriod = this.getMonthsBetweenDates(period.startDate, period.endDate);
+            monthsInPeriod = this.getMonthsBetweenDates(period.startPeriodDate, period.endPeriodDate);
         }
 
         // Retrieve all applications, optionally filtered by company

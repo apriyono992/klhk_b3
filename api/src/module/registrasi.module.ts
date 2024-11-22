@@ -7,8 +7,11 @@ import {InswServices} from "../services/insw.services";
 import {InswModule} from "./insw.module";
 import { BahanB3Module } from './bahanB3.module';
 
+import { PrismaModule } from './prisma.module';
+import { AuthModule } from './auth.module';
+
 @Module({
-  imports: [BahanB3RegistrasiModule],
+  imports: [BahanB3RegistrasiModule, PrismaModule, AuthModule],
   controllers: [RegistrasiController],
   providers: [RegistrasiServices, PrismaService],
   exports: [RegistrasiServices],

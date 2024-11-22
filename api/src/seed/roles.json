@@ -9,14 +9,34 @@
   },
   {
     "id": "bbe0d665-f5ba-48d5-82cc-45c6f32065cb",
-    "name": "KabSubdit"
+    "name": "KabSubdit Registrasi"
+  },
+  {
+    "id": "bbe0d665-f5ba-48d5-82cc-45c6f32065cb",
+    "name": "KabSubdit Rekomendasi"
   },
   {
     "id": "152cce4c-107b-472b-9e50-0eceb69b728f",
-    "name": "PIC"
+    "name": "PIC Registrasi"
+  },
+  {
+    "id": "152cce4c-107b-472b-9e50-0eceb69b728f",
+    "name": "PIC Rekomendasi"
+  },
+  {
+    "id": "152cce4c-107b-472b-9e50-0eceb69b728f",
+    "name": "PIC Notifikasi"
+  },
+  {
+    "id": "152cce4c-107b-472b-9e50-0eceb69b728f",
+    "name": "PIC Pelaporan"
+  },
+  {
+    "id": "152cce4c-107b-472b-9e50-0eceb69b728f",
+    "name": "PIC CMS"
   },
   {
     "id": "a6ff2d5c-aa09-4951-ad53-e52f7efdfbd1",
-    "name": "User"
+    "name": "Pengelola"
   }
 ]

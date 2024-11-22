@@ -6,17 +6,24 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { BahanB3RegistrasiService } from '../services/bahanB3Registrasi.services';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BahanB3RegistrasiDto } from '../models/createUpdateBahanB3regDTO';
+import { JwtAuthGuard } from 'src/utils/auth.guard';
+import { RolesGuard } from 'src/utils/roles.guard';
+import { RolesAccess } from 'src/models/enums/roles';
+import { Roles } from 'src/utils/roles.decorator';
 
 @ApiTags('B3 Registrasi')
 @Controller('b3-registrasi')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class BahanB3RegistrasiController {
   constructor(private readonly bahanB3RegServices: BahanB3RegistrasiService) {}
 
   @Post()
+  @Roles(RolesAccess.SUPER_ADMIN, RolesAccess.PENGELOLA, RolesAccess.PIC_REGISTRASI, RolesAccess.KAB_SUBDIT_REGISTRASI) 
   @ApiOperation({ summary: 'Create a new B3 Registrasi entry' })
   @ApiResponse({
     status: 201,
@@ -27,6 +34,7 @@ export class BahanB3RegistrasiController {
   }
 
   @Put(':id')
+  @Roles(RolesAccess.SUPER_ADMIN, RolesAccess.PENGELOLA, RolesAccess.PIC_REGISTRASI, RolesAccess.KAB_SUBDIT_REGISTRASI) 
   @ApiOperation({ summary: 'Update an existing B3 Registrasi entry' })
   @ApiResponse({
     status: 200,
@@ -54,6 +62,7 @@ export class BahanB3RegistrasiController {
   }
 
   @Delete(':id')
+  @Roles(RolesAccess.SUPER_ADMIN, RolesAccess.PENGELOLA, RolesAccess.PIC_REGISTRASI, RolesAccess.KAB_SUBDIT_REGISTRASI) 
   @ApiOperation({ summary: 'Delete a B3 Registrasi entry' })
   @ApiResponse({
     status: 200,

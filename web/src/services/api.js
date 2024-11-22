@@ -1,11 +1,11 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import { LOGIN_PATH } from './routes';
-import toast from 'react-hot-toast';
-import { jwtDecode } from "jwt-decode";
+import { LOGIN_PATH } from './routes'
+import toast from 'react-hot-toast'
+import { jwtDecode } from 'jwt-decode'
 
 const BASE_URL_DEV = 'https://dummyjson.com';
-const BASE_URL = 'http://localhost:3002';
+export const BASE_URL = 'http://localhost:3002'
 
 const instance = axios.create({
     baseURL: BASE_URL,
@@ -25,19 +25,19 @@ const axiosInstance = axios.create({
 const axiosInstanceAuth = axios.create({
     baseURL: BASE_URL,
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
     },
 })
 
 axiosInstanceAuth.interceptors.request.use(
     (config) => {
-        if (!config.headers.Authorization) config.headers.Authorization = `Bearer ${Cookies.get('accessToken')}`;
-        return config;
+        if (!config.headers.Authorization) config.headers.Authorization = `Bearer ${Cookies.get('accessToken')}`
+        return config
     },
     (error) => {
-        return Promise.reject(error);
+        return Promise.reject(error)
     }
-);
+)
 
 axiosInstanceAuth.interceptors.response.use(
     (response) => {
@@ -50,10 +50,11 @@ axiosInstanceAuth.interceptors.response.use(
 
         if (error.response.status === 401) {
             try {
-                const originalRequest = error.config;
+                const originalRequest = error.config
                 const aToken = Cookies.get('accessToken')
-                const rToken = Cookies.get('refreshToken');
+                const rToken = Cookies.get('refreshToken')
                 const decode = jwtDecode(aToken)
+
                 const response = await refreshToken(decode.userId, rToken);
 
                 Cookies.set('accessToken', response.accessToken, { expires: 0.5, secure: true, sameSite: 'strict' });
@@ -64,16 +65,23 @@ axiosInstanceAuth.interceptors.response.use(
 
                 return axiosInstanceAuth(originalRequest);
             } catch (error) {
-                Cookies.remove('accessToken');
-                Cookies.remove('refreshToken');
-                Cookies.remove('sessionExpired');
+                Cookies.remove('accessToken')
+                Cookies.remove('refreshToken')
+                Cookies.remove('sessionExpired')
                 window.location.href = LOGIN_PATH
             }
         }
 
         return Promise.reject(error);
     }
-);
+)
+
+export async function fetchUserInfo(token) {
+    const response = await axios.get('/api/users/me', {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data;
+}
 
 export async function login(data) {
     return await axiosInstance.post('/api/auth/login', data).then(res => res).catch(err => err.response)
@@ -100,7 +108,9 @@ export async function uploadPhoto(data) {
 };
 
 async function refreshToken(userId, refreshToken) {
-    return await axiosInstanceAuth.post('/api/auth/refreshToken', { userId, refreshToken, expiresInMins: 1 }).then(res => res.data)
+    return await axiosInstanceAuth
+        .post('/api/auth/refreshToken', { userId, refreshToken, expiresInMins: 1 })
+        .then((res) => res.data)
 }
 
 export async function getListRegistrasi(data) {
@@ -140,17 +150,31 @@ export async function authStateFetcher(url) {
 }
 
 export async function getFetcher(url) {
-    return await axiosInstanceAuth.get(url).then(res => res.data)
+    return await axiosInstanceAuth.get(url).then((res) => res.data)
 }
 
 export async function getSelectFetcher(url) {
-    return await axiosInstanceAuth.get(url).then(res => {
+    return await axiosInstanceAuth.get(url).then((res) => {
         return res.data.data.map((item) => ({
             value: item.id,
             label: item.name ? item.name : item.namaDagang ? item.namaDagang : item.nama ? item.nama : null,
         }))
     })
 }
+
+export async function getSelectFetcherJenisB3(url) {
+    return await axiosInstanceAuth.get(url).then((res) => {
+        return res.data.data.map((item) => ({
+            value: item.id,
+            label: item.casNumber  && item.namaBahanKimia ? item.casNumber + ' - ' +  item.namaBahanKimia : null,
+        }))
+    })
+}
+
+export async function getBasicSelectFetcher(url) {
+    return await axiosInstanceAuth.get(url).then((res) => {
+        return res.data
+})}
 
 export async function getSelectCountryFetcher(url) {
     return await axiosInstanceAuth.get(url).then(res => {
@@ -161,17 +185,35 @@ export async function getSelectCountryFetcher(url) {
     })
 }
 
-export async function getSelectPejabatFetcher(url) {
+export async function getSelectJenisSampleFetcher(url) {
     return await axiosInstanceAuth.get(url).then(res => {
+        return res.data?.map((item) => ({
+            value: item.id,
+            label: `${item.deskripsi} (${item.jenisSampelType.type} - ${item.jenisSampelType.deskripsi})`,
+        }))
+    })
+}
+
+export async function getSelectLocationsFetcher(url) {
+    return await axiosInstanceAuth.get(url).then(res => {
+        return res.data?.map((item) => ({
+            value: item.id,
+            label: item.name ? item.name : item.namaDagang ? item.namaDagang : item.nama ? item.nama : null,
+        }))
+    })
+}
+
+export async function getSelectPejabatFetcher(url) {
+    return await axiosInstanceAuth.get(url).then((res) => {
         return res.data.data.map((item) => ({
             value: item.id,
-            label: item.nama && item.jabatan ? `${item.nama} - ${item.jabatan}`  : item.nama  ? item.nama : null,
+            label: item.nama && item.jabatan ? `${item.nama} - ${item.jabatan}` : item.nama ? item.nama : null,
         }))
     })
 }
 
 export async function postFetcher(url, data) {
-    return await axiosInstanceAuth.post(url, data).then(res => res.data)
+    return await axiosInstanceAuth.post(url, data).then((res) => res.data)
 }
 
 export async function postMultipartFetcher(url, data) {
@@ -183,27 +225,49 @@ export async function postMultipartFetcher(url, data) {
 }
 
 export async function putFetcher(url, id, data) {
-    return await axiosInstanceAuth.put(`${url}/${id}`, data).then(res => res.data)
+    return await axiosInstanceAuth.put(`${url}/${id}`, data).then((res) => res.data)
 }
 
 export async function putFetcherWithoutId(url, data) {
-    return await axiosInstanceAuth.put(url, data).then(res => res.data)
+    return await axiosInstanceAuth.put(url, data).then((res) => res.data)
 }
 
 export async function patchFetcher(url, id, data) {
-    return await axiosInstanceAuth.patch(`${url}/${id}`, data).then(res => res.data)
+    return await axiosInstanceAuth.patch(`${url}/${id}`, data).then((res) => res.data)
 }
 
 export async function patchFetcherWithoutId(url, data) {
-    return await axiosInstanceAuth.patch(url, data).then(res => res.data)
+    return await axiosInstanceAuth.patch(url, data).then((res) => res.data)
 }
 
 export async function deleteFetcher(url, id) {
-    return await axiosInstanceAuth.delete(`${url}/${id}`).then(res => res.data)
+    return await axiosInstanceAuth.delete(`${url}/${id}`).then((res) => res.data)
 }
 
 export async function deleteWithFormFetcher(url, data) {
-    return await axiosInstanceAuth.delete(url, data).then(res => res.data)
+    return await axiosInstanceAuth.delete(url, data).then((res) => res.data)
+}
+
+export async function postWithFormDataFetcher(url, data) {
+    return await axiosInstanceAuth
+        .post(url, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        })
+        .then((res) => res)
+        .catch((err) => err.response)
+}
+
+export async function putWithFormDataFetcher(url, id, data) {
+    return await axiosInstanceAuth
+        .put(`${url}/${id}`, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        })
+        .then((res) => res)
+        .catch((err) => err.response)
 }
 
 export async function deleteWithFormFetcherTest(url, data) {
@@ -223,17 +287,16 @@ export async function getPdfUrl(url) {
         });
 
         // Create a URL for the PDF file from the blob
-        const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
-        const pdfUrl = URL.createObjectURL(pdfBlob);
+        const pdfBlob = new Blob([response.data], { type: 'application/pdf' })
+        const pdfUrl = URL.createObjectURL(pdfBlob)
 
         // Open the PDF in a new tab
-        window.open(pdfUrl, '_blank');
+        window.open(pdfUrl, '_blank')
 
         // Optional: Revoke the object URL after some time to free up memory
-        setTimeout(() => URL.revokeObjectURL(pdfUrl), 10000);
+        setTimeout(() => URL.revokeObjectURL(pdfUrl), 10000)
     } catch (error) {
-        console.error("Failed to open PDF:", error);
-        throw new Error('Failed to open PDF');
+        console.error('Failed to open PDF:', error)
+        throw new Error('Failed to open PDF')
     }
 }
-

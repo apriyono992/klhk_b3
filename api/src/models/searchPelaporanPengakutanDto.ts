@@ -1,6 +1,7 @@
 import { IsOptional, IsUUID, IsInt, IsString, IsArray, IsNumber } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PaginationDto } from './paginationDto';
+import { Transform } from 'class-transformer';
 
 export class SearchPelaporanPengakutanDto extends PaginationDto {
   @ApiPropertyOptional({ description: 'Filter by Application ID', example: '123e4567-e89b-12d3-a456-426614174000' })
@@ -25,6 +26,7 @@ export class SearchPelaporanPengakutanDto extends PaginationDto {
 
   @ApiPropertyOptional({ description: 'Filter by Vehicle IDs', isArray: true })
   @IsOptional()
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
   @IsArray()
   @IsUUID(undefined, { each: true })
   vehicleIds?: string[];

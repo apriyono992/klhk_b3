@@ -6,8 +6,12 @@ import { JenisSampleService } from '../services/jenisSample.services';  // Jenis
 import { MercuryMonitoringController } from 'src/controller/mercuryMonitoring.controller';
 import { JenisSampleController } from 'src/controller/jenisSample.controller';
 import { JenisSampleTypeController } from 'src/controller/jenisSampleType.controller';
+import { PrismaModule } from './prisma.module';
+import { AuthModule } from './auth.module';
+
 
 @Module({
+    imports: [PrismaModule, AuthModule],
   controllers: [MercuryMonitoringController, JenisSampleController, JenisSampleTypeController,],  // No controllers in this module
   providers: [        
     PrismaService,// Shared Prisma service

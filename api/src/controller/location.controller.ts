@@ -1,7 +1,11 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { LocationService } from '../services/location.services'; // Import the LocationService
 import { ApiTags, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 
+import { JwtAuthGuard } from 'src/utils/auth.guard';
+import { RolesGuard } from 'src/utils/roles.guard';
+
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('Location')
 @Controller('location')
 export class LocationController {

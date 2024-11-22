@@ -77,7 +77,7 @@ export default function HeaderLanding() {
                                 </DropdownTrigger>
                                 <DropdownMenu variant="faded">
                                     <DropdownItem key="berita">Portal dan Database</DropdownItem>
-                                    <DropdownItem key="artikel">Mercury Monitoring</DropdownItem>
+                                    <DropdownItem onClick={() => navigate('/pemantauan-merkuri', {replace: true})} key="pemantauan-merkuri">Mercury Monitoring</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                         </div>

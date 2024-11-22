@@ -9,6 +9,7 @@ import {
   Query,
   BadRequestException,
   Param,
+  UseGuards,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiQuery, ApiTags, ApiResponse } from '@nestjs/swagger';
@@ -21,7 +22,10 @@ import { uploadFilesToDisk } from 'src/utils/uploadDocumentFileToDisk';
 import { IsDocumentValidFile } from 'src/validators/documentFileType.validator';
 import * as fs from 'fs';
 import { ValidateTelaahDocumentDto } from 'src/models/validateDocumentTelaahDto';
+import { JwtAuthGuard } from 'src/utils/auth.guard';
+import { RolesGuard } from 'src/utils/roles.guard';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('DocumentRekomendasiB3')
 @Controller('documents')
 export class DocumentController {

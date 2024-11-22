@@ -236,7 +236,7 @@ export class PdfService {
     const currentYear = new Date().getFullYear();
 
     const currentMonthYear = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long' });
-    const tanggalSurat = draftSurat.tanggalSurat?.toLocaleDateString('id-ID', { year: 'numeric', month: 'long' }) || currentMonthYear;
+    const tanggalSurat = draftSurat.tanggalSurat ? draftSurat.tanggalSurat?.toLocaleDateString('id-ID', { year: 'numeric', month: 'long' }) : currentMonthYear;
 
     const month = draftSurat.tanggalSurat ? draftSurat.tanggalSurat.getMonth() : currentMonth;
     const year = draftSurat.tanggalSurat ? draftSurat.tanggalSurat.getFullYear() : currentYear;
@@ -348,7 +348,7 @@ export class PdfService {
     const currentYear = new Date().getFullYear();
 
     const currentMonthYear = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long' });
-    const tanggalSurat = draftSurat.tanggalSurat?.toLocaleDateString('id-ID', { year: 'numeric', month: 'long' }) || currentMonthYear;
+    const tanggalSurat =  draftSurat.tanggalSurat ? draftSurat.tanggalSurat?.toLocaleDateString('id-ID', { year: 'numeric', month: 'long' }) : currentMonthYear;
 
     const month = draftSurat.tanggalSurat ? draftSurat.tanggalSurat.getMonth() : currentMonth;
     const year = draftSurat.tanggalSurat ? draftSurat.tanggalSurat.getFullYear() : currentYear;
@@ -367,7 +367,7 @@ export class PdfService {
       tembusan: draftSurat.NotifikasiTembusan ?? [],
       bahanKimia: draftSurat.notifikasi.dataBahanB3.namaBahanKimia ?? '',
       email: draftSurat.emailPenerima ?? '',
-      tanggalPengiriman: draftSurat.tanggalPengiriman.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) ?? '',
+      tanggalPengiriman: draftSurat.tanggalPengiriman?.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) ?? '',
       namaKimia: draftSurat.notifikasi.dataBahanB3?.namaBahanKimia || 'Nama Bahan Kimia Tidak Diketahui',
       namaDagang: draftSurat.notifikasi.dataBahanB3?.namaDagang || 'Nama Dagang Tidak Diketahui',
       customPoint1: draftSurat.PersetujuanImport[0]?.point1 || 'Point 1 Tidak Diketahui',
@@ -383,7 +383,7 @@ export class PdfService {
       nomorSuratExplicitConsent: draftSurat.PersetujuanImport[0]?.nomorSuratExplicitConsent || 'Nomor Surat Explicit Consent Tidak Diketahui',
       tanggalSuratExplicitConsent: draftSurat.PersetujuanImport[0]?.tanggalSuratExplicitConsent.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) ? draftSurat.PersetujuanImport[0]?.tanggalSuratExplicitConsent.toDateString() : 'Tanggal Explicit Consent Tidak Diketahui',
       nomorSuratPerusahaanPengimpor: draftSurat.PersetujuanImport[0]?.nomorSuratPerusahaanPengimpor || 'Nomor Surat Perusahaan Pengimpor Tidak Diketahui',
-      tanggalDiterimaKebenaranImport: draftSurat.PersetujuanImport[0]?.tanggalDiterimaKebenaranImport.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) ? draftSurat.PersetujuanImport[0]?.tanggalDiterimaKebenaranImport.toDateString() : 'Tanggal Surat Perusahaan Pengimpor Tidak Diketahui',
+      tanggalDiterimaKebenaranImport: draftSurat.PersetujuanImport[0]?.tanggalDiterimaKebenaranImport?.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) ? draftSurat.PersetujuanImport[0]?.tanggalDiterimaKebenaranImport.toDateString() : 'Tanggal Surat Perusahaan Pengimpor Tidak Diketahui',
     });
 
     // Generate the PDF using Puppeteer
@@ -474,7 +474,7 @@ export class PdfService {
     const currentYear = new Date().getFullYear();
 
     const currentMonthYear = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long' });
-    const tanggalSurat = draftSurat.tanggalSurat?.toLocaleDateString('id-ID', { year: 'numeric', month: 'long' }) || currentMonthYear;
+    const tanggalSurat = draftSurat.tanggalSurat ? draftSurat.tanggalSurat?.toLocaleDateString('id-ID', { year: 'numeric', month: 'long' }) : currentMonthYear;
 
     const month = draftSurat.tanggalSurat ? draftSurat.tanggalSurat.getMonth() : currentMonth;
     const year = draftSurat.tanggalSurat ? draftSurat.tanggalSurat.getFullYear() : currentYear;

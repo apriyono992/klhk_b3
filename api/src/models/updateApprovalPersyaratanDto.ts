@@ -8,6 +8,10 @@ export class UpdateApprovalPersyaratanDto {
 
   @IsString()
   @IsOptional()
+  approval_status?: string;
+
+  @IsString()
+  @IsOptional()
   status?: string;
 
   @IsString()

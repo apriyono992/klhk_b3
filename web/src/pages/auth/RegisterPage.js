@@ -18,8 +18,8 @@ export default function RegisterPage() {
     const navigate = useNavigate();
     const provinceId = watch('provinceId');
 
-    const { data: province } = useSWR('/location/provinces', getFetcher)
-    const { data: regency } = useSWR(provinceId ? `/location/cities?provinceId=${provinceId}` : null, getFetcher)
+    const { data: province } = useSWR('api/location/provinces', getFetcher)
+    const { data: regency } = useSWR(provinceId ? `api/location/cities?provinceId=${provinceId}` : null, getFetcher)
 
     const handleFileUpload = async (event) => {
         try {
@@ -46,7 +46,9 @@ export default function RegisterPage() {
             const updatedData = {
                 ...newData,
                 idPhotoUrl: uploadStatus.path,
+                rolesId:"a6ff2d5c-aa09-4951-ad53-e52f7efdfbd1"
             }
+            console.log(updatedData);
 
             await registerUser(updatedData)
             toast.success('Berhasil membuat akun silahkan masuk!')

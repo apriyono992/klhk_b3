@@ -38,7 +38,14 @@ import { CountryModule } from './module/country.module';
 import { PenyimpananB3Module } from './module/penyimpananB3.module';
 import { BahanB3RegistrasiModule } from './module/bahanB3Registrasi.module';
 import {InswModule} from "./module/insw.module";
-
+import { PelaporanBahanB3DihasilkanModule } from './module/pelaporanBahanB3Dihasilkan.module';
+import { PelaporanDistribusiBahanB3Module } from './module/pelaporanDistribusiBahanB3.module';
+import { PeriodModule } from './module/period.module';
+import { BahanB3CompanyModule } from './module/bahanB3Company.module';
+import { PelaporanPenggunaanB3Module } from './module/pelaporanPenggunaanB3.module';
+import { WprModule } from './module/wpr.module';
+import { PrismaModule } from './module/prisma.module';
+import { UserModule } from './module/user.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -46,6 +53,7 @@ import {InswModule} from "./module/insw.module";
     }),
     ValidatorsModule,
     RolesModule,
+    UserModule,
     CasbinModule,
     ContentModule,
     MercuryModule,
@@ -82,6 +90,13 @@ import {InswModule} from "./module/insw.module";
     RegistrasiModule,
     NotifikasiModule,
     DraftNotifikasiModule,
+    PelaporanBahanB3DihasilkanModule,
+    PelaporanDistribusiBahanB3Module,
+    PelaporanPenggunaanB3Module,
+    PeriodModule,
+    BahanB3CompanyModule,
+    WprModule,
+    PrismaModule
   ],
   controllers: [AppController, AuthController],
   providers: [
@@ -97,6 +112,6 @@ import {InswModule} from "./module/insw.module";
     AuthService,
     EmailService,
   ],
-  exports: [JwtProvider, EnforcerProvider, PermissionUtil, Enforcer, PrismaService, CategoriesValidationPipe, EmailService],
+  exports: [ EnforcerProvider, PermissionUtil, Enforcer, PrismaService, CategoriesValidationPipe, EmailService],
 })
 export class AppModule {}

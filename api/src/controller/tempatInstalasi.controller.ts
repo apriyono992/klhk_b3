@@ -1,7 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { CreateTempatInstalasiDto } from '../models/createTempatInstalasiDto';
 import { DataMasterService } from '../services/dataMaster.services';
+import { RolesGuard } from 'src/utils/roles.guard';
+import { JwtAuthGuard } from 'src/utils/auth.guard';
+import { RolesAccess } from 'src/models/enums/roles';
+import { Roles } from 'src/utils/roles.decorator';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('tempat-instalasi')
 export class TempatInstalasiController {
   constructor(private readonly dataMaster: DataMasterService) {}

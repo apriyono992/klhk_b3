@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { RegisterUserDTO } from 'src/models/auth/registerUser.dto';
@@ -17,6 +18,7 @@ import { ResetPasswordRequestDTO } from 'src/models/auth/resetPasswordRequest.dt
 import * as path from 'path';
 import { replaceTemplate } from 'src/utils/html/emailTemplateHelper';
 import { EmailService } from './email.services';
+import { RolesAccess } from 'src/models/enums/roles';
 @Injectable()
 export class AuthService {
   constructor(
@@ -103,6 +105,21 @@ export class AuthService {
       data: newUserPayload,
     });
 
+    const superAdminRole = await this.prisma.roles.findUnique({
+      where: { name: RolesAccess.PENGELOLA },
+    });
+
+    if (!superAdminRole) {
+      throw new Error('Role SuperAdmin tidak ditemukan');
+    }
+
+    await this.prisma.userRoles.create({
+          data: {
+            userId:user.id,
+            roleId: superAdminRole.id
+          },
+      });
+
     return omit(user, ['password', 'salt']);
   }
 
@@ -113,6 +130,13 @@ export class AuthService {
       where: {
         email,
       },
+      include:{
+        roles:{
+          include:{
+            role:true
+          }
+        }
+      }
     });
 
     if (!existingUser) {
@@ -145,35 +169,20 @@ export class AuthService {
   }
 
   async refreshTokens(userId: string, refreshToken: string) {
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const user = await this.prisma.user.findUnique({ where: { id: userId },
+      include:{
+        roles:{
+          include:{
+            role:true
+          }
+        }
+      } });
 
     if (!user || user.refreshToken !== refreshToken) {
       throw new BadRequestException('Invalid refresh token');
     }
 
     return this.generateToken(user);
-  }
-
-  private async generateToken(user: User) {
-    const payload = {
-      userId: user.id,
-      fullName: user.fullName,
-      rolesId: user.rolesId
-    };
-    const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
-    const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
-
-    await this.prisma.user.update({
-      where: { id: user.id },
-      data: { refreshToken },
-    });
-
-    const sessionExpired = addHours(new Date(), 1).getTime();
-    return {
-      accessToken,
-      refreshToken,
-      sessionExpired,
-    };
   }
 
   async resetPassword(payload: ResetPasswordRequestDTO): Promise<void> {
@@ -240,5 +249,41 @@ export class AuthService {
       'Silakan klik tautan berikut untuk mereset kata sandi Anda.',
       emailHtml,
     );
+  }
+
+  async validateToken(token: string) {
+    try {
+      return this.jwtService.verify(token); // Validate the token and return the payload
+    } catch (error) {
+      throw new UnauthorizedException('Invalid token');
+    }
+  }
+
+  async getPayload(token: string) {
+    return this.jwtService.decode(token); // Decode the token to extract the payload
+  }
+  
+  private async generateToken(user: User) {
+    const payload = {
+      userId: user.id,
+      fullName: user.fullName
+    };
+
+    console.log('user', user);
+    console.log('Secret in JwtService:', this.jwtService['options']);
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
+    const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
+    console.log(accessToken, refreshToken);
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { refreshToken },
+    });
+
+    const sessionExpired = addHours(new Date(), 1).getTime();
+    return {
+      accessToken,
+      refreshToken,
+      sessionExpired,
+    };
   }
 }

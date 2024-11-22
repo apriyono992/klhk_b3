@@ -1,36 +1,21 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import * as jwt from 'jsonwebtoken';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class JwtProvider {
+  constructor(private readonly jwtService: JwtService) {}
   private readonly secret = process.env.JWT_SECRET;
 
-  decodeToken(token: string): any {
+  validateToken(token: string) {
     try {
-      return jwt.decode(token);
-    } catch (err) {
+      // Tambahkan `secret` secara eksplisit
+      return this.jwtService.verify(token, { secret: process.env.JWT_SECRET });
+    } catch (error) {
       throw new UnauthorizedException('Invalid token');
     }
   }
 
-  validateToken(token: string): boolean {
-    try {
-      jwt.verify(token, this.secret);
-      return true;
-    } catch (err) {
-      if (err.name === 'TokenExpiredError') {
-        throw new UnauthorizedException('Token has expired');
-      } else {
-        throw new UnauthorizedException('Invalid token');
-      }
-    }
-  }
-
-  getUserIdFromToken(token: string): string {
-    const decoded = this.decodeToken(token);
-    if (!decoded || !decoded.userId) {
-      throw new UnauthorizedException('Invalid token: userId not found');
-    }
-    return decoded.userId;
+  getPayload(token: string) {
+    return this.jwtService.decode(token); // Decode the token to extract the payload
   }
 }

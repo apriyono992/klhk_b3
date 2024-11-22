@@ -1,16 +1,24 @@
-import { Controller, Post, Put, Delete, Get, Param, Body, Query } from '@nestjs/common';
+import { Controller, Post, Put, Delete, Get, Param, Body, Query, UseGuards } from '@nestjs/common';
 import { CreateB3PermohonanRekomDto } from 'src/models/createB3PermohonanRekomDto';
 import { UpdateB3PermohonanRekomDto } from 'src/models/updateB3PermohonanRekomDto';
 import { SearchBahanB3PermohonanRekomDto } from 'src/models/searchBahanB3PermohonanRekomDto';
-import { ApiTags, ApiOperation, ApiBody, ApiParam, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBody, ApiParam, ApiQuery, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { BahanB3Service } from 'src/services/bahanB3.services';
+import { JwtAuthGuard } from 'src/utils/auth.guard';
+import { RolesGuard } from 'src/utils/roles.guard';
+import { Roles } from 'src/utils/roles.decorator';
+import { RolesAccess } from 'src/models/enums/roles';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
+@ApiBearerAuth() // Dokumentasi untuk token
 @ApiTags('B3Substance')
 @Controller('b3-substance')
 export class BahanB3Controller {
   constructor(private readonly bahanB3Service: BahanB3Service) {}
 
+  
   @Post()
+  @Roles(RolesAccess.SUPER_ADMIN, RolesAccess.PENGELOLA, RolesAccess.PIC_REKOMENDASI) // Pengguna dengan role 'user' atau 'admin' dapat 
   @ApiOperation({ summary: 'Create a new B3Substance' })
   @ApiBody({
     type: CreateB3PermohonanRekomDto,
@@ -84,6 +92,7 @@ export class BahanB3Controller {
 
 
   @Put()
+  @Roles(RolesAccess.SUPER_ADMIN, RolesAccess.PENGELOLA, RolesAccess.PIC_REKOMENDASI) 
   @ApiOperation({ summary: 'Update an existing B3Substance' })
   @ApiBody({
     type: UpdateB3PermohonanRekomDto,
@@ -156,6 +165,7 @@ export class BahanB3Controller {
   
 
   @Delete(':id')
+  @Roles(RolesAccess.SUPER_ADMIN, RolesAccess.PENGELOLA, RolesAccess.PIC_REKOMENDASI) 
   @ApiOperation({ summary: 'Delete a B3Substance' })
   @ApiParam({ name: 'id', description: 'ID of the B3Substance to delete' })
   @ApiResponse({
@@ -171,7 +181,7 @@ export class BahanB3Controller {
     return this.bahanB3Service.deleteB3Substance(id);
   }
 
-  @Get(':id')
+  @Get('find/:id')
   @ApiOperation({ summary: 'Get a single B3Substance by ID' })
   @ApiParam({ name: 'id', description: 'ID of the B3Substance to retrieve' })
   @ApiResponse({

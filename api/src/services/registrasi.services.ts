@@ -178,6 +178,7 @@ export class RegistrasiServices {
         berlaku_sampai: data?.berlaku_sampai,
         nomor_notifikasi_impor: data?.nomor_notifikasi_impor,
         approval_status: 'pending',
+        status: 'draft',
         is_draft: false,
         tembusan: {
           connect: data.tembusanIds.map((id) => ({ id })), // Set related Tembusan to avoid duplicate connections
@@ -234,7 +235,7 @@ export class RegistrasiServices {
   }
 
   async listRegistrasiB3(searchRegistrasiDto: SearchRegistrasiDto) {
-    const { page, limit, sortBy, sortOrder, search } = searchRegistrasiDto;
+    const { page, limit, sortBy, sortOrder, search, status } = searchRegistrasiDto;
 
     const where: Prisma.RegistrasiWhereInput = {
       ...(search && {
@@ -244,7 +245,9 @@ export class RegistrasiServices {
           { kode_db_klh_perusahaan: { contains: search, mode: 'insensitive' } },
         ],
       }),
+      ...(status && { status }),
     };
+
     const [registrasi, total] = await Promise.all([
       this.prisma.registrasi.findMany({
         where,
@@ -255,11 +258,16 @@ export class RegistrasiServices {
       this.prisma.registrasi.count({ where }),
     ]);
 
+    const registrasiWithIndex = registrasi.map((item, index) => ({
+      ...item,
+      index: (page - 1) * limit + index + 1,
+    }));
+
     return {
       total,
       page,
       limit,
-      registrasi,
+      registrasi: registrasiWithIndex,
     };
   }
 
@@ -293,10 +301,8 @@ export class RegistrasiServices {
     const registrasi = await this.prisma.registrasi.update({
       where: { id },
       data: {
-        approval_status:
-          updateApprovalPersyaratanDto.status === 'approved by direksi'
-            ? updateApprovalPersyaratanDto.status
-            : '',
+        approval_status: updateApprovalPersyaratanDto.approval_status,
+        status: updateApprovalPersyaratanDto.status,
         approved_by: updateApprovalPersyaratanDto.approved_by,
         nomor: updateApprovalPersyaratanDto.nomor_surat,
         tanggal_surat: updateApprovalPersyaratanDto.tanggal_surat
@@ -385,5 +391,40 @@ export class RegistrasiServices {
     const noReg = `R${randomLetter()}${randomLetter()}${randomNumber()}${randomNumber()}Q${randomNumber()}${randomLetter()}`;
 
     return noReg;
+  }
+
+  // @Cron('* * * * * *')
+  async cronGetDataValidasiTeknis() {
+
+    /**
+     *   Rules get PTSP for VAlIDASI TEKNIS
+     *
+     *   Payload
+     *   1. Get Token from Login PTSP
+     *   2. Get Nomor Registrasi for detail registrasi PTSP
+     */
+
+
+    // const getToken = await this.env.blablablabla  -> dapetin token data dari login ptsp
+
+    /**
+     * const dataPtsp = await this.env.blablablabla  -> Setelah dapat data dari ptsp, return nya kita simpan ke db
+     *
+     *  - Buat payload nya gw kepikiran si dataPTSP buat function sendiri khusus nampilin response dari ptsp
+     *  - continue next step
+     */
+
+    // Call table for save data PTSP
+
+
+  }
+
+  async getListValidasiTeknis(nomor: string) {
+
+    const getAllData = await this.prisma.validasiTeknisRegistrasi.findMany({
+      where: { nomor_registrasi: nomor },
+    });
+
+    return getAllData;
   }
 }

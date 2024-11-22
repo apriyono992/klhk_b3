@@ -1,9 +1,12 @@
-import { Controller, Post, Put, Delete, Body, Param, UseFilters } from '@nestjs/common';
+import { Controller, Post, Put, Delete, Body, Param, UseFilters, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JenisSampleTypeService } from '../services/jenisSampleType.services';
 import { CreateJenisSampleTypeDto } from '../models/createSampleTypeDto';
 import { ValidationFilter } from 'src/utils/response.filter';
+import { JwtAuthGuard } from 'src/utils/auth.guard';
+import { RolesGuard } from 'src/utils/roles.guard';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('Jenis Sample Type')
 @Controller('jenis-sample-type')
 @UseFilters(ValidationFilter)  

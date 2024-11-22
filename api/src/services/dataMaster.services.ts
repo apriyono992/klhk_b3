@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../services/prisma.services';
@@ -16,8 +17,9 @@ import { CreateTempatInstalasiDto } from '../models/createTempatInstalasiDto';
 
 @Injectable()
 export class DataMasterService {
+  private readonly logger = new Logger(DataMasterService.name);
   constructor(private prisma: PrismaService) {}
-
+  
   // ============================================
   // Data Bahan B3 Methods
   // ============================================
@@ -242,10 +244,8 @@ export class DataMasterService {
   async createDataTembusan(data: CreateDataTembusanDto) {
     try {
       return await this.prisma.$transaction(async (prisma) => {
-        if (
-          data.applicationId !== undefined ||
-          data.applicationId?.trim() !== ''
-        ) {
+
+        if (data.applicationId !== undefined && data.applicationId.trim() !== '') {
           // Cari DraftSurat berdasarkan applicationId
           const draftSurat = await prisma.draftSurat.findUnique({
             where: { applicationId: data.applicationId },

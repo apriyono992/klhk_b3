@@ -85,6 +85,16 @@ export class JenisSampleService {
     }
   }
 
+  async getById(id: string) {
+    const sample = await this.prisma.jenisSample.findUnique({ where: { id } });
+    if (!sample) throw new NotFoundException('Sample not found.');
+    return sample;
+  }
+
+  async getAll() {
+    return await this.prisma.jenisSample.findMany({include: {jenisSampelType: true}});
+  }
+
   // Helper function to generate the next 2-digit code for a given typeId
   private async generateNextCode(typeId: string): Promise<string> {
     const lastSample = await this.prisma.jenisSample.findFirst({

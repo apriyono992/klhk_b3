@@ -6,6 +6,8 @@ import toast from "react-hot-toast";
 import * as yup from 'yup';
 import { deleteFetcher, postFetcher, putFetcher } from "../services/api";
 import { dirtyInput, isResponseErrorObject } from "../services/helpers";
+import { TipePerusahaan } from "../enums/tipePerusahaan.ts";
+import { SkalaPerusahaan } from "../enums/skalaPerusahaan.ts";
 
 export default function useCompany({ mutate }) {
     const formSchema =  yup.object().shape({
@@ -16,16 +18,18 @@ export default function useCompany({ mutate }) {
         faxKantor: yup.string().required('Harus diisi'),
         emailKantor: yup.string().required('Harus diisi'),
         npwp: yup.string().required('Harus diisi'),
-        alamatPool: yup.string().required('Harus diisi'),
+        // alamatPool: yup.string().required('Harus diisi'),
         bidangUsaha: yup.string().required('Harus diisi'),
         nomorInduk: yup.string().required('Harus diisi'),
+        tipePerusahaan: yup.array().of(yup.string().required()).min(1, 'Tipe Perusahaan harus dipilih'),
+        skalaPerusahaan: yup.string().nullable(),
     }).required()
 
     const {isOpen: isOpenModalForm, onOpen: onOpenModalForm, onOpenChange: onOpenChangeModalForm, onClose: onCloseModalForm} = useDisclosure();
     const {isOpen: isOpenModalAlert, onOpenChange: onOpenChangeModalAlert} = useDisclosure();
     const [editId, setEditId] = useState(null);
     const [isEdit, setIsEdit] = useState(false);
-    const { register, handleSubmit, reset, formState: { errors, isSubmitting, dirtyFields } } = useForm({resolver: yupResolver(formSchema)});
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting, dirtyFields }, watch, control, } = useForm({resolver: yupResolver(formSchema)});
 
     function onClickEdit(item) {    
         setEditId(item.id);
@@ -40,7 +44,9 @@ export default function useCompany({ mutate }) {
             npwp: item.npwp,
             alamatPool: item.alamatPool,
             bidangUsaha: item.bidangUsaha,
-            nomorInduk: item.nomorInduk
+            nomorInduk: item.nomorInduk,
+            tipePerusahaan: item.tipePerusahaan || [],
+            skalaPerusahaan: item.skalaPerusahaan || null,
         });           
         onOpenChangeModalForm();
     }
@@ -58,7 +64,9 @@ export default function useCompany({ mutate }) {
             npwp: '',
             alamatPool: '',
             bidangUsaha: '',
-            nomorInduk: ''
+            nomorInduk: '',
+            tipePerusahaan: [],
+            skalaPerusahaan: null,
         });
         onCloseModalForm()
     }
@@ -82,7 +90,7 @@ export default function useCompany({ mutate }) {
         try {
             if (isEdit) {
                 const filteredData = dirtyInput(dirtyFields, data);
-                await putFetcher('/api/company', editId, filteredData);
+                await putFetcher('/api/company/update-company', editId, filteredData);
                 mutate()
                 toast.success('Perusahaan berhasil diubah!');
             } else {
@@ -122,5 +130,7 @@ export default function useCompany({ mutate }) {
         onClickDelete,
         onSubmitDelete,
         onSubmitForm,
+        watch,
+        control,
     }
 }

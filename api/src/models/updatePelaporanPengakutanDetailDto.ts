@@ -1,5 +1,7 @@
-import { IsUUID, IsNumber, IsArray, IsString, IsOptional } from 'class-validator';
+import { IsUUID, IsNumber, IsArray, IsString, IsOptional, ValidateNested } from 'class-validator';
 import { CreatePerusahaanAsalMuatDanTujuanDto } from './createPerusahaanAsalDanTujuanB3Dto';
+import { Type } from 'class-transformer';
+import { PerusahaanTujuanBongkarDto } from './createPelaporanPengakutanDetailDto';
 
 export class UpdatePengangkutanDetailDto {
   @IsUUID()
@@ -15,8 +17,10 @@ export class UpdatePengangkutanDetailDto {
   @IsString({ each: true })
   perusahaanAsalMuat: string[];
 
+
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
-  perusahaanTujuanBongkar: string[];
+  @ValidateNested({ each: true })
+  @Type(() => PerusahaanTujuanBongkarDto)
+  perusahaanTujuanBongkar: PerusahaanTujuanBongkarDto[];
 }

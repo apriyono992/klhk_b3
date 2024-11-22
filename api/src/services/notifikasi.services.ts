@@ -10,9 +10,10 @@ import { TipeSuratNotifikasi } from 'src/models/enums/tipeSuratNotifikasi';
 
 // Allowed status transitions map
 const allowedStatusTransitions = {
+  
+
   [StatusNotifikasi.DITERIMA]: [
     StatusNotifikasi.VERIFIKASI_ADM_TEK,
-    StatusNotifikasi.KIRIM_SURAT_KEBENARAN_IMPORT,
     StatusNotifikasi.DIBATALKAN,
   ],
   [StatusNotifikasi.VERIFIKASI_ADM_TEK]: [
@@ -55,6 +56,7 @@ export class NotifikasiService {
           dataBahanB3Id: dto.databahanb3Id,
           status: dto.status,
           tanggalDiterima: dto.tanggalDiterima || new Date(),
+          tanggalPerubahan: dto.tanggalDiterima || new Date(),
           exceedsThreshold: dto.exceedsThreshold || false,
           createdById: dto.changeBy || undefined, // Directly assign the user ID as a string here
           negaraAsal: dto.negaraAsal
@@ -65,7 +67,7 @@ export class NotifikasiService {
         data: {
           notifikasiId: newNotifikasi.id,
           newStatus: dto.status,
-          tanggalPerubahan: new Date(),
+          tanggalPerubahan: dto.tanggalDiterima || new Date(),
           changedAt: new Date(),
           changedBy: dto.changeBy || undefined, // Directly assign the user ID as a string here
           oldStatus: null,
@@ -104,7 +106,14 @@ export class NotifikasiService {
 
         // If the status transition is valid, proceed with the update
         updateData.status = dto.status;
-        updateData.tanggalPerubahan = dto.tanggalPerubahan || new Date();
+        updateData.tanggalPerubahan = dto.tanggalDiterima || new Date();
+      }
+
+      // Validasi: Pastikan tanggal baru tidak lebih kecil dari tanggal yang sudah ada
+      if (updateData.tanggalPerubahan && new Date(dto.tanggalPerubahan) < new Date(notifikasi.tanggalPerubahan)) {
+        throw new BadRequestException(
+          `Tanggal perubahaan baru (${dto.tanggalPerubahan}) tidak boleh lebih kecil dari tanggal diterima sebelumnya (${notifikasi.tanggalPerubahan})`
+        );
       }
 
       if (dto.companyId) {

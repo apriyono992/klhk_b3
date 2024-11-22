@@ -5,7 +5,7 @@ import RequestPasswordResetPage from "../pages/auth/RequestPasswordResetPage";
 import PasswordResetPage from "../pages/auth/PasswordResetPage";
 import DashboardPage from "../pages/admin/DashboardPage";
 import RouteGuest from "../components/fragments/RouteGuest";
-import AuthProvider from "../contexts/AuthContext";
+import {AuthProvider, AuthContext } from "../contexts/AuthContext";
 import RegistrationIndexPage from "../pages/admin/registration/IndexPage";
 import RegistrationDashboardPage from "../pages/admin/registration/DashboardPage";
 import RegistrationDetailPage from "../pages/admin/registration/DetailPage";
@@ -32,10 +32,24 @@ import BeritaPage from "../pages/landing-page/berita";
 import ArticlePage from "../pages/landing-page/article";
 import CompanyIndexPage from "../pages/admin/company/IndexPage";
 import PeriodIndexPage from "../pages/admin/period/IndexPage";
+import NewsIndexPage from '../pages/admin/cms/news/IndexPage'
+import ArticleIndexPage from '../pages/admin/cms/article/IndexPage'
+import DocumentIndexPage from '../pages/admin/cms/document/IndexPage'
+import EventIndexPage from '../pages/admin/cms/event/IndexPage'
+import PelaporanDashboard from "../pages/admin/report/PelaporanDashboard";
+import IndexAdminStokB3 from "../pages/admin/stokB3/admin/IndexPage";
+import IndexUserStokB3 from "../pages/admin/stokB3/user/IndexPage";
+
+import MercuryMonitoringLandingPage from "../pages/landing-page/mercuryMonitoring";
+import WilayahPertambanganRakyat from "../pages/admin/wpr/IndexPage";
+import MercuryMonitoringIndex from "../pages/admin/merkuri/IndexPage";
+import UnauthorizedPage from "../pages/admin/UnauthorizedPage";
+import ProtectedRoute from "../services/protectedRoute";
 
 export const ROOT_PATH = '/'
 export const BERITA_PATH = '/berita'
 export const ARTICLE_PATH = '/artikel'
+export const MONITORING_MERCURY_PATH = '/pemantauan-merkuri'
 
 export const LOGIN_PATH = '/masuk'
 export const REGISTER_PATH = '/daftar'
@@ -43,6 +57,7 @@ export const FORGOT_PASSWORD_PATH = '/lupa-sandi/formulir'
 export const RESET_PASSWORD_PATH = '/lupa-sandi/atur-ulang'
 
 export const DASHBOARD_PATH = '/admin/dasbor'
+export const PELAPORAN_DASHBOARD_PATH = '/admin/dasbor/pelaporan'
 
 export const REGISTRATION_DASHBOARD_PATH = '/admin/registrasi-b3/dasbor'
 export const REGISTRATION_INDEX_PATH = '/admin/registrasi-b3/daftar'
@@ -73,32 +88,51 @@ export const MATERIAL_INDEX_PATH = '/admin/utama/bahan-b3'
 export const OFFICIAL_INDEX_PATH = '/admin/utama/pejabat'
 export const COMPANY_INDEX_PATH = '/admin/utama/perusahaan'
 export const PERIOD_INDEX_PATH = '/admin/utama/periode'
+export const WPR_INDEX_PATH = '/admin/utama/wpr'
+export const MERKURI_MONITORING_INDEX_PATH = '/admin/utama/merkuri-monitoring'
+
+export const CMS_NEWS_PATH = '/admin/cms/berita'
+export const CMS_ARTICLE_PATH = '/admin/cms/artikel'
+export const CMS_DOCUMENT_PATH = '/admin/cms/dokumen'
+export const CMS_EVENT_PATH = '/admin/cms/event'
+
+export const STOK_B3_INDEX_ADMIN_PATH = '/admin/utama/stok-b3'
+export const STOK_B3_INDEX_USER_PATH = '/user/utama/stok-b3'
+
+export const UNAUTHORIZED_PATH = '/unauthorized'
 
 const router = createBrowserRouter([
     { path: "/", element: <HomePage/>,},
     { path: BERITA_PATH, element: <BeritaPage/>,},
     { path: ARTICLE_PATH, element: <ArticlePage/>,},
+    { path: MONITORING_MERCURY_PATH, element: <MercuryMonitoringLandingPage/>,},
     {
         element: <RouteGuest />,
         children: [
-            { path: LOGIN_PATH, element: <LoginPage />, },
-            { path: REGISTER_PATH, element: <RegisterPage />,},
-            { path: FORGOT_PASSWORD_PATH, element: <RequestPasswordResetPage />,},
-            { path: RESET_PASSWORD_PATH, element: <PasswordResetPage />,},
+            { path: LOGIN_PATH, element: <LoginPage /> },
+            { path: REGISTER_PATH, element: <RegisterPage /> },
+            { path: FORGOT_PASSWORD_PATH, element: <RequestPasswordResetPage /> },
+            { path: RESET_PASSWORD_PATH, element: <PasswordResetPage /> },
         ],
     },
     {
         element: <AuthProvider />,
         children: [
-            { path: DASHBOARD_PATH, element: <DashboardPage />, },
+            { path: UNAUTHORIZED_PATH, element: <UnauthorizedPage /> },
+            { path: DASHBOARD_PATH, element: <ProtectedRoute allowedRoles={["Admin"]}><DashboardPage /></ProtectedRoute>  },
 
-            { path: REGISTRATION_DASHBOARD_PATH, element: <RegistrationDashboardPage />, },
-            { path: REGISTRATION_INDEX_PATH, element: <RegistrationIndexPage />,},
-            { path: REGISTRATION_DETAIL_PATH, element: <RegistrationDetailPage />,},
+            { path: REGISTRATION_DASHBOARD_PATH, element: <RegistrationDashboardPage /> },
+            { path: REGISTRATION_INDEX_PATH, element: <RegistrationIndexPage /> },
+            { path: REGISTRATION_DETAIL_PATH, element: <RegistrationDetailPage /> },
 
-            { path: RECOMENDATION_DASHBOARD_PATH, element: <RecomendationDashboardPage />,},
-            { path: RECOMENDATION_INDEX_PATH, element: <RecomendationIndexPage />,},
-            { path: RECOMENDATION_DETAIL_PATH, element: <RecomendationDetailPage />,},
+            { path: RECOMENDATION_DASHBOARD_PATH, element: <RecomendationDashboardPage /> },
+            { path: RECOMENDATION_INDEX_PATH, element: <RecomendationIndexPage /> },
+            { path: RECOMENDATION_DETAIL_PATH, element: <RecomendationDetailPage /> },
+
+            { path: NOTIFICATION_DASHBOARD_PATH, element: <NotificationDashboardPage /> },
+            { path: NOTIFICATION_INDEX_PATH, element: <NotificationIndexPage /> },
+            { path: NOTIFICATION_DETAIL_PATH, element: <NotificationDetailPage /> },
+            { path: NOTIFICATION_IMPORT_VERIFICATION_PATH, element: <NotificationImportVerficationDraftPage /> },
 
             { path: NOTIFICATION_DASHBOARD_PATH, element: <NotificationDashboardPage />,},
             { path: NOTIFICATION_INDEX_PATH, element: <NotificationIndexPage />,},
@@ -120,9 +154,21 @@ const router = createBrowserRouter([
             { path: MATERIAL_INDEX_PATH, element: <MaterialIndexPage />,},
             { path: COMPANY_INDEX_PATH, element: <CompanyIndexPage />,},
             { path: PERIOD_INDEX_PATH, element: <PeriodIndexPage />,},
-            
+  
+            { path: CMS_NEWS_PATH, element: <NewsIndexPage /> },
+            { path: CMS_ARTICLE_PATH, element: <ArticleIndexPage /> },
+            { path: CMS_DOCUMENT_PATH, element: <DocumentIndexPage /> },
+            { path: CMS_EVENT_PATH, element: <EventIndexPage /> },
+
+            { path: PELAPORAN_DASHBOARD_PATH, element: <PelaporanDashboard />, },
+
+            { path: STOK_B3_INDEX_ADMIN_PATH, element: <IndexAdminStokB3 />, },
+            { path: STOK_B3_INDEX_USER_PATH, element: <IndexUserStokB3 />, },
+
+            { path: WPR_INDEX_PATH, element: <WilayahPertambanganRakyat />,},
+            { path: MERKURI_MONITORING_INDEX_PATH, element: < MercuryMonitoringIndex/>,},
         ],
     },
-]);
+])
 
 export default router

@@ -7,9 +7,13 @@ import { CompanyService } from "src/services/company.services";
 import { PrismaService } from "src/services/prisma.services";
 import { PermissionUtil } from "src/utils/permission";
 
+import { PrismaModule } from "./prisma.module";
+import { AuthModule } from "./auth.module";
+
 @Module({
+    imports: [PrismaModule, AuthModule],
     controllers: [CompanyController],
-    providers: [ CompanyService, PrismaService, JwtProvider, EnforcerProvider, PermissionUtil, Enforcer],
+    providers: [ CompanyService, PrismaService, EnforcerProvider, PermissionUtil, Enforcer],
   })
 export class CompanyModule {}
   

@@ -7,6 +7,7 @@ import {
   Param,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { PdfService } from '../services/pdf.services';
@@ -17,7 +18,10 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/utils/auth.guard';
+import { RolesGuard } from 'src/utils/roles.guard';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('PDF')
 @Controller('pdf')
 export class PdfController {

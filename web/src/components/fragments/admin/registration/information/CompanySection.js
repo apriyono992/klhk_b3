@@ -32,7 +32,7 @@ export default function CompanySection({ className, dataCompany }) {
     const data = [
         {
             'label': 'Nama Perusahaan',
-            'value': <InlineEditInput value={dataCompany?.nama_perusahaan || dataCompany?.company?.name} onSubmit={onSubmitName}/>
+            'value': <InlineEditInput value={dataCompany?.nama_perusahaan} onSubmit={onSubmitName}/>
         },
         {
             'label': 'Alamat Kantor Pusat',

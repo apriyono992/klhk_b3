@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Post, Put, HttpCode, HttpStatus, Get, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Post, Put, HttpCode, HttpStatus, Get, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateDataBahanB3Dto } from 'src/models/createDataBahanB3Dto';
 import { CreateDataPejabatDto } from 'src/models/createDataPejabatDto';
@@ -10,7 +10,10 @@ import { UpdateDataBahanB3Dto } from 'src/models/updateDataBahanB3Dto';
 import { UpdateDataPejabatDto } from 'src/models/updateDataPejabatDto';
 import { UpdateDataTembusanDto } from 'src/models/updateDataTembusanDto';
 import { DataMasterService } from 'src/services/dataMaster.services';
+import { JwtAuthGuard } from 'src/utils/auth.guard';
+import { RolesGuard } from 'src/utils/roles.guard';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('Data Master')
 @Controller('data-master')
 export class DataMasterController {

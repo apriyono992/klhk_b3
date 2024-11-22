@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, Chip } from "@nextui-org/react";
+import { Button, Card, CardBody, Chip, Tabs, Tab } from "@nextui-org/react";
 import { ArrowPathIcon, CheckIcon, EyeIcon, ListBulletIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import RootAdmin from "../../../components/layouts/RootAdmin";
 import CountWidget from "../../../components/elements/CountWidget";
@@ -32,15 +32,13 @@ export default function IndexPage() {
         }
     }
 
-    const { data, isLoading } = useSWR('/api/registrasi/search?page=1&limit=10&sortBy=createdAt&sortOrder=desc', fetcher);
-    const dataWithIndex = data?.registrasi?.map((item, index) => ({
-        ...item,
-        no: index + 1 // Auto-incrementing number
-    })) || [];
+    const { data: pending, isLoading: loadingPending } = useSWR('/api/registrasi/search?page=1&limit=10&sortBy=createdAt&sortOrder=desc&status=pending', fetcher);
+    const { data: draft, isLoading: loadingDraft } = useSWR('/api/registrasi/search?page=1&limit=10&sortBy=createdAt&sortOrder=desc&status=draft', fetcher);
+    const { data: riwayat, isLoading: loadingRiwayat } = useSWR('/api/registrasi/search?page=1&limit=10&sortBy=createdAt&sortOrder=desc&status=riwayat', fetcher);
 
     const columns = useMemo(() =>  [
         {
-            field: 'no',
+            field: 'index',
             headerName: 'No',
             width: 70,
         },
@@ -108,26 +106,74 @@ export default function IndexPage() {
             </Card>
             <Card className="w-full mt-3" radius="sm">
                 <CardBody className='w-full h-[550px] p-5'>
-                    <DataGrid
-                        rows={dataWithIndex}
-                        loading={isLoading}
-                        columns={columns}
-                        disableDensitySelector
-                        initialState={{
-                            pagination: {
-                                paginationModel: {
-                                  pageSize: 10,
-                                },
-                            },
-                            density: 'compact',
-                        }}
-                        slots={{
-                            toolbar: GridToolbar,
-                        }}
-                        pageSizeOptions={[5]}
-                        checkboxSelection
-                        disableRowSelectionOnClick
-                    />
+                    <Tabs aria-label="Daftar Penyimpanan B3" defaultValue="toValidate">
+                        <Tab title="Perlu Divalidasi" value="toValidate">
+                            <DataGrid
+                                rows={pending?.registrasi || []}
+                                loading={loadingPending}
+                                columns={columns}
+                                disableDensitySelector
+                                initialState={{
+                                    pagination: {
+                                        paginationModel: {
+                                            pageSize: 10,
+                                        },
+                                    },
+                                    density: 'compact',
+                                }}
+                                slots={{
+                                    toolbar: GridToolbar,
+                                }}
+                                pageSizeOptions={[5]}
+                                checkboxSelection
+                                disableRowSelectionOnClick
+                            />
+                        </Tab>
+                        <Tab title="Draft SK" value="draftSk">
+                            <DataGrid
+                                rows={draft?.registrasi || []}
+                                loading={loadingDraft}
+                                columns={columns}
+                                disableDensitySelector
+                                initialState={{
+                                    pagination: {
+                                        paginationModel: {
+                                            pageSize: 10,
+                                        },
+                                    },
+                                    density: 'compact',
+                                }}
+                                slots={{
+                                    toolbar: GridToolbar,
+                                }}
+                                pageSizeOptions={[5]}
+                                checkboxSelection
+                                disableRowSelectionOnClick
+                            />
+                        </Tab>
+                        <Tab title="Riwayat" value="riwayat">
+                            <DataGrid
+                                rows={riwayat?.registrasi || []}
+                                loading={loadingRiwayat}
+                                columns={columns}
+                                disableDensitySelector
+                                initialState={{
+                                    pagination: {
+                                        paginationModel: {
+                                            pageSize: 10,
+                                        },
+                                    },
+                                    density: 'compact',
+                                }}
+                                slots={{
+                                    toolbar: GridToolbar,
+                                }}
+                                pageSizeOptions={[5]}
+                                checkboxSelection
+                                disableRowSelectionOnClick
+                            />
+                        </Tab>
+                    </Tabs>
                 </CardBody>
             </Card>
         </RootAdmin>

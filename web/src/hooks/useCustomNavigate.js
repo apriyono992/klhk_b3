@@ -1,15 +1,16 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export default function useCustomNavigate() {
-    const navigate = useNavigate();
-    const { pathname } = useLocation();
-    
+    const navigate = useNavigate()
+    const { pathname } = useLocation()
+
     const routeGroup = {
         "1": pathname.startsWith("/admin/registrasi-b3"),
         "2": pathname.startsWith("/admin/rekomendasi-b3"),
         "3": pathname.startsWith("/admin/notifikasi"),
         "4": pathname.startsWith("/admin/pelaporan") || pathname.startsWith("/pelaporan"),
         "5": pathname.startsWith("/admin/utama"),
+        "6": pathname.startsWith('/admin/cms'),
     };
 
     const getCurrentRouteGroup = () => Object.keys(routeGroup).filter(key => routeGroup[key])
@@ -23,9 +24,9 @@ export default function useCustomNavigate() {
     const getAdminStorageDetailPath = (id) => navigate(`/admin/pelaporan/penyimpanan-b3/daftar/${id}`);
     const getCompanyStorageDetailPath = (id) => navigate(`/pelaporan/penyimpanan-b3/daftar/${id}`);
 
-    return { 
-        getRegistrationDetailPath, 
-        getRecomendationDetailPath, 
+    return {
+        getRegistrationDetailPath,
+        getRecomendationDetailPath,
         getNotificationDetailPath,
         getNotificationImportVerificationDraftPath,
         getNotificationImportApprovalDraftPath,

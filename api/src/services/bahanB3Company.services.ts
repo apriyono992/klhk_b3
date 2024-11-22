@@ -4,6 +4,8 @@ import { CreateBahanB3CompanyDto } from 'src/models/createBahanB3CompanyDto';
 import { ApproveBahanB3RequestDto } from 'src/models/approveBahanB3RequestDto';
 import { UpdateStokB3Dto } from 'src/models/updateStokB3Dto';
 import { SearchBahanB3CompanyDto } from 'src/models/searchBahanB3CompanyDto';
+import { PaginationDto } from 'src/models/paginationDto';
+import { SearchStokB3PeriodeDto } from 'src/models/searchStokB3PeriodeDto';
 
 
 @Injectable()
@@ -51,15 +53,15 @@ export class DataBahanB3CompanyService {
   // Approve addition or update request
   async approveRequest(dto: ApproveBahanB3RequestDto) {
     return this.prisma.$transaction(async (tx) => {
-      // Check if it's a new B3 addition request
+      // Cek apakah ini permintaan penambahan stok baru
       const createRequest = await tx.stokB3AddRequest.findUnique({
         where: { id: dto.requestId },
       });
-  
+
       if (createRequest) {
-        // This is a new B3 addition request
-  
-        // 1. Create the new B3 entry
+        // Ini adalah permintaan penambahan B3 baru
+
+        // 1. Buat entri B3 baru di dataBahanB3Company
         const newEntry = await tx.dataBahanB3Company.create({
           data: {
             companyId: createRequest.companyId,
@@ -67,8 +69,8 @@ export class DataBahanB3CompanyService {
             stokB3: createRequest.requestedStokB3,
           },
         });
-  
-        // 2. Log the history
+
+        // 2. Log histori stok
         await tx.stokB3History.create({
           data: {
             dataBahanB3CompanyId: newEntry.id,
@@ -76,16 +78,16 @@ export class DataBahanB3CompanyService {
             newStokB3: createRequest.requestedStokB3,
           },
         });
-  
-        // 3. Create an approval entry
+
+        // 3. Buat entri approval
         const approval = await tx.approval.create({
           data: {
             approvedById: dto.approvedById,
             approvedAt: new Date(),
           },
         });
-  
-        // 4. Mark the request as approved
+
+        // 4. Tandai permintaan sebagai disetujui
         return tx.stokB3UpdateRequest.update({
           where: { id: dto.requestId },
           data: {
@@ -94,45 +96,53 @@ export class DataBahanB3CompanyService {
           },
         });
       } else {
-        // Check if it's a stock update request
+        // Cek apakah ini permintaan pembaruan stok
         const updateRequest = await tx.stokB3UpdateRequest.findUnique({
           where: { id: dto.requestId },
         });
-  
+
         if (!updateRequest) throw new NotFoundException('Request not found');
         if (updateRequest.approved) throw new BadRequestException('Request already approved');
-  
-        // 1. Create an approval entry
+
+        // 1. Buat entri approval
         const approval = await tx.approval.create({
           data: {
             approvedById: dto.approvedById,
             approvedAt: new Date(),
           },
         });
-  
-        // 2. Fetch the existing B3 entry
+
+        // 2. Ambil data stok B3 yang ada
         const existingEntry = await tx.dataBahanB3Company.findUnique({
           where: { id: updateRequest.dataBahanB3CompanyId },
         });
-  
+
         if (!existingEntry) throw new NotFoundException('DataBahanB3Company entry not found');
-  
-        // 3. Update the stock value
+
+        // 3. Hitung stok baru
+        const newStokB3 = existingEntry.stokB3 + updateRequest.requestedStokB3;
+
+        // Validasi agar stok tidak menjadi negatif
+        if (newStokB3 < 0) {
+          throw new BadRequestException('Stok tidak boleh negatif setelah pengurangan');
+        }
+
+        // 4. Perbarui nilai stok
         const updatedEntry = await tx.dataBahanB3Company.update({
           where: { id: existingEntry.id },
-          data: { stokB3: updateRequest.requestedStokB3 },
+          data: { stokB3: newStokB3 },
         });
-  
-        // 4. Log the history
+
+        // 5. Log histori perubahan stok
         await tx.stokB3History.create({
           data: {
             dataBahanB3CompanyId: updatedEntry.id,
             previousStokB3: existingEntry.stokB3,
-            newStokB3: updateRequest.requestedStokB3,
+            newStokB3: newStokB3,
           },
         });
-  
-        // 5. Mark the request as approved
+
+        // 6. Tandai permintaan sebagai disetujui
         return tx.stokB3UpdateRequest.update({
           where: { id: dto.requestId },
           data: {
@@ -142,12 +152,12 @@ export class DataBahanB3CompanyService {
         });
       }
     });
-  } 
+  }
+
 
   // List pending requests (addition and update)
   async listPendingRequests() {
     const addRequests = await this.prisma.stokB3AddRequest.findMany({
-      where: { approved: false },
       include: {
         dataBahanB3: true,
         company: true,
@@ -155,7 +165,6 @@ export class DataBahanB3CompanyService {
     });
 
     const updateRequests = await this.prisma.stokB3UpdateRequest.findMany({
-      where: { approved: false },
       include: {
         dataBahanB3Company: {
           include: {
@@ -186,7 +195,6 @@ export class DataBahanB3CompanyService {
     if (!detail) throw new NotFoundException('Bahan B3 entry not found');
     return detail;
   }
-
 
   async searchBahanB3Company(dto: SearchBahanB3CompanyDto) {
     const {
@@ -253,5 +261,50 @@ export class DataBahanB3CompanyService {
       limit,
       totalPages: Math.ceil(totalCount / limit),
     };
+  }
+
+  // Method untuk mencari stok B3 pada StokB3Periode dengan date range
+  async searchStokB3Periode(
+    filter : SearchStokB3PeriodeDto 
+  ) {
+    const { companyId, dataBahanB3Id, startDate, endDate, page, limit, returnAll, sortOrder, sortBy } = filter;
+    const queryOptions = {
+      where: {
+        companyId: companyId || undefined,
+        dataBahanB3Id: dataBahanB3Id || undefined,
+        AND: [
+          startDate ? { createdAt: { gte: startDate } } : {},
+          endDate ? { createdAt: { lte: endDate } } : {},
+        ],
+      },
+      orderBy: { [sortBy]: sortOrder },
+    };
+
+    if (returnAll) {
+      const data = await this.prisma.stokB3Periode.findMany({
+        ...queryOptions,
+        include: {
+          company: true,
+          dataBahanB3: true,
+        },
+      });
+      return { total: data.length, data };
+    }
+
+    const total = await this.prisma.stokB3Periode.count({
+      where: queryOptions.where,
+    });
+
+    const data = await this.prisma.stokB3Periode.findMany({
+      ...queryOptions,
+      include: {
+        company: true,
+        dataBahanB3: true,
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    return { total, data };
   }
 }

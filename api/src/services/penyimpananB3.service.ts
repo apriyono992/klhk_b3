@@ -9,6 +9,7 @@ import { Response } from 'express';
 import { TipeDokumenPenyimpananB3 } from 'src/models/enums/tipeDokumenPenyimpananB3';
 import { StatusPenyimpananB3 } from 'src/models/enums/statusPenyimpananB3';
 import { url } from 'inspector';
+import { SearchPenyimpananB3Dto } from 'src/models/searchPenyimpananB3Dto';
 
 @Injectable()
 export class PenyimpananB3Service {
@@ -38,11 +39,21 @@ export class PenyimpananB3Service {
             tipeDokumen: tipeDokumen,
           },
         });
+
       }catch(error){
         console.log(error);
       }
 
     }
+    
+    await this.prisma.penyimpananB3History.create({
+      data:{
+        penyimpananB3Id: penyimpananB3.id,
+        statusPengajuan: StatusPenyimpananB3.PENDING,
+        tanggalPengajuan: new Date(),
+        catatanAdmin: `Penyimpanan B3 Berhasil Dibuat`,
+      }
+    });
 
     return {
         message: 'Penyimpanan B3 created successfully',
@@ -70,34 +81,13 @@ export class PenyimpananB3Service {
     if(existing.status === StatusPenyimpananB3.DELETE){
       throw new NotFoundException(`Penyimpanan B3 with ID ${id} has been deleted`);
     }
-    let updatePenyimpananB3Dto:any;
-
-    if(companyId){
-      updatePenyimpananB3Dto.companyId = { connect: { id: companyId } };
-    }
-
-    if(alamatGudang){
-      updatePenyimpananB3Dto.alamatGudang = alamatGudang;
-    }
-    
-    if(longitude){
-      updatePenyimpananB3Dto.longitude = longitude;
-    }
-    
-    if(latitude){
-      updatePenyimpananB3Dto.latitude = latitude;
-    }
-
-    if(luasArea){
-      updatePenyimpananB3Dto.luasArea = luasArea;
-    }
 
     if(status){
       if(status === StatusPenyimpananB3.APPROVED && existing.PenyimpananB3Persyaratan.some((item) => !item.isApproved)){
           throw new BadRequestException(`Penyimpanan B3 cannot be approved because some documents are not approved`);
       }
 
-      if(status === StatusPenyimpananB3.REVIEW_BY_ADMIN){
+      if(status === StatusPenyimpananB3.MENUNGGU_VERIFIKASI){
         // Step 1: Extract all the requirements
         const persyaratanList = existing.PenyimpananB3Persyaratan;
 
@@ -112,14 +102,39 @@ export class PenyimpananB3Service {
         if(isAnyDocumentMissing){
           throw new BadRequestException(`Penyimpanan B3 cannot be submited because some documents are missing, missing documents: ${missingDocuments.join(', ')}`);
         }
-        updatePenyimpananB3Dto.status = status;
+      }
+      if(status === StatusPenyimpananB3.APPROVED){
+        // Step 1: Extract all the requirements
+        const persyaratanList = existing.PenyimpananB3Persyaratan;
+
+        // Step 2: Filter out the requirements where photos are missing
+        const missingDocuments = persyaratanList.filter((item) => item.photosPenyimpananB3.length === 0);
+
+        // Step 3: Get a list of missing document types (tipeDokumen)
+        const missingTipeDokumen = missingDocuments.map((item) => item.tipeDokumen);
+
+        // Check if there are any missing documents
+        const isAnyDocumentMissing = missingTipeDokumen.length > 0;
+        if(isAnyDocumentMissing){
+          throw new BadRequestException(`Penyimpanan B3 cannot be approved because some documents are missing, missing documents: ${missingDocuments.join(', ')}`);
+        }
       }
 
     }
 
     await this.prisma.penyimpananB3.update({
       where: { id },
-      data: updatePenyimpananB3Dto
+      data: {
+        alamatGudang: alamatGudang ?? undefined,
+        latitude: latitude ?? undefined,
+        longitude: longitude ?? undefined,
+        status: status ?? undefined,
+        luasArea: luasArea ?? undefined,
+        provinceId: createPenyimpananB3Dto.provinceId ?? undefined,
+        regencyId: createPenyimpananB3Dto.regencyId ?? undefined,
+        districtId: createPenyimpananB3Dto.districtId ?? undefined,
+        villageId: createPenyimpananB3Dto.villageId ?? undefined,
+      }
     });
     return {
         message: 'Penyimpanan B3 updated successfully',
@@ -208,7 +223,6 @@ export class PenyimpananB3Service {
     };
   }
 
-
   async getPenyimpananB3(id: string) {
     // Fetch data with Prisma query
     const penyimpananB3 = await this.prisma.penyimpananB3.findUnique({
@@ -240,7 +254,6 @@ export class PenyimpananB3Service {
       penyimpananB3,
     };
   }
-  
   
   // View a document file inline
   async viewDocumentFile(id: string, res: Response) {
@@ -277,6 +290,12 @@ export class PenyimpananB3Service {
       const penyimpananB3 = await this.prisma.penyimpananB3.findMany({
           where: { companyId: companyId },
           include: {
+            approval: true,
+            company: true,
+            district: true,
+            province: true,
+            regency: true,
+            village: true,
             PenyimpananB3Persyaratan: {include: {photosPenyimpananB3: true}}
           },
       });
@@ -317,37 +336,151 @@ export class PenyimpananB3Service {
   }
 
   // Validate a document by an admin
-  async validatePenyimpanan(penyimpananB3Id: string, isValid: boolean,  status: StatusPenyimpananB3, userId?: string) {
-      const penyimpananB3 = await this.prisma.penyimpananB3.findUnique({
+  async validatePenyimpanan(
+    penyimpananB3Id: string,
+    isValid: boolean,
+    status: StatusPenyimpananB3,
+    userId?: string,
+  ) {
+    return await this.prisma.$transaction(async (prisma) => {
+      // 1. Ambil data Penyimpanan B3
+      const penyimpananB3 = await prisma.penyimpananB3.findUnique({
         where: { id: penyimpananB3Id },
-        include: {PenyimpananB3Persyaratan: true}
+        include: { PenyimpananB3Persyaratan: true },
       });
-
+  
+      // 2. Validasi apakah Penyimpanan B3 ditemukan
       if (!penyimpananB3) {
         throw new NotFoundException(`Penyimpanan B3 with ID ${penyimpananB3Id} not found`);
       }
-
-      if(status === StatusPenyimpananB3.APPROVED && penyimpananB3.PenyimpananB3Persyaratan.some((item) => !item.isApproved)){
-        throw new BadRequestException(`Penyimpanan B3 cannot be approved because some documents are not approved`);
-    }
-
-      return this.prisma.penyimpananB3.update({
+  
+      // 3. Validasi status jika ingin disetujui
+      if (
+        status === StatusPenyimpananB3.APPROVED &&
+        penyimpananB3.PenyimpananB3Persyaratan.some((item) => !item.isApproved)
+      ) {
+        throw new BadRequestException(
+          `Penyimpanan B3 cannot be approved because some documents are not approved`,
+        );
+      }
+  
+      // 4. Buat riwayat status Penyimpanan B3
+      await prisma.penyimpananB3History.create({
+        data: {
+          penyimpananB3Id: penyimpananB3.id,
+          statusPengajuan: status,
+          tanggalPengajuan: new Date(),
+          catatanAdmin: `Penyimpanan B3 Berhasil Di${status === StatusPenyimpananB3.APPROVED ? 'Setujui' : 'Tolak'}`,
+        },
+      });
+  
+      // 5. Update status Penyimpanan B3 dan data persetujuan
+      const updatedPenyimpanan = await prisma.penyimpananB3.update({
         where: { id: penyimpananB3Id },
         data: {
           isApproved: isValid,
           status: status,
-          approval:{
-              upsert:{
-                  create:{
-                    approvedBy: {connect: {id: userId}},
-                    approvedAt: new Date(),
-                  },
-                  update:{
-                      approvedAt: new Date(),
-                      approvedBy: {connect: {id: userId}},
-              }
-          }
+          approval: {
+            upsert: {
+              create: {
+                approvedBy: userId ? { connect: { id: userId } } : undefined,
+                approvedAt: new Date(),
+              },
+              update: {
+                approvedBy: userId ? { connect: { id: userId } } : undefined,
+                approvedAt: new Date(),
+              },
+            },
+          },
         },
-      }});
+      });
+  
+      // 6. Return hasil update
+      return updatedPenyimpanan;
+    });
   }
+  
+  async searchPenyimpananB3(params: SearchPenyimpananB3Dto) {
+    const {
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+      companyId,
+      provinceId,
+      regencyId,
+      districtId,
+      villageId,
+      status,
+      alamatGudang,
+      isApproved,
+      includeAll,
+    } = params;
+  
+    const skip = includeAll ? undefined : (page - 1) * limit;
+    const take = includeAll ? undefined : limit;
+  
+    // Dapatkan total records tanpa pagination
+    const totalRecords = await this.prisma.penyimpananB3.count({
+      where: {
+        companyId: companyId || undefined,
+        provinceId: provinceId || undefined,
+        regencyId: regencyId || undefined,
+        districtId: districtId || undefined,
+        villageId: villageId || undefined,
+        status: status && status.length > 0 ? { in: status } : undefined,
+        isApproved: isApproved !== undefined ? isApproved : undefined,
+        alamatGudang: alamatGudang
+          ? {
+              contains: alamatGudang,
+              mode: 'insensitive',
+            }
+          : undefined,
+      },
+    });
+  
+    // Dapatkan data dengan pagination
+    const data = await this.prisma.penyimpananB3.findMany({
+      where: {
+        companyId: companyId || undefined,
+        provinceId: provinceId || undefined,
+        regencyId: regencyId || undefined,
+        districtId: districtId || undefined,
+        villageId: villageId || undefined,
+        status: status && status.length > 0 ? { in: status } : undefined,
+        isApproved: isApproved !== undefined ? isApproved : undefined,
+        alamatGudang: alamatGudang
+          ? {
+              contains: alamatGudang,
+              mode: 'insensitive',
+            }
+          : undefined,
+      },
+      orderBy: {
+        [sortBy]: sortOrder ?? undefined,
+      },
+      skip,
+      take,
+      include: {
+        company: true,
+        province: true,
+        regency: true,
+        district: true,
+        village: true,
+        PenyimpananB3Persyaratan: { include: { photosPenyimpananB3: true } },
+        PenyimpananB3History: true,
+        approval: true,
+      },
+    });
+  
+    const totalPages = includeAll ? 1 : Math.ceil(totalRecords / limit);
+  
+    return {
+      data,
+      totalRecords,
+      currentPage: page,
+      totalPages,
+    };
+  }
+  
 }

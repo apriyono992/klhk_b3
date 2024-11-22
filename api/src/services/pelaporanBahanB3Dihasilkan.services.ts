@@ -3,6 +3,9 @@ import { PrismaService } from "./prisma.services";
 import { CreatePelaporanBahanB3DihasilkanDto } from "src/models/createPelaporanBahanB3DihasilkanDto";
 import { UpdatePelaporanB3DihasilkanDto } from "src/models/updatePelaporanBahanB3DihasilkanDto";
 import { ReviewPelaporanBahanB3Dto } from "src/models/reviewPelaporanBahanB3Dto";
+import { SearchPelaporanB3DihasilkanDto } from "src/models/searchPelaporanBahanB3DihasilkanDto";
+import { StatusPengajuan } from "src/models/enums/statusPengajuanPelaporan";
+import { JenisPelaporan } from "src/models/enums/jenisPelaporan";
 
 @Injectable()
 export class PelaporanBahanB3DihasilkanService {
@@ -13,9 +16,15 @@ export class PelaporanBahanB3DihasilkanService {
   
     const period = await this.prisma.period.findUnique({ where: { id: periodId } });
     if (!period) throw new NotFoundException('Periode tidak ditemukan.');
+
+    // Ensure the report is created within the allowed period
+    const currentDate = new Date();
+    if (currentDate < period.startReportingDate || currentDate > period.endReportingDate) {
+      throw new BadRequestException('Current date is outside the reporting period.');
+    }
   
-    const startDate = new Date(period.startDate);
-    const endDate = new Date(period.endDate);
+    const startDate = new Date(period.startPeriodDate);
+    const endDate = new Date(period.endPeriodDate);
     const inputDate = new Date(tahun, bulan - 1);
     if (inputDate < startDate || inputDate > endDate) {
       throw new BadRequestException('Bulan dan tahun berada di luar rentang periode.');
@@ -60,8 +69,8 @@ export class PelaporanBahanB3DihasilkanService {
       const period = await prisma.period.findUnique({ where: { id: data.periodId || draftReport.periodId } });
       if (!period) throw new NotFoundException('Periode tidak ditemukan.');
   
-      const startDate = new Date(period.startDate);
-      const endDate = new Date(period.endDate);
+      const startDate = new Date(period.startPeriodDate);
+      const endDate = new Date(period.endPeriodDate);
       const inputDate = new Date(data.tahun || draftReport.tahun, (data.bulan || draftReport.bulan) - 1);
       if (inputDate < startDate || inputDate > endDate) {
         throw new BadRequestException('Bulan dan tahun berada di luar rentang periode.');
@@ -126,11 +135,94 @@ export class PelaporanBahanB3DihasilkanService {
             approvedAt: new Date(),
           },
         });
+
+        const bahanB3Company = await prisma.dataBahanB3Company.upsert({
+          where: {
+            companyId_dataBahanB3Id: {
+              companyId: report.companyId,
+              dataBahanB3Id: report.dataBahanB3Id,
+            },
+          },
+          update: {
+            stokB3: {
+              increment: report.jumlahB3Dihasilkan,
+            },
+          },
+          create: {
+            companyId: report.companyId,
+            dataBahanB3Id: report.dataBahanB3Id,
+            stokB3: report.jumlahB3Dihasilkan,
+          },
+        });
+
+        const newStokCompany = bahanB3Company.stokB3;
+        if (newStokCompany < 0) {
+          throw new BadRequestException('Stok perusahaan tidak mencukupi. Persetujuan laporan ditolak.');
+        }
+        
+        // Simpan riwayat perubahan stok di `StokB3History`
+        await prisma.stokB3History.create({
+          data: {
+            dataBahanB3CompanyId: bahanB3Company.id,
+            previousStokB3: bahanB3Company.stokB3 - report.jumlahB3Dihasilkan,
+            newStokB3: bahanB3Company.stokB3,
+            changeDate: new Date(),
+          },
+        });
+
+        // Menggunakan upsert untuk `StokB3Periode`
+        const stokPeriode = await prisma.stokB3Periode.upsert({
+          where: {
+            companyId_dataBahanB3Id_bulan_tahun: {
+              companyId: report.companyId,
+              dataBahanB3Id: report.dataBahanB3Id,
+              bulan: report.bulan,
+              tahun: report.tahun,
+            },
+          },
+          update: {
+            stokB3: {
+              increment: report.jumlahB3Dihasilkan,
+            },
+          },
+          create: {
+            companyId: report.companyId,
+            dataBahanB3Id: report.dataBahanB3Id,
+            bulan: report.bulan,
+            tahun: report.tahun,
+            stokB3: report.jumlahB3Dihasilkan,
+          },
+        });
+
+        const newStokPeriode = stokPeriode.stokB3;
+        if (newStokPeriode < 0) {
+          throw new BadRequestException('Stok periode tidak mencukupi. Persetujuan laporan ditolak.');
+        }
   
-        await prisma.pelaporanB3Dihasilkan.update({ where: { id }, data: { isApproved: true } });
+        await prisma.stokB3PeriodeHistory.create({
+          data: {
+            stokB3PeriodeId: stokPeriode.id,
+            previousStokB3: stokPeriode.stokB3 - report.jumlahB3Dihasilkan,
+            newStokB3: stokPeriode.stokB3,
+            changeDate: new Date(),
+          },
+        });
+        await prisma.pelaporanB3Dihasilkan.update({ where: { id }, data: { isApproved: true, status: status} });
       } else {
-        await prisma.pelaporanB3Dihasilkan.update({ where: { id }, data: { isDraft: true, isFinalized: false } });
+        await prisma.pelaporanB3Dihasilkan.update({ where: { id }, data: { isDraft: true, isFinalized: false , status: status} });
       }
+
+      const kewajiban = await prisma.kewajibanPelaporanPerusahaan.findFirst(
+        {
+          where: { bulan: report.bulan, tahun: report.tahun, companyId: report.companyId, jenisLaporan: JenisPelaporan.DISTRIBUSI_B3 },
+        }
+      )
+      
+      // Tandai laporan sebagai disetujui
+      await prisma.kewajibanPelaporanPerusahaan.update({
+        where: { id: kewajiban.id},
+        data: { sudahDilaporkan: true },
+      });
   
       await prisma.pelaporanB3DihasilkanHistory.create({
         data: {
@@ -153,8 +245,8 @@ export class PelaporanBahanB3DihasilkanService {
       if (!period) throw new NotFoundException('Periode tidak ditemukan.');
   
       // Ambil rentang tanggal periode
-      const startDate = new Date(period.startDate);
-      const endDate = new Date(period.endDate);
+      const startDate = new Date(period.startPeriodDate);
+      const endDate = new Date(period.endPeriodDate);
   
       // Dapatkan semua bulan dan tahun dalam rentang periode
       const monthsInPeriod = this.getMonthsBetweenDates(startDate, endDate);
@@ -193,6 +285,7 @@ export class PelaporanBahanB3DihasilkanService {
         await prisma.pelaporanB3Dihasilkan.update({
           where: { id: report.id },
           data: {
+            status: StatusPengajuan.MENUNGGU_PERSETUJUAN,
             isDraft: false,
             isFinalized: true,
           },
@@ -218,15 +311,14 @@ export class PelaporanBahanB3DihasilkanService {
     if (!period) throw new NotFoundException('Periode tidak ditemukan.');
   
     // Ambil rentang tanggal periode
-    const startDate = new Date(period.startDate);
-    const endDate = new Date(period.endDate);
+    const startDate = new Date(period.startPeriodDate);
+    const endDate = new Date(period.endPeriodDate);
   
     // Dapatkan semua bulan dan tahun dalam rentang periode
     const monthsInPeriod = this.getMonthsBetweenDates(startDate, endDate);
   
     // Ambil semua perusahaan yang terdaftar
     const allCompanies = await this.prisma.company.findMany({
-      select: { id: true, name: true },
     });
   
     // Ambil laporan yang sudah diajukan dalam periode ini
@@ -235,7 +327,7 @@ export class PelaporanBahanB3DihasilkanService {
         periodId,
       },
       select: {
-        companyId: true,
+        company: true,
         bulan: true,
         tahun: true,
       },
@@ -243,7 +335,7 @@ export class PelaporanBahanB3DihasilkanService {
   
     // Buat set untuk menyimpan kombinasi (companyId, bulan, tahun) yang sudah dilaporkan
     const reportedSet = new Set(
-      submittedReports.map((report) => `${report.companyId}-${report.bulan}-${report.tahun}`)
+      submittedReports.map((report) => `${report.company.id}-${report.bulan}-${report.tahun}`)
     );
   
     // Filter perusahaan yang belum melaporkan untuk setiap bulan dalam periode
@@ -269,15 +361,14 @@ export class PelaporanBahanB3DihasilkanService {
     if (!period) throw new NotFoundException('Periode tidak ditemukan.');
   
     // Ambil rentang tanggal periode
-    const startDate = new Date(period.startDate);
-    const endDate = new Date(period.endDate);
+    const startDate = new Date(period.startPeriodDate);
+    const endDate = new Date(period.endPeriodDate);
   
     // Dapatkan semua bulan dan tahun dalam rentang periode
     const monthsInPeriod = this.getMonthsBetweenDates(startDate, endDate);
   
     // Ambil semua perusahaan yang terdaftar
     const allCompanies = await this.prisma.company.findMany({
-      select: { id: true, name: true },
     });
   
     // Ambil laporan yang sudah difinalisasi dalam periode ini
@@ -287,7 +378,7 @@ export class PelaporanBahanB3DihasilkanService {
         isFinalized: true,
       },
       select: {
-        companyId: true,
+        company: true,
         bulan: true,
         tahun: true,
       },
@@ -295,7 +386,7 @@ export class PelaporanBahanB3DihasilkanService {
   
     // Buat set untuk menyimpan kombinasi (companyId, bulan, tahun) yang sudah difinalisasi
     const finalizedSet = new Set(
-      finalizedReports.map((report) => `${report.companyId}-${report.bulan}-${report.tahun}`)
+      finalizedReports.map((report) => `${report.company.id}-${report.bulan}-${report.tahun}`)
     );
   
     // Filter perusahaan yang belum melakukan finalisasi laporan untuk setiap bulan dalam periode
@@ -313,7 +404,96 @@ export class PelaporanBahanB3DihasilkanService {
       companies: companiesWithoutFinalizedReports,
     };
   }
+
+  async searchReports(dto: SearchPelaporanB3DihasilkanDto) {
+    const {
+      companyId,
+      periodId,
+      dataBahanB3Id,
+      tipeProduk,
+      startDate,
+      endDate,
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'DESC',
+      returnAll = false,
+    } = dto;
   
+    // Query conditions
+    const whereConditions: any = {};
+  
+    if (companyId) whereConditions.companyId = companyId;
+    if (periodId) whereConditions.periodId = periodId;
+    if (dataBahanB3Id) whereConditions.dataBahanB3Id = dataBahanB3Id;
+    if (tipeProduk) whereConditions.tipeProduk = tipeProduk;
+  
+    // Filter berdasarkan bulan dan tahun jika `startDate` atau `endDate` diberikan
+    if (startDate || endDate) {
+      const startMonth = startDate ? startDate.getMonth() + 1 : undefined;
+      const startYear = startDate ? startDate.getFullYear() : undefined;
+      const endMonth = endDate ? endDate.getMonth() + 1 : undefined;
+      const endYear = endDate ? endDate.getFullYear() : undefined;
+  
+      whereConditions.bulan = {
+        ...(startMonth && { gte: startMonth }),
+        ...(endMonth && { lte: endMonth }),
+      };
+  
+      whereConditions.tahun = {
+        ...(startYear && { gte: startYear }),
+        ...(endYear && { lte: endYear }),
+      };
+    }
+  
+    // Jika `returnAll` true, ambil semua data tanpa pagination
+    const reports = await this.prisma.pelaporanB3Dihasilkan.findMany({
+      where: whereConditions,
+      orderBy: { [sortBy]: sortOrder.toLowerCase() },
+      ...(returnAll ? {} : { skip: (page - 1) * limit, take: limit }),
+      include: {
+        company: true,
+        period: true,
+        dataBahanB3: true,
+        PelaporanB3DihasilkanHistory:true
+      },
+    });
+  
+    // Hitung total records hanya jika `returnAll` adalah false
+    const totalRecords = returnAll
+      ? reports.length
+      : await this.prisma.pelaporanB3Dihasilkan.count({ where: whereConditions });
+  
+    return {
+      message: 'Data laporan berhasil ditemukan.',
+      data: reports,
+      pagination: returnAll
+        ? null
+        : {
+            totalRecords,
+            currentPage: page,
+            totalPages: Math.ceil(totalRecords / limit),
+          },
+    };
+  }
+  
+  async getReportById(id: string) {
+    const report = await this.prisma.pelaporanB3Dihasilkan.findUnique({
+      where: { id },
+      include: {
+        company: true,
+        period: true,
+        dataBahanB3: true,
+        PelaporanB3DihasilkanHistory:true
+      },
+    });
+  
+    if (!report) {
+      throw new NotFoundException('Laporan tidak ditemukan.');
+    }
+  
+    return report;
+  }
   
   
   private getMonthsBetweenDates(startDate: Date, endDate: Date): { bulan: number; tahun: number }[] {

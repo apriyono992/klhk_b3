@@ -23,7 +23,7 @@ export class CreateMercuryMonitoringDto {
     description: 'ID of the environmental quality standard (baku mutu lingkungan)',
     example: 'qualityStandard456'
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @Validate(IsBakuMutuLingkunganExists)
   bakuMutuLingkunganId: string;
@@ -35,6 +35,7 @@ export class CreateMercuryMonitoringDto {
     format: 'date-time'
   })
   @IsNotEmpty()
+  @Type(() => Date)
   @IsDate()
   tahunPengambilan: Date;
 
@@ -71,13 +72,29 @@ export class CreateMercuryMonitoringDto {
   konsentrasi: string;
 
   @ApiProperty({
+    description: 'Keterangan Lokasi dari PESK',
+    example: 'Tambang Emas Rakyat'
+  })
+  @IsOptional()
+  @IsString()
+  keterangan: string;
+
+  @ApiProperty({
+    description: 'Sumber Data',
+    example: 'Laporan Pemerintah'
+  })
+  @IsOptional()
+  @IsString()
+  sumberData: string;
+
+  @ApiProperty({
     description: 'ID of the province',
     example: 'province123',
   })
   @IsNotEmpty()
   @IsString()
   @IsProvinceExist() // Ensure province exists
-  peskProvinceId: string;
+  provinceId: string;
 
   @ApiProperty({
     description: 'ID of the regency',
@@ -85,8 +102,8 @@ export class CreateMercuryMonitoringDto {
   })
   @IsNotEmpty()
   @IsString()
-  @Validate(IsRegencyValid, ['peskProvinceId']) // Ensure regency belongs to the provided provinceId
-  peskRegencyId: string;
+  @Validate(IsRegencyValid, ['provinceId']) // Ensure regency belongs to the provided provinceId
+  regencyId: string;
 
   @ApiProperty({
     description: 'ID of the district',
@@ -94,8 +111,8 @@ export class CreateMercuryMonitoringDto {
   })
   @IsNotEmpty()
   @IsString()
-  @Validate(IsDistrictValid, ['peskRegencyId']) // Ensure district belongs to the provided regencyId
-  peskDistrictId: string;
+  @Validate(IsDistrictValid, ['regencyId']) // Ensure district belongs to the provided regencyId
+  districtId: string;
 
   @ApiProperty({
     description: 'ID of the village',
@@ -103,8 +120,8 @@ export class CreateMercuryMonitoringDto {
   })
   @IsNotEmpty()
   @IsString()
-  @Validate(IsVillageValid, ['peskDistrictId']) // Ensure village belongs to the provided districtId
-  peskVillageId: string;
+  @Validate(IsVillageValid, ['districtId']) // Ensure village belongs to the provided districtId
+  villageId: string;
 
   @ApiProperty({
     description: 'Latitude of the small-scale gold mining (PESK) site',
@@ -115,7 +132,7 @@ export class CreateMercuryMonitoringDto {
   @IsNotEmpty()
   @IsLatitude()
   @Transform(({ value }) => parseFloat(value))
-  peskLatitude: number;
+  latitude: number;
 
   @ApiProperty({
     description: 'Longitude of the small-scale gold mining (PESK) site',
@@ -126,65 +143,7 @@ export class CreateMercuryMonitoringDto {
   @IsNotEmpty()
   @Transform(({ value }) => parseFloat(value))
   @IsLongitude()
-  peskLongitude: number;
-
-  @ApiProperty({
-    description: 'ID of the province',
-    example: 'province123',
-  })
-  @IsNotEmpty()
-  @IsString()
-  @IsProvinceExist() // Ensure province exists
-  warehouseProvinceId: string;
-
-  @ApiProperty({
-    description: 'ID of the regency',
-    example: 'regency123',
-  })
-  @IsNotEmpty()
-  @IsString()
-  @Validate(IsRegencyValid, ['warehouseProvinceId']) // Ensure regency belongs to the provided provinceId
-  warehouseRegencyId: string;
-
-  @ApiProperty({
-    description: 'ID of the district',
-    example: 'district123',
-  })
-  @IsNotEmpty()
-  @IsString()
-  @Validate(IsDistrictValid, ['warehouseRegencyId']) // Ensure district belongs to the provided regencyId
-  warehouseDistrictId: string;
-
-  @ApiProperty({
-    description: 'ID of the village',
-    example: 'village123',
-  })
-  @IsNotEmpty()
-  @IsString()
-  @Validate(IsVillageValid, ['warehouseDistrictId']) // Ensure village belongs to the provided districtId
-  warehouseVillageId: string;
-
-  @ApiProperty({
-    description: 'Latitude of the warehouse location',
-    example: -6.2099,
-    type: 'number',
-    format: 'float'
-  })
-  @IsNotEmpty()
-  @IsLatitude()
-  @Transform(({ value }) => parseFloat(value))
-  warehouseLatitude: number;
-
-  @ApiProperty({
-    description: 'Longitude of the warehouse location',
-    example: 106.8467,
-    type: 'number',
-    format: 'float'
-  })
-  @IsNotEmpty()
-  @IsLongitude()
-  @Transform(({ value }) => parseFloat(value))
-  warehouseLongitude: number;
+  longitude: number;
 
   @ApiProperty({
     description: 'Array of photo files for the mercury monitoring data',
@@ -192,7 +151,6 @@ export class CreateMercuryMonitoringDto {
     items: { type: 'string', format: 'binary' },
     example: ['photo1.jpg', 'photo2.jpg']
   })
-
   @IsOptional()
   photos: any[];
 }

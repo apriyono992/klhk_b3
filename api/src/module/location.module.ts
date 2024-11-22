@@ -6,10 +6,14 @@ import { PermissionUtil } from 'src/utils/permission';
 import { Enforcer } from 'casbin';
 import { LocationController } from 'src/controller/location.controller';
 import { LocationService } from 'src/services/location.services';
+import { PrismaModule } from './prisma.module';
+import { AuthModule } from './auth.module';
+
 
 @Module({
+    imports: [PrismaModule, AuthModule],
   controllers: [LocationController],
-  providers: [ PrismaService, JwtProvider, EnforcerProvider, PermissionUtil, Enforcer, LocationService  ],
-  exports: [JwtProvider, EnforcerProvider, PermissionUtil, Enforcer],
+  providers: [ PrismaService,  EnforcerProvider, PermissionUtil, Enforcer, LocationService  ],
+  exports: [ EnforcerProvider, PermissionUtil, Enforcer],
 })
 export class LocationModule {}

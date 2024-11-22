@@ -5,19 +5,22 @@ import Draft from "../../../components/fragments/admin/registration/Draft";
 import { DocumentIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { useParams } from "react-router-dom";
 import HeaderPage from "../../../components/elements/HeaderPage";
-import {exportJsonINSW, getDetailRegistrasi, getPreviewSK, sendInsw} from "../../../services/api";
+import {exportJsonINSW, getDetailRegistrasi, getFetcher, getPreviewSK, sendInsw} from "../../../services/api";
 import { useState, useEffect } from "react";
 import toast from 'react-hot-toast';
 import {getRoles} from "../../../services/helpers";
 import {roleName} from "../../../services/enum";
 import DraftDireksi from "../../../components/fragments/admin/registration/DraftDireksi";
 import {saveAs} from 'file-saver'
+import Validation from "../../../components/fragments/admin/registration/information/Validation";
+import useSWR from "swr";
 
 export default function DetailPage() {
     const { id } = useParams();
     const [dataDetail, setDataDetail] = useState(null)
     const [pdfUrl, setPdfUrl] = useState('');
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const { data, isLoading, mutate } = useSWR(`/api/rekom/permohonan/${id}`, getFetcher);
 
     useEffect(() => {
         fetchDetail(id)
@@ -87,6 +90,11 @@ export default function DetailPage() {
             content: <Information dataB3={dataDetail} company={dataDetail}/>
         },
         {
+            id: "validasi",
+            label: "Validasi Teknis",
+            content: <Validation registrasi={dataDetail}/>
+        },
+        {
             id: "draft",
             label: "Draft SK",
             content: getRoles() === roleName.direksi ? <DraftDireksi id={id}/> : <Draft id={id}/>
@@ -101,11 +109,9 @@ export default function DetailPage() {
                 action={
                     <div className="flex items-center gap-3">
                         {
-                            dataDetail?.approval_status == 'approved by direksi' &&
                             <Button startContent={<PaperAirplaneIcon className="size-4"/>} size="sm" color="primary" onPress={onSubmit}>Kirim INSW</Button>
                         }
                         {
-                            dataDetail?.approval_status == 'approved by direksi' &&
                             <Button startContent={<PaperAirplaneIcon className="size-4"/>} size="sm" color="primary" onPress={onPressExport}>Export</Button>
                         }
                         {

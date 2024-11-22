@@ -5,7 +5,7 @@ import ModalAlert from '../../../elements/ModalAlert';
 import useValidationForm from '../../../../hooks/useValidationForm';
 
 export default function Validation({ data, isLoading, mutate }) {
-    const { 
+    const {
         modalForm: { isOpenModalForm, onOpenChangeModalForm },
         modalAlert: { isOpenModalAlert, onOpenChangeModalAlert },
         hookForm: { register, handleSubmit, watch, formState: { errors, isSubmitting } },
@@ -53,7 +53,7 @@ export default function Validation({ data, isLoading, mutate }) {
                                             <Button isIconOnly size="sm" color='primary'><EyeIcon className='size-4'/></Button>
                                         </a>
                                         <Button isIconOnly size="sm" color="warning" onPress={() => onClickEdit(item)}><PencilSquareIcon className='size-4'/></Button>
-                                        
+
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -69,8 +69,8 @@ export default function Validation({ data, isLoading, mutate }) {
                             <ModalHeader>Ubah Status Dokumen</ModalHeader>
                             <ModalBody>
                                 <form onSubmit={handleSubmit(onSubmitForm)}>
-                                    <div className='flex flex-col gap-3 mb-6'>  
-                                        <Checkbox 
+                                    <div className='flex flex-col gap-3 mb-6'>
+                                        <Checkbox
                                             {...register('isValid')}
                                         >
                                             Dokumen valid
@@ -80,11 +80,11 @@ export default function Validation({ data, isLoading, mutate }) {
                                                 required: !isValid ? 'Catatan harus diisi jika dokumen tidak valid' : false,
                                             })}
                                             isRequired={!isValid}
-                                            variant="faded" 
-                                            type="text" 
-                                            label="Catatan" 
+                                            variant="faded"
+                                            type="text"
+                                            label="Catatan"
                                             color={errors.validationNotes ? 'danger' : 'default'}
-                                            isInvalid={errors.validationNotes} 
+                                            isInvalid={errors.validationNotes}
                                             errorMessage={errors.validationNotes && errors.validationNotes.message}
                                         />
                                     </div>
@@ -109,7 +109,7 @@ export default function Validation({ data, isLoading, mutate }) {
                 icon='warning'
                 onSubmit={() => onValidate(data.id)}
                 isOpen={isOpenModalAlert}
-                onOpenChange={onOpenChangeModalAlert}  
+                onOpenChange={onOpenChangeModalAlert}
             />
         </>
     )

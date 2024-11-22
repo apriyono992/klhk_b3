@@ -11,6 +11,7 @@ import {
     Param,
     Put,
     Delete,
+    UseGuards,
   } from '@nestjs/common';
   import { FilesInterceptor } from '@nestjs/platform-express';
   import { ApiOperation, ApiQuery, ApiTags, ApiResponse, ApiBody, ApiConsumes, ApiParam } from '@nestjs/swagger';
@@ -32,7 +33,13 @@ import { DeletePhotosDto } from 'src/models/deletePhotosDto';
 import { ValidatePenyimpananDto } from 'src/models/validatePenyimpananB3Dto';
 import { ValidateDocumentPenyimpananDto } from 'src/models/validateDocumentPenyimpananDto';
 import { TipeDokumenPenyimpananB3 } from 'src/models/enums/tipeDokumenPenyimpananB3';
-  
+import { SearchPenyimpananB3Dto } from 'src/models/searchPenyimpananB3Dto';
+import { RolesGuard } from 'src/utils/roles.guard';
+import { JwtAuthGuard } from 'src/utils/auth.guard';
+import { RolesAccess } from 'src/models/enums/roles';
+import { Roles } from 'src/utils/roles.decorator';
+
+@UseGuards(JwtAuthGuard, RolesGuard)
   @ApiTags('PenyimpananB3')
   @Controller('penyimpananB3')
   export class PenyimpananB3Controller {
@@ -41,6 +48,7 @@ import { TipeDokumenPenyimpananB3 } from 'src/models/enums/tipeDokumenPenyimpana
       private readonly isPhotoValidFile: IsPhotoValidFile,
     ) {}
 
+    @Roles(RolesAccess.PIC_PELAPORAN, RolesAccess.PENGELOLA, RolesAccess.SUPER_ADMIN)
     @Post('create')
     @ApiOperation({ summary: 'Create a new Penyimpanan B3' })
     @ApiBody({
@@ -94,8 +102,9 @@ import { TipeDokumenPenyimpananB3 } from 'src/models/enums/tipeDokumenPenyimpana
       return await this.penyimpananB3Service.createPenyimpananB3(createPenyimpananB3Dto);
     }
     
+    @Roles(RolesAccess.PIC_PELAPORAN, RolesAccess.PENGELOLA, RolesAccess.SUPER_ADMIN)
     @Post('upload')
-    @UseInterceptors(FilesInterceptor('attachments'))
+    @UseInterceptors(FilesInterceptor('photos'))
     @ApiOperation({ summary: 'Upload documents for Penyimpanan B3' })
     @ApiConsumes('multipart/form-data')
     @ApiBody({
@@ -114,7 +123,7 @@ import { TipeDokumenPenyimpananB3 } from 'src/models/enums/tipeDokumenPenyimpana
             example: '12345',
             description: 'ID of the Penyimpanan B3',
           },
-          attachments: {
+          photos: {
             type: 'array',
             items: {
               type: 'string',
@@ -157,18 +166,18 @@ import { TipeDokumenPenyimpananB3 } from 'src/models/enums/tipeDokumenPenyimpana
       },
     })
     async uploadDocuments(
-      @UploadedFiles() attachments: Express.Multer.File[],
+      @UploadedFiles() photos: Express.Multer.File[],
       @Body() createDocumentDto: CreateDocumentPenyimpananDto,
     ) {
       let uploadedFiles: UploadResult[] = [];
   
       // Validate the files
-      this.isPhotoValidFile.validateAndThrow(attachments);
+      this.isPhotoValidFile.validateAndThrow(photos);
   
       // If attachments are valid and present, upload the files
-      if (attachments && attachments.length > 0) {
+      if (photos && photos.length > 0) {
         // Upload files to disk and generate the file metadata
-        uploadedFiles = uploadPhotoFilesToDisk(attachments);
+        uploadedFiles = uploadPhotoFilesToDisk(photos);
         try {
           return await this.penyimpananB3Service.uploadDocument(createDocumentDto, uploadedFiles);
         } catch (error) {
@@ -180,6 +189,7 @@ import { TipeDokumenPenyimpananB3 } from 'src/models/enums/tipeDokumenPenyimpana
       }
     }
 
+    @Roles(RolesAccess.PIC_PELAPORAN, RolesAccess.PENGELOLA, RolesAccess.SUPER_ADMIN)
     @Put(':id')
     @ApiOperation({ summary: 'Update an existing Penyimpanan B3 record' })
     @ApiParam({ name: 'id', description: 'ID of the Penyimpanan B3 to update', example: '12345' })
@@ -290,6 +300,7 @@ import { TipeDokumenPenyimpananB3 } from 'src/models/enums/tipeDokumenPenyimpana
       return this.penyimpananB3Service.viewDocumentFile(documentId, res);
     }
 
+    @Roles(RolesAccess.PIC_PELAPORAN, RolesAccess.PENGELOLA, RolesAccess.SUPER_ADMIN)
     @Delete('delete-document')
     @ApiOperation({ summary: 'Delete photos associated with Penyimpanan B3 documents' })
     @ApiBody({
@@ -406,7 +417,7 @@ import { TipeDokumenPenyimpananB3 } from 'src/models/enums/tipeDokumenPenyimpana
       return this.penyimpananB3Service.getPenyimpananB3(id);
     }
 
-@Get('company/:companyId')
+  @Get('company/:companyId')
   @ApiOperation({ summary: 'Get all documents for a specific company by Company ID' })
   @ApiParam({
     name: 'companyId',
@@ -497,7 +508,6 @@ import { TipeDokumenPenyimpananB3 } from 'src/models/enums/tipeDokumenPenyimpana
       },
     },
   })
-
   @ApiResponse({
     status: 200,
     description: 'Document validated successfully',
@@ -533,7 +543,7 @@ import { TipeDokumenPenyimpananB3 } from 'src/models/enums/tipeDokumenPenyimpana
     );
   }
   
-  @Put('validate-penyimpanan')
+  @Post('validate-penyimpanan')
   @ApiOperation({ summary: 'Admin validates the Penyimpanan B3' })
   @ApiBody({
     description: 'Payload for validating a Penyimpanan B3',
@@ -595,15 +605,78 @@ import { TipeDokumenPenyimpananB3 } from 'src/models/enums/tipeDokumenPenyimpana
       dto.userId,
     );
   }
-  
-    // Handle the deletion of files if there's an error during upload
-    private handleDocumentsFileDeletion(uploadedFiles: UploadResult[]) {
-      uploadedFiles.forEach((file) => {
-        const filePath = `/uploads/photos/${file.filename}`;
-        if (fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath); // Remove the file from the disk
-        }
-      });
-    }
+
+  @Post('search')
+  @ApiOperation({
+    summary: 'Search Penyimpanan B3 records with filters and pagination',
+    description:
+      'This endpoint allows searching for Penyimpanan B3 records with optional filters. Supports pagination or fetching all records without pagination using the `includeAll` parameter.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'List of Penyimpanan B3 records matching the search criteria',
+    schema: {
+      example: {
+        data: [
+          {
+            id: '12345',
+            alamatGudang: 'Jl. Industri No. 10, Jakarta',
+            longitude: 106.84513,
+            latitude: -6.20876,
+            luasArea: 500.0,
+            status: 'APPROVED',
+            isApproved: true,
+            company: {
+              id: 'company123',
+              name: 'PT. Example Company',
+            },
+            province: {
+              id: 'province123',
+              name: 'DKI Jakarta',
+            },
+            regency: {
+              id: 'regency123',
+              name: 'Jakarta Pusat',
+            },
+            district: {
+              id: 'district123',
+              name: 'Tanah Abang',
+            },
+            village: {
+              id: 'village123',
+              name: 'Kampung Bali',
+            },
+          },
+        ],
+        totalRecords: 100,
+        currentPage: 1,
+        totalPages: 10,
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request - Invalid query parameters',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not Found - No records found',
+  })
+  async searchPenyimpananB3(@Query() query: SearchPenyimpananB3Dto) {
+    const result = await this.penyimpananB3Service.searchPenyimpananB3(query);
+    return result;
+
   }
+
+  
+  // Handle the deletion of files if there's an error during upload
+  private handleDocumentsFileDeletion(uploadedFiles: UploadResult[]) {
+    uploadedFiles.forEach((file) => {
+      const filePath = `/uploads/photos/${file.filename}`;
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath); // Remove the file from the disk
+      }
+    });
+  }
+}
   

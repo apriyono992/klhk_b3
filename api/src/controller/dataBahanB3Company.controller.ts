@@ -1,11 +1,15 @@
-import { Controller, Get, Post, Patch, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { CreateBahanB3CompanyDto } from 'src/models/createBahanB3CompanyDto';
 import { UpdateStokB3Dto } from 'src/models/updateStokB3Dto';
 import { ApproveBahanB3RequestDto } from 'src/models/approveBahanB3RequestDto';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam, ApiNotFoundResponse } from '@nestjs/swagger';
 import { DataBahanB3CompanyService } from 'src/services/bahanB3Company.services';
 import { SearchBahanB3CompanyDto } from 'src/models/searchBahanB3CompanyDto';
+import { SearchStokB3PeriodeDto } from 'src/models/searchStokB3PeriodeDto';
+import { JwtAuthGuard } from 'src/utils/auth.guard';
+import { RolesGuard } from 'src/utils/roles.guard';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('Data Bahan B3 Company')
 @Controller('data-bahan-b3-company')
 export class DataBahanB3CompanyController {
@@ -229,7 +233,53 @@ export class DataBahanB3CompanyController {
         },
       },
     })
-    async searchBahanB3Company(@Body() dto: SearchBahanB3CompanyDto) {
+    async searchBahanB3Company(@Query() dto: SearchBahanB3CompanyDto) {
       return this.service.searchBahanB3Company(dto);
     }
+
+    @Get('search-period')
+    @ApiOperation({ summary: 'Search Stok B3 Periode with date range filter' })
+    @ApiResponse({
+      status: 200,
+      description: 'List of Stok B3 Periode based on filters.',
+      schema: {
+        example: {
+          total: 2,
+          data: [
+            {
+              id: 'stokPeriode-123',
+              companyId: 'company-123',
+              dataBahanB3Id: 'bahanB3-456',
+              bulan: 11,
+              tahun: 2024,
+              stokB3: 150.0,
+              createdAt: '2024-11-01T10:00:00.000Z',
+              updatedAt: '2024-11-15T10:00:00.000Z',
+              company: {
+                id: 'company-123',
+                name: 'Perusahaan A',
+              },
+              dataBahanB3: {
+                id: 'bahanB3-456',
+                name: 'Bahan B3 A',
+              },
+            },
+          ],
+        },
+      },
+    })
+    @ApiNotFoundResponse({
+      description: 'No Stok B3 Periode found for the given filters.',
+      schema: {
+        example: {
+          statusCode: 404,
+          message: 'No Stok B3 Periode found for the given filters.',
+          error: 'Not Found',
+        },
+      },
+    })
+  async searchStokB3Periode(@Query() dto: SearchStokB3PeriodeDto) {
+    const result = await this.service.searchStokB3Periode(dto);
+    return result;
+  }
 }

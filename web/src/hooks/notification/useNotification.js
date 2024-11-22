@@ -20,6 +20,7 @@ export default function useNotification({ mutate }) {
             referenceNumber: '',
             companyId: '',
             negaraAsal:'',
+            tanggalDiterima: '',
         });
         onCloseModalForm()
     }

@@ -2,8 +2,11 @@ import { Module } from '@nestjs/common';
 import { BahanB3Controller } from 'src/controller/bahanB3.controller';
 import { BahanB3Service } from 'src/services/bahanB3.services';
 import { PrismaService } from 'src/services/prisma.services';
+import { AuthModule } from './auth.module';
+
 
 @Module({
+  imports: [AuthModule], // No modules in this module
   controllers: [BahanB3Controller], // No controllers in this module
   providers: [
     PrismaService, // Shared Prisma service

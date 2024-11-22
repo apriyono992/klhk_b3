@@ -12,6 +12,11 @@ import { CreateDataTransporterDto } from 'src/models/createDataTransporterDto';
 import { UpdateDataTransporterDto } from 'src/models/updateDataTransporterDto';
 import { CreatePerusahaanAsalMuatDanTujuanDto } from 'src/models/createPerusahaanAsalDanTujuanB3Dto';
 import { UpdatePerusahaanAsalMuatDanTujuanDto } from 'src/models/updatePerusahaanAsalDanTujuanB3Dto';
+import { SearchDataSupplierDto } from 'src/models/searchDataSupplierDto';
+import { SearchDataCustomerDto } from 'src/models/searchDataCustomerDto';
+import { SearchDataTransporterDto } from 'src/models/searchDataTransporterDto';
+import { SearchPerusahaanAsalMuatDto } from 'src/models/searchPerusahaanAsalMuatDto';
+import { SearchPerusahaanTujuanBongkarDto } from 'src/models/searchPerusahaanTujuanBongkarDto';
 
 @Injectable()
 export class CompanyService {
@@ -112,7 +117,7 @@ export class CompanyService {
         where: { id },
         data: {
           ...updateCompanyDto,
-          alamatPool: updateCompanyDto.alamatPool || company.alamatPool, // Handle alamatPool update
+          alamatPool: updateCompanyDto.alamatPool || undefined, // Handle alamatPool update
         },
       });
     } catch (error) {
@@ -641,7 +646,7 @@ export class CompanyService {
   async addPerusahaanAsalMuat(data: CreatePerusahaanAsalMuatDanTujuanDto) {
   const namaPerusahaan = data.namaPerusahaan.trim();
   const detail = await this.prisma.perusahaanAsalMuat.findFirst({ where: { namaPerusahaan: {equals: namaPerusahaan , mode: 'insensitive'}, companyId: data.companyId} });
-  if (!detail) throw new NotFoundException('Perusahaan Asal Muat Not Found.');
+  if (detail) throw new NotFoundException('Perusahaan Asal Muat Sudah Ada.');
 
   return this.prisma.perusahaanAsalMuat.create({
     data:{
@@ -657,13 +662,13 @@ export class CompanyService {
       village: {connect: {id: data.villageId}}
     }
   });
-}
+  }
 
   // Add a new PerusahaanTujuanBongkar to an existing PengangkutanDetail
   async addPerusahaanTujuanBongkar(data: CreatePerusahaanAsalMuatDanTujuanDto) {
     const namaPerusahaan = data.namaPerusahaan.trim();
     const detail = await this.prisma.perusahaanTujuanBongkar.findFirst({ where: { namaPerusahaan: {equals: namaPerusahaan , mode: 'insensitive'}, companyId: data.companyId} });
-    if (!detail) throw new NotFoundException('Perusahaan Tujuan Bongkar Not Found');
+    if (detail) throw new NotFoundException('Perusahaan Tujuan Bongkar Sudah Ada');
 
     return this.prisma.perusahaanTujuanBongkar.create({
       data:{
@@ -672,6 +677,7 @@ export class CompanyService {
         latitude: data.latitude,
         longitude: data.longitude,
         namaPerusahaan: data.namaPerusahaan,
+        locationType: data.locationType ?? "KANTOR",
         province: {connect: {id: data.provinceId}},
         regency: {connect: {id: data.regencyId}},
         district: {connect: {id: data.districtId}},
@@ -748,5 +754,475 @@ export class CompanyService {
     return this.prisma.perusahaanTujuanBongkar.delete({ where: { id } });
   }
 
+  async searchSuppliers(dto: SearchDataSupplierDto) {
+    const {
+      companyId,
+      namaSupplier,
+      provinceId,
+      regencyId,
+      districtId,
+      villageId,
+      longitude,
+      latitude,
+      reportId,
+      returnAll = false,
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'DESC',
+    } = dto;
+  
+    const whereConditions: any = {
+      ...(companyId && { companyId }),
+      ...(namaSupplier && {
+        namaSupplier: {
+          contains: namaSupplier.trim(),
+          mode: 'insensitive',
+        },
+      }),
+      ...(provinceId && { provinceId }),
+      ...(regencyId && { regencyId }),
+      ...(districtId && { districtId }),
+      ...(villageId && { villageId }),
+      ...(longitude && { longitude }),
+      ...(latitude && { latitude }),
+    };
+  
+    // Filter berdasarkan pelaporan terkait
+    if (reportId) {
+      whereConditions.DataSupplierOnPelaporanPenggunaanB3 = {
+        some: {
+          pelaporanPenggunaanB3Id: reportId,
+        },
+      };
+    }
+  
+    const suppliers = await this.prisma.dataSupplier.findMany({
+      where: whereConditions,
+      include: {
+        province: true,
+        regency: true,
+        district: true,
+        village: true,
+        company: true,
+        DataPic: true,
+        DataSupplierOnPelaporanPenggunaanB3:{include:{
+          pelaporanPenggunaanB3:true
+        }}
+      },
+      orderBy: {
+        [sortBy]: sortOrder.toLowerCase(),
+      },
+      ...(returnAll ? {} : { skip: (page - 1) * limit, take: limit }),
+    });
+  
+    const totalRecords = returnAll
+      ? suppliers.length
+      : await this.prisma.dataSupplier.count({ where: whereConditions });
+  
+    return {
+      data: suppliers,
+      totalRecords,
+      currentPage: returnAll ? 1 : page,
+      totalPages: returnAll ? 1 : Math.ceil(totalRecords / limit),
+    };
+  }
+  
+  async getSupplierById(id: string) {
+    const supplier = await this.prisma.dataSupplier.findUnique({
+      where: { id },
+      include: {
+        company: true,
+        province: true,
+        regency: true,
+        district: true,
+        village: true,
+        DataPic: true,
+      },
+    });
+  
+    if (!supplier) {
+      throw new NotFoundException('Supplier tidak ditemukan.');
+    }
+  
+    return supplier;
+  }
+
+  async searchCustomers(dto: SearchDataCustomerDto) {
+    const {
+      companyId,
+      namaCustomer,
+      provinceId,
+      regencyId,
+      districtId,
+      villageId,
+      longitude,
+      latitude,
+      reportId,
+      returnAll = false,
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'DESC',
+    } = dto;
+  
+    const whereConditions: any = {
+      ...(companyId && { companyId }),
+      ...(namaCustomer && {
+        namaCustomer: {
+          contains: namaCustomer.trim(),
+          mode: 'insensitive',
+        },
+      }),
+      ...(provinceId && { provinceId }),
+      ...(regencyId && { regencyId }),
+      ...(districtId && { districtId }),
+      ...(villageId && { villageId }),
+      ...(longitude && { longitude }),
+      ...(latitude && { latitude }),
+    };
+  
+    // Filter berdasarkan pelaporan terkait
+    if (reportId) {
+      whereConditions.DataCustomerOnPelaporanDistribusiBahanB3 = {
+        some: {
+          pelaporanBahanB3DistribusiId: reportId,
+        },
+      };
+    }
+  
+    const customers = await this.prisma.dataCustomer.findMany({
+      where: whereConditions,
+      include: {
+        company: true,
+        province: true,
+        regency: true,
+        district: true,
+        village: true,
+        DataPic: true,
+      },
+      orderBy: {
+        [sortBy]: sortOrder.toLowerCase(),
+      },
+      ...(returnAll ? {} : { skip: (page - 1) * limit, take: limit }),
+    });
+  
+    const totalRecords = returnAll
+      ? customers.length
+      : await this.prisma.dataCustomer.count({ where: whereConditions });
+  
+    return {
+      data: customers,
+      totalRecords,
+      currentPage: returnAll ? 1 : page,
+      totalPages: returnAll ? 1 : Math.ceil(totalRecords / limit),
+    };
+  }
+
+  async getCustomerById(id: string) {
+    const customer = await this.prisma.dataCustomer.findUnique({
+      where: { id },
+      include: {
+        company: true,
+        province: true,
+        regency: true,
+        district: true,
+        village: true,
+        DataPic: true,
+      },
+    });
+  
+    if (!customer) {
+      throw new NotFoundException('Customer tidak ditemukan.');
+    }
+  
+    return customer;
+  }
+  
+  async getTransporterById(id: string) {
+    const transporter = await this.prisma.dataTransporter.findUnique({
+      where: { id },
+      include: {
+        company: true,
+        province: true,
+        regency: true,
+        district: true,
+        village: true,
+        DataPic: true,
+      },
+    });
+  
+    if (!transporter) {
+      throw new NotFoundException('Transporter tidak ditemukan.');
+    }
+  
+    return transporter;
+  }
+
+  async searchTransporters(dto: SearchDataTransporterDto) {
+    const {
+      companyId,
+      namaTransPorter,
+      provinceId,
+      regencyId,
+      districtId,
+      villageId,
+      longitude,
+      latitude,
+      reportId,
+      returnAll = false,
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'DESC',
+    } = dto;
+  
+    const whereConditions: any = {
+      ...(companyId && { companyId }),
+      ...(namaTransPorter && {
+        namaTransPorter: {
+          contains: namaTransPorter.trim(),
+          mode: 'insensitive',
+        },
+      }),
+      ...(provinceId && { provinceId }),
+      ...(regencyId && { regencyId }),
+      ...(districtId && { districtId }),
+      ...(villageId && { villageId }),
+      ...(longitude && { longitude }),
+      ...(latitude && { latitude }),
+    };
+  
+    // Filter berdasarkan pelaporan terkait
+    if (reportId) {
+      whereConditions.DataTransporterOnPelaporanDistribusiBahanB3 = {
+        some: {
+          pelaporanBahanB3DistribusiId: reportId,
+        },
+      };
+    }
+  
+    const transporters = await this.prisma.dataTransporter.findMany({
+      where: whereConditions,
+      include: {
+        company: true,
+        province: true,
+        regency: true,
+        district: true,
+        village: true,
+        DataPic: true,
+      },
+      orderBy: {
+        [sortBy]: sortOrder.toLowerCase(),
+      },
+      ...(returnAll ? {} : { skip: (page - 1) * limit, take: limit }),
+    });
+  
+    const totalRecords = returnAll
+      ? transporters.length
+      : await this.prisma.dataTransporter.count({ where: whereConditions });
+  
+    return {
+      data: transporters,
+      totalRecords,
+      currentPage: returnAll ? 1 : page,
+      totalPages: returnAll ? 1 : Math.ceil(totalRecords / limit),
+    };
+  }
+  
+  async searchPerusahaanAsalMuat(dto: SearchPerusahaanAsalMuatDto) {
+    const {
+      companyId,
+      namaPerusahaan,
+      provinceId,
+      regencyId,
+      districtId,
+      villageId,
+      longitude,
+      latitude,
+      reportId,
+      returnAll = false,
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'DESC',
+    } = dto;
+  
+    const whereConditions: any = {
+      ...(companyId && { companyId }),
+      ...(namaPerusahaan && {
+        namaPerusahaan: {
+          contains: namaPerusahaan.trim(),
+          mode: 'insensitive',
+        },
+      }),
+      ...(provinceId && { provinceId }),
+      ...(regencyId && { regencyId }),
+      ...(districtId && { districtId }),
+      ...(villageId && { villageId }),
+      ...(longitude && { longitude }),
+      ...(latitude && { latitude }),
+    };
+  
+    // Filter berdasarkan pelaporan terkait
+    if (reportId) {
+      whereConditions.DataPerusahaanAsalMuatOnPengakutanDetail = {
+        some: {
+          pengakutanDetailId: reportId,
+        },
+      };
+    }
+  
+    const results = await this.prisma.perusahaanAsalMuat.findMany({
+      where: whereConditions,
+      include: {
+        company: true,
+        province: true,
+        regency: true,
+        district: true,
+        village: true,
+      },
+      orderBy: {
+        [sortBy]: sortOrder.toLowerCase(),
+      },
+      ...(returnAll ? {} : { skip: (page - 1) * limit, take: limit }),
+    });
+  
+    const totalRecords = returnAll
+      ? results.length
+      : await this.prisma.perusahaanAsalMuat.count({ where: whereConditions });
+  
+    return {
+      data: results,
+      totalRecords,
+      currentPage: returnAll ? 1 : page,
+      totalPages: returnAll ? 1 : Math.ceil(totalRecords / limit),
+    };
+  }
+  
+  async getPerusahaanAsalMuatById(id: string) {
+    const perusahaan = await this.prisma.perusahaanAsalMuat.findUnique({
+      where: { id },
+      include: {
+        company: true,
+        province: true,
+        regency: true,
+        district: true,
+        village: true,
+        DataPerusahaanAsalMuatOnPengakutanDetail: {include:{
+          pengangkutanDetail:{include:{
+            b3Substance:{include:{
+              dataBahanB3:true,
+            }},
+            pelaporanPengangkutan: true
+          }}
+        }}
+      },
+    });
+  
+    if (!perusahaan) {
+      throw new NotFoundException('Perusahaan Asal Muat tidak ditemukan.');
+    }
+  
+    return perusahaan;
+  }
+
+  async searchPerusahaanTujuanBongkar(dto: SearchPerusahaanTujuanBongkarDto) {
+    const {
+      companyId,
+      namaPerusahaan,
+      provinceId,
+      regencyId,
+      districtId,
+      villageId,
+      longitude,
+      latitude,
+      reportId,
+      returnAll = false,
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'DESC',
+    } = dto;
+  
+    const whereConditions: any = {
+      ...(companyId && { companyId }),
+      ...(namaPerusahaan && {
+        namaPerusahaan: {
+          contains: namaPerusahaan.trim(),
+          mode: 'insensitive',
+        },
+      }),
+      ...(provinceId && { provinceId }),
+      ...(regencyId && { regencyId }),
+      ...(districtId && { districtId }),
+      ...(villageId && { villageId }),
+      ...(longitude && { longitude }),
+      ...(latitude && { latitude }),
+    };
+  
+    // Filter berdasarkan pelaporan terkait
+    if (reportId) {
+      whereConditions.DataPerusahaanTujuanBongkarOnPengakutanDetail = {
+        some: {
+          pengakutanDetailId: reportId,
+        },
+      };
+    }
+  
+    const results = await this.prisma.perusahaanTujuanBongkar.findMany({
+      where: whereConditions,
+      include: {
+        company: true,
+        province: true,
+        regency: true,
+        district: true,
+        village: true,
+      },
+      orderBy: {
+        [sortBy]: sortOrder.toLowerCase(),
+      },
+      ...(returnAll ? {} : { skip: (page - 1) * limit, take: limit }),
+    });
+  
+    const totalRecords = returnAll
+      ? results.length
+      : await this.prisma.perusahaanTujuanBongkar.count({ where: whereConditions });
+  
+    return {
+      data: results,
+      totalRecords,
+      currentPage: returnAll ? 1 : page,
+      totalPages: returnAll ? 1 : Math.ceil(totalRecords / limit),
+    };
+  }
+  
+  async getPerusahaanTujuanBongkarById(id: string) {
+    const perusahaan = await this.prisma.perusahaanTujuanBongkar.findUnique({
+      where: { id },
+      include: {
+        company: true,
+        province: true,
+        regency: true,
+        district: true,
+        village: true,
+        DataPerusahaanTujuanBongkarOnPengakutanDetail:{
+          include:{ pengangkutanDetail: {
+            include:{
+              b3Substance:{include:{
+                dataBahanB3:true,
+              }},
+              pelaporanPengangkutan: true}
+          }}
+        }
+      },
+    });
+  
+    if (!perusahaan) {
+      throw new NotFoundException('Perusahaan Tujuan Bongkar tidak ditemukan.');
+    }
+  
+    return perusahaan;
+  }
   
 }

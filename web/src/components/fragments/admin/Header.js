@@ -18,9 +18,10 @@ import useAuth from "../../../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie'
 import { LOGIN_PATH } from "../../../services/routes";
+import { removeSlug } from '../../../services/helpers';
 
 export default function Header({ onOpenSidebar }) {
-    const { data } = useAuth()
+    const { user, roles } = useAuth()
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -28,7 +29,7 @@ export default function Header({ onOpenSidebar }) {
         Cookies.remove('accessToken')
         Cookies.remove('refreshToken')
         Cookies.remove('sessionExpire')
-        return navigate(LOGIN_PATH)
+        return navigate(LOGIN_PATH, { replace: true })
     }
 
 
@@ -43,7 +44,7 @@ export default function Header({ onOpenSidebar }) {
                         <BreadcrumbItem><HomeIcon className="size-4 mb-0.5" /></BreadcrumbItem>
                         {
                             location.pathname.split('/').filter(path => path !== '' && path !== 'admin').map((path) => (
-                                <BreadcrumbItem key={path}>{path.replace('-', ' ')}</BreadcrumbItem>
+                                <BreadcrumbItem key={path}>{removeSlug(path)}</BreadcrumbItem>
                             ))
                         }
                     </Breadcrumbs>
@@ -52,10 +53,10 @@ export default function Header({ onOpenSidebar }) {
                     <DropdownTrigger>
                         <User 
                             as="button" 
-                            name={`${data.fullName}`}
+                            name={`${user.fullName}`}
                             description="User"
                             avatarProps={{
-                                src: `https://ui-avatars.com/api/?name=${data.fullName}`
+                                src: `https://ui-avatars.com/api/?name=${user.fullName}`
                             }}
                         />
                     </DropdownTrigger>

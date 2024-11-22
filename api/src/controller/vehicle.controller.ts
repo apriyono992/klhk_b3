@@ -1,4 +1,4 @@
-import { Controller, Post, Put, Delete, Body, Param, Query, Get, HttpStatus, HttpCode } from '@nestjs/common';
+import { Controller, Post, Put, Delete, Body, Param, Query, Get, HttpStatus, HttpCode, UseGuards } from '@nestjs/common';
 import { ConnectVehiclePemohonanDto } from 'src/models/connectVehiclePemohonanDto';
 import { CreateVehicleDto } from 'src/models/createVehicleDto';
 import { UpdateVehicleDto } from 'src/models/updateVehicleDto';
@@ -6,12 +6,18 @@ import { ApiTags, ApiOperation, ApiBody, ApiParam, ApiResponse } from '@nestjs/s
 import { VehicleService } from 'src/services/vehicle.services';
 import { SearchVehicleDto } from 'src/models/searchVehicleDto';
 import { RemoveVehicleFromApplicationDto } from 'src/models/removeVehicleFromApplicationDto';
+import { RolesGuard } from 'src/utils/roles.guard';
+import { JwtAuthGuard } from 'src/utils/auth.guard';
+import { RolesAccess } from 'src/models/enums/roles';
+import { Roles } from 'src/utils/roles.decorator';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('Vehicles')
 @Controller('vehicles')
 export class VehicleController {
   constructor(private readonly vehicleService: VehicleService) {}
 
+  @Roles(RolesAccess.PIC_REKOMENDASI, RolesAccess.PENGELOLA, RolesAccess.SUPER_ADMIN)
   @Post('link')
   @ApiOperation({ summary: 'Link an existing vehicle to an application' })
   @ApiBody({ type: ConnectVehiclePemohonanDto })
@@ -41,6 +47,7 @@ export class VehicleController {
     return this.vehicleService.linkExistingVehicleToApplication(connectVehicleDto);
   }
 
+  @Roles(RolesAccess.PIC_REKOMENDASI, RolesAccess.PENGELOLA, RolesAccess.SUPER_ADMIN)
   @Post('add-to-application')
   @ApiOperation({ summary: 'Add a new vehicle and link it to an application' })
   @ApiBody({ type: CreateVehicleDto })
@@ -70,6 +77,7 @@ export class VehicleController {
     return this.vehicleService.addNewVehicleToApplication(createVehicleDto);
   }
 
+  @Roles(RolesAccess.PIC_REKOMENDASI, RolesAccess.PENGELOLA, RolesAccess.SUPER_ADMIN)
   @Post('add-to-company')
   @ApiOperation({ summary: 'Add a new vehicle and link it to a company' })
   @ApiBody({ type: CreateVehicleDto })
@@ -99,6 +107,7 @@ export class VehicleController {
     return this.vehicleService.addNewVehicleToCompany(createVehicleDto);
   }
 
+  @Roles(RolesAccess.PIC_REKOMENDASI, RolesAccess.PENGELOLA, RolesAccess.SUPER_ADMIN)
   @Delete(':vehicleId')
   @ApiOperation({ summary: 'Soft delete a vehicle' })
   @ApiParam({ name: 'vehicleId', description: 'ID of the vehicle to be soft deleted' })
@@ -121,6 +130,7 @@ export class VehicleController {
     return this.vehicleService.softDeleteVehicle(vehicleId);
   }
 
+  @Roles(RolesAccess.PIC_REKOMENDASI, RolesAccess.PENGELOLA, RolesAccess.SUPER_ADMIN)
   @Put()
   @ApiOperation({ summary: 'Update vehicle details' })
   @ApiBody({ type: UpdateVehicleDto })
@@ -208,6 +218,7 @@ export class VehicleController {
     return this.vehicleService.getVehicleById(vehicleId);
   }
 
+  @Roles(RolesAccess.PIC_REKOMENDASI, RolesAccess.PENGELOLA, RolesAccess.SUPER_ADMIN)
   @Delete('/vehicle/application/remove-vehicle')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Remove a vehicle from an application' })

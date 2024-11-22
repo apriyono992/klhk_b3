@@ -10,19 +10,26 @@ import {
   HttpCode,
   HttpStatus,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiQuery } from '@nestjs/swagger';
 import { NotifikasiService } from '../services/notifikasi.services';
 import { CreateNotifikasiDto } from '../models/createNotifikasiDto';
 import { UpdateNotifikasiDto } from '../models/updateNotifikasiDto';
 import { SearchNotifikasiDto } from '../models/searchNotifikasiDto';
+import { JwtAuthGuard } from 'src/utils/auth.guard';
+import { RolesGuard } from 'src/utils/roles.guard';
+import { Roles } from 'src/utils/roles.decorator';
+import { RolesAccess } from 'src/models/enums/roles';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('Notifikasi')
 @Controller('notifikasi')
 export class NotifikasiController {
   constructor(private readonly notifikasiService: NotifikasiService) {}
 
   @Post()
+  @Roles(RolesAccess.SUPER_ADMIN, RolesAccess.PIC_NOTIFIKASI)
   @ApiOperation({ summary: 'Create a new Notifikasi' })
   @ApiResponse({
     status: 201,
@@ -55,6 +62,7 @@ export class NotifikasiController {
   }
 
   @Patch(':id')
+  @Roles(RolesAccess.SUPER_ADMIN, RolesAccess.PIC_NOTIFIKASI)
   @ApiOperation({ summary: 'Update an existing Notifikasi' })
   @ApiResponse({
     status: 200,
@@ -171,6 +179,7 @@ export class NotifikasiController {
   }
 
   @Delete(':id')
+  @Roles(RolesAccess.SUPER_ADMIN, RolesAccess.PIC_NOTIFIKASI)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Soft delete a Notifikasi by updating its status to DIBATALKAN' })
   @ApiResponse({ status: 204, description: 'The Notifikasi has been soft deleted successfully.' })

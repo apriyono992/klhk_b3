@@ -44,4 +44,13 @@ export class PaginationDto {
   @IsOptional()
   @IsString()
   sortBy?: string = 'createdAt'; // Default to sorting by 'createdAt'
+
+  @ApiPropertyOptional({
+    description: 'Return all data without pagination',
+    example: false,
+    default: false,
+  })
+  @IsOptional()
+  @Type(() => Boolean)
+  returnAll?: boolean = false;
 }

@@ -13,14 +13,18 @@ export class CreatePelaporanPengangkutanDto {
   companyId: string;
 
   @IsUUID()
+  @IsOptional()
   vehicleId: string;
 
+  @IsOptional()
   @IsInt({ message: 'Bulan harus berupa angka antara 1 hingga 12.' })
   bulan: number;
-
+  
+  @IsOptional()
   @IsInt({ message: 'Tahun harus berupa angka yang valid.' })
   tahun: number;
 
+  @IsOptional()
   @IsArray({ message: 'Pengangkutan details harus berupa array.' })
   pengangkutanDetails: CreatePengangkutanDetailDto[];
 

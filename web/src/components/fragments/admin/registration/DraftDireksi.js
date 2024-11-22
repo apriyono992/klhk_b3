@@ -29,7 +29,8 @@ export default function DraftDireksi(id) {
         const newData = {
             ...dataSK,
             tanggal_surat: format(dataTanggalSurat, 'yyyy-MM-dd'),
-            status: "approved by direksi",
+            approval_status: "approved by direksi",
+            status: "riwayat",
             approved_by: data.fullName
         }
 

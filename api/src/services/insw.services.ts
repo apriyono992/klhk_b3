@@ -88,8 +88,6 @@ export class InswServices {
       throw new NotFoundException("Can't find registrasi");
     }
 
-    console.log(this.formatDataINSW(payload), 'isi payload')
-
     try {
         const responseData = await axios
             .post(
@@ -111,7 +109,7 @@ export class InswServices {
             approval_status: payload.status,
           }
         })
-      console.log(payload,'asdasd')
+
         return responseData.data;
 
       } catch (er) {

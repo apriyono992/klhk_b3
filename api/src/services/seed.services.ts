@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../services/prisma.services'; // Import your Prisma service
 import * as fs from 'fs';
 import * as path from 'path'; // For handling file paths
+import { connect } from 'http2';
 
 function chunkArray<T>(array: T[], chunkSize: number): T[][] {
   const result = [];
@@ -101,18 +102,35 @@ export class SeedService {
     } catch (error) {
       this.logger.error('Error while seeding persyaratan data', error);
     }
+
     try {
       await this.seedSektorPenggunaanBahan();
     } catch (error) {
       this.logger.error('Error while seeding persyaratan data', error);
     }
+
     try {
       await this.seedPelabuhan();
     } catch (error) {
       this.logger.error('Error while seeding pelabuhan data', error);
     }
 
+    try {
+      await this.validasiTeknisRegistrasi();
+    } catch (error) {
+      this.logger.error('Error while seeding pelabuhan data', error);
+    }
+
     this.logger.log('Seeding process completed');
+  }
+
+
+  async seedMercuryMonitoringEndp() {
+    try {
+      await this.seedMercuryMonitoring();
+    } catch (error) {
+      this.logger.error('Error while seeding MercuryMonitoring data', error);
+    }
   }
 
   private async seedProvinces() {
@@ -306,6 +324,17 @@ export class SeedService {
     this.logger.log('Villages seeded');
   }
 
+  private async validasiTeknisRegistrasi() {
+    const filePath = path.join(process.cwd(), 'src/seed/validasiTeknisRegistrasi.json');
+    const data = this.readJsonFile(filePath);
+
+    await this.prisma.validasiTeknisRegistrasi.createMany({
+      data,
+      skipDuplicates: true, // This ensures that existing records are skipped
+    });
+    this.logger.log('Data ValidasiTeknisRegistrasi seeded');
+  }
+
   // Function to get villages without district
   public async getVillagesWithoutDistrict(): Promise<any[]> {
     // Paths to the JSON files
@@ -335,6 +364,103 @@ export class SeedService {
       ),
     ];
     return distinctDistrictIds;
+  }
+    // Fungsi untuk menghasilkan tanggal acak dalam tahun yang diberikan
+    private getRandomDateInYear(year: number): Date {
+      const start = new Date(`${year}-01-01`).getTime();
+      const end = new Date(`${year}-12-31`).getTime();
+      const randomTime = start + Math.random() * (end - start);
+      return new Date(randomTime);
+    }
+  
+
+  private async seedMercuryMonitoring() {
+    const filePath = path.join(process.cwd(), 'src/seed/mercury_monitoring.json');
+    const mercuryData = this.readJsonFile(filePath);
+
+    try {
+      for (const record of mercuryData) {
+        try{
+           // Temukan jenis sampel berdasarkan kode
+        const jenisSampel = await this.prisma.jenisSample.findFirst({
+          where: { deskripsi: {
+             mode: 'insensitive',
+             equals: record["Jenis_Sampel"],
+          } },
+        });
+
+        const province = await this.prisma.province.findFirst({
+          where: { name: {
+             mode: 'insensitive',
+             equals: record["Provinsi"],
+          } },
+        });
+
+        const city = await this.prisma.regencies.findFirst({
+          where: { name: {
+             mode: 'insensitive',
+             equals: record["Kab_Kota"],
+          } },
+        });
+
+        const district = await this.prisma.districts.findFirst({
+          where: { name: {
+             mode: 'insensitive',
+             equals: record["KEC"],
+          } },
+        });
+        
+        const village = await this.prisma.village.findFirst({
+          where: { name: {
+             mode: 'insensitive',
+             equals: record["DESA"],
+          } },
+        });
+
+        if (!jenisSampel) {
+          console.error(`Jenis sampel dengan kode ${record["Jenis_Sampel"]} tidak ditemukan. Skipping...`);
+          continue;
+        }
+
+        // Hasilkan tanggal acak untuk tahun pengambilan
+        const randomTanggalPengambilan = this.getRandomDateInYear(record["THN_SMPL"]);
+
+
+        // Buat entri MercuryMonitoring bersama dengan Location dalam satu operasi
+        await this.prisma.mercuryMonitoring.create({
+          data: {
+            sumberData: record["Sumber_Data"],
+            jenisSampel: { connect: { id: jenisSampel.id } },
+            tahunPengambilan: randomTanggalPengambilan,
+            hasilKadar: record["KADAR"]?.toString(),
+            satuan: record["SATUAN"] ?? "N/A",
+            tingkatKadar: record["TK_MERKURI"] ?? "N/A",
+            konsentrasi: record["KONSNTRASI"] ?? "N/A",
+            location: {
+              create: {
+                latitude: record.Y,
+                longitude: record.X,
+                description: record["DESA"],
+                province: province ? { connect: { id: province.id } } : undefined,
+                regency: city ? { connect: { id: city.id } } : undefined,
+                district: district ?  {connect: { id: district.id }} : undefined,
+                village: village ? {connect: { id: village.id }} : undefined,
+                keterangan: record["TK_MERKURI"],
+              },
+            },
+          },
+        });
+        console.log(`Inserted MercuryMonitoring for sample ${record["Jenis_Sampel"]} at location ${record["DESA"]}`);
+
+        }catch(error){
+        console.log(`Failed to MercuryMonitoring for sample ${record["Jenis_Sampel"]} at location ${record["Provinsi"]} ${record["Kab_Kota"]} ${record["KEC"]} ${record["DESA"]}`);
+
+        }
+       
+      }
+    } catch (error) {
+      console.error('Error during MercuryMonitoring seeding:', error);
+    }
   }
 
   private readJsonFile(filePath: string): any[] {

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { RegistrasiServices } from '../services/registrasi.services';
 import {
   ApiTags,
@@ -15,12 +15,18 @@ import { BahanB3RegistrasiDto } from '../models/createUpdateBahanB3regDTO';
 import { CreateRegistrasiDto } from '../models/createRegistrasiDto';
 import {CreateSubmitDraftSKDto} from "../models/createSubmitDraftSKDto";
 import { UpdateB3PermohonanRekomDto } from '../models/updateB3PermohonanRekomDto';
+import { RolesGuard } from 'src/utils/roles.guard';
+import { JwtAuthGuard } from 'src/utils/auth.guard';
+import { RolesAccess } from 'src/models/enums/roles';
+import { Roles } from 'src/utils/roles.decorator';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('Registrasi')
 @Controller('registrasi')
 export class RegistrasiController {
   constructor(private readonly registrasiService: RegistrasiServices) {}
 
+  @Roles(RolesAccess.PIC_REGISTRASI, RolesAccess.SUPER_ADMIN)
   @Put('update/:id')
   @ApiOperation({ summary: 'Create Registrasi B3' })
   @ApiResponse({
@@ -39,6 +45,7 @@ export class RegistrasiController {
     return this.registrasiService.update(id, saveRegistrasiDto);
   }
 
+  @Roles(RolesAccess.PIC_REGISTRASI, RolesAccess.PENGELOLA, RolesAccess.SUPER_ADMIN)
   @Post('save')
   @ApiOperation({ summary: 'Create Registrasi B3' })
   @ApiResponse({
@@ -54,6 +61,8 @@ export class RegistrasiController {
     return this.registrasiService.create(craeteRegistrasiDto);
   }
 
+  
+  @Roles(RolesAccess.PIC_REGISTRASI, RolesAccess.DIREKTUR, RolesAccess.SUPER_ADMIN)
   @Post('submit-draft-sk/:id')
   @ApiOperation({ summary: 'Submit Draft SK' })
   @ApiResponse({ status: 200, description: 'Draft SK submitted successfully.' })
@@ -65,6 +74,7 @@ export class RegistrasiController {
     return this.registrasiService.submitDraftSK(id, saveDraft);
   }
 
+  @Roles(RolesAccess.PIC_REGISTRASI, RolesAccess.SUPER_ADMIN)
   @Post('submit-insw/:id')
   @ApiOperation({ summary: 'Submit Insw' })
   @ApiResponse({ status: 200, description: 'Draft SK submitted successfully.' })
@@ -74,6 +84,7 @@ export class RegistrasiController {
     return this.registrasiService.submitInsw(id);
   }
 
+  @Roles(RolesAccess.PIC_REGISTRASI, RolesAccess.DIREKTUR, RolesAccess.SUPER_ADMIN)
   @Put('update-status-approval/:id')
   @ApiOperation({ summary: 'Submit Draft SK' })
   @ApiResponse({ status: 200, description: 'Draft SK submitted successfully.' })
@@ -124,6 +135,13 @@ export class RegistrasiController {
     type: String,
     example: 'a',
   })
+  @ApiQuery({
+    name: 'status',
+    description: 'status',
+    required: true,
+    type: String,
+    example: 'pending',
+  })
   @ApiResponse({ status: 200, description: 'List of Registrasi B3.' })
   async listRegistrasiB3(@Query() searchDto: SearchRegistrasiDto) {
     return this.registrasiService.listRegistrasiB3(searchDto);
@@ -139,6 +157,7 @@ export class RegistrasiController {
     return this.registrasiService.getRegistrasiById(id);
   }
 
+  @Roles(RolesAccess.PIC_REGISTRASI, RolesAccess.SUPER_ADMIN)
   @Put(':id/update-bahan')
   @ApiOperation({ summary: 'Update Bahan Registrasi B3' })
   @ApiResponse({
@@ -152,6 +171,7 @@ export class RegistrasiController {
     return this.registrasiService.updateBahanRegistrasiB3(id, updateBahanB3);
   }
 
+  @Roles(RolesAccess.PIC_REGISTRASI,RolesAccess.SUPER_ADMIN)
   @Put('update-perusahaan/:id')
   @ApiOperation({ summary: 'Update Perusahaan Registrasi B3' })
   @ApiResponse({
@@ -166,5 +186,12 @@ export class RegistrasiController {
       id,
       updateRegistrasiPerusahaanDto,
     );
+  }
+
+  @Get('validasi-teknis/:nomor')
+  async getListValidateTeknis(
+      @Param('nomor') nomor: string,
+  ) {
+    return this.registrasiService.getListValidasiTeknis(nomor);
   }
 }

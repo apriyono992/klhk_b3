@@ -7,4 +7,8 @@ export class SearchRegistrasiDto extends PaginationDto {
   @IsOptional()
   @IsString()
   search?: string;
+
+  @ApiPropertyOptional({ description: 'Status' })
+  @IsString()
+  status: string;
 }
