@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 import { PaginationDto } from './paginationDto';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -34,4 +34,9 @@ export class SearchCompanyDto extends PaginationDto {
   @IsOptional()
   @IsString()
   kodeDBKlhk?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  companyIds?: string[];
 }

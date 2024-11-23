@@ -1141,11 +1141,15 @@ model User {
   provinceId  String
   regency       Regencies   @relation(fields: [cityId], references: [id])
   roles       UserRoles[]  @relation("UserRoles") // Relasi ke UserRolesUserRoles
+  isActive    Boolean      @default(true)
 
   companies       UserCompanies[]  @relation("UserCompanies") // Relasi ke UserRolesUserRoles
   idNumber    String // no KTP
   idPhotoUrl  String?
   resetPassword ResetPassword[]
+
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt @default(now())
 
   NotifikasiStatusHistory NotifikasiStatusHistory[]
 

@@ -18,7 +18,8 @@ import {
     DocumentIcon,
     TicketIcon,
     ClockIcon,
-    CogIcon
+    CogIcon,
+    UserIcon
 } from "@heroicons/react/24/outline";
 import { Accordion, AccordionItem, Avatar } from "@nextui-org/react";
 import logo from '../../../assets/images/logo.png'
@@ -30,7 +31,8 @@ import { ADMIN_REPORT_STORAGE, CARBON_COPY_INDEX_PATH, COMPANY_INDEX_PATH, COMPA
     RECOMENDATION_INDEX_PATH, REGISTRATION_DASHBOARD_PATH, REGISTRATION_INDEX_PATH, REPORT_TRANSPORT_INDEX, 
     STOK_B3_INDEX_ADMIN_PATH, STOK_B3_INDEX_USER_PATH,  
     CMS_ARTICLE_PATH, CMS_DOCUMENT_PATH, CMS_EVENT_PATH, CMS_NEWS_PATH,
-    MERKURI_MONITORING_INDEX_PATH, WPR_INDEX_PATH } from "../../../services/routes";
+    MERKURI_MONITORING_INDEX_PATH, WPR_INDEX_PATH, 
+    USERS_MANAGEMENT_INDEX_PATH} from "../../../services/routes";
 import useCustomNavigate from "../../../hooks/useCustomNavigate";
 import { PowerIcon } from "@heroicons/react/16/solid";
 
@@ -207,26 +209,29 @@ export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
                                 icon={<TicketIcon className="size-4" />}
                             />
                         </AccordionItem>
-                        <AccordionItem key="4" title="Pelaporan" className="" startContent={<PresentationChartBarIcon className="size-5" />}>
+                        <AccordionItem key="5" title="Pelaporan" className="" startContent={<PresentationChartBarIcon className="size-5" />}>
                             <ListItem url={PELAPORAN_DASHBOARD_PATH} variant="subitem" title="Dashboard" icon={<ArchiveBoxIcon className="size-4" />} />
                             <ListItem url={COMPANY_REPORT_STORAGE} variant="subitem" title="Penyimpanan B3 (Perusahaan)" icon={<ArchiveBoxIcon className="size-4" />} />
                             <ListItem url={ADMIN_REPORT_STORAGE} variant="subitem" title="Penyimpanan B3 (Admin)" icon={<ArchiveBoxIcon className="size-4" />} />
                             <ListItem url={REPORT_TRANSPORT_INDEX} variant="subitem" title="Pengangkutan B3" icon={<TruckIcon className="size-4" />} />
                         </AccordionItem>
-                        <AccordionItem key="5" title="Mater Data" className="" startContent={<FolderIcon className="size-5" />}>
+                        <AccordionItem key="6" title="Mater Data" className="" startContent={<FolderIcon className="size-5" />}>
                             <ListItem url={CARBON_COPY_INDEX_PATH} variant="subitem" title="Tembusan" icon={<AtSymbolIcon className="size-4" />} />
                             <ListItem url={OFFICIAL_INDEX_PATH} variant="subitem" title="Pejabat" icon={<UserGroupIcon className="size-4" />} />
                             <ListItem url={MATERIAL_INDEX_PATH} variant="subitem" title="Bahan B3" icon={<ExclamationTriangleIcon className="size-4" />} />
                             <ListItem url={COMPANY_INDEX_PATH} variant="subitem" title="Perusahaan" icon={<BuildingOfficeIcon className="size-4" />} />
                             <ListItem url={PERIOD_INDEX_PATH} variant="subitem" title="Periode" icon={<ClockIcon className="size-4" />} />
                         </AccordionItem>
-                        <AccordionItem key="6" title="Stok B3" className="" startContent={<BellAlertIcon className="size-5" />}>
+                        <AccordionItem key="7" title="Stok B3" className="" startContent={<BellAlertIcon className="size-5" />}>
                             <ListItem url={STOK_B3_INDEX_ADMIN_PATH} variant="subitem" title="Stok B3 User" icon={<ChartBarIcon className="size-4" />} />
                             <ListItem url={STOK_B3_INDEX_USER_PATH} variant="subitem" title="Stok B3 Admin" icon={<ListBulletIcon className="size-4" />} />
                         </AccordionItem>
-                        <AccordionItem key="7" title="Merkuri" className="" startContent={<PowerIcon className="size-5" />}>
+                        <AccordionItem key="8" title="Merkuri" className="" startContent={<PowerIcon className="size-5" />}>
                             <ListItem url={WPR_INDEX_PATH} variant="subitem" title="Wilayah Pertambangan Rakyat" icon={<CogIcon className="size-4" />} />
                             <ListItem url={MERKURI_MONITORING_INDEX_PATH} variant="subitem" title="MerKuri Monitoring Lingkungan" icon={<ArchiveBoxIcon className="size-4" />} />
+                        </AccordionItem>
+                        <AccordionItem key="9" title="User Management" className="" startContent={<UserGroupIcon className="size-5" />}>
+                            <ListItem url={USERS_MANAGEMENT_INDEX_PATH} variant="subitem" title="Users" icon={<UserIcon className="size-4" />} />
                         </AccordionItem>
                     </Accordion>
                 </ul>

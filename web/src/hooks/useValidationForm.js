@@ -24,7 +24,7 @@ export default function useValidationForm({ mutate }) {
     
     
     const { register, handleSubmit, reset, watch, formState: { errors, isSubmitting } } = useForm({resolver: yupResolver(schema)});
-    const { data: user } = useAuth()
+    const { user, roles } = useAuth()
 
     async function onSubmitForm(data) {
         try {
@@ -41,7 +41,6 @@ export default function useValidationForm({ mutate }) {
 
     async function onValidate(applicationId) {
         try {
-
             const data = {
                 applicationId: applicationId,
                 status: 'VALIDASI_PEMOHONAN_SELESAI',

@@ -67,10 +67,19 @@ export class CompanyService {
     return company;
   }
 
-  // Get a list of companies with optional search and pagination
   async getCompanies(searchDto: SearchCompanyDto) {
-    const { page = 1, limit = 10, name, npwp, bidangUsaha, kodeDBKlhk, sortBy = 'createdAt', sortOrder = 'desc' } = searchDto;
-    const skip = (page - 1) * limit;
+    const {
+      page = 1,
+      limit = 10,
+      name,
+      npwp,
+      bidangUsaha,
+      kodeDBKlhk,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+      companyIds,
+      returnAll = false,
+    } = searchDto;
   
     // Build the search conditions dynamically
     const where: Prisma.CompanyWhereInput = {
@@ -78,16 +87,35 @@ export class CompanyService {
       ...(npwp && { npwp: { contains: npwp, mode: 'insensitive' } }),
       ...(bidangUsaha && { bidangUsaha: { contains: bidangUsaha, mode: 'insensitive' } }),
       ...(kodeDBKlhk && { kodeDBKlhk: { contains: kodeDBKlhk, mode: 'insensitive' } }),
+      ...(companyIds && companyIds.length > 0 && { id: { in: companyIds } }),
     };
+  
+    // Handle the returnAll flag
+    if (returnAll) {
+      const companies = await this.prisma.company.findMany({
+        where,
+        orderBy: { [sortBy]: sortOrder },
+      });
+      return {
+        total: companies.length,
+        page: 1,
+        limit: companies.length,
+        data: companies,
+      };
+    }
+  
+    // Pagination logic
+    const skip = (page - 1) * limit;
   
     // Query companies with pagination and sorting
     const companies = await this.prisma.company.findMany({
-      where, // Prisma can handle an empty `where` condition
+      where,
       skip,
       take: limit,
       orderBy: { [sortBy]: sortOrder },
     });
   
+    // Count the total number of companies matching the conditions
     const total = await this.prisma.company.count({
       where,
     });
@@ -99,6 +127,7 @@ export class CompanyService {
       data: companies,
     };
   }
+  
 
   // Update an existing company by ID
   async updateCompany(id: string, updateCompanyDto: UpdateCompanyDto) {

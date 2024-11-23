@@ -60,6 +60,7 @@ export class CreateUserDTO {
   })
   address: string;
 
+  @IsOptional()
   @IsDefined()
   @IsString()
   @ApiProperty({
@@ -100,11 +101,11 @@ export class CreateUserDTO {
 
   @IsOptional()
   @IsArray()
-  @IsUUID('all', { each: true })
+  @IsUUID(4, { each: true })
   companyIds?: string[]; // Array ID untuk relasi perusahaan
 
   @IsOptional()
   @IsArray()
-  @IsUUID('all', { each: true })
-  rolesIds?: string[]; // Array ID untuk relasi perusahaan
+  @IsString({ each: true })
+  rolesIds?: string[]; // Array ID untuk relasi roles
 }

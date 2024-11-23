@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { SearchUsersDto } from 'src/models/searchUsersDto';
 import { PrismaService } from './prisma.services';
 import { createHash, createHmac } from 'crypto';
@@ -6,6 +6,7 @@ import { User } from '@prisma/client';
 import { CreateUserDTO } from 'src/models/createUserDto';
 import { omit } from 'lodash';
 import { v4 as uuidV4 } from 'uuid';
+import { RolesAccess } from 'src/models/enums/roles';
 
 @Injectable()
 export class UserService {
@@ -155,17 +156,13 @@ export class UserService {
       provinceId,
       cityId,
       rolesIds,
-      idNumber,
+      idNumber = '1234567890123456',
       companyIds,
     } = payload;
   
     // Validasi cityId
-    const existingCity = await this.prisma.regencies.findUnique({
-      where: { id: cityId },
-    });
-  
-    if (!existingCity) {
-      throw new NotFoundException('Kota tidak valid.');
+    if(rolesIds.includes(RolesAccess.SUPER_ADMIN)){
+      throw new BadRequestException('Tidak dapat membuat pengguna');
     }
   
     // Hash password dan KTP
@@ -194,19 +191,33 @@ export class UserService {
       } else {
         newUserPayload.idPhotoUrl = (attachments as Express.Multer.File).path;
       }
+    }else{
+      newUserPayload.idPhotoUrl = 'http://localhost:3002/uploads/photos/tes.png';
     }
   
+    const province = await this.prisma.province.findFirst();
+    const city = await this.prisma.regencies.findFirst( {where: { provinceId: provinceId }});
+    newUserPayload.provinceId = province.id;
+    newUserPayload.cityId = city.id;
     return await this.prisma.$transaction(async (prisma) => {
       // Buat pengguna baru
       const user = await prisma.user.create({
         data: newUserPayload,
       });
-  
+      
+
       // Tambahkan relasi roles
       if (rolesIds) {
         const roleIdsArray = Array.isArray(rolesIds) ? rolesIds : [rolesIds];
+        const roles = [];
+        for (const roleId of roleIdsArray) {
+          const role = await prisma.roles.findFirst({ where: { name: roleId } });
+          if (role) {
+            roles.push(role.id);
+          }
+        }
         await prisma.userRoles.createMany({
-          data: roleIdsArray.map((roleId) => ({
+          data: roles.map((roleId) => ({
             userId: user.id,
             roleId,
           })),

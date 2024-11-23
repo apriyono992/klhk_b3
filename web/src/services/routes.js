@@ -45,6 +45,7 @@ import WilayahPertambanganRakyat from "../pages/admin/wpr/IndexPage";
 import MercuryMonitoringIndex from "../pages/admin/merkuri/IndexPage";
 import UnauthorizedPage from "../pages/admin/UnauthorizedPage";
 import ProtectedRoute from "../services/protectedRoute";
+import UserManagementPage from "../pages/admin/users/IndexPage";
 
 export const ROOT_PATH = '/'
 export const BERITA_PATH = '/berita'
@@ -100,6 +101,8 @@ export const STOK_B3_INDEX_ADMIN_PATH = '/admin/utama/stok-b3'
 export const STOK_B3_INDEX_USER_PATH = '/user/utama/stok-b3'
 
 export const UNAUTHORIZED_PATH = '/unauthorized'
+
+export const USERS_MANAGEMENT_INDEX_PATH = '/admin/user-management'
 
 const router = createBrowserRouter([
     { path: "/", element: <HomePage/>,},
@@ -167,6 +170,8 @@ const router = createBrowserRouter([
 
             { path: WPR_INDEX_PATH, element: <WilayahPertambanganRakyat />,},
             { path: MERKURI_MONITORING_INDEX_PATH, element: < MercuryMonitoringIndex/>,},
+
+            { path: USERS_MANAGEMENT_INDEX_PATH, element: < UserManagementPage/>,},
         ],
     },
 ])

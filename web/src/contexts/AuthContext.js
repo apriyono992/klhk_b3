@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => { // Tambahkan 'children' dalam ar
     try {
       const userInfo = await getFetcher(`/api/users/find/${userId}`);
       setUser(userInfo);
-      setRoles(userInfo.roles.map((role) => role.name));
+      setRoles(userInfo.roles.map((role) => role.role.name));
     } catch (error) {
       console.error("Failed to fetch user info:", error);
       setUser(null);
