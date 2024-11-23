@@ -7,6 +7,10 @@ export class RequestInswDto {
 
     @IsOptional()
     @IsString()
+    approval_status?: string;
+
+    @IsOptional()
+    @IsString()
     status?: string;
 
     @IsOptional()

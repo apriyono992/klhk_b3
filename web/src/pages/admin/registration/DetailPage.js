@@ -1,11 +1,16 @@
-import { Button, Tab, Tabs, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
+import {Button, Chip, Tab, Tabs} from "@nextui-org/react";
 import RootAdmin from "../../../components/layouts/RootAdmin";
 import Information from "../../../components/fragments/admin/registration/information/Information";
 import Draft from "../../../components/fragments/admin/registration/Draft";
 import { DocumentIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { useParams } from "react-router-dom";
 import HeaderPage from "../../../components/elements/HeaderPage";
-import {exportJsonINSW, getDetailRegistrasi, getFetcher, getPreviewSK, sendInsw} from "../../../services/api";
+import {
+    exportJsonINSW,
+    getDetailRegistrasi, getFetcher,
+    getPdfUrl,
+    sendInsw, submitSK
+} from "../../../services/api";
 import { useState, useEffect } from "react";
 import toast from 'react-hot-toast';
 import {getRoles} from "../../../services/helpers";
@@ -17,28 +22,15 @@ import useSWR from "swr";
 
 export default function DetailPage() {
     const { id } = useParams();
-    const [dataDetail, setDataDetail] = useState(null)
-    const [pdfUrl, setPdfUrl] = useState('');
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
-    const { data, isLoading, mutate } = useSWR(`/api/rekom/permohonan/${id}`, getFetcher);
-
-    useEffect(() => {
-        fetchDetail(id)
-    }, [])
-
-    const fetchDetail = async (param) => {
-        try {
-            const detail = await getDetailRegistrasi(param);
-            setDataDetail(detail);
-        } catch (error) {
-            console.log('error fetching:', error)
-        }
-    }
+    const {data: dataDetail, isLoading, mutate} = useSWR(`/api/registrasi/${id}`, getFetcher)
+    const [activeTab, setActiveTab] = useState("informasi");
 
     const onSubmit = async () => {
+        console.log('hit hit hit')
         const data = {
             id: id,
-            status: 'kirim ke INSW',
+            status: 'riwayat',
+            approval_status: 'selesai',
             jnsPengajuan: '0100000000'
         }
         try {
@@ -48,6 +40,17 @@ export default function DetailPage() {
         } catch (error) {
             console.log('error fetching:', error)
             toast.error(error.response.data.message.message);
+        }
+    }
+
+    const onSubmitDraft = async () => {
+        try {
+            const response = await submitSK(id);
+            console.log(response, 'success');
+            toast.success('Berhasil Submit Data Draft SK')
+        } catch (error) {
+            console.log('error fetching:', error)
+            toast.error(error.response.data.message);
         }
     }
 
@@ -68,20 +71,21 @@ export default function DetailPage() {
         }
     }
 
-    const fetchPreview = async () => {
+    const fetchPreview = async (endpoint) => {
         try {
-            const response = await getPreviewSK(id);
-            console.log(response, 'isi response')
-            const pdfBlob = await response;
-            console.log(pdfBlob, 'isi blob')
-            const pdfUrl = URL.createObjectURL(pdfBlob);
-
-            setPdfUrl(pdfUrl);
-        } catch (e) {
-            console.log('error get pdf registrasi', e)
+            await getPdfUrl(endpoint)
+        }
+        catch (error) {
+            toast.error('Failed to open PDF');
         }
     }
 
+    const handleTabChange = (tabId) => {
+        const selectedTab = tabs.find((tab) => tab.id === tabId);
+        if (selectedTab && !selectedTab.disabled) {
+            setActiveTab(tabId); // Only update activeTab if the tab is not disabled
+        }
+    };
 
     let tabs = [
         {
@@ -97,7 +101,7 @@ export default function DetailPage() {
         {
             id: "draft",
             label: "Draft SK",
-            content: getRoles() === roleName.direksi ? <DraftDireksi id={id}/> : <Draft id={id}/>
+            content: getRoles() === roleName.direksi ? <DraftDireksi id={id}/> : <Draft id={id} dataTembusan={dataDetail?.RegistrasiTembusan} mutate={mutate} data={dataDetail}/>
         }
     ];
 
@@ -108,11 +112,18 @@ export default function DetailPage() {
                 subtitle="No. Reg. Bahan B3"
                 action={
                     <div className="flex items-center gap-3">
+                        <Chip size="sm" variant="bordered" color="primary" className={'capitalize'}>{dataDetail?.approval_status}</Chip>
                         {
+                            dataDetail?.approval_status === 'approve direksi' || getRoles() === roleName.admin &&
                             <Button startContent={<PaperAirplaneIcon className="size-4"/>} size="sm" color="primary" onPress={onSubmit}>Kirim INSW</Button>
                         }
                         {
+                            dataDetail?.approval_status === 'approve direksi' || getRoles() === roleName.admin &&
                             <Button startContent={<PaperAirplaneIcon className="size-4"/>} size="sm" color="primary" onPress={onPressExport}>Export</Button>
+                        }
+                        {
+                            getRoles() === roleName.admin &&
+                            <Button startContent={<PaperAirplaneIcon className="size-4"/>} size="sm" color="primary" onPress={onSubmitDraft}>Submit Draft</Button>
                         }
                         {
                             !dataDetail?.is_draft &&
@@ -121,17 +132,22 @@ export default function DetailPage() {
                                 size="sm"
                                 color="primary"
                                 variant="faded"
-                                onPress={() => {
-                                        fetchPreview()
-                                        onOpen()
-                                    }}
+                                onPress={() => fetchPreview(`/api/pdf/generateRegistrasiB3/${id}`)}
                             >View Draft SK</Button>
                         }
                     </div>
                 }
             />
             <div className="flex w-full flex-col justify-between pt-5">
-                <Tabs color="primary" radius="sm" size="md" variant="bordered" aria-label="form">
+                <Tabs
+                    color="primary"
+                    radius="sm"
+                    size="md"
+                    variant="bordered"
+                    aria-label="form"
+                    selectedKey={activeTab}
+                    onSelectionChange={(key) => handleTabChange(key)}
+                >
                     {tabs.map((tab) => (
                         <Tab key={tab.id} title={tab.label}>
                             {tab.content}
@@ -139,24 +155,6 @@ export default function DetailPage() {
                     ))}
                 </Tabs>
             </div>
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-                <ModalContent>
-                    {(onClose) => (
-                        <>
-                            <ModalHeader className="flex flex-col gap-1">Preview Draft SK</ModalHeader>
-                            <ModalBody>
-                                <iframe
-                                    src={pdfUrl}
-                                    title="PDF Preview"
-                                    width="100%"
-                                    height="500px"
-                                    style={{ marginTop: '20px', border: '1px solid black' }}
-                                />
-                            </ModalBody>
-                        </>
-                    )}
-                </ModalContent>
-            </Modal>
         </RootAdmin>
     )
 };

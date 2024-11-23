@@ -95,15 +95,18 @@ export class PdfService {
 
   async generateRegistrasiB3Pdf(registrasiId: string) {
     const registrasi = await this.registrasiService.getRegistrasiById(registrasiId);
+    const templatePath = path.resolve(__dirname, '../pdf/registrasiB3.html');
+
+    const dataB3Registrasi = registrasi.BahanB3Registrasi;
 
     // Resolve the path to the main EJS template
-    const templatePath = path.resolve(process.cwd(), 'src/pdf/registrasiB3.html',);
+    // const templatePath = path.resolve(process.cwd(), 'src/pdf/registrasiB3.html',);
     let tembusanListHTML = '';
 
-    if (registrasi.tembusan.length > 0) {
-      tembusanListHTML = registrasi.tembusan
-        .map((item) => `<li>${item.nama}</li>`)
-        .join('\n');
+    if (registrasi.RegistrasiTembusan.length > 0) {
+      tembusanListHTML = registrasi.RegistrasiTembusan
+          .map((item) => `<li>${item.DataTembusan.nama}</li>`)
+          .join('\n');
     }
 
     // Read binary file (logo image) and convert it to base64
@@ -141,13 +144,7 @@ export class PdfService {
         npwp: registrasi.company.npwp,
         nib: registrasi.company.nomorInduk,
         kode_db_klh: registrasi.company.kodeDBKlh,
-        hs_code: registrasi.BahanB3Registrasi[0]?.hs_code,
-        nama_dagang: registrasi.BahanB3Registrasi[0].nama_dagang,
-        nama_bahan_kimia: registrasi.BahanB3Registrasi[0].nama_bahan,
-        negara_asal: registrasi.BahanB3Registrasi[0].asal_negara,
-        pelabuhan_bongkar:
-          registrasi.BahanB3Registrasi[0].pelabuhan_bongkar.join(','),
-        nomor_registrasi: registrasi.BahanB3Registrasi[0].no_reg_bahan,
+        dataMap: dataB3Registrasi,
         director_name: 'Sugasri',
         director_nip: '19690827 199803 1 001',
         nomor_surat_b3: nomorSuratBahanB3,

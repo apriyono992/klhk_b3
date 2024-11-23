@@ -664,6 +664,7 @@ model DataPejabat {
 
   // One-to-many relations with DraftSurat and FinalSurat
   DraftSurat           DraftSurat[]
+  Registrasi           Registrasi[]
   FinalSurat           FinalSurat[]
   DraftSuratNotifikasi BaseSuratNotfikasi[]
   TelaahTeknisPejabat TelaahTeknisPejabat[]
@@ -682,6 +683,7 @@ model DataTembusan {
   Registrasi           Registrasi[]
   NotifikasiTembusan   NotifikasiTembusan[]
   PermohonanRekomendasiTembusan PermohonanRekomendasiTembusan[]
+  RegistrasiTembusan RegistrasiTembusan[]
   DraftSuratNotifikasi BaseSuratNotfikasi[]
 }
 
@@ -800,14 +802,20 @@ model Registrasi {
   nama_perusahaan         String
   alamat_perusahaan       String
   status                  String
-  bulan                   String?                   @default("Januari")
+  bulan                   String
+  pejabatId               String? // Nullable, foreign key for Pejabat
+  pejabat                 DataPejabat?   @relation(fields: [pejabatId], references: [id]) // Nullable relation
   is_draft                Boolean                   @default(true)
   approved_by             String                    @default("")
   approval_status         String                    @default("created")
   no_reg                  String?
   sub_layanan             String?
+
+
   // Implicit many-to-many relations with Tembusan and bahanB3
+
   tembusan                DataTembusan[]
+  RegistrasiTembusan      RegistrasiTembusan[]
   BahanB3Registrasi       BahanB3Registrasi[]
   persyaratan             Persyaratan[]
   historyStatusRegistrasi HistoryStatusRegistrasi[]
@@ -2042,6 +2050,18 @@ model ValidasiTeknisRegistrasi {
     pertanyaan_teks     String
     validasi_valid      Int
     nomor_registrasi    String
+}
+
+model RegistrasiTembusan {
+  id                       String               @id @default(uuid())
+  registrasiId           String
+  dataTembusanId            String
+  index                    Int                  // Index of pejabat in the array
+
+  Registrasi                Registrasi            @relation(fields: [registrasiId], references: [id])
+  DataTembusan              DataTembusan          @relation(fields: [dataTembusanId], references: [id])
+
+  @@unique([registrasiId, dataTembusanId])    // Ensure uniqueness for each relation
 }
 
 model KewajibanPelaporanPerusahaan {

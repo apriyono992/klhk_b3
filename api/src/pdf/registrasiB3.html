@@ -400,15 +400,17 @@
                 </tr>
             </thead>
             <tbody>
+                <% dataMap.forEach((data, index) => { %>
                 <tr>
-                    <td>1</td>
-                    <th><%= hs_code %></th>
-                    <th><%= nama_dagang %></th>
-                    <th><%= nama_bahan_kimia %></th>
-                    <th><%= negara_asal %></th>
-                    <th><%= pelabuhan_bongkar %></th>
-                    <th><%= nomor_registrasi %></th>
+                    <th><%= index + 1 %></th>
+                    <th><%= data.hs_code %></th>
+                    <th><%= data.nama_dagang %></th>
+                    <th><%= data.nama_bahan %></th>
+                    <th><%= data.asal_negara %></th>
+                    <th><%= data.pelabuhan_bongkar %></th>
+                    <th><%= data.no_reg_bahan %></th>
                 </tr>
+                <% }); %>
             </tbody>
         </table>
 

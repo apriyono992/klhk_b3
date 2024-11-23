@@ -125,12 +125,20 @@ export async function updatePerusahaan(id, data) {
     return await axiosInstanceAuth.put(`/api/registrasi/update-perusahaan/${id}`, data).then(res => res.data)
 }
 
-export async function simpanSK(data, id) {
-    return await axiosInstanceAuth.post(`/api/registrasi/submit-draft-sk/${id}`, data).then(res => res.data)
+export async function updateBahanB3(id, data) {
+    return await axiosInstanceAuth.put(`/api/registrasi/${id}/update-bahan`, data).then(res => res.data)
 }
 
-export async function submitSK(id, data) {
+export async function submitSK(id) {
+    return await axiosInstanceAuth.post(`/api/registrasi/submit-draft-sk/${id}`).then(res => res.data)
+}
+
+export async function submitApprovalSK(id, data) {
     return await axiosInstanceAuth.put(`/api/registrasi/update-status-approval/${id}`, data).then(res => res.data)
+}
+
+export async function simpanSK(id, data) {
+    return await axiosInstanceAuth.post(`/api/registrasi/simpan-draft-sk/${id}`, data).then(res => res.data)
 }
 
 export async function sendInsw(data) {
@@ -139,10 +147,6 @@ export async function sendInsw(data) {
 
 export async function exportJsonINSW(data) {
     return await axiosInstanceAuth.post(`/api/insw/export-json`, data).then(res => res.data)
-}
-
-export async function getPreviewSK(id) {
-    return await axiosInstance.get(`/api/pdf/generateRegistrasiB3/${id}`).then(res => res.data)
 }
 
 export async function authStateFetcher(url) {

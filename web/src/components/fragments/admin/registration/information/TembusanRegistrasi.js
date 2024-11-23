@@ -3,10 +3,8 @@ import { useState } from 'react';
 import ReactSelect from 'react-select';
 import { useForm, Controller } from "react-hook-form";
 import { PlusIcon, PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import useSWR from 'swr';
 import toast from 'react-hot-toast';
-import useTembusanForm from '../../../hooks/useTembusanForm';
 import {
     getFetcher,
     getSelectFetcher,
@@ -14,25 +12,24 @@ import {
     postFetcher,
     putFetcher,
     simpanSK
-} from '../../../services/api';
+} from '../../../../../services/api';
 
-export default function TembusanComponent({ dataTembusan, isLoadingTembusan, existingTembusan, mutate, registrasiId }) {
-    console.log(existingTembusan);
+export default function TembusanRegistrasi({ dataTembusan, isLoadingTembusan, existingTembusan, mutate, registrasiId }) {
     const { control, handleSubmit, setValue, reset, register, formState: { errors, isSubmitting } } = useForm({
-        defaultValues: {
-            tembusanIds: existingTembusan || [],
-            nip: '',
-            tipe: '',
-        },
+        // defaultValues: {
+        //     tembusanIds: existingTembusan || [],
+        //     nip: '',
+        //     tipe: '',
+        // },
     });
 
     const { data: tembusanList, isLoading, mutate: mutateTembusanList } = useSWR(`/api/data-master/tembusan`, getSelectFetcher);
 
     const [selectedItems, setSelectedItems] = useState(() => {
         // Check if existing data is available
-        const existingPejabatIds = existingTembusan.draftSurat?.PermohonanRekomendasiTembusan?.map((tembusan) => tembusan.DataTembusan) || [];
+        // const existingPejabatIds = [];
+        const existingPejabatIds = existingTembusan?.map((tembusan) => tembusan.DataTembusan) || [];
 
-        console.log(existingPejabatIds);
         // Map existing pejabat IDs to the format required by ReactSelect
         return existingPejabatIds?.map((tembusan) => ({
             value: tembusan.id,
@@ -98,11 +95,11 @@ export default function TembusanComponent({ dataTembusan, isLoadingTembusan, exi
                 setSelectedItems(updatedItems);
                 toast.success('Tembusan berhasil diubah!');
             } else {
-                const payload = {
+                data = {
                     nama: data.nama,
                     tipe: data.tipe,
-                };
-                const newPejabat = await postFetcher('/api/data-master/tembusan', payload);
+                }
+                const newPejabat = await postFetcher('/api/data-master/tembusan', data);
 
                 // Tambahkan data baru ke tabel setelah tambah
                 const newItem = { value: newPejabat.id, label: `${data.nama}` };
@@ -154,45 +151,23 @@ export default function TembusanComponent({ dataTembusan, isLoadingTembusan, exi
     };
 
     // Handler untuk submit list pejabat
-    const onSubmitList = async () => {
-        console.log('hit dong')
+    const onSubmitList = async (data) => {
         try {
             const payload = {
-                draftId: existingTembusan.draftSurat.id,
                 tembusanIds: selectedItems?.map((item) => item.value)
             };
-            if (registrasiId) {
-                await simpanSK(registrasiId, payload)
-            } else {
-                await patchFetcherWithoutId('api/rekom/permohonan/draft-surat', payload);
-            }
+            await simpanSK(registrasiId, payload);
             setHasUnsavedChanges(false);
             toast.success('Daftar pejabat berhasil disimpan!');
         } catch (error) {
-            console.log(error, 'isi error')
+            console.log(error, 'isi error registrasi')
             toast.error('Gagal menyimpan daftar pejabat.');
         }
     };
 
-    // const {
-    //     selectedItems,
-    //     control,
-    //     register,
-    //     handleSubmit,
-    //     handleSelectChange,
-    //     handleDragEnd,
-    //     isEditModalOpen,
-    //     isEdit,
-    //     onOpenModalForm,
-    //     onClickEdit,
-    //     onClickDelete,
-    //     onCloseForm,
-    //     onSubmitForm,
-    //     formState: { errors, isSubmitting }
-    // } = useTembusanForm({ mutate, existingTembusan });
     return (
         <form onSubmit={handleSubmit(onSubmitList)}>
-            <Card radius='sm' className='col-span-3 h-[500px] shadow-lg'>
+            <Card radius='sm' className='col-span-3 h-fit shadow-lg'>
                 <CardHeader className="flex flex-col gap-2">
                     <div className="flex items-center justify-between w-full">
                         <p className="text-md">Tembusan</p>
@@ -266,7 +241,7 @@ export default function TembusanComponent({ dataTembusan, isLoadingTembusan, exi
                         </Table>
                     </div>
                     <div className="mt-4">
-                        <Button size="sm" type="submit" color="primary" isDisabled={isSubmitting || selectedItems.length === 0}>
+                        <Button size="sm" type="submit" color="primary">
                             Submit
                         </Button>
                     </div>

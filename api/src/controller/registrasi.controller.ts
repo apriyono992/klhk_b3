@@ -15,6 +15,7 @@ import { BahanB3RegistrasiDto } from '../models/createUpdateBahanB3regDTO';
 import { CreateRegistrasiDto } from '../models/createRegistrasiDto';
 import {CreateSubmitDraftSKDto} from "../models/createSubmitDraftSKDto";
 import { UpdateB3PermohonanRekomDto } from '../models/updateB3PermohonanRekomDto';
+import {CreateUpdateValidasiTeknis} from "../models/createUpdateValidasiTeknis";
 import { RolesGuard } from 'src/utils/roles.guard';
 import { JwtAuthGuard } from 'src/utils/auth.guard';
 import { RolesAccess } from 'src/models/enums/roles';
@@ -193,5 +194,43 @@ export class RegistrasiController {
       @Param('nomor') nomor: string,
   ) {
     return this.registrasiService.getListValidasiTeknis(nomor);
+  }
+
+  @Put('edit-document/:id')
+  async editDocumentValidasiTeknis(
+      @Param('id') id: string,
+      @Body() updateData : CreateUpdateValidasiTeknis
+  ) {
+    return this.registrasiService.editDocumentValidasiTeknis(id, updateData);
+  }
+
+  @Post('validasi-teknis/submit/:id')
+  @ApiResponse({
+    status: 200,
+    description: 'Submit Validasi Teknis successfully.',
+  })
+  async submitValidasiTeknis( @Param('id') id: string,) {
+    return this.registrasiService.submitValidasiTeknis(id);
+  }
+
+  @Post('simpan-draft-sk/:id')
+  @ApiResponse({
+    status: 200,
+    description: 'Simpan Draft SK successfully.',
+  })
+  async simpanDraftSk(
+      @Param('id') id: string,
+      @Body() saveDraft : CreateSubmitDraftSKDto
+      ) {
+    return this.registrasiService.simpanDraftSK(id, saveDraft);
+  }
+
+  @Post('submit-draft-sk/:id')
+  @ApiOperation({ summary: 'Submit Draft SK' })
+  @ApiResponse({ status: 200, description: 'Draft SK submitted successfully.' })
+  async submitDraftSK(
+      @Param('id') id: string
+  ) {
+    return this.registrasiService.submitDraftSK(id);
   }
 }

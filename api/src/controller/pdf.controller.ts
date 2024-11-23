@@ -54,6 +54,7 @@ export class PdfController {
   @Get('generateRegistrasiB3/:registrasiId')
   @ApiOperation({ summary: 'Generate a PDF document for Registrasi B3' })
   @ApiResponse({ status: 200, description: 'PDF generated successfully.' })
+  @ApiResponse({ status: 404, description: 'Application not found.' })
   @ApiResponse({ status: 500, description: 'Internal server error.' })
   async generateRegistrasiB3(
     @Param('registrasiId') id: string,

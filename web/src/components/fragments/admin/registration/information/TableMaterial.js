@@ -1,5 +1,5 @@
 import { Button, Card, CardBody, CardHeader, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, useDisclosure } from "@nextui-org/react";
-import { getFetcher } from "../../../../../services/api";
+import {getDetailRegistrasi, getFetcher, updateBahanB3} from "../../../../../services/api";
 import ModalAlert from "../../../../elements/ModalAlert";
 import ModalDetailList from "../../../../elements/ModalDetailList";
 import useSWR from "swr";
@@ -11,24 +11,40 @@ import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
 export default function TableMaterial({ className, dataB3 }) {
-    const { data, isLoading } = useSWR('/products?limit=4', getFetcher);
     const {isOpen: isOpenModalAlert, onOpen: onOpenModalAlert, onOpenChange: onOpenChangeModalAlert, onClose: onCloseModalAlert } = useDisclosure();
     const {isOpen: isOpenModalForm, onOpen: onOpenModalForm, onOpenChange: onOpenChangeModalForm, onClose : onCloseModalForm } = useDisclosure();
     const [editId, setEditId] = useState(null);
 
     const schema =  yup.object().shape({
-        noRegBahan: yup.string().required('Harus diisi'),   
-        namaDagang: yup.string().required('Harus diisi'),   
+        no_reg_bahan: yup.string().required('Harus diisi'),
+        nama_dagang: yup.string().required('Harus diisi'),
     }).required()
 
     const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({resolver: yupResolver(schema)});
 
     const columns = [
         'No',
-        'HS Code',
-        'Nama Dagang',
-        'Nama Bahan Kimia',
         'No. Reg. Bahan Kimia',
+        'No. Registrasi PTSP',
+        'Kategori Bahan Kimia',
+        'Nama Bahan Kimia',
+        'Nama Dagang',
+        'Cas Number',
+        'HS Code',
+        'Klasifikasi Bahan Kimia',
+        'Karakteristik Bahan Kimia',
+        'Tujuan Penggunaan',
+        'Jumlah Impor',
+        'Jumlah Impor / TH',
+        'Rencana Impor (Kali/TH)',
+        'Penggunaan',
+        'Penghasil Bahan Kimia',
+        'Asal Negara',
+        'Negara Muat',
+        'Alamat Penghasil',
+        'Pelabuhan Muat',
+        'Pelabuhan Bongkar',
+        'Provinsi Tujuan',
         'Aksi',
     ]
 
@@ -116,29 +132,31 @@ export default function TableMaterial({ className, dataB3 }) {
     ]
 
     async function handleOnSubmit(data) {
+        const {id, ...newData} = data
         try {
             await new Promise((r) => setTimeout(r, 1000));
-            console.log(data);
+            const response = await updateBahanB3(data.id, newData)
+            console.log(response);
             toast.success('Data bahan b3 berhasil diubah!');
             reset();
             onCloseModalForm();
         } catch (error) {
-            toast.success('Gagal ubah data bahan b3!');
+            toast.error('Gagal ubah data bahan b3!');
         }
     }
 
     function handleOnClose() {
         reset({
             id: '',
-            noRegBahan: '',
-            namaDagang: '',   
+            no_reg_bahan: '',
+            nama_dagang: '',
         });
     }
 
-    function handleOnEdit(item) {        
+    function handleOnEdit(item) {
         reset({
             id: item.id,
-        });        
+        });
         onOpenModalForm();
     }
 
@@ -169,14 +187,31 @@ export default function TableMaterial({ className, dataB3 }) {
                         <TableHeader>
                             {columns.map((item, index) => <TableColumn key={index}>{item}</TableColumn>)}
                         </TableHeader>
-                        <TableBody loadingContent={<Spinner />} loadingState={isLoading ? 'loading' : 'idle'}>
+                        <TableBody loadingContent={<Spinner />}>
                             {dataB3?.BahanB3Registrasi?.map((item, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{index + 1}</TableCell>
-                                    <TableCell>{item.hs_code}</TableCell>
-                                    <TableCell>{item.nama_dagang}</TableCell>
-                                    <TableCell>{item.nama_bahan}</TableCell>
                                     <TableCell>{item?.no_reg_bahan}</TableCell>
+                                    <TableCell>{item.registrasiId}</TableCell>
+                                    <TableCell>{item.kategori_b3}</TableCell>
+                                    <TableCell>{item?.nama_bahan}</TableCell>
+                                    <TableCell>{item?.nama_dagang}</TableCell>
+                                    <TableCell>{item?.cas_number}</TableCell>
+                                    <TableCell>{item?.hs_code}</TableCell>
+                                    <TableCell>{item?.klasifikasi_b3}</TableCell>
+                                    <TableCell>{item?.karakteristik_b3}</TableCell>
+                                    <TableCell>{item?.tujuan_penggunaan}</TableCell>
+                                    <TableCell>{item?.jumlah_impor}</TableCell>
+                                    <TableCell>{item?.jumlah_impor_per_tahun}</TableCell>
+                                    <TableCell>{item?.pelaksanaan_rencana_impor}</TableCell>
+                                    <TableCell>{item?.penggunaan}</TableCell>
+                                    <TableCell>{item?.penghasil_bahan_kimia}</TableCell>
+                                    <TableCell>{item?.asal_negara}</TableCell>
+                                    <TableCell>{item?.negara_muat}</TableCell>
+                                    <TableCell>{item?.alamat_penghasil_b3}</TableCell>
+                                    <TableCell>{item?.pelabuhan_muat}</TableCell>
+                                    <TableCell>{item?.pelabuhan_bongkar}</TableCell>
+                                    <TableCell>{item?.provinsi_pelabuhan_bongkar}</TableCell>
                                     <TableCell className='flex items-center gap-1'>
                                         <ModalDetailList list={list(item)}/>
                                         <Button isIconOnly size="sm" color="warning" onPress={() => handleOnEdit(item)}><PencilSquareIcon className="size-4" /></Button>
@@ -199,24 +234,24 @@ export default function TableMaterial({ className, dataB3 }) {
                                     <div className='flex flex-col gap-3 mb-6'>
                                         <input type="hidden" {...register('id')} />
                                         <Input
-                                            {...register('noRegBahan')}
+                                            {...register('no_reg_bahan')}
                                             isRequired
-                                            variant="faded" 
-                                            type="text" 
-                                            label="No. Reg. Bahan" 
-                                            color={errors.noRegBahan ? 'danger' : 'default'}
-                                            isInvalid={errors.noRegBahan} 
-                                            errorMessage={errors.noRegBahan && errors.noRegBahan.message}
+                                            variant="faded"
+                                            type="text"
+                                            label="No. Reg. Bahan"
+                                            color={errors.no_reg_bahan ? 'danger' : 'default'}
+                                            isInvalid={errors.no_reg_bahan}
+                                            errorMessage={errors.no_reg_bahan && errors.no_reg_bahan.message}
                                         />
                                         <Input
-                                            {...register('namaDagang')}
+                                            {...register('nama_dagang')}
                                             isRequired
-                                            variant="faded" 
-                                            type="text" 
-                                            label="Nama Dagang" 
-                                            color={errors.namaDagang ? 'danger' : 'default'}
-                                            isInvalid={errors.namaDagang} 
-                                            errorMessage={errors.namaDagang && errors.namaDagang.message}
+                                            variant="faded"
+                                            type="text"
+                                            label="Nama Dagang"
+                                            color={errors.nama_dagang ? 'danger' : 'default'}
+                                            isInvalid={errors.nama_dagang}
+                                            errorMessage={errors.nama_dagang && errors.nama_dagang.message}
                                         />
                                     </div>
                                     <div className='flex items-center gap-1'>

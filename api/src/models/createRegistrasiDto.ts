@@ -26,6 +26,9 @@ export class CreateRegistrasiDto {
   @IsString()
   bulan: string;
 
+  @IsOptional()
+  pejabat_id: string;
+
   @IsInt()
   @IsNotEmpty()
   tahun: number; // Tahun field

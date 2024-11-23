@@ -106,7 +106,8 @@ export class InswServices {
         await this.prisma.registrasi.update({
           where: { id: payload.id },
           data: {
-            approval_status: payload.status,
+            approval_status: payload.approval_status,
+            status: payload.status,
           }
         })
 
@@ -124,7 +125,6 @@ export class InswServices {
         )
     }
 
-    // return responseData;
   }
 
   private formatDate(isoString: string): string {

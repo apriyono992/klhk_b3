@@ -1,12 +1,11 @@
 import { Button, Card, CardBody, CardHeader, Divider, Input, Select, SelectItem, Textarea } from '@nextui-org/react'
 import React from 'react'
-import { Controller, useForm } from 'react-hook-form'
-import MultiSelectSort from '../../../elements/MultiSelectSort'
+import { useForm } from 'react-hook-form'
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
-import {simpanSK, submitSK} from '../../../../services/api';
+import { submitApprovalSK } from '../../../../services/api';
 import { useNavigate } from 'react-router-dom';
 import { REGISTRATION_INDEX_PATH } from '../../../../services/routes';
 import useAuth from "../../../../hooks/useAuth";
@@ -29,15 +28,15 @@ export default function DraftDireksi(id) {
         const newData = {
             ...dataSK,
             tanggal_surat: format(dataTanggalSurat, 'yyyy-MM-dd'),
-            approval_status: "approved by direksi",
-            status: "riwayat",
+            approval_status: "kirim INSW",
+            status: "draft",
             approved_by: data.fullName
         }
 
         try {
-            const response = await submitSK(id.id, newData);
+            const response = await submitApprovalSK(id.id, newData);
             console.log(response, 'success');
-            toast.success('Draft sk berhasil dibuat!');
+            toast.success('Simpan Draft sk berhasil dibuat!');
             navigate(REGISTRATION_INDEX_PATH, { replace: true })
         } catch (error) {
             toast.error('Gagal buat draft sk!');
@@ -78,7 +77,7 @@ export default function DraftDireksi(id) {
                             />
                         </div>
                         <div>
-                            <Button isDisabled={isSubmitting} isLoading={isSubmitting} type="submit" color='primary'>Simpan</Button>
+                            <Button isDisabled={isSubmitting} isLoading={isSubmitting} type="submit" color='primary'>Submit</Button>
                         </div>
                     </CardBody>
                 </Card>

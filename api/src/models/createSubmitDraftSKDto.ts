@@ -13,39 +13,44 @@ import { Type } from 'class-transformer';
 import { BahanB3RegistrasiDto } from './createUpdateBahanB3regDTO';
 
 export class CreateSubmitDraftSKDto {
-  @IsNotEmpty()
+  @IsOptional()
   bulan: string; // Foreign key company ID
 
-  @IsInt()
-  @IsNotEmpty()
+  @IsOptional()
   tahun: number; // Nomor field
 
+  @IsOptional()
   @IsString()
   status_izin: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   keterangan_sk: string; // Tahun field
 
   @IsDate()
-  @IsNotEmpty()
+  @IsOptional()
   @Type(() => Date)
   tanggal_terbit: Date; // Tanggal terbit
 
   @IsDate()
-  @IsNotEmpty()
+  @IsOptional()
   @Type(() => Date)
-  berlaku_dari: Date; // Berlaku dari
+  berlaku_dari: Date; // Berlaku dari wajib
 
   @IsDate()
-  @IsNotEmpty()
+  @IsOptional()
   @Type(() => Date)
   berlaku_sampai: Date; // Berlaku sampai
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   nomor_notifikasi_impor: string; // Nomor notifikasi impor
 
+  @IsOptional()
+  @IsString()
+  pejabat_id: string;
+
+  @IsOptional()
   @IsArray()
   @ArrayNotEmpty() // Ensure array is not empty
   @IsUUID('all', { each: true }) // Validate that each item is a valid UUID

@@ -1,65 +1,31 @@
-import { Button, Card, CardBody, CardHeader, Divider, Input, Select, SelectItem, Textarea } from '@nextui-org/react'
-import React from 'react'
-import { Controller, useForm } from 'react-hook-form'
-import MultiSelectSort from '../../../elements/MultiSelectSort'
+import React from 'react';
+import { Button, Card, CardBody, CardHeader, Divider, Input, Select, SelectItem, Textarea } from '@nextui-org/react';
+import { Controller, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
-import { simpanSK } from '../../../../services/api';
-import { useNavigate } from 'react-router-dom';
-import { REGISTRATION_INDEX_PATH } from '../../../../services/routes';
+import {getSelectFetcher, simpanSK} from '../../../../services/api';
+import ReactSelect from "../../../elements/ReactSelect";
+import useSWR from "swr";
+import TembusanRegistrasi from "./information/TembusanRegistrasi";
+import {dirtyInput} from "../../../../services/helpers";
 
-export default function Draft(id) {
-    const navigate = useNavigate();
-    const formSchema =  yup.object().shape({
-        tembusanIds: yup.array()
-            .min(1, 'Minimal 1 tembusan')
-            .required('Harus diisi'),
-        bulan: yup.string().typeError('Harus diisi'),
-        tahun: yup.number()
-                        .typeError('Tahun harus valid')
-                        .integer('Harus angka').min(1900, 'Tahun tidak valid')
-                        .max(2099, `Tahun tidak valid`)
-                        .required('harus diisi'),
-        status_izin: yup.string().typeError('Harus diisi'),
-        keterangan_sk: yup.string().required('harus diisi'),
-        tanggal_terbit: yup.date()
-                                    .typeError('Tanggal harus valid')
-                                    .required('harus diisi'),
+export default function Draft({ id, dataTembusan, mutate, data }) {
+    const formSchema = yup.object().shape({
         berlaku_dari: yup.date()
-                            .typeError('Tanggal harus valid')
-                            .required('harus diisi'),
+            .typeError('Tanggal harus valid')
+            .required('harus diisi'),
         berlaku_sampai: yup.date()
-                            .typeError('Tanggal harus valid')
-                            .required('harus diisi'),
+            .typeError('Tanggal harus valid')
+            .required('harus diisi'),
         nomor_notifikasi_impor: yup.string().required('harus diisi'),
 
-    }).required()
+    }).required();
 
-    const { register, handleSubmit, control, formState: { errors, isSubmitting }, } = useForm({resolver: yupResolver(formSchema)})
-
-    async function onSubmit(data) {
-        const dataBerlakuDari = new Date(data?.berlaku_dari)
-        const dataBerlakuSampai = new Date(data?.berlaku_sampai)
-        const dataTanggalTerbit = new Date(data?.tanggal_terbit)
-        const dataSK = {
-            ...data,
-            berlaku_dari: format(dataBerlakuDari, 'yyyy-MM-dd'),
-            berlaku_sampai: format(dataBerlakuSampai, 'yyyy-MM-dd'),
-            tanggal_terbit: format(dataTanggalTerbit, 'yyyy-MM-dd'),
-            tembusanIds: data?.tembusanIds.map(it => it.value),
-        }
-
-        try {
-            const response = await simpanSK(dataSK, id.id);
-            console.log(response, 'success');
-            toast.success('Draft sk berhasil dibuat!');
-            navigate(REGISTRATION_INDEX_PATH, { replace: true })
-        } catch (error) {
-            toast.error('Gagal buat draft sk!');
-        }
-    }
+    const dataBerlakuDari = data?.berlaku_dari && new Date(data?.berlaku_dari)
+    const dataBerlakuSampai = data?.berlaku_sampai && new Date(data?.berlaku_sampai)
+    const dataTanggalTerbit = data?.tanggal_terbit && new Date(data?.tanggal_terbit)
 
     const month = [
         'Januari',
@@ -83,47 +49,61 @@ export default function Draft(id) {
         'Perkecualian - Transaksional',
     ]
 
-    const options = [
-        { value: '1', label: 'Orang 1' },
-        { value: '2', label: 'Orang 2' },
-        { value: '3', label: 'Orang 3' },
-        { value: '4', label: 'Orang 4' },
-        { value: '5', label: 'Orang 5' },
-        { value: '6', label: 'Orang 6' },
-        { value: '7', label: 'Orang 7' },
-        { value: '8', label: 'Orang 8' },
-        { value: '9', label: 'Orang 9' },
-    ]
+    const { register, handleSubmit, control, formState: { errors, isSubmitting, dirtyFields } } = useForm({
+        resolver: yupResolver(formSchema),
+        defaultValues: {
+            bulan: data?.bulan,
+            tahun: data?.tahun,
+            status_izin: permit.find(word => word.toLowerCase() === data?.status_izin),
+            keterangan_sk: data?.keterangan_sk || '',
+            tanggal_terbit: format(dataTanggalTerbit, 'yyyy-MM-dd') || null,
+            berlaku_dari: format(dataBerlakuDari, 'yyyy-MM-dd') || null,
+            berlaku_sampai: format(dataBerlakuSampai, 'yyyy-MM-dd') || null,
+            nomor_notifikasi_impor: data?.nomor_notifikasi_impor || '',
+            pejabat_id: { value: data?.pejabat?.id, label: data?.pejabat?.nama },
+        }
+    });
+    const { data: dataPejabat, isLoading: isLoadingPejabat } = useSWR('/api/data-master/pejabat?limit=100', getSelectFetcher);
+
+    const onSubmit = async (data) => {
+        try {
+            const filteredData = dirtyInput(dirtyFields, data);
+            const dataBerlakuDari = data?.berlaku_dari && new Date(data?.berlaku_dari)
+            const dataBerlakuSampai = data?.berlaku_sampai && new Date(data?.berlaku_sampai)
+            const dataTanggalTerbit = data?.tanggal_terbit && new Date(data?.tanggal_terbit)
+            if (filteredData.berlaku_dari) {
+                filteredData.berlaku_dari = format(dataBerlakuDari, 'yyyy-MM-dd')
+            }
+            if (filteredData.berlaku_sampai) {
+                filteredData.berlaku_sampai = format(dataBerlakuSampai, 'yyyy-MM-dd')
+            }
+            if (filteredData.tanggal_terbit) {
+                filteredData.tanggal_terbit = format(dataTanggalTerbit, 'yyyy-MM-dd')
+            }
+
+            await simpanSK(id, filteredData);
+            mutate();
+            toast.success('Draft sk berhasil dibuat!');
+        } catch (error) {
+            console.log(error, 'isis eror draft')
+            toast.error('Gagal buat draft sk!');
+        }
+    }
+
+    const hasUnsavedChanges = Object.keys(dirtyFields).length > 0;
 
     return (
-        <div className=''>
-            <form onSubmit={handleSubmit(onSubmit)} className='grid grid-cols-1 md:grid-cols-2 gap-3 py-3'>
-                <Card radius='sm'>
-                    <CardHeader>
-                        <p className="text-md">Tembusan</p>
-                    </CardHeader>
-                    <Divider/>
-                    <CardBody>
-                        <Controller
-                            name='tembusanIds'
-                            control={control}
-                            rules={{ required: true }}
-                            render={({ field, fieldState }) => (
-                                <div className='flex flex-col'>
-                                    {fieldState.error && <div className="text-red-500 text-xs">{fieldState.error.message}</div>}
-                                    <MultiSelectSort
-                                        value={field.value}
-                                        onChange={field.onChange}
-                                        options={options}
-                                    />
-                                </div>
-                            )}
-                        />
-                    </CardBody>
-                </Card>
-                <Card radius='sm'>
+        <div className='flex flex-row gap-4 py-3'>
+            <div className={'w-1/2'}>
+                <TembusanRegistrasi registrasiId={id} existingTembusan={dataTembusan}/>
+            </div>
+            <form onSubmit={handleSubmit(onSubmit)} className='w-1/2'>
+                <Card radius='sm' className='h-full'>
                     <CardHeader>
                         <p className="text-md">Draft Sk</p>
+                        {hasUnsavedChanges && (
+                            <span className="text-red-500 text-sm ml-2">Perubahan belum disimpan</span>
+                        )}
                     </CardHeader>
                     <Divider/>
                     <CardBody>
@@ -133,7 +113,7 @@ export default function Draft(id) {
                                 variant="faded"
                                 label="Bulan"
                                 placeholder="Pilih"
-                                isRequired
+                                labelPlacement="outside"
                                 color={errors.bulan ? 'danger' : 'default'}
                                 isInvalid={errors.bulan}
                                 errorMessage={errors.bulan && errors.bulan.message}
@@ -144,8 +124,9 @@ export default function Draft(id) {
                             </Select>
                             <Input
                                 {...register('tahun')}
-                                isRequired
                                 variant="faded"
+                                labelPlacement="outside"
+                                placeholder={'...'}
                                 type="text"
                                 label="Tahun"
                                 color={errors.tahun ? 'danger' : 'default'}
@@ -157,7 +138,7 @@ export default function Draft(id) {
                                 variant="faded"
                                 label="Status Izin"
                                 placeholder="Pilih"
-                                isRequired
+                                labelPlacement="outside"
                                 color={errors.status_izin ? 'danger' : 'default'}
                                 isInvalid={errors.status_izin}
                                 errorMessage={errors.status_izin && errors.status_izin.message}
@@ -170,18 +151,18 @@ export default function Draft(id) {
                                 {...register('keterangan_sk')}
                                 variant="faded"
                                 label="Keterangan SK"
-                                isRequired
                                 color={errors.keterangan_sk ? 'danger' : 'default'}
                                 isInvalid={errors.keterangan_sk}
                                 errorMessage={errors.keterangan_sk && errors.keterangan_sk.message}
                                 className="col-span-2"
+                                labelPlacement="outside"
                             />
                             <Input
                                 {...register('tanggal_terbit')}
                                 variant="faded"
                                 label="Tanggal Terbit"
                                 type="date"
-                                isRequired
+                                labelPlacement="outside"
                                 color={errors.tanggal_terbit ? 'danger' : 'default'}
                                 isInvalid={errors.tanggal_terbit}
                                 errorMessage={errors.tanggal_terbit && errors.tanggal_terbit.message}
@@ -192,6 +173,7 @@ export default function Draft(id) {
                                 variant="faded"
                                 label="Berlaku Dari"
                                 type="date"
+                                labelPlacement="outside"
                                 isRequired
                                 color={errors.berlaku_dari ? 'danger' : 'default'}
                                 isInvalid={errors.berlaku_dari}
@@ -200,6 +182,7 @@ export default function Draft(id) {
                             <Input
                                 {...register('berlaku_sampai')}
                                 variant="faded"
+                                labelPlacement="outside"
                                 label="Sampai"
                                 type="date"
                                 isRequired
@@ -211,16 +194,43 @@ export default function Draft(id) {
                                 {...register('nomor_notifikasi_impor')}
                                 variant="faded"
                                 isRequired
+                                labelPlacement="outside"
                                 type="text"
                                 label="Nomor Notifikasi Impor"
+                                placeholder={'...'}
                                 color={errors.nomor_notifikasi_impor ? 'danger' : 'default'}
                                 isInvalid={errors.nomor_notifikasi_impor}
                                 errorMessage={errors.nomor_notifikasi_impor && errors.nomor_notifikasi_impor.message}
                                 className="col-span-2"
                             />
+                            <div className={'col-span-2'}>
+                                <Controller
+                                    name="pejabat_id"
+                                    control={control}
+                                    rules={{ required: 'Pejabat wajib diisi' }}
+                                    render={({ field, fieldState }) => (
+                                        <ReactSelect
+                                            label="Pejabat"
+                                            data={dataPejabat}
+                                            isLoading={isLoadingPejabat}
+                                            value={field.value}
+                                            defaultValue={field.value}
+                                            onChange={(selectedOption) => field.onChange(selectedOption.value)}
+                                            error={fieldState.error && fieldState.error.message}
+                                        />
+                                    )}
+                                />
+                            </div>
                         </div>
                         <div>
-                            <Button isDisabled={isSubmitting} isLoading={isSubmitting} type="submit" color='primary'>Simpan</Button>
+                            <Button
+                                type={"submit"}
+                                color='primary'
+                                isDisabled={isSubmitting || Object.keys(dirtyFields).length === 0}
+                                isLoading={isSubmitting}
+                            >
+                                Simpan
+                            </Button>
                         </div>
                     </CardBody>
                 </Card>

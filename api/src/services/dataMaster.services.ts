@@ -244,7 +244,6 @@ export class DataMasterService {
   async createDataTembusan(data: CreateDataTembusanDto) {
     try {
       return await this.prisma.$transaction(async (prisma) => {
-
         if (data.applicationId !== undefined && data.applicationId.trim() !== '') {
           // Cari DraftSurat berdasarkan applicationId
           const draftSurat = await prisma.draftSurat.findUnique({

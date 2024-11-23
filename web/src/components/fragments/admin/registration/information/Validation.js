@@ -1,21 +1,54 @@
 import { ArrowPathIcon, EyeIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
-import { Button, Card, CardBody, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Textarea } from '@nextui-org/react';
+import {
+    Button,
+    Card,
+    CardBody,
+    Checkbox,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    Spinner,
+    Table,
+    TableBody,
+    TableCell,
+    TableColumn,
+    TableHeader,
+    TableRow,
+    Textarea,
+    useDisclosure
+} from '@nextui-org/react';
 import ModalAlert from '../../../../elements/ModalAlert';
 import useValidationForm from '../../../../../hooks/useValidationForm';
 import useSWR from "swr";
-import {getFetcher} from "../../../../../services/api";
+import {getFetcher, patchFetcherWithoutId, postFetcher, putFetcher} from "../../../../../services/api";
+import toast from "react-hot-toast";
+import {useState} from "react";
+import * as yup from "yup";
+import {useForm} from "react-hook-form";
+import {yupResolver} from "@hookform/resolvers/yup";
+import useAuth from "../../../../../hooks/useAuth";
 
 export default function Validation({registrasi}) {
+    const [editId, setEditId] = useState(null);
     const { data, isLoading, mutate } = useSWR(`/api/registrasi/validasi-teknis/${registrasi.nomor}`, getFetcher);
-    const {
-        modalForm: { isOpenModalForm, onOpenChangeModalForm },
-        modalAlert: { isOpenModalAlert, onOpenChangeModalAlert },
-        hookForm: { register, handleSubmit, watch, formState: { errors, isSubmitting } },
-        onCloseForm,
-        onSubmitForm,
-        onClickEdit,
-        onValidate,
-    } = useValidationForm({ mutate });
+    const {isOpen: isOpenModalForm, onOpen: onOpenModalForm, onOpenChange: onOpenChangeModalForm, onClose: onCloseModalForm} = useDisclosure();
+    const {isOpen: isOpenModalAlert, onOpenChange: onOpenChangeModalAlert} = useDisclosure();
+    const { data: user } = useAuth()
+
+    const schema = yup.object({
+        isValid: yup.boolean().oneOf([true, false], 'Isi harus valid atau tidak valid'),
+        keterangan: yup.string().when('isValid', (isValid, schema) => {
+            if (isValid[0] === true) {
+                return schema.notRequired();
+            }
+            return schema.required('Catatan harus diisi jika dokumen tidak valid');
+        }),
+    }).required();
+
+    const { register, handleSubmit, reset, watch, formState: { errors, isSubmitting } } = useForm({resolver: yupResolver(schema)});
+
     // Watch for changes on 'isValid' checkbox
     const isValid = watch('isValid');
     const areAllDocumentValid = data?.documents?.every(
@@ -30,6 +63,47 @@ export default function Validation({registrasi}) {
         'Catatan',
         'Aksi',
     ]
+
+    const onSubmitForm = async(data) => {
+        try {
+            await putFetcher(`/api/registrasi/edit-document`, editId , data);
+            await mutate()
+            toast.success('Status dokumen berhasil diubah!');
+            onCloseForm();
+        } catch (error) {
+            console.log(error);
+            toast.error('Gagal ubah status dokumen!');
+        }
+    }
+
+    function onCloseForm() {
+        setEditId(null);
+        reset({
+            isValid: false,
+            keterangan: '',
+        });
+        onCloseModalForm();
+    }
+
+    function onClickEdit(item) {
+        setEditId(item.id);
+        onOpenModalForm();
+    }
+
+    async function onValidate(applicationId) {
+        try {
+            const data = {
+                applicationId: applicationId,
+                status: 'VALIDASI_PEMOHONAN_SELESAI',
+                userId: user.userId
+            }
+            await patchFetcherWithoutId('/api/rekom/permohonan/status', data);
+            mutate()
+            toast.success('Validasi teknis selesai!');
+        } catch (error) {
+            toast.error('Gagal validasi!');
+        }
+    }
 
     return (
         <>
@@ -48,7 +122,7 @@ export default function Validation({registrasi}) {
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{item.pertanyaan_teks}</TableCell>
                                     <TableCell>{item.jawaban_pertanyaan}</TableCell>
-                                    <TableCell>{item.validasi_valid == 1 ? 'Iya' : 'Tidak'}</TableCell>
+                                    <TableCell>{item.validasi_valid === 1 ? 'Iya' : 'Tidak'}</TableCell>
                                     <TableCell>{item.keterangan}</TableCell>
                                     <TableCell className='flex items-center gap-1'>
                                         <a target='_blank' href={item.fileUrl} className=''>
@@ -75,20 +149,22 @@ export default function Validation({registrasi}) {
                                         <Checkbox
                                             {...register('isValid')}
                                         >
-                                            Dokumen valid
+                                            Dokumen tidak valid
                                         </Checkbox>
-                                        <Textarea
-                                            {...register('validationNotes', {
-                                                required: !isValid ? 'Catatan harus diisi jika dokumen tidak valid' : false,
-                                            })}
-                                            isRequired={!isValid}
-                                            variant="faded"
-                                            type="text"
-                                            label="Catatan"
-                                            color={errors.validationNotes ? 'danger' : 'default'}
-                                            isInvalid={errors.validationNotes}
-                                            errorMessage={errors.validationNotes && errors.validationNotes.message}
-                                        />
+                                        {isValid &&
+                                            <Textarea
+                                                {...register('keterangan', {
+                                                    required: !isValid ? 'Catatan harus diisi jika dokumen tidak valid' : false,
+                                                })}
+                                                isRequired
+                                                variant="faded"
+                                                type="text"
+                                                label="Catatan"
+                                                color={errors.keterangan ? 'danger' : 'default'}
+                                                isInvalid={errors.keterangan}
+                                                errorMessage={errors.keterangan && errors.keterangan.message}
+                                            />
+                                        }
                                     </div>
                                     <div className='flex items-center gap-1'>
                                         <Button isLoading={isSubmitting} isDisabled={isSubmitting} type='submit' color='primary'>Simpan</Button>

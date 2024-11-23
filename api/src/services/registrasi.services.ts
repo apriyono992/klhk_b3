@@ -12,6 +12,7 @@ import { CreateRegistrasiDto } from '../models/createRegistrasiDto';
 import { BahanB3RegistrasiDto } from '../models/createUpdateBahanB3regDTO';
 import {InswServices} from "./insw.services";
 import {CreateSubmitDraftSKDto} from "../models/createSubmitDraftSKDto";
+import {CreateUpdateValidasiTeknis} from "../models/createUpdateValidasiTeknis";
 
 @Injectable()
 export class RegistrasiServices {
@@ -91,108 +92,109 @@ export class RegistrasiServices {
     return registrasi;
   }
 
-  async create(saveRegistrasiDto: CreateRegistrasiDto) {
-    const { BahanB3Reg } = saveRegistrasiDto;
-    // Ensure that the Company exists
-    const company = await this.prisma.company.findUnique({
-      where: { id: saveRegistrasiDto.companyId },
-    });
-    if (!company) {
-      throw new NotFoundException(
-        `Company with ID ${saveRegistrasiDto.companyId} not found`,
-      );
+  // async create(saveRegistrasiDto: CreateRegistrasiDto) {
+  //   const { BahanB3Reg } = saveRegistrasiDto;
+  //   // Ensure that the Company exists
+  //   const company = await this.prisma.company.findUnique({
+  //     where: { id: saveRegistrasiDto.companyId },
+  //   });
+  //   if (!company) {
+  //     throw new NotFoundException(
+  //       `Company with ID ${saveRegistrasiDto.companyId} not found`,
+  //     );
+  //   }
+  //
+  //   // Ensure that all Tembusan IDs exist
+  //   const tembusanExists = await this.prisma.dataTembusan.findMany({
+  //     where: { id: { in: saveRegistrasiDto.tembusanIds } },
+  //   });
+  //   if (tembusanExists.length !== saveRegistrasiDto.tembusanIds.length) {
+  //     throw new NotFoundException(`Some Tembusan IDs do not exist`);
+  //   }
+  //
+  //   // Ensure that all Bahan B3 IDs exist
+  //   const bahanB3Exists =
+  //     await this.bahanB3RegService.createBahanB3Reg(BahanB3Reg);
+  //
+  //   // Ensure that all persyaratan exist
+  //   const persyaratanExist = await this.prisma.persyaratan.findMany({
+  //     where: { id: { in: saveRegistrasiDto.registrasiPersyaratanIds } },
+  //   });
+  //   if (
+  //     persyaratanExist.length !==
+  //     saveRegistrasiDto.registrasiPersyaratanIds.length
+  //   ) {
+  //     throw new NotFoundException(`Some Persyaratan IDs do not exist`);
+  //   }
+  //
+  //   // Create the Registrasi entry with related Tembusan and b3subtance entries
+  //   const registrasi = await this.prisma.registrasi.create({
+  //     data: {
+  //       ..._.omit(saveRegistrasiDto, [
+  //         'tembusanIds',
+  //         'BahanB3Reg',
+  //         'registrasiPersyaratanIds',
+  //       ]),
+  //       approval_status: 'updated', // Set approval_status to 'updated' if it already exists
+  //       no_reg: await this.generateNoRegBahanb3(),
+  //       tembusan: {
+  //         connect: saveRegistrasiDto.tembusanIds.map((id) => ({ id })), // Set related Tembusan to avoid duplicate connections
+  //       },
+  //       BahanB3Registrasi: {
+  //         connect: { id: bahanB3Exists.id },
+  //       },
+  //       persyaratan: {
+  //         connect: saveRegistrasiDto.registrasiPersyaratanIds.map((id) => ({
+  //           id,
+  //         })),
+  //       },
+  //     },
+  //     include: {
+  //       tembusan: true,
+  //       BahanB3Registrasi: true,
+  //       company: true,
+  //     },
+  //   });
+  //
+  //   return registrasi;
+  // }
+
+  async submitDraftSK(id: string) {
+
+    const dataRegistrasi = await this.getRegistrasiById(id);
+    if(!dataRegistrasi.RegistrasiTembusan) {
+      throw new Error("Data Tembusan Kosong atau Invalid")
     }
 
-    // Ensure that all Tembusan IDs exist
-    const tembusanExists = await this.prisma.dataTembusan.findMany({
-      where: { id: { in: saveRegistrasiDto.tembusanIds } },
-    });
-    if (tembusanExists.length !== saveRegistrasiDto.tembusanIds.length) {
-      throw new NotFoundException(`Some Tembusan IDs do not exist`);
+    if(!dataRegistrasi.berlaku_dari) {
+      throw new Error("Berlaku Dari Kosong atau Invalid")
     }
 
-    // Ensure that all Bahan B3 IDs exist
-    const bahanB3Exists =
-      await this.bahanB3RegService.createBahanB3Reg(BahanB3Reg);
-
-    // Ensure that all persyaratan exist
-    const persyaratanExist = await this.prisma.persyaratan.findMany({
-      where: { id: { in: saveRegistrasiDto.registrasiPersyaratanIds } },
-    });
-    if (
-      persyaratanExist.length !==
-      saveRegistrasiDto.registrasiPersyaratanIds.length
-    ) {
-      throw new NotFoundException(`Some Persyaratan IDs do not exist`);
+    if(!dataRegistrasi.berlaku_sampai) {
+      throw new Error("Berlaku Sampai Kosong atau Invalid")
     }
 
-    // Create the Registrasi entry with related Tembusan and b3subtance entries
-    const registrasi = await this.prisma.registrasi.create({
-      data: {
-        ..._.omit(saveRegistrasiDto, [
-          'tembusanIds',
-          'BahanB3Reg',
-          'registrasiPersyaratanIds',
-        ]),
-        approval_status: 'updated', // Set approval_status to 'updated' if it already exists
-        no_reg: await this.generateNoRegBahanb3(),
-        tembusan: {
-          connect: saveRegistrasiDto.tembusanIds.map((id) => ({ id })), // Set related Tembusan to avoid duplicate connections
-        },
-        BahanB3Registrasi: {
-          connect: { id: bahanB3Exists.id },
-        },
-        persyaratan: {
-          connect: saveRegistrasiDto.registrasiPersyaratanIds.map((id) => ({
-            id,
-          })),
-        },
-      },
-      include: {
-        tembusan: true,
-        BahanB3Registrasi: true,
-        company: true,
-      },
-    });
-
-    return registrasi;
-  }
-
-  async submitDraftSK(id: string, data: CreateSubmitDraftSKDto) {
-    const existingRegistrasi = await this.prisma.registrasi.findUnique({
-      where: { id },
-    });
-    if (!existingRegistrasi) {
-      throw new NotFoundException(`Registrasi with ID ${id} not found`);
+    if(!dataRegistrasi.nomor_notifikasi_impor) {
+      throw new Error("Nomor Notifikasi Impor Kosong atau Invalid")
     }
 
-    // Create the Registrasi entry with related Tembusan and BahanB3 entries
+    if(!dataRegistrasi.pejabatId) {
+      throw new Error("Pejabat id Kosong atau Invalid")
+    }
+
+    if(!dataRegistrasi.nomor) {
+      throw new Error("Nomor Surat Kosong atau Invalid")
+    }
+
+    if(!dataRegistrasi.tanggal_surat) {
+      throw new Error("Tanggal Surat Kosong atau Invalid")
+    }
+
     const registrasi = await this.prisma.registrasi.update({
       where: { id },
       data: {
-        bulan:data?.bulan,
-        tahun: data?.tahun,
-        status_izin: data?.status_izin,
-        keterangan_sk: data?.keterangan_sk,
-        berlaku_dari:data?.berlaku_dari,
-        berlaku_sampai: data?.berlaku_sampai,
-        nomor_notifikasi_impor: data?.nomor_notifikasi_impor,
-        approval_status: 'pending',
-        status: 'draft',
-        is_draft: false,
-        tembusan: {
-          connect: data.tembusanIds.map((id) => ({ id })), // Set related Tembusan to avoid duplicate connections
-        }
-      },
-      include: {
-        tembusan: true,
-        BahanB3Registrasi: {
-          include: {
-            SektorPenggunaanB3: true,
-          },
-        },
-        company: true,
-      },
+        approval_status: 'approve direksi'
+      }
     });
 
     return registrasi;
@@ -272,10 +274,11 @@ export class RegistrasiServices {
   }
 
   async getRegistrasiById(id: string) {
+    const dataPenjabat = await this.prisma
     const registrasi = await this.prisma.registrasi.findUnique({
       where: { id },
       include: {
-        tembusan: true,
+        // tembusan: true,
         BahanB3Registrasi: {
           include: {
             SektorPenggunaanB3: true,
@@ -283,6 +286,12 @@ export class RegistrasiServices {
         },
         company: true,
         persyaratan: true,
+        pejabat: true,
+        RegistrasiTembusan: {
+          include: {
+            DataTembusan: true
+          },
+        },
       },
     });
 
@@ -426,5 +435,75 @@ export class RegistrasiServices {
     });
 
     return getAllData;
+  }
+  
+  async editDocumentValidasiTeknis(id: string, updateData: CreateUpdateValidasiTeknis) {
+
+    return await this.prisma.validasiTeknisRegistrasi.update({
+      where: { id: id },
+      data: {
+        keterangan: updateData.keterangan,
+        validasi_valid: updateData.isValid === 'true' ? 1 : 0
+      }
+    });
+  }
+
+  async submitValidasiTeknis(id: string) {
+    return await this.prisma.registrasi.update({
+      where: { id: id },
+      data: {
+        approval_status : "draft sk",
+        status: "draft"
+      },
+    });
+  }
+
+  async simpanDraftSK(id: string, saveData: CreateSubmitDraftSKDto) {
+
+    const updatePayload: any = {};
+
+    if (saveData.tahun) {
+      updatePayload.tahun = saveData.tahun;
+    }
+
+    if (saveData.bulan) {
+      updatePayload.bulan = saveData.bulan;
+    }
+
+    if (saveData.status_izin) {
+      updatePayload.status_izin = saveData.status_izin;
+    }
+
+    if (saveData.keterangan_sk) {
+      updatePayload.keterangan_sk = saveData.keterangan_sk;
+    }
+
+    if (saveData.tanggal_terbit) {
+      updatePayload.tanggal_terbit = saveData.tanggal_terbit;
+    }
+
+    return await this.prisma.registrasi.update({
+      where: { id: id },
+      data: {
+        tahun: updatePayload.tahun ?? undefined,
+        bulan: updatePayload.bulan ?? undefined,
+        status_izin: updatePayload.status_izin ?? undefined,
+        keterangan_sk: updatePayload.keterangan_sk ?? undefined,
+        tanggal_terbit: updatePayload.tanggal_terbit ?? undefined,
+        berlaku_dari: saveData.berlaku_dari,
+        berlaku_sampai: saveData.berlaku_sampai,
+        nomor_notifikasi_impor: saveData.nomor_notifikasi_impor,
+        pejabatId: saveData.pejabat_id,
+        RegistrasiTembusan: {
+          deleteMany: saveData.tembusanIds ? {} : undefined, // Remove existing tembusan entries
+          create: saveData.tembusanIds
+              ? saveData.tembusanIds.map((tembusanId, index) => ({
+                dataTembusanId: tembusanId,
+                index: index,
+              }))
+              : undefined,
+        },
+      },
+    });
   }
 }

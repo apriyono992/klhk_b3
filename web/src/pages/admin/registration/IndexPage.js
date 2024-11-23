@@ -71,8 +71,8 @@ export default function IndexPage() {
             headerName: 'Lama Proses',
             width: 150,
             valueGetter: (value, row) => {
-                let startDate = row.berlaku_dari
-                let endDate = row.berlaku_sampai
+                let startDate = row.createdAt
+                let endDate = row.updatedAt
                 return `${differenceInDays(endDate, startDate)} Hari`
             }
         },

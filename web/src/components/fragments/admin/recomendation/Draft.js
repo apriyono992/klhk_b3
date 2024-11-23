@@ -14,7 +14,7 @@ export default function Draft({ data, mutate }) {
     const existingTembusan = data?.draftSurat?.tembusan?.map((item) => ({ value: item.id, label: item.nama }));
 
     const { register, handleSubmit, control, formState: { errors, isSubmitting, dirtyFields } } = useForm({
-        resolver: yupResolver(draftRecomendationLetter), 
+        resolver: yupResolver(draftRecomendationLetter),
         defaultValues: {
             nomorSurat: data?.draftSurat?.nomorSurat,
             tipeSurat: data?.draftSurat?.tipeSurat,
@@ -28,7 +28,7 @@ export default function Draft({ data, mutate }) {
     async function onSubmit(formData) {
         try {
             const filteredData = dirtyInput(dirtyFields, formData);
-            filteredData.draftId = data?.draftSurat.id;
+            filteredData.draftId = data?.draftSurat?.id;
             await patchFetcherWithoutId('/api/rekom/permohonan/draft-surat', filteredData);
             mutate();
             toast.success('Draft SK berhasil diubah!');
@@ -46,7 +46,7 @@ export default function Draft({ data, mutate }) {
     return (
         <div className='flex flex-row gap-4 py-3'>
             <div className='w-1/2'>
-                <TembusanComponent 
+                <TembusanComponent
                     existingTembusan= {data}
                 />
             </div>
@@ -63,24 +63,24 @@ export default function Draft({ data, mutate }) {
                         <div className='flex flex-col gap-3 mb-5'>
                             <Input
                                 {...register('nomorSurat')}
-                                variant="faded" 
-                                type="text" 
-                                label="Nomor Surat" 
+                                variant="faded"
+                                type="text"
+                                label="Nomor Surat"
                                 labelPlacement='outside'
                                 placeholder="..."
                                 color={errors.nomorSurat ? 'danger' : 'default'}
-                                isInvalid={errors.nomorSurat} 
+                                isInvalid={errors.nomorSurat}
                                 errorMessage={errors.nomorSurat && errors.nomorSurat.message}
                             />
                             <Input
                                 {...register('tipeSurat')}
-                                variant="faded" 
-                                type="text" 
-                                label="Tipe Surat" 
+                                variant="faded"
+                                type="text"
+                                label="Tipe Surat"
                                 labelPlacement='outside'
                                 placeholder="..."
                                 color={errors.tipeSurat ? 'danger' : 'default'}
-                                isInvalid={errors.tipeSurat} 
+                                isInvalid={errors.tipeSurat}
                                 errorMessage={errors.tipeSurat && errors.tipeSurat.message}
                             />
                             <Input
@@ -106,13 +106,13 @@ export default function Draft({ data, mutate }) {
                                         error={fieldState.error && fieldState.error.message}
                                     />
                                 )}
-                            />  
+                            />
                         </div>
                         <div>
-                            <Button 
-                                isDisabled={isSubmitting || Object.keys(dirtyFields).length === 0} 
-                                isLoading={isSubmitting} 
-                                type="submit" 
+                            <Button
+                                isDisabled={isSubmitting || Object.keys(dirtyFields).length === 0}
+                                isLoading={isSubmitting}
+                                type="submit"
                                 color='primary'
                             >
                                 Simpan
