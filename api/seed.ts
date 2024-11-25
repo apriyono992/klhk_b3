@@ -1,4 +1,4 @@
-import { TipeDokumen } from './src/models/enums/TipeDokumen';
+import { TipeDokumen } from './src/models/enums/tipeDokumen';
 import { createHmac, createHash } from 'crypto';
 import { v4 as uuidV4 } from 'uuid';
 import { PrismaClient } from '@prisma/client';
