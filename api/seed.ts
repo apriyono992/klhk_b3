@@ -482,6 +482,7 @@ async function main() {
       await prisma.jenisSample.create({
         data: {
           code: nextCode,
+          jenisSampelType: { connect: { id: jenisSampleType.id } },
           deskripsi: sample.jenis,
           typeId: await prisma.jenisSampleType.findUnique({ where: { type: sample.type } }).then((t) => t?.id),
         },
