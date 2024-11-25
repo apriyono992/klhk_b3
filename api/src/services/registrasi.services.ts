@@ -436,7 +436,7 @@ export class RegistrasiServices {
 
     return getAllData;
   }
-  
+
   async editDocumentValidasiTeknis(id: string, updateData: CreateUpdateValidasiTeknis) {
 
     return await this.prisma.validasiTeknisRegistrasi.update({
