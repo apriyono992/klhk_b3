@@ -63,17 +63,17 @@ export class RegistrasiController {
   }
 
   
-  @Roles(RolesAccess.PIC_REGISTRASI, RolesAccess.DIREKTUR, RolesAccess.SUPER_ADMIN)
-  @Post('submit-draft-sk/:id')
-  @ApiOperation({ summary: 'Submit Draft SK' })
-  @ApiResponse({ status: 200, description: 'Draft SK submitted successfully.' })
+  // @Roles(RolesAccess.PIC_REGISTRASI, RolesAccess.DIREKTUR, RolesAccess.SUPER_ADMIN)
+  // @Post('submit-draft-sk/:id')
+  // @ApiOperation({ summary: 'Submit Draft SK' })
+  // @ApiResponse({ status: 200, description: 'Draft SK submitted successfully.' })
 
-  async submitDraftSK(
-      @Param('id') id: string,
-      @Body() saveDraft : CreateSubmitDraftSKDto
-  ) {
-    return this.registrasiService.submitDraftSK(id, saveDraft);
-  }
+  // async submitDraftSK(
+  //     @Param('id') id: string,
+  //     @Body() saveDraft : CreateSubmitDraftSKDto
+  // ) {
+  //   return this.registrasiService.submitDraftSK(id, saveDraft);
+  // }
 
   @Roles(RolesAccess.PIC_REGISTRASI, RolesAccess.SUPER_ADMIN)
   @Post('submit-insw/:id')
@@ -225,6 +225,7 @@ export class RegistrasiController {
     return this.registrasiService.simpanDraftSK(id, saveDraft);
   }
 
+  @Roles(RolesAccess.PIC_REGISTRASI, RolesAccess.DIREKTUR, RolesAccess.SUPER_ADMIN)
   @Post('submit-draft-sk/:id')
   @ApiOperation({ summary: 'Submit Draft SK' })
   @ApiResponse({ status: 200, description: 'Draft SK submitted successfully.' })

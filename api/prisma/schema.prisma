@@ -1460,6 +1460,8 @@ model DataBahanB3Company {
   stokHistory    StokB3History[]
   updateRequests StokB3UpdateRequest[]
   
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt @default(now())
   @@unique([companyId, dataBahanB3Id]) // Constraint unik
 }
 
@@ -1470,6 +1472,10 @@ model StokB3History {
   previousStokB3        Float
   newStokB3             Float
   changeDate            DateTime    @default(now())
+
+  
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt @default(now())
 }
 
 model StokB3UpdateRequest {
@@ -1481,6 +1487,11 @@ model StokB3UpdateRequest {
   approved              Boolean     @default(false)
   approvalId            String?
   approval              Approval?   @relation(fields: [approvalId], references: [id])
+  
+  notes                 String?
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt @default(now())
 }
 
 model StokB3AddRequest {
@@ -1494,6 +1505,10 @@ model StokB3AddRequest {
   approved              Boolean     @default(false)
   approvalId            String?
   approval              Approval?   @relation(fields: [approvalId], references: [id])
+
+  
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt @default(now())
 }
 
 model DataSupplier {
@@ -1631,7 +1646,9 @@ model PelaporanPenggunaanBahanB3 {
   id                  String               @id @default(uuid())
   companyId           String // Foreign key to Company
   company             Company              @relation(fields: [companyId], references: [id])
-
+  no_surat_registrasi String?
+  tujuan_import       String?
+  no_surat_notifikasi String?
   bulan               Int // Month of the report (1 for January, 2 for February, etc.)
   tahun               Int // Year of the report
   dataBahanB3Id       String // Foreign key to DataBahanB3
@@ -1671,7 +1688,9 @@ model PelaporanPenggunaanBahanB3Final {
   id                  String               @id @default(uuid())
   companyId           String // Foreign key to Company
   company             Company              @relation(fields: [companyId], references: [id])
-
+  no_surat_registrasi String?
+  tujuan_import       String?
+  no_surat_notifikasi String?
   bulan               Int // Month of the report (1 for January, 2 for February, etc.)
   tahun               Int // Year of the report
   dataBahanB3Id       String // Foreign key to DataBahanB3

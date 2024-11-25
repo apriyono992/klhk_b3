@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import * as yup from 'yup';
 import { patchFetcherWithoutId, postFetcher } from "../services/api";
 import useAuth from "./useAuth";
+import StatusRekomendasi from "../enums/statusRekomendasi";
 
 export default function useValidationForm({ mutate }) {
     const {isOpen: isOpenModalForm, onOpen: onOpenModalForm, onOpenChange: onOpenChangeModalForm, onClose: onCloseModalForm} = useDisclosure();
@@ -13,9 +14,9 @@ export default function useValidationForm({ mutate }) {
     const [editId, setEditId] = useState(null);
 
     const schema = yup.object({
-        isValid: yup.boolean().oneOf([true, false], 'Isi harus valid atau tidak valid'),
-        validationNotes: yup.string().when('isValid', (isValid, schema) => {
-            if (isValid[0] === true) {
+        isNotValid: yup.boolean().oneOf([true, false], 'Isi harus valid atau tidak valid'),
+        validationNotes: yup.string().when('isNotValid', (isNotValid, schema) => {
+            if (isNotValid[0] === false) {
                 return schema.notRequired();
             }
             return schema.required('Catatan harus diisi jika dokumen tidak valid');
@@ -28,8 +29,12 @@ export default function useValidationForm({ mutate }) {
 
     async function onSubmitForm(data) {
         try {
-            data.documentId = editId;
-            await postFetcher('/api/documents/validate', data);
+            const datas = {
+                documentId: editId,
+                isValid:data.isNotValid === true ? false : true,
+                validationNotes: data.validationNotes,
+            }
+            await postFetcher('/api/documents/validate', datas);
             mutate()
             toast.success('Status dokumen berhasil diubah!');
             onCloseForm();
@@ -43,7 +48,7 @@ export default function useValidationForm({ mutate }) {
         try {
             const data = {
                 applicationId: applicationId,
-                status: 'VALIDASI_PEMOHONAN_SELESAI',
+                status: StatusRekomendasi.PEMBUATAN_DRAFT_SK,
                 userId: user.userId
             }
             await patchFetcherWithoutId('/api/rekom/permohonan/status', data);
@@ -57,7 +62,7 @@ export default function useValidationForm({ mutate }) {
     function onCloseForm() {
         setEditId(null);
         reset({
-            isValid: false,
+            isNotValid: false,
             validationNotes: '',   
         });
         onCloseModalForm();

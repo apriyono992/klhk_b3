@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, IsDate, IsEnum } from 'class-validator';
+import { IsOptional, IsString, IsDate, IsEnum, IsArray } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PaginationDto } from 'src/models/paginationDto';
 
@@ -9,8 +9,8 @@ export class SearchStokB3PeriodeDto extends PaginationDto {
     example: 'company-123',
   })
   @IsOptional()
-  @IsString()
-  companyId?: string;
+  @IsArray()
+  companyId?: string[];
 
   @ApiPropertyOptional({
     description: 'ID Data Bahan B3',

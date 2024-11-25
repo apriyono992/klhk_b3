@@ -3,6 +3,7 @@ import { Button, Card, CardBody, Checkbox, Modal, ModalBody, ModalContent, Modal
 import IsValidIcon from '../../../elements/isValidIcon';
 import ModalAlert from '../../../elements/ModalAlert';
 import useValidationForm from '../../../../hooks/useValidationForm';
+import StatusRekomendasi from '../../../../enums/statusRekomendasi';
 
 export default function Validation({ data, isLoading, mutate }) {
     const {
@@ -15,7 +16,7 @@ export default function Validation({ data, isLoading, mutate }) {
         onValidate,
     } = useValidationForm({ mutate });
     // Watch for changes on 'isValid' checkbox
-    const isValid = watch('isValid');
+    const isNotValid = watch('isNotValid');
     const areAllDocumentValid = data?.documents?.every(
         document => document.isValid
     );
@@ -33,7 +34,7 @@ export default function Validation({ data, isLoading, mutate }) {
             <Card>
                 <CardBody>
                     <div className='mb-6'>
-                        <Button isDisabled={!areAllDocumentValid || data?.status === 'VALIDASI_PEMOHONAN_SELESAI'} onPress={onOpenChangeModalAlert} color='warning' size='sm' startContent={<ArrowPathIcon className="size-4"/>}>Submit Validasi</Button>
+                        <Button isDisabled={!areAllDocumentValid || data?.status === StatusRekomendasi.VALIDASI_PEMOHONAN} onPress={onOpenChangeModalAlert} color='warning' size='sm' startContent={<ArrowPathIcon className="size-4"/>}>Submit Validasi</Button>
                     </div>
                     <Table removeWrapper aria-label="validation-table" radius='sm'>
                         <TableHeader>
@@ -71,15 +72,15 @@ export default function Validation({ data, isLoading, mutate }) {
                                 <form onSubmit={handleSubmit(onSubmitForm)}>
                                     <div className='flex flex-col gap-3 mb-6'>
                                         <Checkbox
-                                            {...register('isValid')}
+                                            {...register('isNotValid')}
                                         >
-                                            Dokumen valid
+                                            Dokumen Tidak Valid
                                         </Checkbox>
                                         <Textarea
                                             {...register('validationNotes', {
-                                                required: !isValid ? 'Catatan harus diisi jika dokumen tidak valid' : false,
+                                                required: isNotValid ? 'Catatan harus diisi jika dokumen tidak valid' : false,
                                             })}
-                                            isRequired={!isValid}
+                                            isRequired={isNotValid}
                                             variant="faded"
                                             type="text"
                                             label="Catatan"

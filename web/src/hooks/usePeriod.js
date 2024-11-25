@@ -28,30 +28,43 @@ export default function usePeriod({ mutate }) {
 
     function onCloseForm() {
         reset({
-            name: '',   
-            startDate: '',
-            endDate: '',
-            finalizationDeadline: '',
-            isActive: ''
+          name: "",
+          startPeriodDate: "",
+          endPeriodDate: "",
+          startReportingDate: "",
+          endReportingDate: "",
+          finalizationDeadline: "",
+          isActive: false,
+          isReportingActive: false,
         });
-        onCloseModalForm()
+        onCloseModalForm();
     }
 
     async function onSubmitForm(data) {
         try {
-            await postFetcher('/api/period/create', data);
-            mutate()
-            toast.success('Periode berhasil ditambah!');
-            onCloseForm();
+        console.log(data);
+        // Pastikan data sesuai DTO
+        const formattedData = {
+            ...data,
+            startPeriodDate: new Date(data.startPeriodDate),
+            endPeriodDate: new Date(data.endPeriodDate),
+            startReportingDate: new Date(data.startReportingDate),
+            endReportingDate: new Date(data.endReportingDate),
+            finalizationDeadline: new Date(data.finalizationDeadline),
+        };
+
+        await postFetcher("/api/period/create", formattedData);
+        mutate();
+        toast.success("Periode berhasil ditambah!");
+        onCloseForm();
         } catch (error) {
-            isResponseErrorObject(error.response.data.message)
-                ? Object.entries(error.response.data.message).forEach(([key, value]) => {
-                    toast.error(value);
-                })
-                : toast.error(error.response.data.message)
+        isResponseErrorObject(error.response.data.message)
+            ? Object.entries(error.response.data.message).forEach(([key, value]) => {
+                toast.error(value);
+            })
+            : toast.error(error.response.data.message);
         }
     }
-
     return {
         modalForm: {
             isOpenModalForm,

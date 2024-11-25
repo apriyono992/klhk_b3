@@ -149,37 +149,6 @@ export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
                         </AccordionItem>
                         <AccordionItem
                             key="4"
-                            title="Master Data"
-                            className=""
-                            startContent={<FolderIcon className="size-5" />}
-                        >
-                            <ListItem
-                                url={CARBON_COPY_INDEX_PATH}
-                                variant="subitem"
-                                title="Tembusan"
-                                icon={<AtSymbolIcon className="size-4" />}
-                            />
-                            <ListItem
-                                url={OFFICIAL_INDEX_PATH}
-                                variant="subitem"
-                                title="Pejabat"
-                                icon={<UserGroupIcon className="size-4" />}
-                            />
-                            <ListItem
-                                url={MATERIAL_INDEX_PATH}
-                                variant="subitem"
-                                title="Bahan B3"
-                                icon={<ExclamationTriangleIcon className="size-4" />}
-                            />
-                            <ListItem
-                                url={COMPANY_INDEX_PATH}
-                                variant="subitem"
-                                title="Perusahaan"
-                                icon={<BuildingOfficeIcon className="size-4" />}
-                            />
-                        </AccordionItem>
-                        <AccordionItem
-                            key="5"
                             title="CMS"
                             className=""
                             startContent={<NewspaperIcon className="size-4" />}
@@ -223,8 +192,8 @@ export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
                             <ListItem url={PERIOD_INDEX_PATH} variant="subitem" title="Periode" icon={<ClockIcon className="size-4" />} />
                         </AccordionItem>
                         <AccordionItem key="7" title="Stok B3" className="" startContent={<BellAlertIcon className="size-5" />}>
-                            <ListItem url={STOK_B3_INDEX_ADMIN_PATH} variant="subitem" title="Stok B3 User" icon={<ChartBarIcon className="size-4" />} />
-                            <ListItem url={STOK_B3_INDEX_USER_PATH} variant="subitem" title="Stok B3 Admin" icon={<ListBulletIcon className="size-4" />} />
+                            <ListItem url={STOK_B3_INDEX_ADMIN_PATH} variant="subitem" title="Stok B3 Admin" icon={<ChartBarIcon className="size-4" />} />
+                            <ListItem url={STOK_B3_INDEX_USER_PATH} variant="subitem" title="Stok B3 User" icon={<ListBulletIcon className="size-4" />} />
                         </AccordionItem>
                         <AccordionItem key="8" title="Merkuri" className="" startContent={<PowerIcon className="size-5" />}>
                             <ListItem url={WPR_INDEX_PATH} variant="subitem" title="Wilayah Pertambangan Rakyat" icon={<CogIcon className="size-4" />} />

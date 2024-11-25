@@ -68,7 +68,7 @@ export class PermohonanRekomendasiB3Service {
         // Attempt to create the application
         application = await this.prisma.application.create({
           data: {
-            status: StatusPermohonan.DraftPermohonan,
+            status: StatusPermohonan.DRAFT_PERMOHONAN,
             jenisPermohonan: JenisPermohonan.REKOMENDASI_B3,
             tipeSurat: createDto.tipeSurat,
             kodePermohonan,
@@ -84,7 +84,7 @@ export class PermohonanRekomendasiB3Service {
           data: {
             application: { connect: { id: application.id } },
             oldStatus: null,
-            newStatus: StatusPermohonan.DraftPermohonan,
+            newStatus: StatusPermohonan.DRAFT_PERMOHONAN,
             changedAt: new Date(),
           },
         });
@@ -118,7 +118,7 @@ export class PermohonanRekomendasiB3Service {
       });
       let updatedApplication;
       // Check if the new status is 'ValidasiPemohonanSelesai' and create DraftSurat if true
-      if (data.status === StatusPermohonan.ValidasiPemohonanSelesai ) {
+      if (data.status === StatusPermohonan.PEMBUATAN_DRAFT_SK ) {
         if(application.status !== data.status && (application.documents.length > 0 && application.documents.every(doc => doc.isValid === true))){
             // Log the old status and the new status in ApplicationStatusHistory
             await prisma.applicationStatusHistory.create({

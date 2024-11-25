@@ -8,6 +8,7 @@ import { SearchBahanB3CompanyDto } from 'src/models/searchBahanB3CompanyDto';
 import { SearchStokB3PeriodeDto } from 'src/models/searchStokB3PeriodeDto';
 import { JwtAuthGuard } from 'src/utils/auth.guard';
 import { RolesGuard } from 'src/utils/roles.guard';
+import { SearchPendingRequestStokBahanB3Dto } from 'src/models/searchPendingRequestStokBahanB3Dto';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('Data Bahan B3 Company')
@@ -204,7 +205,7 @@ export class DataBahanB3CompanyController {
     /**
      * Search Bahan B3 Company based on filters
      */
-    @Post('search')
+    @Get('search')
     @ApiOperation({ summary: 'Search Bahan B3 entries based on filters' })
     @ApiResponse({
       status: 200,
@@ -282,4 +283,50 @@ export class DataBahanB3CompanyController {
     const result = await this.service.searchStokB3Periode(dto);
     return result;
   }
+
+  @Get('search-pending-requests')
+@ApiOperation({
+  summary: 'List all pending B3 requests (addition and update) with combined data',
+  description: 'Retrieve pending requests for addition or update of B3 with combined response and type flags.',
+})
+@ApiResponse({
+  status: 200,
+  description: 'Combined list of pending requests with type flags',
+  schema: {
+    example: [
+      {
+        id: '123e4567-e89b-12d3-a456-426614174000',
+        dataBahanB3Id: '123e4567-e89b-12d3-a456-426614174001',
+        requestedStokB3: 100,
+        companyId: '123e4567-e89b-12d3-a456-426614174002',
+        approved: false,
+        dataBahanB3: {
+          jenis: 'Solvent',
+        },
+        company: {
+          name: 'Company A',
+        },
+        type: 'create',
+      },
+      {
+        id: '123e4567-e89b-12d3-a456-426614174003',
+        dataBahanB3Id: '123e4567-e89b-12d3-a456-426614174004',
+        requestedStokB3: 150,
+        companyId: '123e4567-e89b-12d3-a456-426614174005',
+        approved: false,
+        dataBahanB3: {
+          jenis: 'Chemical',
+        },
+        company: {
+          name: 'Company B',
+        },
+        type: 'update',
+      },
+    ],
+  },
+})
+async searchPendingRequests(@Query() filterDto: SearchPendingRequestStokBahanB3Dto) {
+  return this.service.searchPendingRequests(filterDto);
+}
+
 }

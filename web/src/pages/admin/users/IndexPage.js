@@ -27,7 +27,6 @@ import RoleAccess from "../../../enums/roles";
 export default function UserManagementPage() {
     const { user, roles } = useAuth(); // Ambil informasi user dan roles dari AuthContext
     const isSuperAdmin = roles.includes(RoleAccess.SUPER_ADMIN); // Cek apakah user adalah Super Admin
-    console.log(user, roles, isSuperAdmin);
     const { data: allCompanies } = useSWR(
         isSuperAdmin
             ? `/api/company/search-company` // Jika Super Admin, fetch semua perusahaan

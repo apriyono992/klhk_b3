@@ -13,13 +13,10 @@ export class SearchBahanB3CompanyDto extends PaginationDto {
   @IsString()
   jenisBahanB3?: string;
 
-  @ApiPropertyOptional({
-    description: 'Filter by companyId',
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
   @IsOptional()
-  @IsUUID()
-  companyId?: string;
+  @IsArray()
+  @IsString({ each: true })
+  companyIds?: string[];
 
   @ApiPropertyOptional({
     description: 'Minimum stokB3 value',

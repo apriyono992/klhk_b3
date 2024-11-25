@@ -10,6 +10,7 @@ export default function ControlledInput({
     className,
     control,
     rules = {}, // Tambahkan default untuk rules agar opsional
+    disabled = false
 }) {
     return (
         <Controller
@@ -29,6 +30,7 @@ export default function ControlledInput({
                     isInvalid={!!fieldState.error} // Pastikan nilai boolean
                     errorMessage={fieldState.error?.message} // Tampilkan pesan error jika ada
                     className={className}
+                    disabled={disabled}
                 />
             )}
         />

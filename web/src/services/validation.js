@@ -207,10 +207,41 @@ export const createTransportReportValidation = yup.object().shape({
 }).required()
 
 export const periodValidation = yup.object().shape({
-        name: yup.string().required('Harus diisi'),
-        startDate: yup.date().typeError('Tanggal harus valid').required('Harus diisi'),
-        endDate: yup.date().typeError('Tanggal harus valid').required('Harus diisi'),
-        finalizationDeadline: yup.date().typeError('Tanggal harus valid').required('Harus diisi'),
-        isActive: yup.boolean().oneOf([true, false], 'Isi harus aktif atau tidak aktif'),
-}).required()
+    name: yup.string().required('Harus diisi'),
+    startPeriodDate: yup
+        .date()
+        .typeError('Tanggal harus valid')
+        .required('Harus diisi')
+        .max(yup.ref('endPeriodDate'), 'Tanggal mulai tidak bisa lebih besar dari tanggal akhir'), // Ensure startPeriodDate is before endPeriodDate
+    endPeriodDate: yup
+        .date()
+        .typeError('Tanggal harus valid')
+        .required('Harus diisi')
+        .min(yup.ref('startPeriodDate'), 'Tanggal akhir harus lebih besar dari tanggal mulai'), // Ensure endPeriodDate is after startPeriodDate
+    startReportingDate: yup
+        .date()
+        .typeError('Tanggal harus valid')
+        .required('Harus diisi')
+        .min(yup.ref('startPeriodDate'), 'Tanggal mulai pelaporan harus setelah tanggal mulai periode'), // Ensure startReportingDate is after startPeriodDate
+    endReportingDate: yup
+        .date()
+        .typeError('Tanggal harus valid')
+        .required('Harus diisi')
+        .min(yup.ref('endPeriodDate'), 'Tanggal selesai pelaporan tidak bisa lebih besar dari tanggal akhir periode'), // Ensure endReportingDate is before endPeriodDate
+    finalizationDeadline: yup
+        .date()
+        .typeError('Tanggal harus valid')
+        .required('Harus diisi')
+        .min(yup.ref('endPeriodDate'), 'Batas waktu finalisasi harus setelah tanggal akhir periode'), // Ensure finalizationDeadline is after endPeriodDate
+    isActive: yup
+        .boolean()
+        .oneOf([true, false], 'Isi harus aktif atau tidak aktif')
+        .required('Harus diisi'),
+    isReportingActive: yup
+        .boolean()
+        .oneOf([true, false], 'Isi harus pelaporan aktif atau tidak aktif')
+        .required('Harus diisi'),
+}).required();
+
+
     

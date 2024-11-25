@@ -1,5 +1,5 @@
 import { Controller, UseFilters, Get, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { SeedService } from '../services/seed.services';
 import { ValidationFilter } from 'src/utils/response.filter';
 import { RolesGuard } from 'src/utils/roles.guard';
@@ -10,6 +10,7 @@ import { Roles } from 'src/utils/roles.decorator';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('Seed') // This adds a "Seed" section in Swagger UI
 @Controller('seed')
+@ApiBearerAuth() // Dokumentasi untuk token
 @UseFilters(ValidationFilter)  
 export class SeedController {
   constructor(private readonly seedService: SeedService) {}

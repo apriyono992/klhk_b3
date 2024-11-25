@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsNotEmpty, IsUUID, IsNumber, IsPositive, IsOptional } from 'class-validator';
 
 export class UpdateStokB3Dto {
@@ -10,9 +11,12 @@ export class UpdateStokB3Dto {
   dataBahanB3CompanyId: string;
 
   @IsOptional()
+  @Type(() => Number)
   @IsNumber()
-  @IsPositive()
   newStokB3: number;
+
+  @IsOptional()
+  notes: string;
 
   @IsOptional()
   @IsUUID()
