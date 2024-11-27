@@ -48,6 +48,10 @@ import ProtectedRoute from "../services/protectedRoute";
 import UserManagementPage from "../pages/admin/users/IndexPage";
 import ProdusenPencarian from "../pages/admin/report/produsen/ProdusenPencarian";
 
+import PenggunaanGrafik from "../pages/admin/report/use/graph/IndexPage";
+import PenggunaanPencarian from "../pages/admin/report/use/filter/IndexPage";
+
+
 export const ROOT_PATH = '/'
 export const BERITA_PATH = '/berita'
 export const ARTICLE_PATH = '/artikel'
@@ -60,6 +64,9 @@ export const RESET_PASSWORD_PATH = '/lupa-sandi/atur-ulang'
 
 export const DASHBOARD_PATH = '/admin/dasbor'
 export const PELAPORAN_DASHBOARD_PATH = '/admin/dasbor/pelaporan'
+
+export const PELAPORAN_PENGGUNAAN_GRAFIK = '/admin/pelaporan/penggunaan/grafik'
+export const PELAPORAN_PENGGUNAAN_PENCARIAN = '/admin/pelaporan/penggunaan/pencarian'
 
 export const REGISTRATION_DASHBOARD_PATH = '/admin/registrasi-b3/dasbor'
 export const REGISTRATION_INDEX_PATH = '/admin/registrasi-b3/daftar'
@@ -170,6 +177,10 @@ const router = createBrowserRouter([
             { path: PELAPORAN_DASHBOARD_PATH, element: <PelaporanDashboard />, },
 
             { path: PELAPORAN_PRODUSEN_PENCARIAN, element: <ProdusenPencarian />, },
+
+            { path: PELAPORAN_PENGGUNAAN_GRAFIK, element: <PenggunaanGrafik />, },
+            { path: PELAPORAN_PENGGUNAAN_PENCARIAN, element: <PenggunaanPencarian />, },
+
 
             { path: STOK_B3_INDEX_ADMIN_PATH, element: <IndexAdminStokB3 />, },
             { path: STOK_B3_INDEX_USER_PATH, element: <IndexUserStokB3 />, },
