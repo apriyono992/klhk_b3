@@ -1,6 +1,7 @@
 import { extname } from "path";
 import { CreateVehicleDto } from "src/models/createVehicleDto";
 import { PrismaService } from "src/services/prisma.services";
+import * as dayjs from "dayjs";
 
   // Helper function to get MIME type based on file extension
   export function getMimeType(filePath: string): string {
@@ -32,3 +33,12 @@ import { PrismaService } from "src/services/prisma.services";
         },
     });
   }
+
+export function parseDate(date?: string) {
+    if (!date) return { year: null, month: null };
+    const parsedDate = dayjs(date);
+    return {
+        year: parseInt(parsedDate.format('YYYY')),
+        month: parseInt(parsedDate.format('MM')),
+    };
+};
