@@ -22,13 +22,14 @@ import {
 import ModalAlert from '../../../../elements/ModalAlert';
 import useValidationForm from '../../../../../hooks/useValidationForm';
 import useSWR from "swr";
-import {getFetcher, patchFetcherWithoutId, postFetcher, putFetcher} from "../../../../../services/api";
+import {getFetcher, patchFetcherWithoutId, postFetcher, putFetcher, putFetcherWithoutId} from "../../../../../services/api";
 import toast from "react-hot-toast";
 import {useState} from "react";
 import * as yup from "yup";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import useAuth from "../../../../../hooks/useAuth";
+import StatusPermohonanRegistrasi from '../../../../../enums/statusRegistrasi';
 
 export default function Validation({registrasi}) {
     const [editId, setEditId] = useState(null);
@@ -40,7 +41,7 @@ export default function Validation({registrasi}) {
     const schema = yup.object({
         isValid: yup.boolean().oneOf([true, false], 'Isi harus valid atau tidak valid'),
         keterangan: yup.string().when('isValid', (isValid, schema) => {
-            if (isValid[0] === true) {
+            if (isValid[0] === false) {
                 return schema.notRequired();
             }
             return schema.required('Catatan harus diisi jika dokumen tidak valid');
@@ -51,8 +52,8 @@ export default function Validation({registrasi}) {
 
     // Watch for changes on 'isValid' checkbox
     const isValid = watch('isValid');
-    const areAllDocumentValid = data?.documents?.every(
-        document => document.isValid
+    const areAllDocumentValid = data?.every(
+        document => document.validasi_valid
     );
 
     const columns = [
@@ -66,6 +67,7 @@ export default function Validation({registrasi}) {
 
     const onSubmitForm = async(data) => {
         try {
+            data.isValid = data.isValid ? 'false' : 'true';
             await putFetcher(`/api/registrasi/edit-document`, editId , data);
             await mutate()
             toast.success('Status dokumen berhasil diubah!');
@@ -92,12 +94,7 @@ export default function Validation({registrasi}) {
 
     async function onValidate(applicationId) {
         try {
-            const data = {
-                applicationId: applicationId,
-                status: 'VALIDASI_PEMOHONAN_SELESAI',
-                userId: user.userId
-            }
-            await patchFetcherWithoutId('/api/rekom/permohonan/status', data);
+            await putFetcherWithoutId(`/api/registrasi/update-status-registrasi/${registrasi.id}/${StatusPermohonanRegistrasi.PEMBUATAN_DRAFT_SK}`);
             mutate()
             toast.success('Validasi teknis selesai!');
         } catch (error) {
@@ -110,7 +107,7 @@ export default function Validation({registrasi}) {
             <Card>
                 <CardBody>
                     <div className='mb-6'>
-                        <Button isDisabled={!areAllDocumentValid || data?.status === 'VALIDASI_PEMOHONAN_SELESAI'} onPress={onOpenChangeModalAlert} color='warning' size='sm' startContent={<ArrowPathIcon className="size-4"/>}>Submit Validasi</Button>
+                        <Button isDisabled={!areAllDocumentValid || data?.status === StatusPermohonanRegistrasi.SELESAI || data?.status === StatusPermohonanRegistrasi.DITOLAK } onPress={onOpenChangeModalAlert} color='warning' size='sm' startContent={<ArrowPathIcon className="size-4"/>}>Submit Validasi</Button>
                     </div>
                     <Table removeWrapper aria-label="validation-table" radius='sm'>
                         <TableHeader>

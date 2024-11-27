@@ -17,6 +17,9 @@ import { SearchDataCustomerDto } from 'src/models/searchDataCustomerDto';
 import { SearchDataTransporterDto } from 'src/models/searchDataTransporterDto';
 import { SearchPerusahaanAsalMuatDto } from 'src/models/searchPerusahaanAsalMuatDto';
 import { SearchPerusahaanTujuanBongkarDto } from 'src/models/searchPerusahaanTujuanBongkarDto';
+import { UpdateDataPICDto } from 'src/models/updateDataPICDto';
+import { CreateDataPICDto } from 'src/models/createDataPICDto';
+import { SearchDataPICDto } from 'src/models/searchDataPICDto';
 
 @Injectable()
 export class CompanyService {
@@ -79,6 +82,7 @@ export class CompanyService {
       sortOrder = 'desc',
       companyIds,
       returnAll = false,
+      tipePerusahaan,
     } = searchDto;
   
     // Build the search conditions dynamically
@@ -88,6 +92,7 @@ export class CompanyService {
       ...(bidangUsaha && { bidangUsaha: { contains: bidangUsaha, mode: 'insensitive' } }),
       ...(kodeDBKlhk && { kodeDBKlhk: { contains: kodeDBKlhk, mode: 'insensitive' } }),
       ...(companyIds && companyIds.length > 0 && { id: { in: companyIds } }),
+      ...(tipePerusahaan && tipePerusahaan.length > 0 && { tipePerusahaan: { hasSome: tipePerusahaan } }),
     };
   
     // Handle the returnAll flag
@@ -316,6 +321,7 @@ export class CompanyService {
           await this.prisma.dataPIC.create({
             data: {
               ...pic,
+              companyId: existingSupplier.companyId,
               DataSupplier: { connect: { id: supplierId } },
             },
           });
@@ -380,6 +386,7 @@ export class CompanyService {
           await this.prisma.dataPIC.create({
             data: {
               ...pic,
+              companyId: existingCustomer.companyId,
               DataCustomer: { connect: { id: customerId } },
             },
           });
@@ -389,18 +396,100 @@ export class CompanyService {
   
     return updatedCustomer;
   }
-  
-   // Menghapus satu entri DataPIC berdasarkan picId
-   async deleteDataPIC(picId: string) {
-    // Cek apakah DataPIC dengan ID yang diberikan ada
-    const existingPIC = await this.prisma.dataPIC.findUnique({ where: { id: picId } });
-    if (!existingPIC) throw new NotFoundException('DataPIC not found.');
-
-    // Hapus DataPIC
-    return this.prisma.dataPIC.delete({
-      where: { id: picId },
+  // Create a new DataPIC
+  async createDataPIC(createDataPICDto: CreateDataPICDto) {
+    return this.prisma.dataPIC.create({
+      data: {
+        companyId: createDataPICDto.companyId,
+        namaPIC: createDataPICDto.namaPIC,
+        jabatan: createDataPICDto.jabatan,
+        email: createDataPICDto.email,
+        fax: createDataPICDto.fax,
+        telepon: createDataPICDto.telepon,
+        type: createDataPICDto.type,
+      },
     });
   }
+
+  async listAllDataPIC(dto: SearchDataPICDto) {
+    const { type, companyIds, page, limit, sortBy, sortOrder, returnAll } = dto;
+  
+    // Base query with dynamic filters
+    const whereCondition: Prisma.DataPICWhereInput = {
+      ...(type && { type }),
+      ...(companyIds && companyIds.length > 0 && { companyId: { in: companyIds } }),
+    };
+    // Determine sorting
+    const orderBy = {};
+    if (sortBy) {
+      orderBy[sortBy] = sortOrder?.toLocaleLowerCase() || 'desc';
+    }
+  
+    // Pagination logic
+    const take = returnAll ? undefined : limit;
+    const skip = returnAll ? undefined : (page - 1) * limit;
+  
+    // Query Prisma
+    return this.prisma.dataPIC.findMany({
+      where: whereCondition,
+      include: {
+        DataCustomer: true,
+        DataSupplier: true,
+        DataTransporter: true,
+      },
+      orderBy,
+      take,
+      skip,
+    });
+  }
+  
+
+  // Get a single DataPIC by ID
+  async getPicByid(id: string) {
+    const dataPIC = await this.prisma.dataPIC.findUnique({
+      where: { id },
+      include: {
+        DataCustomer: true,
+        DataSupplier: true,
+        DataTransporter: true,
+      },
+    });
+
+    if (!dataPIC) {
+      throw new NotFoundException(`DataPIC with ID ${id} not found`);
+    }
+
+    return dataPIC;
+  }
+
+  // Update a DataPIC
+  async updateDataPIC(id: string, updateDataPICDto: UpdateDataPICDto) {
+    const dataPIC = await this.prisma.dataPIC.findUnique({
+      where: { id },
+    });
+
+    if (!dataPIC) {
+      throw new NotFoundException(`DataPIC with ID ${id} not found`);
+    }
+
+    await this.prisma.dataPIC.update({
+      where: { id },
+      data: updateDataPICDto,
+    });
+
+  }
+  
+  // Menghapus satu entri DataPIC berdasarkan picId
+  async deleteDataPIC(picId: string) {
+  // Cek apakah DataPIC dengan ID yang diberikan ada
+  const existingPIC = await this.prisma.dataPIC.findUnique({ where: { id: picId } });
+  if (!existingPIC) throw new NotFoundException('DataPIC not found.');
+
+  // Hapus DataPIC
+  return this.prisma.dataPIC.delete({
+    where: { id: picId },
+  });
+}
 
   // Menghapus semua DataPIC terkait dengan DataSupplier berdasarkan supplierId
   async deleteAllDataPICForSupplier(supplierId: string) {
@@ -517,7 +606,7 @@ export class CompanyService {
   async createTransporter(data: CreateDataTransporterDto) {
     const {
       companyId,
-      namaCustomer,
+      namaTransporter,
       alamat,
       email,
       telepon,
@@ -531,7 +620,7 @@ export class CompanyService {
       dataPICIds,
     } = data;
   
-    const trimmedNamaCustomer = namaCustomer.trim();
+    const trimmedNamaCustomer = namaTransporter.trim();
   
     // Validasi perusahaan
     const company = await this.prisma.company.findUnique({ where: { id: companyId } });

@@ -19,54 +19,54 @@ export class SaveRegistrasiDto {
   companyId: string; // Foreign key company ID
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   nomor: string; // Nomor field
 
   @IsInt()
-  @IsNotEmpty()
+  @IsOptional()
   tahun: number; // Tahun field
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   status_izin: string; // Status izin
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   keterangan_sk: string; // Keterangan SK
 
   @IsDate()
-  @IsNotEmpty()
+  @IsOptional()
   @Type(() => Date)
   tanggal_terbit: Date; // Tanggal terbit
 
   @IsDate()
-  @IsNotEmpty()
+  @IsOptional()
   @Type(() => Date)
   berlaku_dari: Date; // Berlaku dari
 
   @IsDate()
-  @IsNotEmpty()
+  @IsOptional()
   @Type(() => Date)
   berlaku_sampai: Date; // Berlaku sampai
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   nomor_notifikasi_impor: string; // Nomor notifikasi impor
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   kode_db_klh_perusahaan: string; // Kode DB KLH perusahaan
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   nama_perusahaan: string; // Nama perusahaan
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   alamat_perusahaan: string; // Alamat perusahaan
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   status: string; // Status field
 
   @IsBoolean()

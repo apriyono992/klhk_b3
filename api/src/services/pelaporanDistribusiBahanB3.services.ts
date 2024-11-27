@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException, Logger } from "@nestjs/common";
 import { PrismaService } from "./prisma.services";
 import { CreatePelaporanBahanB3DistribusiDto } from "src/models/createPelaporanBahanB3DistribusiDto";
 import { UpdatePelaporanBahanB3DistribusiDto } from "src/models/updatePelaporanBahanB3DistribusiDto";
@@ -9,6 +9,7 @@ import { JenisPelaporan } from "src/models/enums/jenisPelaporan";
 
 @Injectable()
 export class PelaporanDistribusiBahanB3Service {
+  private readonly logger = new Logger(PelaporanDistribusiBahanB3Service.name);
   constructor(private readonly prisma: PrismaService) {}
 
   async createReport(data: CreatePelaporanBahanB3DistribusiDto) {
@@ -209,16 +210,17 @@ export class PelaporanDistribusiBahanB3Service {
     if (![StatusPengajuan.DISETUJUI, StatusPengajuan.DITOLAK].includes(status)) {
       throw new BadRequestException('Status pengajuan tidak valid.');
     }
-  
+
     return await this.prisma.$transaction(async (prisma) => {
       const report = await prisma.pelaporanBahanB3Distribusi.findUnique({
         where: { id },
         include: {
           DataCustomerOnPelaporanDistribusiBahanB3: { include: { dataCustomer: true } },
           DataTransporterOnPelaporanDistribusiBahanB3: { include: { dataTransporter: true } },
+          period: true,
         },
       });
-  
+      
       if (!report || !report.isFinalized) {
         throw new BadRequestException('Laporan tidak valid atau belum difinalisasi.');
       }
@@ -295,11 +297,11 @@ export class PelaporanDistribusiBahanB3Service {
             stokB3: -report.jumlahB3Distribusi,
           },
         });
-  
+        
         // Validasi stok periode tidak boleh negatif
-        if (stokPeriode.stokB3 < 0) {
-          throw new BadRequestException('Stok periode tidak mencukupi. Persetujuan laporan ditolak.');
-        }
+        // if (stokPeriode.stokB3 < 0) {
+        //   throw new BadRequestException('Stok periode tidak mencukupi. Persetujuan laporan ditolak.');
+        // }
   
         // Simpan riwayat perubahan stok periode di `StokB3PeriodeHistory`
         await prisma.stokB3PeriodeHistory.create({
@@ -329,11 +331,28 @@ export class PelaporanDistribusiBahanB3Service {
           where: { bulan: report.bulan, tahun: report.tahun, companyId: report.companyId, jenisLaporan: JenisPelaporan.DISTRIBUSI_B3 },
         }
       )
-      // Tandai laporan sebagai disetujui
-      await prisma.kewajibanPelaporanPerusahaan.update({
-        where: { id: kewajiban.id},
-        data: { sudahDilaporkan: true },
-      });
+      if (kewajiban) {
+        // Jika data ditemukan, perbarui
+        await prisma.kewajibanPelaporanPerusahaan.update({
+            where: { id: kewajiban.id },
+            data: {
+                sudahDilaporkan: true,
+            },
+        });
+      } else {
+          // Jika data tidak ditemukan, buat data baru
+          await prisma.kewajibanPelaporanPerusahaan.create({
+              data: {
+                  bulan: report.bulan,
+                  tahun: report.tahun,
+                  companyId: report.companyId,
+                  jenisLaporan: JenisPelaporan.DISTRIBUSI_B3,
+                  sudahDilaporkan: true,
+                  periodId: report.periodId,
+                  tanggalBatas: report.period.endReportingDate,
+              },
+          });
+      }
   
       // Simpan riwayat pengajuan
       await prisma.pelaporanBahanB3DistribusiHistory.create({

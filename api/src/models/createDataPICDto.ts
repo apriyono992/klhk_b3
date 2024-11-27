@@ -20,4 +20,12 @@ export class CreateDataPICDto {
   @IsOptional()
   @IsString()
   fax?: string;
+
+  @IsOptional()
+  @IsString()
+  companyId?: string;
+
+  @IsOptional()
+  @IsString()
+  type?: string;
 }

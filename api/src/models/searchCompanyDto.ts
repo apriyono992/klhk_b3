@@ -1,6 +1,7 @@
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsEnum, IsOptional, IsString } from 'class-validator';
 import { PaginationDto } from './paginationDto';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { TipePerusahaan } from './enums/tipePerusahaan';
 
 export class SearchCompanyDto extends PaginationDto {
   @ApiPropertyOptional({
@@ -39,4 +40,9 @@ export class SearchCompanyDto extends PaginationDto {
   @IsArray()
   @IsString({ each: true })
   companyIds?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsEnum(TipePerusahaan, { each: true })
+  tipePerusahaan?: TipePerusahaan[];
 }

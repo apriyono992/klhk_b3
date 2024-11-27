@@ -14,7 +14,18 @@ export class SearchApplicationDto extends PaginationDto {
     @ArrayNotEmpty()
     @IsString({ each: true })
     @IsCompanyExists({ each: true })
-    @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
+      @Transform(({ value }) => {
+    // Jika sudah berupa array, trim setiap elemen
+    if (Array.isArray(value)) {
+      return value.map((item) => item.trim());
+    }
+    // Jika berupa string dengan koma, pecah menjadi array dan trim setiap elemen
+    if (typeof value === 'string') {
+      return value.split(',').map((item) => item.trim());
+    }
+    // Jika bukan array atau string, kembalikan seperti apa adanya
+    return [value];
+  })
     companyId?: string[];
   
     @ApiPropertyOptional({ description: 'Filter by application IDs', type: [String] })
@@ -23,7 +34,18 @@ export class SearchApplicationDto extends PaginationDto {
     @ArrayNotEmpty()
     @IsString({ each: true })
     @IsApplicationExists({ each: true })
-    @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
+      @Transform(({ value }) => {
+    // Jika sudah berupa array, trim setiap elemen
+    if (Array.isArray(value)) {
+      return value.map((item) => item.trim());
+    }
+    // Jika berupa string dengan koma, pecah menjadi array dan trim setiap elemen
+    if (typeof value === 'string') {
+      return value.split(',').map((item) => item.trim());
+    }
+    // Jika bukan array atau string, kembalikan seperti apa adanya
+    return [value];
+  })
     applicationId?: string[];
   
     @ApiPropertyOptional({ description: 'Filter by application statuses', enum: StatusPermohonan, isArray: true })
@@ -31,7 +53,18 @@ export class SearchApplicationDto extends PaginationDto {
     @IsArray()
     @ArrayNotEmpty()
     @IsEnum(StatusPermohonan, { each: true })
-    @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
+      @Transform(({ value }) => {
+    // Jika sudah berupa array, trim setiap elemen
+    if (Array.isArray(value)) {
+      return value.map((item) => item.trim());
+    }
+    // Jika berupa string dengan koma, pecah menjadi array dan trim setiap elemen
+    if (typeof value === 'string') {
+      return value.split(',').map((item) => item.trim());
+    }
+    // Jika bukan array atau string, kembalikan seperti apa adanya
+    return [value];
+  })
     status?: StatusPermohonan[];
   
     @ApiPropertyOptional({ description: 'Search by kodePermohonan', type: [String] })
@@ -40,6 +73,37 @@ export class SearchApplicationDto extends PaginationDto {
     @ArrayNotEmpty()
     @IsString({ each: true })
     @IsKodePermohonanExists({ each: true })
-    @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
+      @Transform(({ value }) => {
+    // Jika sudah berupa array, trim setiap elemen
+    if (Array.isArray(value)) {
+      return value.map((item) => item.trim());
+    }
+    // Jika berupa string dengan koma, pecah menjadi array dan trim setiap elemen
+    if (typeof value === 'string') {
+      return value.split(',').map((item) => item.trim());
+    }
+    // Jika bukan array atau string, kembalikan seperti apa adanya
+    return [value];
+  })
     kodePermohonan?: string[];
-  }
+
+    
+    @ApiPropertyOptional({ description: 'Search by Period', type: [String] })
+    @IsOptional()
+    @IsArray()
+    @ArrayNotEmpty()
+    @IsString({ each: true })
+    @Transform(({ value }) => {
+    // Jika sudah berupa array, trim setiap elemen
+    if (Array.isArray(value)) {
+      return value.map((item) => item.trim());
+    }
+    // Jika berupa string dengan koma, pecah menjadi array dan trim setiap elemen
+    if (typeof value === 'string') {
+      return value.split(',').map((item) => item.trim());
+    }
+    // Jika bukan array atau string, kembalikan seperti apa adanya
+    return [value];
+  })
+    periodId?: string[];
+}

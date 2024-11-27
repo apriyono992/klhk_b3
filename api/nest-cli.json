@@ -8,6 +8,10 @@
       {
         "include": "**/*",
         "outDir": "dist/src"
+      },
+      {
+        "include": "**/*",
+        "outDir": "dist"
       }
     ]
   }

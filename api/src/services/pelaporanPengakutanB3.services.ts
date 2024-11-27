@@ -175,7 +175,6 @@ export class PelaporanPengangkutanService {
               });
           }
         }
-
         // Create the report along with the related details
         
     }
@@ -437,12 +436,16 @@ export class PelaporanPengangkutanService {
         const report = await prisma.pelaporanPengangkutan.findUnique({ where: { id }, include:{
           pengangkutanDetails:{ include: { b3Substance:true, DataPerusahaanAsalMuatOnPengakutanDetail:{include: {perusahaanAsalMuat:true},
           }, DataPerusahaanTujuanBongkarOnPengakutanDetail: {
-           include:{perusahaanTujuanBongkar:true} 
-          }}}
+           include:{perusahaanTujuanBongkar:true, perusahaanAsalMuat:true} 
+          }}},period:true
         } });
     
         if (!report || !report.isFinalized) {
           throw new BadRequestException('Laporan tidak valid atau belum difinalisasi.');
+        }
+
+        if (report.status === StatusPengajuan.DISETUJUI || report.isApproved) {
+          throw new BadRequestException('Laporan sudah disetujui.');
         }
     
         if (status === StatusPengajuan.DISETUJUI) {
@@ -456,7 +459,7 @@ export class PelaporanPengangkutanService {
               vehicleId: report.vehicleId,
               status: status,
               approvedAt: new Date(),
-            },
+            }, 
           });
   
           for (const reportDetails of report.pengangkutanDetails) {
@@ -468,7 +471,7 @@ export class PelaporanPengangkutanService {
           
                   // Salin DataPerusahaanAsalMuatOnPengakutanDetail ke DataPerusahaanAsalMuatOnPengakutanDetailFinal
                   DataPerusahaanAsalMuatOnPengakutanDetailFinal: {
-                    create: reportDetails.DataPerusahaanAsalMuatOnPengakutanDetail.map((asalMuat) => ({
+                    create: reportDetails.DataPerusahaanTujuanBongkarOnPengakutanDetail.map((asalMuat) => ({
                       companyId: asalMuat.perusahaanAsalMuat.companyId,
                       namaPerusahaan: asalMuat.perusahaanAsalMuat.namaPerusahaan,
                       alamat: asalMuat.perusahaanAsalMuat.alamat,
@@ -478,6 +481,7 @@ export class PelaporanPengangkutanService {
                       regencyId: asalMuat.perusahaanAsalMuat.regencyId,
                       districtId: asalMuat.perusahaanAsalMuat.districtId,
                       villageId: asalMuat.perusahaanAsalMuat.villageId,
+
                     })),
                   },
                 },
@@ -493,7 +497,11 @@ export class PelaporanPengangkutanService {
               // Salin DataPerusahaanTujuanBongkarOnPengakutanDetail ke DataPerusahaanTujuanBongkarOnPengakutanDetailFinal
               for (const tujuanBongkar of reportDetails.DataPerusahaanTujuanBongkarOnPengakutanDetail) {
                 const asalMuatFinal = asalMuatFinalList.find(
-                  (asalFinal) => asalFinal.companyId === tujuanBongkar.perusahaanAsalMuatId
+                  (asalFinal) => asalFinal.alamat === tujuanBongkar.perusahaanAsalMuat.alamat && asalFinal.namaPerusahaan === tujuanBongkar.perusahaanAsalMuat.namaPerusahaan
+                  && asalFinal.latitude === tujuanBongkar.perusahaanAsalMuat.latitude && asalFinal.longitude === tujuanBongkar.perusahaanAsalMuat.longitude
+                  && asalFinal.provinceId === tujuanBongkar.perusahaanAsalMuat.provinceId && asalFinal.regencyId === tujuanBongkar.perusahaanAsalMuat.regencyId
+                  && asalFinal.districtId === tujuanBongkar.perusahaanAsalMuat.districtId && asalFinal.villageId === tujuanBongkar.perusahaanAsalMuat.villageId
+                  && asalFinal.companyId === tujuanBongkar.perusahaanAsalMuat.companyId
                 );
           
                 if (!asalMuatFinal) {
@@ -525,8 +533,9 @@ export class PelaporanPengangkutanService {
             }
             await prisma.pelaporanPengangkutan.update({
             where: { id },
-            data: { isApproved: true },
+            data: { isApproved: true, status:status },
             });
+
           } else {
               await prisma.pelaporanPengangkutan.update({
               where: { id },
@@ -534,29 +543,73 @@ export class PelaporanPengangkutanService {
               });
           }
 
-          const kewajiban = await prisma.kewajibanPelaporanPerusahaan.findFirst(
-            {
-              where: { bulan: report.bulan, tahun: report.tahun, companyId: report.companyId, jenisLaporan: JenisPelaporan.PENGANGKUTAN_BAHAN_B3 },
-            }
-          )
-          // Tandai laporan sebagai disetujui
-          await prisma.kewajibanPelaporanPerusahaan.update({
-            where: { id: kewajiban.id},
-            data: { sudahDilaporkan: true },
-          });
-
-          const rekomendasiB3 = await prisma.kewajibanPelaporanAplikasi.findFirst(
+          const rekomendasiB3 = await prisma.kewajibanPelaporanAplikasi.findMany(
             {
               where: { bulan: report.bulan, tahun: report.tahun, companyId: report.companyId, applicationId: report.applicationId },
             }
           )
-          
-          // Tandai laporan sebagai disetujui
-          await prisma.kewajibanPelaporanAplikasi.update({
-            where: { id: rekomendasiB3.id},
-            data: { sudahDilaporkan: true },
-          });
-      
+
+          if(!rekomendasiB3) {
+            throw new NotFoundException('Rekomendasi B3 tidak ditemukan.');
+          }
+
+          const rekomendasiB3C = await prisma.kewajibanPelaporanAplikasi.findFirst(
+            {
+              where: { bulan: report.bulan, tahun: report.tahun, companyId: report.companyId, applicationId: report.applicationId, vehicleId: report.vehicleId },
+            }
+          )
+
+          if (rekomendasiB3C){
+            // Tandai laporan sebagai disetujui
+            await prisma.kewajibanPelaporanAplikasi.update({
+              where: { id: rekomendasiB3C.id},
+              data: { sudahDilaporkan: true },
+            });
+          }else{
+            await prisma.kewajibanPelaporanAplikasi.create({
+              data:{
+                companyId: report.companyId,
+                applicationId: report.applicationId,
+                bulan: report.bulan,
+                tahun: report.tahun,
+                sudahDilaporkan: status === StatusPengajuan.DISETUJUI ? true : false,
+                tanggalBatas: report.period.endPeriodDate,
+                vehicleId: report.vehicleId,
+                periodId: report.periodId,
+              }
+            })
+          }
+
+
+
+          if( rekomendasiB3.every((rekomendasi) => rekomendasi.sudahDilaporkan === true)){
+            const kewajiban = await prisma.kewajibanPelaporanPerusahaan.findFirst(
+              {
+                where: { bulan: report.bulan, tahun: report.tahun, companyId: report.companyId, jenisLaporan: JenisPelaporan.PENGANGKUTAN_BAHAN_B3 },
+              }
+            )
+            if(!kewajiban) {
+              await prisma.kewajibanPelaporanPerusahaan.create({
+                data: {
+                  companyId: report.companyId,
+                  bulan: report.bulan,
+                  tahun: report.tahun,
+                  jenisLaporan: JenisPelaporan.PENGANGKUTAN_BAHAN_B3,
+                  sudahDilaporkan: status === StatusPengajuan.DISETUJUI ? true : false,
+                  tanggalBatas: report.period.endPeriodDate,
+                  periodId: report.periodId,
+                },
+              });
+            }else{
+              // Tandai laporan sebagai disetujui
+              await prisma.kewajibanPelaporanPerusahaan.update({
+                where: { id: kewajiban.id},
+                data: { sudahDilaporkan: true },
+              });
+            }
+        
+          }
+       
           await prisma.pelaporanPengakutanHistory.create({
               data: {
               pelaporanPengakutanId: id,
@@ -588,7 +641,21 @@ export class PelaporanPengangkutanService {
             include: {
               b3Substance: {include:{dataBahanB3:true}}, // Include B3Substance details in each PengangkutanDetail, if applicable
               DataPerusahaanAsalMuatOnPengakutanDetail: {include:{ perusahaanAsalMuat: true }},
-              DataPerusahaanTujuanBongkarOnPengakutanDetail: {include:{ perusahaanTujuanBongkar: true }},
+              DataPerusahaanTujuanBongkarOnPengakutanDetail:
+               {include:{ perusahaanTujuanBongkar: {include:{
+                village: true,
+                district: true,
+                regency: true,
+                province: true,
+              }
+            },perusahaanAsalMuat:{include:{
+              village: true,
+              district: true,
+              regency: true,
+              province: true,
+            }} 
+          }
+          },
             },
           },
         },
@@ -665,7 +732,7 @@ export class PelaporanPengangkutanService {
             include: {
               b3Substance: {include: {dataBahanB3:true}},
               DataPerusahaanAsalMuatOnPengakutanDetail: {include:{ perusahaanAsalMuat: true }},
-              DataPerusahaanTujuanBongkarOnPengakutanDetail: {include:{ perusahaanTujuanBongkar: true }},
+              DataPerusahaanTujuanBongkarOnPengakutanDetail: {include:{ perusahaanTujuanBongkar: true, perusahaanAsalMuat:true }},
             },
           },
         },

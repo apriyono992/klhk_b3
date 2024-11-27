@@ -20,6 +20,7 @@ import { RolesGuard } from 'src/utils/roles.guard';
 import { JwtAuthGuard } from 'src/utils/auth.guard';
 import { RolesAccess } from 'src/models/enums/roles';
 import { Roles } from 'src/utils/roles.decorator';
+import { StatusPermohonanRegistrasi } from 'src/models/enums/statusPermohonanRegistrasi';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('Registrasi')
@@ -84,6 +85,17 @@ export class RegistrasiController {
       id,
       udpateStatusApproval,
     );
+  }
+
+  @Roles(RolesAccess.PIC_REGISTRASI, RolesAccess.DIREKTUR, RolesAccess.SUPER_ADMIN)
+  @Put('update-status-registrasi/:id/:status')
+  @ApiOperation({ summary: 'Update Status Registrasi' })
+  @ApiResponse({ status: 200, description: 'Status Registrasi updated successfully.' })
+  async updateStatusRegistrasi(
+    @Param('id') id: string,
+    @Param('status') updateStatusRegistrasi: StatusPermohonanRegistrasi,
+  ) {
+    return this.registrasiService.updateStatus(id, updateStatusRegistrasi);
   }
 
   @Get('search')

@@ -91,3 +91,8 @@ export const roleName = {
     direksi: 'c6575a11-dc48-45a3-8818-60d45c865938',
     user: 'a6ff2d5c-aa09-4951-ad53-e52f7efdfbd1',
 }
+
+export const reportProductType = [
+    'Bahan Berbahaya dan Beracun',
+    'Non Bahan Berbahaya dan Beracun'
+]

@@ -3,6 +3,7 @@ import i18nIsoCountries from 'i18n-iso-countries';
 import enLocale from 'i18n-iso-countries/langs/en.json';
 import idLocale from 'i18n-iso-countries/langs/id.json'; // Indonesian locale
 import { jwtDecode } from 'jwt-decode';
+import RolesAccess from '../enums/roles';
 
 // Register English locale
 i18nIsoCountries.registerLocale(enLocale);
@@ -128,6 +129,28 @@ export function removeSlug(slug) {
     }
 
     return words.join(' ');
+}
+
+// Array nama bulan
+export const monthNames = [
+  "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
+  "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+];
+
+export function hasValidRole(userRoles, validRoles) {
+  return validRoles.some(role => userRoles.includes(role));
+}
+
+export function isSuperAdminRole(userRoles) {
+  const validRoles = [RolesAccess.SUPER_ADMIN];
+  return validRoles.some(role => userRoles.includes(role));
+}
+
+export function hasValidStatus(currentStatus, validStatus) {
+  if(!Array.isArray(currentStatus)) {
+    currentStatus = [currentStatus]
+  }
+  return validStatus.some(status => currentStatus.includes(status));
 }
 
 // export async function isSessionExpired() {

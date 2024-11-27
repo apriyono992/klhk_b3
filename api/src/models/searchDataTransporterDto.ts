@@ -35,12 +35,14 @@ export class SearchDataTransporterDto extends PaginationDto {
   villageId?: string;
 
   @ApiPropertyOptional({ description: 'Longitude', example: 107.6191 })
+  @IsOptional()
   @Transform(({ value }) => parseFloat(value))
   @IsLongitude()
   longitude?: number;
 
   @ApiPropertyOptional({ description: 'Latitude', example: -6.9175 })
   @Transform(({ value }) => parseFloat(value))
+  @IsOptional()
   @IsLatitude()
   latitude?: number;
 

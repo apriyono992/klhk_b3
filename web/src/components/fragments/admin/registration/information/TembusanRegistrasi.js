@@ -13,8 +13,13 @@ import {
     putFetcher,
     simpanSK
 } from '../../../../../services/api';
+import StatusPermohonanRegistrasi from '../../../../../enums/statusRegistrasi';
+import useAuth from '../../../../../hooks/useAuth';
+import RolesAccess from '../../../../../enums/roles';
+import { hasValidRole, hasValidStatus } from '../../../../../services/helpers';
 
-export default function TembusanRegistrasi({ dataTembusan, isLoadingTembusan, existingTembusan, mutate, registrasiId }) {
+export default function TembusanRegistrasi({ dataTembusan, isLoadingTembusan, existingTembusan, mutate, registrasiId, status }) {
+    const {user, roles } = useAuth();
     const { control, handleSubmit, setValue, reset, register, formState: { errors, isSubmitting } } = useForm({
         // defaultValues: {
         //     tembusanIds: existingTembusan || [],
@@ -171,7 +176,9 @@ export default function TembusanRegistrasi({ dataTembusan, isLoadingTembusan, ex
                 <CardHeader className="flex flex-col gap-2">
                     <div className="flex items-center justify-between w-full">
                         <p className="text-md">Tembusan</p>
-                        <Button isIconOnly size="sm" color="primary" onPress={() => openModalForm()}>
+                        <Button isIconOnly size="sm" color="primary" onPress={() => openModalForm()} isDisabled={
+                                hasValidRole(roles, [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_REGISTRASI]) && hasValidStatus(status,[StatusPermohonanRegistrasi.PEMBUATAN_DRAFT_SK]) ? false : true
+                                }>
                             <PlusIcon className="size-4" />
                         </Button>
                     </div>
@@ -189,6 +196,11 @@ export default function TembusanRegistrasi({ dataTembusan, isLoadingTembusan, ex
                         control={control}
                         render={({ field }) => (
                             <ReactSelect
+                                isDisabled={
+                                    hasValidRole(roles, [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_REGISTRASI]) 
+                                    && hasValidStatus(status,[StatusPermohonanRegistrasi.PEMBUATAN_DRAFT_SK])
+                                    ? false : true
+                                }
                                 label="Pilih Tembusan"
                                 isMulti
                                 options={tembusanList || []}
@@ -241,7 +253,11 @@ export default function TembusanRegistrasi({ dataTembusan, isLoadingTembusan, ex
                         </Table>
                     </div>
                     <div className="mt-4">
-                        <Button size="sm" type="submit" color="primary">
+                        <Button size="sm" type="submit" color="primary" isDisabled={
+                                hasValidRole(roles, [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_REGISTRASI]) 
+                                && hasValidStatus(status,[StatusPermohonanRegistrasi.PEMBUATAN_DRAFT_SK])
+                                ? false : true
+                                }>
                             Submit
                         </Button>
                     </div>

@@ -8,11 +8,32 @@ export class BahanB3RegistrasiService {
 
   async createBahanB3Reg(data: BahanB3RegistrasiDto) {
     // Transform the input data as needed for Prisma compatibility
-    const { sektor_penggunaan_b3, ...bahanData } = data;
+    const { sektor_penggunaan_b3,registrasiId, ...bahanData } = data;
 
     const createdBahan = await this.prisma.bahanB3Registrasi.create({
       data: {
-        ...bahanData,
+        alamat_penghasil_b3: bahanData.alamat_penghasil_b3,
+        cas_number: bahanData.cas_number,
+        hs_code: bahanData.hs_code,
+        jumlah_impor: bahanData.jumlah_impor,
+        jumlah_impor_per_tahun: bahanData.jumlah_impor_per_tahun,
+        karakteristik_b3: bahanData.karakteristik_b3,
+        kategori_b3: bahanData.kategori_b3,
+        klasifikasi_b3: bahanData.klasifikasi_b3,
+        nama_bahan: bahanData.nama_bahan,
+        nama_dagang: bahanData.nama_dagang,
+        negara_muat: bahanData.negara_muat,
+        no_reg_bahan: bahanData.no_reg_bahan,
+        pelaksanaan_rencana_impor: bahanData.pelaksanaan_rencana_impor,
+        penggunaan: bahanData.penggunaan,
+        penghasil_bahan_kimia: bahanData.penghasil_bahan_kimia,
+        registrasiId:registrasiId,
+        tujuan_penggunaan: bahanData.tujuan_penggunaan,
+        asal_negara: bahanData.asal_negara,
+        pelabuhan_asal: bahanData.pelabuhan_asal,
+        pelabuhan_bongkar: bahanData.pelabuhan_bongkar,
+        pelabuhan_muat: bahanData.pelabuhan_muat,
+        provinsi_pelabuhan_bongkar: bahanData.provinsi_pelabuhan_bongkar,
         SektorPenggunaanB3: {
           create: sektor_penggunaan_b3?.map((sektor) => ({
             name: sektor.name,

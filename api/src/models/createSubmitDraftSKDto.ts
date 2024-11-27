@@ -50,6 +50,15 @@ export class CreateSubmitDraftSKDto {
   @IsString()
   pejabat_id: string;
 
+  @IsDate()
+  @IsOptional()
+  @Type(() => Date)
+  tanggal_surat: Date; // Berlaku sampai
+
+  @IsString()
+  @IsOptional()
+  nomor_surat: string; // Berlaku sampai
+
   @IsOptional()
   @IsArray()
   @ArrayNotEmpty() // Ensure array is not empty

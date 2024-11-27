@@ -6,6 +6,7 @@ import axios from "axios";
 import {RegistrasiServices} from "./registrasi.services";
 import {RequestInswDto} from "../models/requestInswDto";
 import { Response } from 'express';
+import { StatusPermohonanRegistrasi } from 'src/models/enums/statusPermohonanRegistrasi';
 
 @Injectable()
 export class InswServices {
@@ -107,14 +108,14 @@ export class InswServices {
           where: { id: payload.id },
           data: {
             approval_status: payload.approval_status,
-            status: payload.status,
+            status: StatusPermohonanRegistrasi.SELESAI,
           }
         })
 
         return responseData.data;
 
       } catch (er) {
-      console.log(er, 'isi error')
+      // console.log(er, 'isi error')
       throw new HttpException(
           {
             status: er.response.data.data.kode,
@@ -142,8 +143,6 @@ export class InswServices {
     const dataRegistrasi = await this.registrasiService.getRegistrasiById(payload.id);
     const dataB3Registrasi = await dataRegistrasi.BahanB3Registrasi;
 
-     console.log(dataRegistrasi, " check dataRegistrasi")
-
     const data = {
       header: {
         urlKep: "https://www.google.com/",
@@ -160,13 +159,13 @@ export class InswServices {
         kdKeputusan: "",
         kdPerijinan: "0130001",
         noPengajuan: "",
-        noPerijinan: dataRegistrasi.nomor,
+        noPerijinan: "S"+ dataRegistrasi.nomor_surat.toString(),
         urPerijinan: "",
         jnsPengajuan: payload.jnsPengajuan,
         jnsPerijinan: "2",
-        tglKeputusan: "2022-03-03",
+        tglKeputusan: this.formatDate(dataRegistrasi.tanggal_surat.toISOString()),
         tglPengajuan: "",
-        tglPerijinan:  this.formatDate(dataRegistrasi.tanggal_terbit.toISOString()),
+        tglPerijinan:  this.formatDate(dataRegistrasi.tanggal_surat.toISOString()),
         noPengajuanKL: "SH2022-1-001012",
         tglPengajuanKL: this.formatDate(dataRegistrasi.tanggal_pengajuan.toISOString()),
         tglAwalPerijinan: this.formatDate(dataRegistrasi.berlaku_dari.toISOString()),
@@ -196,18 +195,18 @@ export class InswServices {
       },
       komoditas: dataB3Registrasi.map((dataReg, index) => {
         return {
-          noHS:"",
+          noHS:dataReg.hs_code,
           netto: null,
           noCAS: dataReg.cas_number,
           serial: index + 1, //Mandatory
           volume: null,
-          negAsal: [],
-          negMuat: [],
+          negAsal: dataReg.asal_negara,
+          negMuat: dataReg.negara_muat,
           nmLatin: "",
           noBatch: null,
           periode: [],
-          plbAsal: [],
-          plbMuat: [],
+          plbAsal: dataReg.pelabuhan_asal,
+          plbMuat: dataReg.pelabuhan_muat,
           sediaan: "",
           urBarang: dataReg.nama_dagang, //Mandatory
           jmlSatuan: null,

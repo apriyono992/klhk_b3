@@ -166,11 +166,29 @@ export async function getSelectFetcher(url) {
     })
 }
 
+export async function getSelectFetcherPeriod(url) {
+    return await axiosInstanceAuth.get(url).then((res) => {
+        return res.data?.map((item) => ({
+            value: item.id, 
+            label: item.name ? item.name : item.namaDagang ? item.namaDagang : item.nama ? item.nama : null,
+        }))
+    })
+}
+
 export async function getSelectFetcherJenisB3(url) {
     return await axiosInstanceAuth.get(url).then((res) => {
         return res.data.data.map((item) => ({
             value: item.id,
             label: item.casNumber  && item.namaBahanKimia ? item.casNumber + ' - ' +  item.namaBahanKimia : null,
+        }))
+    })
+}
+
+export async function getSelectB3SubstanceFetcher(url) {
+    return await axiosInstanceAuth.get(url).then(res => {
+        return res.data.b3Substances.map((item) => ({
+            value: item.id,
+            label: `${item.dataBahanB3.casNumber} - ${item.dataBahanB3.namaDagang} - ${item.dataBahanB3.namaBahanKimia}`,
         }))
     })
 }
