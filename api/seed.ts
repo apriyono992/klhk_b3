@@ -121,6 +121,16 @@ async function main() {
 
  }
  try{
+   await prisma.finalSurat.deleteMany()
+   await prisma.draftSurat.deleteMany()
+   await prisma.notifikasi.deleteMany()
+   await prisma.user.deleteMany()
+   await prisma.userRole.deleteMany()
+   await prisma.location.deleteMany()
+   await prisma.province.deleteMany();
+   await prisma.regencies.deleteMany();
+   await prisma.districts.deleteMany();
+   await prisma.village.deleteMany();
 
   // Seed Location and other hierarchical models (Province, Regency, District, Village)
   await prisma.province.create({
@@ -164,6 +174,7 @@ async function main() {
   const villages = await prisma.village.findMany();
   await prisma.jenisSample.deleteMany();
   await prisma.jenisSampleType.deleteMany();
+  await prisma.userRoles.deleteMany();
   await prisma.roles.deleteMany();
 
   await insertRoles(prisma)
@@ -483,9 +494,7 @@ async function main() {
         data: {
           code: nextCode,
           jenisSampelType: { connect: { id: jenisSampleType.id } },
-          deskripsi: sample.jenis,
-          typeId: await prisma.jenisSampleType.findUnique({ where: { type: sample.type } }).then((t) => t?.id),
-        },
+          deskripsi: sample.jenis},
       });
       console.log(`Inserted: ${sample.jenis} as type ${sample.type} ${nextCode}`);
     }

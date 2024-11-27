@@ -223,10 +223,10 @@ model MercuryMonitoring {
   bakuMutuLingkungan   JenisSample? @relation("BakuMutuLingkunganRelation", fields: [bakuMutuLingkunganId], references: [id])
 
   tahunPengambilan DateTime // Sample collection date
-  hasilKadar       String  
-  satuan           String   
-  tingkatKadar     String   
-  konsentrasi      String  
+  hasilKadar       String
+  satuan           String
+  tingkatKadar     String
+  konsentrasi      String
   locationId String? // Foreign key for the location
   location   Location? @relation(fields: [locationId], references: [id])
 
@@ -269,7 +269,7 @@ model Location {
   village   Village? @relation(fields: [villageId], references: [id])
 
   keterangan String? // Optional description for the location
-  
+
   MercuryMonitoring MercuryMonitoring[]
 
   WilayahPertambanganRakyat WilayahPertambanganRakyat[]
@@ -459,7 +459,7 @@ model Company {
 
   KewajibanPelaporanRegistrasi KewajibanPelaporanRegistrasi[]
 
-  UserCompanies UserCompanies[] @relation("UserCompanies") // Relasi ke 
+  UserCompanies UserCompanies[] @relation("UserCompanies") // Relasi ke
 }
 
 model Vehicle {
@@ -810,8 +810,7 @@ model Registrasi {
   approval_status         String                    @default("created")
   no_reg                  String?
   sub_layanan             String?
-
-
+  type_registrasi         String                    @default("import")
   // Implicit many-to-many relations with Tembusan and bahanB3
 
   tembusan                DataTembusan[]
@@ -1079,7 +1078,7 @@ model Period {
   endReportingDate        DateTime // End of the reporting period
   finalizationDeadline        DateTime // Deadline for finalizing reports in this period
   isActive             Boolean  @default(false) // Only one active period allowed
-  isReportingActive             Boolean  @default(false) // Only one active period 
+  isReportingActive             Boolean  @default(false) // Only one active period
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
@@ -1239,8 +1238,8 @@ model UserCompanies {
   userId   String
   companyId   String
   user     User     @relation(fields: [userId], references: [id], name: "UserCompanies") // Relasi ke User
-  company     Company    @relation(fields: [companyId], references: [id], name: "UserCompanies") // Relasi ke Roles 
-  
+  company     Company    @relation(fields: [companyId], references: [id], name: "UserCompanies") // Relasi ke Roles
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -1294,7 +1293,7 @@ model LaporanPengangkutanFinalDetail {
   createdAt               DateTime                  @default(now())
   updatedAt               DateTime                  @updatedAt
 
-    
+
   isDraft            Boolean    @default(true)
   isFinalized        Boolean    @default(false)
   isApproved         Boolean    @default(false)
@@ -1354,7 +1353,7 @@ model PenyimpananB3 {
 
   villageId String? // Foreign key to Village
   village   Village? @relation(fields: [villageId], references: [id])
-  
+
   luasArea              Float
   companyId             String
   isApproved            Boolean?
@@ -1459,7 +1458,7 @@ model DataBahanB3Company {
 
   stokHistory    StokB3History[]
   updateRequests StokB3UpdateRequest[]
-  
+
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt @default(now())
   @@unique([companyId, dataBahanB3Id]) // Constraint unik
@@ -1473,7 +1472,7 @@ model StokB3History {
   newStokB3             Float
   changeDate            DateTime    @default(now())
 
-  
+
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt @default(now())
 }
@@ -1487,7 +1486,7 @@ model StokB3UpdateRequest {
   approved              Boolean     @default(false)
   approvalId            String?
   approval              Approval?   @relation(fields: [approvalId], references: [id])
-  
+
   notes                 String?
 
   createdAt      DateTime      @default(now())
@@ -1506,7 +1505,7 @@ model StokB3AddRequest {
   approvalId            String?
   approval              Approval?   @relation(fields: [approvalId], references: [id])
 
-  
+
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt @default(now())
 }
@@ -1908,10 +1907,10 @@ model DataPerusahaanTujuanBongkarOnPengakutanDetail{
   perusahaanAsalMuat PerusahaanAsalMuat @relation(fields: [perusahaanAsalMuatId], references: [id])
   locationTypeTujuan         String // Type of location: Gudang or Pelabuhan
   longitudeTujuan            Float // Loading origin longitude
-  latitudeTujuan             Float // Loading origin latitude 
+  latitudeTujuan             Float // Loading origin latitude
   locationTypeAsalMuat         String // Type of location: Gudang or Pelabuhan
   longitudeAsalMuat            Float // Loading origin longitude
-  latitudeAsalMuat             Float // Loading origin latitude 
+  latitudeAsalMuat             Float // Loading origin latitude
   perusahaanTujuanBongkarId String
   perusahaanTujuanBongkar PerusahaanTujuanBongkar @relation(fields: [perusahaanTujuanBongkarId], references: [id])
 }
@@ -1953,10 +1952,10 @@ model DataPerusahaanTujuanBongkarOnPengakutanDetailFinal{
   longitude            Float // Loading origin longitude
   locationTypeTujuan         String // Type of location: Gudang or Pelabuhan
   longitudeTujuan            Float // Loading origin longitude
-  latitudeTujuan             Float // Loading origin latitude 
+  latitudeTujuan             Float // Loading origin latitude
   locationTypeAsalMuat         String // Type of location: Gudang or Pelabuhan
   longitudeAsalMuat            Float // Loading origin longitude
-  latitudeAsalMuat             Float // Loading origin latitude 
+  latitudeAsalMuat             Float // Loading origin latitude
   locationType         String? // Type of location: Gudang or Pelabuhan
   createdAt            DateTime           @default(now())
   updatedAt            DateTime           @updatedAt
@@ -2062,6 +2061,8 @@ model DataPelabuhan {
     nm_lokasi   String
     kd_kantor   String
     nm_kantor_pendek String
+    latitude         String?
+    longitude        String?
 }
 
 model ValidasiTeknisRegistrasi {

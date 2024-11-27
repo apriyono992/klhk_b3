@@ -46,6 +46,7 @@ import MercuryMonitoringIndex from "../pages/admin/merkuri/IndexPage";
 import UnauthorizedPage from "../pages/admin/UnauthorizedPage";
 import ProtectedRoute from "../services/protectedRoute";
 import UserManagementPage from "../pages/admin/users/IndexPage";
+import ProdusenPencarian from "../pages/admin/report/produsen/ProdusenPencarian";
 
 export const ROOT_PATH = '/'
 export const BERITA_PATH = '/berita'
@@ -83,6 +84,9 @@ export const COMPANY_REPORT_STORAGE_DETAIL = '/pelaporan/penyimpanan-b3/daftar/:
 
 export const REPORT_TRANSPORT_INDEX = '/admin/pelaporan/pengangkutan-b3/daftar'
 export const REPORT_TRANSPORT_CREATE = '/pelaporan/pengangkutan-b3/buat/:applicationId'
+
+export const REPORT_PRODUCER_INDEX = '/admin/pelaporan/produsen-b3'
+export const PELAPORAN_PRODUSEN_PENCARIAN = '/admin/pelaporan/produsen-b3/pencarian'
 
 export const CARBON_COPY_INDEX_PATH = '/admin/utama/tembusan'
 export const MATERIAL_INDEX_PATH = '/admin/utama/bahan-b3'
@@ -164,6 +168,8 @@ const router = createBrowserRouter([
             { path: CMS_EVENT_PATH, element: <EventIndexPage /> },
 
             { path: PELAPORAN_DASHBOARD_PATH, element: <PelaporanDashboard />, },
+
+            { path: PELAPORAN_PRODUSEN_PENCARIAN, element: <ProdusenPencarian />, },
 
             { path: STOK_B3_INDEX_ADMIN_PATH, element: <IndexAdminStokB3 />, },
             { path: STOK_B3_INDEX_USER_PATH, element: <IndexUserStokB3 />, },
