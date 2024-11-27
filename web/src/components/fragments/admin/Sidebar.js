@@ -181,7 +181,13 @@ export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
                             />
                         </AccordionItem>
                         <AccordionItem key="5" title="Pelaporan" className="" startContent={<PresentationChartBarIcon className="size-5" />}>
-                            <ListItem url={PELAPORAN_DASHBOARD_PATH} variant="subitem" title="Dashboard" icon={<ArchiveBoxIcon className="size-4" />} />
+                            <Accordion showDivider={false} className="px-0" itemClasses={itemClasses}>
+                                <AccordionItem url={PELAPORAN_DASHBOARD_PATH} variant="subitem" title="Dashboard" icon={<ArchiveBoxIcon className="size-4" />}>
+                                    <ListItem url={PELAPORAN_DASHBOARD_PATH} variant="subitem" title="Grafik" icon={<ArchiveBoxIcon className="size-4" />} />
+                                    <ListItem url={PELAPORAN_DASHBOARD_PATH} variant="subitem" title="Peta" icon={<ArchiveBoxIcon className="size-4" />} />
+                                    <ListItem url={PELAPORAN_DASHBOARD_PATH} variant="subitem" title="Pencarian" icon={<ArchiveBoxIcon className="size-4" />} />
+                                </AccordionItem>
+                            </Accordion>
                             <ListItem url={COMPANY_REPORT_STORAGE} variant="subitem" title="Penyimpanan B3 (Perusahaan)" icon={<ArchiveBoxIcon className="size-4" />} />
                             <ListItem url={ADMIN_REPORT_STORAGE} variant="subitem" title="Penyimpanan B3 (Admin)" icon={<ArchiveBoxIcon className="size-4" />} />
                             <ListItem url={REPORT_TRANSPORT_INDEX} variant="subitem" title="Pengangkutan B3" icon={<TruckIcon className="size-4" />} />
