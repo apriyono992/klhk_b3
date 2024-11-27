@@ -19,20 +19,22 @@ import {
     TicketIcon,
     ClockIcon,
     CogIcon,
-    UserIcon
+    UserIcon, TableCellsIcon
 } from "@heroicons/react/24/outline";
 import { Accordion, AccordionItem, Avatar } from "@nextui-org/react";
 import logo from '../../../assets/images/logo.png'
 import ListItem from "../../elements/ListItem";
 import { useEffect, useRef } from "react";
-import { ADMIN_REPORT_STORAGE, CARBON_COPY_INDEX_PATH, COMPANY_INDEX_PATH, COMPANY_REPORT_STORAGE, DASHBOARD_PATH, 
-    MATERIAL_INDEX_PATH, NOTIFICATION_DASHBOARD_PATH, NOTIFICATION_INDEX_PATH, 
-    OFFICIAL_INDEX_PATH, PELAPORAN_DASHBOARD_PATH, PERIOD_INDEX_PATH, RECOMENDATION_DASHBOARD_PATH, 
-    RECOMENDATION_INDEX_PATH, REGISTRATION_DASHBOARD_PATH, REGISTRATION_INDEX_PATH, REPORT_TRANSPORT_INDEX, 
-    STOK_B3_INDEX_ADMIN_PATH, STOK_B3_INDEX_USER_PATH,  
+import {
+    ADMIN_REPORT_STORAGE, CARBON_COPY_INDEX_PATH, COMPANY_INDEX_PATH, COMPANY_REPORT_STORAGE, DASHBOARD_PATH,
+    MATERIAL_INDEX_PATH, NOTIFICATION_DASHBOARD_PATH, NOTIFICATION_INDEX_PATH,
+    OFFICIAL_INDEX_PATH, PELAPORAN_DASHBOARD_PATH, PERIOD_INDEX_PATH, RECOMENDATION_DASHBOARD_PATH,
+    RECOMENDATION_INDEX_PATH, REGISTRATION_DASHBOARD_PATH, REGISTRATION_INDEX_PATH, REPORT_TRANSPORT_INDEX,
+    STOK_B3_INDEX_ADMIN_PATH, STOK_B3_INDEX_USER_PATH,
     CMS_ARTICLE_PATH, CMS_DOCUMENT_PATH, CMS_EVENT_PATH, CMS_NEWS_PATH,
-    MERKURI_MONITORING_INDEX_PATH, WPR_INDEX_PATH, 
-    USERS_MANAGEMENT_INDEX_PATH} from "../../../services/routes";
+    MERKURI_MONITORING_INDEX_PATH, WPR_INDEX_PATH,
+    USERS_MANAGEMENT_INDEX_PATH, PELAPORAN_PRODUSEN_PENCARIAN
+} from "../../../services/routes";
 import useCustomNavigate from "../../../hooks/useCustomNavigate";
 import { PowerIcon } from "@heroicons/react/16/solid";
 
@@ -183,6 +185,9 @@ export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
                             <ListItem url={COMPANY_REPORT_STORAGE} variant="subitem" title="Penyimpanan B3 (Perusahaan)" icon={<ArchiveBoxIcon className="size-4" />} />
                             <ListItem url={ADMIN_REPORT_STORAGE} variant="subitem" title="Penyimpanan B3 (Admin)" icon={<ArchiveBoxIcon className="size-4" />} />
                             <ListItem url={REPORT_TRANSPORT_INDEX} variant="subitem" title="Pengangkutan B3" icon={<TruckIcon className="size-4" />} />
+                        </AccordionItem>
+                        <AccordionItem key="10" title="Pelaporan Produsen" className="" startContent={<PresentationChartBarIcon className="size-5" />}>
+                            <ListItem url={PELAPORAN_PRODUSEN_PENCARIAN} variant="subitem" title="Pencarian" icon={<TableCellsIcon className="size-4" />} />
                         </AccordionItem>
                         <AccordionItem key="6" title="Mater Data" className="" startContent={<FolderIcon className="size-5" />}>
                             <ListItem url={CARBON_COPY_INDEX_PATH} variant="subitem" title="Tembusan" icon={<AtSymbolIcon className="size-4" />} />
