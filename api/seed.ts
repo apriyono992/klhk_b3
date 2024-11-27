@@ -121,7 +121,11 @@ async function main() {
 
  }
  try{
+   await prisma.finalSurat.deleteMany()
+   await prisma.draftSurat.deleteMany()
+   await prisma.notifikasi.deleteMany()
    await prisma.user.deleteMany()
+   await prisma.userRole.deleteMany()
    await prisma.location.deleteMany()
    await prisma.province.deleteMany();
    await prisma.regencies.deleteMany();
