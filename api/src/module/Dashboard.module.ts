@@ -16,11 +16,14 @@ import {DashboardRegistrasiService} from "../services/dashboard/dashboardRegistr
 import {PrismaService} from "../services/prisma.services";
 import {MapsServices} from "../services/maps.services";
 import {MapsControllers} from "../controller/maps.controller";
+import {DashboardPelaporanProdusenController} from "../controller/dashboardPelaporanProdusen.controller";
+import {DashboardPelaporanProdusenService} from "../services/dashboard/dashboardPelaporanProdusen.service";
 
 
 @Module({
     imports: [PrismaModule, AuthModule],
     providers: [
+        DashboardPelaporanProdusenService,
         MapsServices,
         DashboardPelaporanDistribusiService,
         DashboardPelaporanRegistrasiService,
@@ -31,6 +34,7 @@ import {MapsControllers} from "../controller/maps.controller";
         PrismaService
     ],
     controllers: [
+        DashboardPelaporanProdusenController,
         MapsControllers,
         DashboardPelaporanPenyimpananController,
         DashboardPelaporanImportController,
