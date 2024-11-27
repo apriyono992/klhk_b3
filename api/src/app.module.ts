@@ -46,6 +46,7 @@ import { PelaporanPenggunaanB3Module } from './module/pelaporanPenggunaanB3.modu
 import { WprModule } from './module/wpr.module';
 import { PrismaModule } from './module/prisma.module';
 import { UserModule } from './module/user.module';
+import {DashboardModule} from "./module/Dashboard.module";
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -96,7 +97,8 @@ import { UserModule } from './module/user.module';
     PeriodModule,
     BahanB3CompanyModule,
     WprModule,
-    PrismaModule
+    PrismaModule,
+    DashboardModule
   ],
   controllers: [AppController, AuthController],
   providers: [
