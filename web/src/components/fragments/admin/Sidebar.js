@@ -232,7 +232,7 @@ export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
                                     url={PELAPORAN_PENGGUNAAN_PENCARIAN}
                                     variant="subitem"
                                     title="Pencarian"
-                                    icon={<ArchiveBoxIcon className="size-4" />}
+                                    icon={<TableCellsIcon className="size-4" />}
                                     />
                                 </AccordionItem>
                             </Accordion>
