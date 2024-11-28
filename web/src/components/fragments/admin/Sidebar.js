@@ -22,7 +22,6 @@ import {
     UserIcon, TableCellsIcon,
     ArrowsPointingOutIcon,
     ScaleIcon,
-    UserIcon,
     ArrowDownOnSquareIcon,
     ArrowUpOnSquareIcon,
     TableCellsIcon,
