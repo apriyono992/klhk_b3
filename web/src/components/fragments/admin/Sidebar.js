@@ -33,7 +33,8 @@ import {
     STOK_B3_INDEX_ADMIN_PATH, STOK_B3_INDEX_USER_PATH,
     CMS_ARTICLE_PATH, CMS_DOCUMENT_PATH, CMS_EVENT_PATH, CMS_NEWS_PATH,
     MERKURI_MONITORING_INDEX_PATH, WPR_INDEX_PATH,
-    USERS_MANAGEMENT_INDEX_PATH, PELAPORAN_PRODUSEN_PENCARIAN, PELAPORAN_PENGGUNAAN_GRAFIK, PELAPORAN_PENGGUNAAN_PENCARIAN
+    USERS_MANAGEMENT_INDEX_PATH, PELAPORAN_PRODUSEN_PENCARIAN, PELAPORAN_PENGGUNAAN_GRAFIK, PELAPORAN_PENGGUNAAN_PENCARIAN,
+    PELAPORAN_PRODUSEN_GRAFIK
 } from "../../../services/routes";
 import useCustomNavigate from "../../../hooks/useCustomNavigate";
 import { PowerIcon } from "@heroicons/react/16/solid";
@@ -181,38 +182,44 @@ export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
                             />
                         </AccordionItem>
                         <AccordionItem key="5" title="Pelaporan" className="" startContent={<PresentationChartBarIcon className="size-5" />}>
-                            <Accordion showDivider={false} className="px-0" itemClasses={itemClasses}>
+                            <Accordion showDivider={false} className="pl-[1.5rem]" itemClasses={itemClasses}>
                                 <AccordionItem url={PELAPORAN_DASHBOARD_PATH} variant="subitem" title="Dashboard" icon={<ArchiveBoxIcon className="size-4" />}>
                                     <ListItem url={PELAPORAN_DASHBOARD_PATH} variant="subitem" title="Grafik" icon={<ArchiveBoxIcon className="size-4" />} />
                                     <ListItem url={PELAPORAN_DASHBOARD_PATH} variant="subitem" title="Peta" icon={<ArchiveBoxIcon className="size-4" />} />
                                     <ListItem url={PELAPORAN_DASHBOARD_PATH} variant="subitem" title="Pencarian" icon={<ArchiveBoxIcon className="size-4" />} />
                                 </AccordionItem>
                             </Accordion>
-                            <ListItem url={COMPANY_REPORT_STORAGE} variant="subitem" title="Penyimpanan B3 (Perusahaan)" icon={<ArchiveBoxIcon className="size-4" />} />
+                            <Accordion showDivider={false}
+                                       className="pl-[1.5rem]" itemClasses={itemClasses}>
+                                <AccordionItem key="10" title="Produsen" className="text-small text-primary sub-accord-item" startContent={<PresentationChartBarIcon className="size-5" />}>
+                                    <ListItem url={PELAPORAN_PRODUSEN_GRAFIK} variant="subitem" title="Grafik" icon={<ArchiveBoxIcon className="size-4" />} />
+                                    {/*<ListItem url={""} variant="subitem" title="Peta" icon={<ArchiveBoxIcon className="size-4" />} />*/}
+                                    <ListItem url={PELAPORAN_PRODUSEN_PENCARIAN} variant="subitem" title="Pencarian" icon={<TableCellsIcon className="size-4" />} />
+                                </AccordionItem>
+                            </Accordion>
                             <Accordion
-                            showDivider={false}
-                            className="px-5">
+                                showDivider={false}
+                                className="pl-[1.5rem]" itemClasses={itemClasses}>
                                 <AccordionItem key="51" title="Penggunaan" className="text-small text-primary sub-accord-item"  startContent={<PresentationChartBarIcon className="size-5" />}>
-                                    <ListItem 
-                                    url={PELAPORAN_PENGGUNAAN_GRAFIK} 
-                                    variant="subitem" 
-                                    title="Grafik" 
-                                    icon={<ArchiveBoxIcon className="size-4" />} 
+                                    <ListItem
+                                        url={PELAPORAN_PENGGUNAAN_GRAFIK}
+                                        variant="subitem"
+                                        title="Grafik"
+                                        icon={<ArchiveBoxIcon className="size-4" />}
                                     />
-                                    <ListItem 
-                                    url={PELAPORAN_PENGGUNAAN_PENCARIAN} 
-                                    variant="subitem" 
-                                    title="Pencarian" 
-                                    icon={<ArchiveBoxIcon className="size-4" />} 
+                                    <ListItem
+                                        url={PELAPORAN_PENGGUNAAN_PENCARIAN}
+                                        variant="subitem"
+                                        title="Pencarian"
+                                        icon={<ArchiveBoxIcon className="size-4" />}
                                     />
                                 </AccordionItem>
                             </Accordion>
+                            <ListItem url={COMPANY_REPORT_STORAGE} variant="subitem" title="Penyimpanan B3 (Perusahaan)" icon={<ArchiveBoxIcon className="size-4" />} />
                             <ListItem url={ADMIN_REPORT_STORAGE} variant="subitem" title="Penyimpanan B3 (Admin)" icon={<ArchiveBoxIcon className="size-4" />} />
                             <ListItem url={REPORT_TRANSPORT_INDEX} variant="subitem" title="Pengangkutan B3" icon={<TruckIcon className="size-4" />} />
                         </AccordionItem>
-                        <AccordionItem key="10" title="Pelaporan Produsen" className="" startContent={<PresentationChartBarIcon className="size-5" />}>
-                            <ListItem url={PELAPORAN_PRODUSEN_PENCARIAN} variant="subitem" title="Pencarian" icon={<TableCellsIcon className="size-4" />} />
-                        </AccordionItem>
+
                         <AccordionItem key="6" title="Mater Data" className="" startContent={<FolderIcon className="size-5" />}>
                             <ListItem url={CARBON_COPY_INDEX_PATH} variant="subitem" title="Tembusan" icon={<AtSymbolIcon className="size-4" />} />
                             <ListItem url={OFFICIAL_INDEX_PATH} variant="subitem" title="Pejabat" icon={<UserGroupIcon className="size-4" />} />

@@ -47,6 +47,7 @@ import UnauthorizedPage from "../pages/admin/UnauthorizedPage";
 import ProtectedRoute from "../services/protectedRoute";
 import UserManagementPage from "../pages/admin/users/IndexPage";
 import ProdusenPencarian from "../pages/admin/report/produsen/ProdusenPencarian";
+import ProdusenGrafik from "../pages/admin/report/produsen/ProdusenGrafik";
 
 import PenggunaanGrafik from "../pages/admin/report/use/graph/IndexPage";
 import PenggunaanPencarian from "../pages/admin/report/use/filter/IndexPage";
@@ -94,6 +95,7 @@ export const REPORT_TRANSPORT_CREATE = '/pelaporan/pengangkutan-b3/buat/:applica
 
 export const REPORT_PRODUCER_INDEX = '/admin/pelaporan/produsen-b3'
 export const PELAPORAN_PRODUSEN_PENCARIAN = '/admin/pelaporan/produsen-b3/pencarian'
+export const PELAPORAN_PRODUSEN_GRAFIK = '/admin/pelaporan/produsen-b3/grafik'
 
 export const CARBON_COPY_INDEX_PATH = '/admin/utama/tembusan'
 export const MATERIAL_INDEX_PATH = '/admin/utama/bahan-b3'
@@ -177,6 +179,7 @@ const router = createBrowserRouter([
             { path: PELAPORAN_DASHBOARD_PATH, element: <PelaporanDashboard />, },
 
             { path: PELAPORAN_PRODUSEN_PENCARIAN, element: <ProdusenPencarian />, },
+            { path: PELAPORAN_PRODUSEN_GRAFIK, element: <ProdusenGrafik />, },
 
             { path: PELAPORAN_PENGGUNAAN_GRAFIK, element: <PenggunaanGrafik />, },
             { path: PELAPORAN_PENGGUNAAN_PENCARIAN, element: <PenggunaanPencarian />, },
