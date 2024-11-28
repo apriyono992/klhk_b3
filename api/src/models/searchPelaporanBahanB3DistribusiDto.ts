@@ -1,7 +1,7 @@
 
-import { IsOptional, IsUUID, IsEnum, IsString, IsDate, IsBoolean, IsNumber, Validate } from 'class-validator';
+import { IsOptional, IsUUID, IsEnum, IsString, IsDate, IsBoolean, IsNumber, Validate, IsArray } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { PaginationDto } from './paginationDto';
 import { IsProvinceExist } from 'src/validators/province.validator';
 import { IsRegencyValid } from 'src/validators/regency.validator';
@@ -11,8 +11,20 @@ import { IsVillageValid } from 'src/validators/village.validator';
 export class SearchPelaporanBahanB3DistribusiDto extends PaginationDto {
   @ApiPropertyOptional({ description: 'ID perusahaan', example: '123e4567-e89b-12d3-a456-426614174000' })
   @IsOptional()
-  @IsUUID()
-  companyId?: string;
+  @Transform(({ value }) => {
+    // Jika sudah berupa array, trim setiap elemen
+    if (Array.isArray(value)) {
+      return value.map((item) => item.trim());
+    }
+    // Jika berupa string dengan koma, pecah menjadi array dan trim setiap elemen
+    if (typeof value === 'string') {
+      return value.split(',').map((item) => item.trim());
+    }
+    // Jika bukan array atau string, kembalikan seperti apa adanya
+    return [value];
+  })
+  @IsArray()
+  companyId?: string[];
 
   @ApiPropertyOptional({ description: 'ID periode', example: '321e4567-e89b-12d3-a456-426614174999' })
   @IsOptional()

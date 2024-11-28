@@ -58,7 +58,7 @@ export default function IndexAdminStokB3() {
     const { data: allCompanies } = useSWR(
         isSuperAdmin
             ? `/api/company/search-company` // Jika Super Admin, fetch semua perusahaan
-            : `/api/company/search-company?ids=${user.companies.map((company) => company.id).join(",")}`, // Jika bukan Super Admin, fetch perusahaan sesuai IDs
+            : `/api/company/search-company?companyIds=${user.companies.map((company) => company.id).join(",")}`, // Jika bukan Super Admin, fetch perusahaan sesuai IDs
         getSelectFetcher
     );
 
