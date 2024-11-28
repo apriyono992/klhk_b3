@@ -37,6 +37,7 @@ import ArticleIndexPage from '../pages/admin/cms/article/IndexPage'
 import DocumentIndexPage from '../pages/admin/cms/document/IndexPage'
 import EventIndexPage from '../pages/admin/cms/event/IndexPage'
 import PelaporanDashboard from "../pages/admin/report/PelaporanDashboard";
+import PelaporanPenyimpananGrafik from "../pages/admin/Pelaporan/DashboardPenyimpanan/GrafikPenyimpanan";
 import IndexAdminStokB3 from "../pages/admin/stokB3/admin/IndexPage";
 import IndexUserStokB3 from "../pages/admin/stokB3/user/IndexPage";
 
@@ -59,6 +60,7 @@ export const RESET_PASSWORD_PATH = '/lupa-sandi/atur-ulang'
 
 export const DASHBOARD_PATH = '/admin/dasbor'
 export const PELAPORAN_DASHBOARD_PATH = '/admin/dasbor/pelaporan'
+export const PELAPORAN_PENYIMPANAN_GRAFIK_PATH = '/admin/dasbor/pelaporanPenyimpanan/grafik'
 
 export const REGISTRATION_DASHBOARD_PATH = '/admin/registrasi-b3/dasbor'
 export const REGISTRATION_INDEX_PATH = '/admin/registrasi-b3/daftar'
@@ -164,6 +166,7 @@ const router = createBrowserRouter([
             { path: CMS_EVENT_PATH, element: <EventIndexPage /> },
 
             { path: PELAPORAN_DASHBOARD_PATH, element: <PelaporanDashboard />, },
+            { path: PELAPORAN_PENYIMPANAN_GRAFIK_PATH, element: <PelaporanPenyimpananGrafik />},
 
             { path: STOK_B3_INDEX_ADMIN_PATH, element: <IndexAdminStokB3 />, },
             { path: STOK_B3_INDEX_USER_PATH, element: <IndexUserStokB3 />, },

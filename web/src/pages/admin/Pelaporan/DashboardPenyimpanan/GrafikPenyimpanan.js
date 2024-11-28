@@ -1,18 +1,18 @@
-import { Button, Card, CardBody, CardHeader, Divider, Tabs, Tab, Table } from "@nextui-org/react";
-import { EyeIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
-import useSWR from "swr";
-import { getFetcher } from "../../../services/api";
-import RootAdmin from "../../../components/layouts/RootAdmin";
 
-export default function PelaporanDashboardPenyimpanan() {
+import { Button, Card, CardBody, CardHeader, Tabs, Tab, Chip, DatePicker, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/react'
+import RootAdmin from "../../../../components/layouts/RootAdmin";
+import { BarChart } from '@mui/x-charts/BarChart';
+
+export default function PelaporanPenyimpananGrafik() {
    
+    const labels = ['a', 'b', 'c']
+    const values = ['1', '2', '3']
 
     return (
         <RootAdmin>
            <Card radius='sm' className='col-span-4 p-3'>
-                    <Tabs defaultValue={selectedtype}>
-                        <Tab title="Import" value="import" onClick={() => console.log('test')
-                        }>
+                    <Tabs defaultValue='Import'>
+                        <Tab title="Import" value="import">
                         <div>
                             <CardHeader>
                                 <span className='text-primary text-xl font-bold'>10 Jenis B3 Terbanyak (import)</span>
@@ -34,7 +34,7 @@ export default function PelaporanDashboardPenyimpanan() {
                             </CardBody>
                         </div>                           
                         </Tab>
-                        <Tab title="Produsen" value="produsen" onClick={() => handleTabClick('produsen')}>
+                        <Tab title="Produsen" value="produsen">
                         <div>
                             <CardHeader>
                                 <span className='text-primary text-xl font-bold'>10 Jenis B3 Terbanyak (Produsen)</span>
@@ -65,12 +65,11 @@ export default function PelaporanDashboardPenyimpanan() {
                             <TableColumn>Jumlah</TableColumn>
                         </TableHeader>
                         <TableBody>
-                             {data?.responseData?.company?.map((data,index) => (
-                                <TableRow key={index}>
-                                    <TableCell>{data?.company_name}</TableCell>
-                                    <TableCell>{data?.count} Registration</TableCell>
+                            
+                                <TableRow>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
                                 </TableRow>
-                            ))}
                         </TableBody>
                     </Table>
                 </div>
