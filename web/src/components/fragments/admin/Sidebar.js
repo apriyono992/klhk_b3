@@ -19,7 +19,7 @@ import {
     TicketIcon,
     ClockIcon,
     CogIcon,
-    UserIcon, TableCellsIcon,
+    UserIcon,
     ArrowsPointingOutIcon,
     ScaleIcon,
     ArrowDownOnSquareIcon,
