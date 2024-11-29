@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react'
 import RootAdmin from '../../../../components/layouts/RootAdmin'
 import {
     Button,
@@ -27,42 +27,13 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { SparkLineChart } from '@mui/x-charts'
 import CountWidget from '../../../../components/elements/CountWidget'
 import CustomDataGrid from "../../../../components/elements/CustomDataGrid";
-import useSWR from "swr";
-import { getFetcher } from "../../../../services/api";
-import ControlledInput from "../../../../components/elements/ControlledInput";
-import {useForm} from "react-hook-form";
 
-export default function ProdusenGrafik() {
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
-
-
-    useEffect(() => {
-        console.log(startDate, endDate, " ini start end date ")
-    }, [startDate, endDate])
-    // Fetch data grafik bahan b3 & perusahaan terbanyak
-    const { data: produsenB3, mutate: mutateProdusenB3 } = useSWR(
-        `/api/dashboard/pelaporan/Produsen/grafik/bahanb3?startDate=${startDate}&endDate=${endDate}`,
-        getFetcher
-    );
-
-    const { data: produsenPerusahaan, mutate: mutateProdusenPerusahaan } = useSWR(
-        `/api/dashboard/pelaporan/Produsen/grafik/perusahaan?startDate=${startDate}&endDate=${endDate}`,
-        getFetcher
-    );
-
-    const handleFilterApply = (start, end) => {
-        setStartDate(start);
-        setEndDate(end);
-        mutateProdusenB3(); // Refresh data for produsenB3
-        mutateProdusenPerusahaan(); // Refresh data for produsenPerusahaan
-    };
-
+export default function PengangkutanGrafik() {
     return (<RootAdmin>
             <HeaderPage
-                title="Grafik Pelaporan Produsen"
+                title="Grafik Pelaporan Pengangkutan"
                 subtitle="Gambaran Umum"
-                action={<FilterForm onApplyFilter={handleFilterApply}/>}
+                action={<FilterForm/>}
             />
             <div className='grid grid-rows-1 md:grid-rows-4 gap-3 pt-5'>
                 <Card>
@@ -162,57 +133,23 @@ export default function ProdusenGrafik() {
         </RootAdmin>)
 }
 
-function FilterForm({onApplyFilter}) {
-    const { control, watch } = useForm({
-        defaultValues: {
-            startDate: "",
-            endDate: "",
-        },
-    });
-    const filters = watch();
-
-    const handleApply = () => {
-        onApplyFilter(filters.startDate, filters.endDate);
-    };
-
+function FilterForm() {
     return (
         <Dropdown closeOnSelect={false}>
             <DropdownTrigger>
-                <Button radius='sm' variant='bordered' startContent={<FunnelIcon className='size-4' />}>
-                    Saring
-                </Button>
+                <Button radius='sm' variant='bordered' startContent={<FunnelIcon className='size-4'/>}>Saring</Button>
             </DropdownTrigger>
-            <DropdownMenu aria-label="Filter Date">
+            <DropdownMenu aria-label="">
                 <DropdownItem isReadOnly>
-                    <ControlledInput
-                        name="startDate"
-                        label="Tanggal Mulai"
-                        type="date"
-                        control={control}
-                        isRequired
-                        rules={{
-                            required: "Tanggal Mulai harus diisi.",
-                        }}
-                    />
+                    <DatePicker size='sm' label="Tanggal Mulai" labelPlacement='outside' />
                 </DropdownItem>
                 <DropdownItem isReadOnly>
-                    <ControlledInput
-                        name="endDate"
-                        label="Tanggal Selesai"
-                        type="date"
-                        control={control}
-                        isRequired
-                        rules={{
-                            required: "Tanggal Selesai harus diisi.",
-                        }}
-                    />
+                    <DatePicker size='sm' label="Tanggal Akhir" labelPlacement='outside' />
                 </DropdownItem>
                 <DropdownItem isReadOnly>
-                    <Button size='sm' color='primary' onClick={handleApply}>
-                        Terapkan
-                    </Button>
+                    <Button size='sm' color='primary'>Terapkan</Button>
                 </DropdownItem>
             </DropdownMenu>
         </Dropdown>
-    );
+    )
 }

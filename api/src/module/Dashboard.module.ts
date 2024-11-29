@@ -18,6 +18,8 @@ import {MapsServices} from "../services/maps.services";
 import {MapsControllers} from "../controller/maps.controller";
 import {DashboardPelaporanProdusenController} from "../controller/dashboardPelaporanProdusen.controller";
 import {DashboardPelaporanProdusenService} from "../services/dashboard/dashboardPelaporanProdusen.service";
+import {DashboardPelaporanPengangkutanController} from "../controller/dashboardPelaporanPengangkutan.controller";
+import {DashboardPelaporanPengangkutanService} from "../services/dashboard/dashboardPelaporanPengangkutan.service";
 
 
 @Module({
@@ -28,6 +30,7 @@ import {DashboardPelaporanProdusenService} from "../services/dashboard/dashboard
         DashboardPelaporanDistribusiService,
         DashboardPelaporanRegistrasiService,
         DashboardPelaporanPenggunaanService,
+        DashboardPelaporanPengangkutanService,
         DashboardPelaporanPenyimpananService,
         DashboardPermohonanService,
         DashboardRegistrasiService,
@@ -38,6 +41,7 @@ import {DashboardPelaporanProdusenService} from "../services/dashboard/dashboard
         MapsControllers,
         DashboardPelaporanPenyimpananController,
         DashboardPelaporanImportController,
+        DashboardPelaporanPengangkutanController,
         DashboardPelaporanDistribusiController,
         DashboardPelaporanPenggunaanController,
         DashboardPermohonanController,

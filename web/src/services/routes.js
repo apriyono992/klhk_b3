@@ -49,7 +49,8 @@ import ProtectedRoute from "../services/protectedRoute";
 import UserManagementPage from "../pages/admin/users/IndexPage";
 import ProdusenPencarian from "../pages/admin/report/produsen/ProdusenPencarian";
 import ProdusenGrafik from "../pages/admin/report/produsen/ProdusenGrafik";
-
+import PengangkutanGrafik from "../pages/admin/report/pengangkutan/PengangkutanGrafik";
+import PengangkutanPencarian from "../pages/admin/report/pengangkutan/PengangkutanPencarian";
 import PenggunaanGrafik from "../pages/admin/report/use/graph/IndexPage";
 import PenggunaanPencarian from "../pages/admin/report/use/filter/IndexPage";
 
@@ -70,6 +71,10 @@ export const PELAPORAN_PENYIMPANAN_GRAFIK_PATH = '/admin/dasbor/pelaporanPenyimp
 
 export const PELAPORAN_PENGGUNAAN_GRAFIK = '/admin/pelaporan/penggunaan/grafik'
 export const PELAPORAN_PENGGUNAAN_PENCARIAN = '/admin/pelaporan/penggunaan/pencarian'
+
+export const PELAPORAN_PENGANGKUTAN_GRAFIK = '/admin/pelaporan/pengangkutan/grafik'
+export const PELAPORAN_PENGANGKUTAN_PENCARIAN = '/admin/pelaporan/pengangkutan/pencarian'
+export const PELAPORAN_PENGANGKUTAN_MAPS = '/admin/pelaporan/pengangkutan/maps'
 
 export const REGISTRATION_DASHBOARD_PATH = '/admin/registrasi-b3/dasbor'
 export const REGISTRATION_INDEX_PATH = '/admin/registrasi-b3/daftar'
@@ -172,7 +177,7 @@ const router = createBrowserRouter([
             { path: MATERIAL_INDEX_PATH, element: <MaterialIndexPage />,},
             { path: COMPANY_INDEX_PATH, element: <CompanyIndexPage />,},
             { path: PERIOD_INDEX_PATH, element: <PeriodIndexPage />,},
-  
+
             { path: CMS_NEWS_PATH, element: <NewsIndexPage /> },
             { path: CMS_ARTICLE_PATH, element: <ArticleIndexPage /> },
             { path: CMS_DOCUMENT_PATH, element: <DocumentIndexPage /> },
@@ -186,6 +191,9 @@ const router = createBrowserRouter([
 
             { path: PELAPORAN_PENGGUNAAN_GRAFIK, element: <PenggunaanGrafik />, },
             { path: PELAPORAN_PENGGUNAAN_PENCARIAN, element: <PenggunaanPencarian />, },
+
+            { path: PELAPORAN_PENGANGKUTAN_GRAFIK, element: <PengangkutanGrafik />, },
+            { path: PELAPORAN_PENGANGKUTAN_PENCARIAN, element: <PengangkutanPencarian />, },
 
 
             { path: STOK_B3_INDEX_ADMIN_PATH, element: <IndexAdminStokB3 />, },
