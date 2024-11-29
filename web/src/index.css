@@ -16,3 +16,10 @@
 .ql-editor {
   min-height: 200px;
 }
+
+.sub-accord-item h2 button div span {
+  color: hsl(var(--nextui-primary) / var(--nextui-primary-opacity, var(--tw-text-opacity))) !important;
+  --tw-text-opacity: 1 !important;
+  font-size: var(--nextui-font-size-small) !important;
+  line-height: var(--nextui-line-height-small) !important;
+}

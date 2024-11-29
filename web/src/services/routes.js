@@ -47,6 +47,12 @@ import MercuryMonitoringIndex from "../pages/admin/merkuri/IndexPage";
 import UnauthorizedPage from "../pages/admin/UnauthorizedPage";
 import ProtectedRoute from "../services/protectedRoute";
 import UserManagementPage from "../pages/admin/users/IndexPage";
+import ProdusenPencarian from "../pages/admin/report/produsen/ProdusenPencarian";
+import ProdusenGrafik from "../pages/admin/report/produsen/ProdusenGrafik";
+
+import PenggunaanGrafik from "../pages/admin/report/use/graph/IndexPage";
+import PenggunaanPencarian from "../pages/admin/report/use/filter/IndexPage";
+
 
 export const ROOT_PATH = '/'
 export const BERITA_PATH = '/berita'
@@ -61,6 +67,9 @@ export const RESET_PASSWORD_PATH = '/lupa-sandi/atur-ulang'
 export const DASHBOARD_PATH = '/admin/dasbor'
 export const PELAPORAN_DASHBOARD_PATH = '/admin/dasbor/pelaporan'
 export const PELAPORAN_PENYIMPANAN_GRAFIK_PATH = '/admin/dasbor/pelaporanPenyimpanan/grafik'
+
+export const PELAPORAN_PENGGUNAAN_GRAFIK = '/admin/pelaporan/penggunaan/grafik'
+export const PELAPORAN_PENGGUNAAN_PENCARIAN = '/admin/pelaporan/penggunaan/pencarian'
 
 export const REGISTRATION_DASHBOARD_PATH = '/admin/registrasi-b3/dasbor'
 export const REGISTRATION_INDEX_PATH = '/admin/registrasi-b3/daftar'
@@ -85,6 +94,10 @@ export const COMPANY_REPORT_STORAGE_DETAIL = '/pelaporan/penyimpanan-b3/daftar/:
 
 export const REPORT_TRANSPORT_INDEX = '/admin/pelaporan/pengangkutan-b3/daftar'
 export const REPORT_TRANSPORT_CREATE = '/pelaporan/pengangkutan-b3/buat/:applicationId'
+
+export const REPORT_PRODUCER_INDEX = '/admin/pelaporan/produsen-b3'
+export const PELAPORAN_PRODUSEN_PENCARIAN = '/admin/pelaporan/produsen-b3/pencarian'
+export const PELAPORAN_PRODUSEN_GRAFIK = '/admin/pelaporan/produsen-b3/grafik'
 
 export const CARBON_COPY_INDEX_PATH = '/admin/utama/tembusan'
 export const MATERIAL_INDEX_PATH = '/admin/utama/bahan-b3'
@@ -167,6 +180,13 @@ const router = createBrowserRouter([
 
             { path: PELAPORAN_DASHBOARD_PATH, element: <PelaporanDashboard />, },
             { path: PELAPORAN_PENYIMPANAN_GRAFIK_PATH, element: <PelaporanPenyimpananGrafik />},
+
+            { path: PELAPORAN_PRODUSEN_PENCARIAN, element: <ProdusenPencarian />, },
+            { path: PELAPORAN_PRODUSEN_GRAFIK, element: <ProdusenGrafik />, },
+
+            { path: PELAPORAN_PENGGUNAAN_GRAFIK, element: <PenggunaanGrafik />, },
+            { path: PELAPORAN_PENGGUNAAN_PENCARIAN, element: <PenggunaanPencarian />, },
+
 
             { path: STOK_B3_INDEX_ADMIN_PATH, element: <IndexAdminStokB3 />, },
             { path: STOK_B3_INDEX_USER_PATH, element: <IndexUserStokB3 />, },
