@@ -39,7 +39,7 @@ export class SearchCompanyDto extends PaginationDto {
 
   @ApiPropertyOptional({ description: 'ID perusahaan', example: '123e4567-e89b-12d3-a456-426614174000' })
   @IsOptional()
-    @Transform(({ value }) => {
+  @Transform(({ value }) => {
     // Jika sudah berupa array, trim setiap elemen
     if (Array.isArray(value)) {
       return value.map((item) => item.trim());
@@ -52,7 +52,6 @@ export class SearchCompanyDto extends PaginationDto {
     return [value];
   })
   @IsArray()
-  companyId?: string[];
   companyIds?: string[];
 
   @IsOptional()

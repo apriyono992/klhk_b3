@@ -18,6 +18,7 @@ import { UserService } from 'src/services/users.services';
 import { JwtAuthGuard } from 'src/utils/auth.guard';
 import { RolesGuard } from 'src/utils/roles.guard';
 import { RoleCompanyGuard } from 'src/utils/roleCompany.guard';
+import { UpdateUserDto } from 'src/models/updateUserDto';
   
   @ApiTags('Users')
   @ApiBearerAuth()
@@ -154,6 +155,21 @@ import { RoleCompanyGuard } from 'src/utils/roleCompany.guard';
     })
     async getUserById(@Param('id') userId: string) {
     return this.userService.getUserById(userId);
+    }
+
+    @Put('update-profile/:id')
+    @ApiOperation({ summary: 'Memperbarui pengguna yang ada' })
+    @ApiConsumes('multipart/form-data')
+    @ApiParam({
+      name: 'id',
+      description: 'ID pengguna yang akan diperbarui',
+      example: 'user-id-1',
+    })
+    async updateUserProfile(
+      @Param('id') userId: string,
+      @Body() payload: Partial<UpdateUserDto>
+    ) {
+      return this.userService.updateUserWithDto(userId, payload);
     }
   }
   

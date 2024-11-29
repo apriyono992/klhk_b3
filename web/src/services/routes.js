@@ -65,6 +65,7 @@ import UnauthorizedPage from "../pages/admin/UnauthorizedPage";
 import ProtectedRoute from "../services/protectedRoute";
 import UserManagementPage from "../pages/admin/users/IndexPage";
 import ProdusenPencarian from "../pages/admin/report/produsen/ProdusenPencarian";
+import ProfilePage from "../pages/admin/profile/profile";
 
 export const ROOT_PATH = '/'
 export const BERITA_PATH = '/berita'
@@ -149,6 +150,8 @@ export const STOK_B3_INDEX_USER_PATH = '/gudang/stok-b3'
 export const UNAUTHORIZED_PATH = '/unauthorized'
 
 export const USERS_MANAGEMENT_INDEX_PATH = '/admin/user-management'
+
+export const USER_PROFILE = '/user/profile'
 
 const router = createBrowserRouter([
     { path: "/", element: <HomePage/>,},
@@ -242,6 +245,8 @@ const router = createBrowserRouter([
             { path: MERKURI_MONITORING_INDEX_PATH, element: < MercuryMonitoringIndex/>,},
 
             { path: USERS_MANAGEMENT_INDEX_PATH, element: < UserManagementPage/>,},
+
+            { path: USER_PROFILE, element: <ProfilePage/>,},
         ],
     },
 ])

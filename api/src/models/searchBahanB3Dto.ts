@@ -2,6 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsArray, IsString, IsEnum } from 'class-validator';
 import { PaginationDto } from './paginationDto';
 import { TipeBahan } from './enums/tipeBahan';
+import { Transform } from 'class-transformer';
 
 export class SearchDataBahanB3Dto extends PaginationDto {
   @ApiPropertyOptional({
@@ -11,6 +12,18 @@ export class SearchDataBahanB3Dto extends PaginationDto {
   })
   @IsOptional()
   @IsArray()
+  @Transform(({ value }) => {
+    // Jika sudah berupa array, trim setiap elemen
+    if (Array.isArray(value)) {
+      return value.map((item) => item.trim());
+    }
+    // Jika berupa string dengan koma, pecah menjadi array dan trim setiap elemen
+    if (typeof value === 'string') {
+      return value.split(',').map((item) => item.trim());
+    }
+    // Jika bukan array atau string, kembalikan seperti apa adanya
+    return [value];
+  })
   @IsString({ each: true })
   casNumber?: string[];
 

@@ -17,8 +17,9 @@ import {
 import useAuth from "../../../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie'
-import { LOGIN_PATH } from "../../../services/routes";
+import { LOGIN_PATH, USER_PROFILE } from "../../../services/routes";
 import { removeSlug } from '../../../services/helpers';
+import ListItem from '../../elements/ListItem';
 
 export default function Header({ onOpenSidebar }) {
     const { user, roles } = useAuth()
@@ -61,7 +62,11 @@ export default function Header({ onOpenSidebar }) {
                         />
                     </DropdownTrigger>
                     <DropdownMenu variant="faded">
-                        <DropdownItem key="settings" startContent={<UserIcon className="size-4" />}>Profile</DropdownItem>
+                        <DropdownItem key="settings" startContent={<UserIcon className="size-4" />}>
+                            <a href={USER_PROFILE} className="text-sm text-gray-700 hover:text-gray-900 hover:underline">
+                                Profile
+                            </a>
+                        </DropdownItem>
                         <DropdownItem key="logout" startContent={<ArrowLeftStartOnRectangleIcon className="size-4" />}><button onClick={handleLogout}>Logout</button></DropdownItem>
                     </DropdownMenu>
                 </Dropdown>  

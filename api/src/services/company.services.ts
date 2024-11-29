@@ -891,7 +891,7 @@ export class CompanyService {
     } = dto;
   
     const whereConditions: any = {
-      ...(companyId && { companyId }),
+      ...(companyId?.length > 0 && { companyId: { in: companyId} }),
       ...(namaSupplier && {
         namaSupplier: {
           contains: namaSupplier.trim(),
@@ -985,7 +985,7 @@ export class CompanyService {
     } = dto;
   
     const whereConditions: any = {
-      ...(companyId && { companyId }),
+      ...(companyId && { companyId:  { in: companyId }}),
       ...(namaCustomer && {
         namaCustomer: {
           contains: namaCustomer.trim(),
@@ -1096,7 +1096,7 @@ export class CompanyService {
     } = dto;
   
     const whereConditions: any = {
-      ...(companyId && { companyId }),
+      ...(companyId?.length > 0 && { companyId: { in: companyId} }),
       ...(namaTransPorter && {
         namaTransPorter: {
           contains: namaTransPorter.trim(),
