@@ -35,11 +35,9 @@ import {useForm} from "react-hook-form";
 export default function ProdusenGrafik() {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+    const [b3Data, setB3Data] = useState([]);
+    const [companyData, setCompanyData] = useState([]);
 
-
-    useEffect(() => {
-        console.log(startDate, endDate, " ini start end date ")
-    }, [startDate, endDate])
     // Fetch data grafik bahan b3 & perusahaan terbanyak
     const { data: produsenB3, mutate: mutateProdusenB3 } = useSWR(
         `/api/dashboard/pelaporan/Produsen/grafik/bahanb3?startDate=${startDate}&endDate=${endDate}`,
@@ -50,6 +48,24 @@ export default function ProdusenGrafik() {
         `/api/dashboard/pelaporan/Produsen/grafik/perusahaan?startDate=${startDate}&endDate=${endDate}`,
         getFetcher
     );
+
+    // masukkan ke data usestate setiap data baru ter-fetch
+    useEffect(() => {
+        console.log(produsenB3)
+        if (produsenB3) {
+            setB3Data(produsenB3.responseData.map(item => ({
+                name: item.namaBahanKimia,
+                total: item.total
+            })));
+        }
+
+        if (produsenPerusahaan) {
+            setCompanyData(produsenPerusahaan.responseData.map(item => ({
+                name: item.name,
+                total: item.total
+            })));
+        }
+    }, [produsenB3, produsenPerusahaan]);
 
     const handleFilterApply = (start, end) => {
         setStartDate(start);
@@ -77,13 +93,13 @@ export default function ProdusenGrafik() {
                                     <BarChart
                                         xAxis={[{
                                             scaleType: 'band',
-                                            data: ['consectetur', 'lorem', 'ipsum', 'dolor', 'sit', 'amet', 'adipiscing', 'pellentesque', 'pharetra', 'pretium'],
+                                            data: b3Data.map(item => item.name),
                                             label: 'Jenis B3',
                                             barGapRatio: 0,
                                             categoryGapRatio: 0.4,
                                         }]}
                                         series={[
-                                            { data: [4, 10, 12, 7, 10, 5, 3, 7, 8, 2] },
+                                            { data: b3Data.map(item => item.total) }
                                         ]}
                                         height={300}
                                     />
@@ -96,18 +112,12 @@ export default function ProdusenGrafik() {
                                         <TableColumn>Jumlah</TableColumn>
                                     </TableHeader>
                                     <TableBody>
-                                        <TableRow key="1">
-                                            <TableCell>Gas</TableCell>
-                                            <TableCell>12</TableCell>
-                                        </TableRow>
-                                        <TableRow key="2">
-                                            <TableCell>Methanol</TableCell>
-                                            <TableCell>20</TableCell>
-                                        </TableRow>
-                                        <TableRow key="3">
-                                            <TableCell>Merkuri</TableCell>
-                                            <TableCell>30</TableCell>
-                                        </TableRow>
+                                        {b3Data.map((item, index) => (
+                                            <TableRow key={index}>
+                                                <TableCell>{item.name}</TableCell>
+                                                <TableCell>{item.total}</TableCell>
+                                            </TableRow>
+                                        ))}
                                     </TableBody>
                                 </Table>
                             </div>
@@ -121,13 +131,13 @@ export default function ProdusenGrafik() {
                                     <BarChart
                                         xAxis={[{
                                             scaleType: 'band',
-                                            data: ['consectetur', 'lorem', 'ipsum', 'dolor', 'sit', 'amet', 'adipiscing', 'pellentesque', 'pharetra', 'pretium'],
+                                            data: companyData.map(item => item.name),
                                             label: 'Perusahaan',
                                             barGapRatio: 0,
                                             categoryGapRatio: 0.4,
                                         }]}
                                         series={[
-                                            { data: [4, 10, 12, 7, 10, 5, 3, 7, 8, 2] },
+                                            { data: companyData.map(item => item.total) },
                                         ]}
                                         height={300}
                                     />
@@ -140,18 +150,12 @@ export default function ProdusenGrafik() {
                                         <TableColumn>Jumlah Produksi</TableColumn>
                                     </TableHeader>
                                     <TableBody>
-                                        <TableRow key="1">
-                                            <TableCell>PT. Tony Reichert</TableCell>
-                                            <TableCell>12</TableCell>
-                                        </TableRow>
-                                        <TableRow key="2">
-                                            <TableCell>PT. Zoey Lang</TableCell>
-                                            <TableCell>20</TableCell>
-                                        </TableRow>
-                                        <TableRow key="3">
-                                            <TableCell>PT. Jane Fisher</TableCell>
-                                            <TableCell>30</TableCell>
-                                        </TableRow>
+                                        {companyData.map((item, index) => (
+                                            <TableRow key={index}>
+                                                <TableCell>{item.name}</TableCell>
+                                                <TableCell>{item.total}</TableCell>
+                                            </TableRow>
+                                        ))}
                                     </TableBody>
                                 </Table>
                             </div>
