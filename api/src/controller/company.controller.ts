@@ -24,6 +24,7 @@ import { UpdateDataPICDto } from 'src/models/updateDataPICDto';
 import { SearchDataPICDto } from 'src/models/searchDataPICDto';
 import { CreateDataCustomerDto } from 'src/models/createDataCustomerDto';
 import { UpdateDataCustomerDto } from 'src/models/updateDataCustomerDto';
+import { SearchReportedAndUnreportedCompaniesDto } from 'src/models/searchReportedAndUnreportedCompaniesDto';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('Company')
@@ -1403,5 +1404,56 @@ export class CompanyController {
   async getAllPIC(@Query() dto: SearchDataPICDto) {
     return await this.companyService.listAllDataPIC(dto);
 
+  }
+
+  @ApiOperation({
+    summary: 'Get reported and unreported companies',
+    description:
+      'Retrieve companies along with their reporting status based on period, company IDs, report types, and company types.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully retrieved the companies and their reporting status.',
+    schema: {
+      example: {
+        total: 25,
+        page: 1,
+        limit: 10,
+        data: [
+          {
+            companyId: 'abcd1234',
+            companyName: 'Perusahaan A',
+            tipePerusahaan: ['PERUSAHAAN_PRODUSEN', 'PERUSAHAAN_IMPOR'],
+            jenisLaporan: 'Penggunaan Bahan B3',
+            sudahDilaporkan: true,
+            periodId: '123e4567-e89b-12d3-a456-426614174000',
+            periodName: 'Q1 2024',
+          },
+          {
+            companyId: 'efgh5678',
+            companyName: 'Perusahaan B',
+            tipePerusahaan: ['PERUSAHAAN_PENGGUNA'],
+            jenisLaporan: 'Produksi B3',
+            sudahDilaporkan: false,
+            periodId: '123e4567-e89b-12d3-a456-426614174000',
+            periodName: 'Q1 2024',
+          },
+        ],
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid parameters provided.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Period not found.',
+  })
+  @Get('reports-status')
+  async getReportedAndUnreportedCompanies(
+    @Query() dto: SearchReportedAndUnreportedCompaniesDto,
+  ) {
+    return this.companyService.getReportedAndUnreportedCompanies(dto);
   }
 }

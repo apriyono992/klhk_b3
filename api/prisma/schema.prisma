@@ -835,6 +835,8 @@ model Registrasi {
   KewajibanPelaporanRegistrasi KewajibanPelaporanRegistrasi[]
 
   PelaporanPenggunaanBahanB3 PelaporanPenggunaanBahanB3[]
+
+  PelaporanPenggunaanBahanB3Final PelaporanPenggunaanBahanB3Final[]
 }
 
 model ExplicitConsent {
@@ -1712,6 +1714,8 @@ model PelaporanPenggunaanBahanB3Final {
   dataBahanB3         DataBahanB3          @relation(fields: [dataBahanB3Id], references: [id])
   periodId            String // Foreign key to Period
   period              Period               @relation(fields: [periodId], references: [id])
+  registrasiId        String?
+  registrasi          Registrasi? @relation(fields: [registrasiId], references: [id])
   tipePembelian       String // Type of purchase (e.g., 'Import', 'Local')
   jumlahPembelianB3   Float // Amount of B3 purchased (kg)
   jumlahB3Digunakan   Float // Amount of B3 used (kg)

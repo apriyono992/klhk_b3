@@ -5,6 +5,7 @@ import { Transform } from 'class-transformer';
 
 export class SearchDataTransporterDto extends PaginationDto {
   @ApiPropertyOptional({ description: 'ID perusahaan', example: '123e4567-e89b-12d3-a456-426614174000' })
+  @IsOptional()
   @Transform(({ value }) => {
     // Jika sudah berupa array, trim setiap elemen
     if (Array.isArray(value)) {
@@ -18,7 +19,7 @@ export class SearchDataTransporterDto extends PaginationDto {
     return [value];
   })
   @IsArray()
-  @IsString()
+  @IsString({ each: true })
   companyId?: string[];
 
   @ApiPropertyOptional({ description: 'Nama transporter', example: 'PT. Transporter Kimia' })

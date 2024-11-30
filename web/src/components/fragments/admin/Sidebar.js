@@ -25,93 +25,443 @@ import {
     ArrowDownOnSquareIcon,
     ArrowUpOnSquareIcon,
     TableCellsIcon,
-    PowerIcon
+    PowerIcon,
 } from "@heroicons/react/24/outline";
 import { Accordion, AccordionItem, Avatar } from "@nextui-org/react";
-import logo from '../../../assets/images/logo.png'
+import logo from "../../../assets/images/logo.png";
 import ListItem from "../../elements/ListItem";
 import { useEffect, useRef } from "react";
-import {
-    ADMIN_REPORT_STORAGE,
-    CARBON_COPY_INDEX_PATH,
-    COMPANY_INDEX_PATH,
-    COMPANY_REPORT_STORAGE,
-    DASHBOARD_PATH,
-    MATERIAL_INDEX_PATH,
-    NOTIFICATION_DASHBOARD_PATH,
-    NOTIFICATION_INDEX_PATH,
-    OFFICIAL_INDEX_PATH,
-    PELAPORAN_DASHBOARD_PATH,
-    PERIOD_INDEX_PATH,
-    RECOMENDATION_DASHBOARD_PATH,
-    RECOMENDATION_INDEX_PATH,
-    REGISTRATION_DASHBOARD_PATH,
-    REGISTRATION_INDEX_PATH,
-    STOK_B3_INDEX_ADMIN_PATH,
-    STOK_B3_INDEX_USER_PATH,
-    CMS_ARTICLE_PATH,
-    CMS_DOCUMENT_PATH,
-    CMS_EVENT_PATH,
-    CMS_NEWS_PATH,
-    MERKURI_MONITORING_INDEX_PATH,
-    WPR_INDEX_PATH,
-    USERS_MANAGEMENT_INDEX_PATH,
-    PELAPORAN_PRODUSEN_PENCARIAN,
-    PELAPORAN_PENGGUNAAN_GRAFIK,
-    PELAPORAN_PENGGUNAAN_PENCARIAN,
-    PELAPORAN_PRODUSEN_GRAFIK,
-    PELAPORAN_PENGANGKUTAN_GRAFIK,
-    PELAPORAN_PENGANGKUTAN_PENCARIAN,
-    PELAPORAN_PENYIMPANAN_GRAFIK_PATH, ADMIN_REPORT_TRANSPORT_INDEX,
-    REPORT_TRANSPORT_RECOMENDATION_INDEX,
-    REPORT_PRODUCTION_MATERIAL,
-    ADMIN_REPORT_PRODUCTION_MATERIAL,
-    REPORT_DISTRIBUTION_MATERIAL_INDEX,
-    ADMIN_REPORT_DISTRIBUTION_MATERIAL_INDEX,
-    REPORT_CONSUMPTION_MATERIAL_INDEX,
-    ASAL_MUAT_INDEX_PATH,
-    TUJUAN_BONGKAR_INDEX_PATH,
-    ADMIN_REPORT_CONSUMPTION_MATERIAL_INDEX
+import { useAuth } from "../../../contexts/AuthContext";
+import { 
+    ADMIN_REPORT_CONSUMPTION_MATERIAL_INDEX,
+    ADMIN_REPORT_DISTRIBUTION_MATERIAL_INDEX, 
+    ADMIN_REPORT_PRODUCTION_MATERIAL, 
+    ADMIN_REPORT_STORAGE, 
+    ADMIN_REPORT_TRANSPORT_INDEX, 
+    ASAL_MUAT_INDEX_PATH, 
+    CARBON_COPY_INDEX_PATH, 
+    CMS_ARTICLE_PATH, 
+    CMS_DOCUMENT_PATH, 
+    CMS_EVENT_PATH, 
+    CMS_NEWS_PATH, 
+    COMPANY_INDEX_PATH, 
+    COMPANY_REPORT_STORAGE, 
+    DASHBOARD_PATH, 
+    MATERIAL_INDEX_PATH, 
+    MERKURI_MONITORING_INDEX_PATH, 
+    NOTIFICATION_DASHBOARD_PATH, 
+    NOTIFICATION_INDEX_PATH, 
+    OFFICIAL_INDEX_PATH, 
+    PELAPORAN_DASHBOARD_PATH, 
+    PELAPORAN_PENGANGKUTAN_GRAFIK, 
+    PELAPORAN_PENGANGKUTAN_PENCARIAN, 
+    PELAPORAN_PENGGUNAAN_GRAFIK, 
+    PELAPORAN_PENGGUNAAN_PENCARIAN, 
+    PELAPORAN_PRODUSEN_GRAFIK, 
+    PELAPORAN_PRODUSEN_PENCARIAN, 
+    PELAPORAN_PENYIMPANAN_GRAFIK_PATH, 
+    PERIOD_INDEX_PATH, 
+    RECOMENDATION_DASHBOARD_PATH, 
+    RECOMENDATION_INDEX_PATH, 
+    REGISTRATION_DASHBOARD_PATH, 
+    REGISTRATION_INDEX_PATH, 
+    REPORT_CONSUMPTION_MATERIAL_INDEX, 
+    REPORT_DISTRIBUTION_MATERIAL, 
+    REPORT_DISTRIBUTION_MATERIAL_INDEX, 
+    REPORT_PRODUCTION_MATERIAL, 
+    REPORT_TRANSPORT_INDEX, 
+    REPORT_TRANSPORT_RECOMENDATION_INDEX, 
+    STOK_B3_INDEX_ADMIN_PATH, 
+    STOK_B3_INDEX_USER_PATH, 
+    TUJUAN_BONGKAR_INDEX_PATH, 
+    USERS_MANAGEMENT_INDEX_PATH, 
+    WPR_INDEX_PATH 
 } from "../../../services/routes";
 import useCustomNavigate from "../../../hooks/useCustomNavigate";
-// import { PowerIcon } from "@heroicons/react/16/solid";
+import RolesAccess from "../../../enums/roles";
+import { icon } from "leaflet";
 
 export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
-    const sidebarRef = useRef(null)
+    const sidebarRef = useRef(null);
+    const { user, roles } = useAuth();
     const { getCurrentRouteGroup } = useCustomNavigate()
 
+
+    // Data menu lengkap dengan assign roles
+    const menuData = [
+        {
+            title: "Dasbor",
+            url: DASHBOARD_PATH,
+            icon: <CubeTransparentIcon className="size-5" />,
+            roles: [RolesAccess.SUPER_ADMIN, RolesAccess.DIREKTUR, RolesAccess.KAB_SUBDIT_REGISTRASI, RolesAccess.KAB_SUBDIT_REKOMENDASI],
+        },
+        {
+            key: "1",
+            title: "Registrasi B3",
+            icon: <ClipboardDocumentIcon className="size-5" />,
+            roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_REGISTRASI],
+            children: [
+                { title: "Dasbor", url: REGISTRATION_DASHBOARD_PATH, icon: <ChartBarIcon className="size-4" /> ,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_REGISTRASI]},
+                { title: "Daftar", url: REGISTRATION_INDEX_PATH, icon: <ListBulletIcon className="size-4" /> ,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_REGISTRASI]},
+            ],
+        },
+        {
+            key: "2",
+            title: "Rekomendasi Pengakutan B3",
+            icon: <CursorArrowRaysIcon className="size-5" />,
+            roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_REKOMENDASI],
+            children: [
+                { 
+                    title: "Dasbor", 
+                    url: RECOMENDATION_DASHBOARD_PATH, 
+                    icon: <ChartBarIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_REKOMENDASI]
+                },
+                { title: "Daftar", url: RECOMENDATION_INDEX_PATH, icon: <ListBulletIcon className="size-4" />,roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_REKOMENDASI] },
+            ],
+        },
+        {
+            key: "3",
+            title: "Notifikasi",
+            icon: <BellAlertIcon className="size-5" />,
+            roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_NOTIFIKASI],
+            children: [
+                { title: "Dasbor", url: NOTIFICATION_DASHBOARD_PATH, icon: <ChartBarIcon className="size-4" />, roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_NOTIFIKASI]},
+                { title: "Daftar", url: NOTIFICATION_INDEX_PATH, icon: <ListBulletIcon className="size-4" />, roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_NOTIFIKASI] },
+            ],
+        },
+        {
+            key: "4",
+            title: "Pelaporan",
+            icon: <PresentationChartBarIcon className="size-5" />,
+            roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN, RolesAccess.PENGELOLA],
+            children: [
+                // Akses untuk Super Admin
+                {
+                    title: "Dashboard",
+                    url: PELAPORAN_DASHBOARD_PATH,
+                    icon: <TableCellsIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN, RolesAccess.PENGELOLA], // Bisa diakses semua
+                },
+                {
+                    title: "Penyimpanan B3 (Admin)",
+                    url: ADMIN_REPORT_STORAGE,
+                    icon: <ArchiveBoxIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN], // Hanya Super Admin dan PIC Pelaporan
+                },
+                {
+                    title: "Pengangkutan B3 (Admin)",
+                    url: ADMIN_REPORT_TRANSPORT_INDEX,
+                    icon: <TruckIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN], // Hanya Super Admin dan PIC Pelaporan
+                },
+                {
+                    title: "Produksi Jenis B3 (Admin)",
+                    url: ADMIN_REPORT_PRODUCTION_MATERIAL,
+                    icon: <ExclamationTriangleIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN], // Hanya Super Admin dan PIC Pelaporan
+                },
+                {
+                    title: "Distribusi Jenis B3 (Admin)",
+                    url: ADMIN_REPORT_DISTRIBUTION_MATERIAL_INDEX,
+                    icon: <ArrowsPointingOutIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN], // Hanya Super Admin dan PIC Pelaporan
+                },
+                {
+                    title: "Konsumsi B3 (Admin)",
+                    url: ADMIN_REPORT_CONSUMPTION_MATERIAL_INDEX,
+                    icon: <ScaleIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN], // Hanya Super Admin dan PIC Pelaporan
+                },
+        
+                // Akses untuk Pengelola (User)
+                {
+                    title: "Penyimpanan B3 (Perusahaan)",
+                    url: COMPANY_REPORT_STORAGE,
+                    icon: <ArchiveBoxIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PENGELOLA], // Hanya Super Admin dan Pengelola
+                },
+                {
+                    title: "Pengangkutan B3 (Perusahaan)",
+                    url: REPORT_TRANSPORT_RECOMENDATION_INDEX,
+                    icon: <TruckIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PENGELOLA], // Hanya Super Admin dan Pengelola
+                },
+                {
+                    title: "Produksi Jenis B3 (Perusahaan)",
+                    url: REPORT_PRODUCTION_MATERIAL,
+                    icon: <ExclamationTriangleIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PENGELOLA], // Hanya Super Admin dan Pengelola
+                },
+                {
+                    title: "Distribusi Jenis B3 (Perusahaan)",
+                    url: REPORT_DISTRIBUTION_MATERIAL_INDEX,
+                    icon: <ArrowsPointingOutIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PENGELOLA], // Hanya Super Admin dan Pengelola
+                },
+                {
+                    title: "Konsumsi B3 (Perusahaan)",
+                    url: REPORT_CONSUMPTION_MATERIAL_INDEX,
+                    icon: <ScaleIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PENGELOLA], // Hanya Super Admin dan Pengelola
+                },
+            ],
+        },        
+        {
+            key: "5",
+            title: "Data Master",
+            icon: <FolderIcon className="size-5" />,
+            roles: [RolesAccess.SUPER_ADMIN, RolesAccess.DIREKTUR, RolesAccess.PENGELOLA, RolesAccess.PIC_NOTIFIKASI, RolesAccess.PIC_PELAPORAN, RolesAccess.PIC_REGISTRASI, RolesAccess.PIC_REKOMENDASI], // Akses hanya untuk SuperAdmin
+            children: [
+                {
+                    title: "Tembusan",
+                    url: CARBON_COPY_INDEX_PATH,
+                    icon: <AtSymbolIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.DIREKTUR,RolesAccess.PIC_NOTIFIKASI, RolesAccess.PIC_PELAPORAN, RolesAccess.PIC_REGISTRASI, RolesAccess.PIC_REKOMENDASI], // Akses hanya untuk SuperAdmin
+                },
+                {
+                    title: "Pejabat",
+                    url: OFFICIAL_INDEX_PATH,
+                    icon: <UserGroupIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.DIREKTUR,RolesAccess.PIC_NOTIFIKASI, RolesAccess.PIC_PELAPORAN, RolesAccess.PIC_REGISTRASI, RolesAccess.PIC_REKOMENDASI], // Akses hanya untuk SuperAdmin
+                },
+                {
+                    title: "Bahan B3",
+                    url: MATERIAL_INDEX_PATH,
+                    icon: <ExclamationTriangleIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.DIREKTUR, RolesAccess.PENGELOLA, RolesAccess.PIC_NOTIFIKASI, RolesAccess.PIC_PELAPORAN, RolesAccess.PIC_REGISTRASI, RolesAccess.PIC_REKOMENDASI], // Akses hanya untuk SuperAdmin
+                },
+                {
+                    title: "Perusahaan",
+                    url: COMPANY_INDEX_PATH,
+                    icon: <BuildingOfficeIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.DIREKTUR, RolesAccess.PENGELOLA, RolesAccess.PIC_NOTIFIKASI, RolesAccess.PIC_PELAPORAN, RolesAccess.PIC_REGISTRASI, RolesAccess.PIC_REKOMENDASI], // Akses hanya untuk SuperAdmin
+                },
+                {
+                    title: "Periode",
+                    url: PERIOD_INDEX_PATH,
+                    icon: <ClockIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN], // Akses hanya untuk SuperAdmin
+                },
+                {
+                    title: "Asal Muat",
+                    url: ASAL_MUAT_INDEX_PATH,
+                    icon: <ArrowDownOnSquareIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.DIREKTUR, RolesAccess.PENGELOLA, RolesAccess.PIC_NOTIFIKASI, RolesAccess.PIC_PELAPORAN, RolesAccess.PIC_REGISTRASI, RolesAccess.PIC_REKOMENDASI], // Akses hanya untuk SuperAdmin
+                },
+                {
+                    title: "Tujuan Bongkar",
+                    url: TUJUAN_BONGKAR_INDEX_PATH,
+                    icon: <ArrowUpOnSquareIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.DIREKTUR, RolesAccess.PENGELOLA, RolesAccess.PIC_NOTIFIKASI, RolesAccess.PIC_PELAPORAN, RolesAccess.PIC_REGISTRASI, RolesAccess.PIC_REKOMENDASI], // Akses hanya untuk SuperAdmin
+                },
+            ],
+        },               
+        {
+            key: "7",
+            title: "CMS",
+            icon: <NewspaperIcon className="size-4" />,
+            roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_CMS],
+            children: [
+                { title: "Berita", url: CMS_NEWS_PATH, icon: <NewspaperIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_CMS]},
+                { title: "Artikel", url: CMS_ARTICLE_PATH, icon: <PaperClipIcon className="size-4" /> ,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_CMS]},
+                { title: "Dokumen", url: CMS_DOCUMENT_PATH, icon: <DocumentIcon className="size-4" /> ,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_CMS]},
+                { title: "Event", url: CMS_EVENT_PATH, icon: <TicketIcon className="size-4" /> ,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_CMS]},
+            ],
+        },
+        {
+            key: "6",
+            title: "Stok B3",
+            icon: <BellAlertIcon className="size-5" />,
+            roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PENGELOLA, RolesAccess.PIC_PELAPORAN],
+            children: [
+                { title: "Stok B3 Admin", url: STOK_B3_INDEX_ADMIN_PATH, icon: <ChartBarIcon className="size-4" /> ,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN]},
+                { title: "Stok B3 User", url: STOK_B3_INDEX_USER_PATH, icon: <ListBulletIcon className="size-4" /> ,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PENGELOLA]},
+            ],
+        },
+        {
+            key: "8",
+            title: "Merkuri",
+            icon: <PowerIcon className="size-5" />,
+            roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_CMS, RolesAccess.DIREKTUR], // Akses untuk SuperAdmin dan Pengelola
+            children: [
+                {
+                    title: "Wilayah Pertambangan Rakyat",
+                    url: WPR_INDEX_PATH,
+                    icon: <CogIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_CMS], // Hanya untuk SuperAdmin
+                },
+                {
+                    title: "Merkuri Monitoring Lingkungan",
+                    url: MERKURI_MONITORING_INDEX_PATH,
+                    icon: <ArchiveBoxIcon className="size-4" />,
+                    roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_CMS], // Hanya untuk SuperAdmin
+                },
+            ],
+        },
+        {
+            key: "9",
+            title: "User Management",
+            icon: <UserGroupIcon className="size-5" />,
+            roles: [RolesAccess.SUPER_ADMIN],
+            children: [
+                { title: "Users", url: USERS_MANAGEMENT_INDEX_PATH, icon: <UserIcon className="size-4" /> ,
+                    roles: [RolesAccess.SUPER_ADMIN]},
+            ],
+        },
+        {
+            key: "10",
+            title: "Dashboard Pengangkutan",
+            icon: <ChartBarIcon className="size-5" />,
+            roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN, RolesAccess.DIREKTUR],
+            children:[                        {
+                title: "Grafik",
+                url: PELAPORAN_PENGANGKUTAN_GRAFIK,
+                icon: <ArchiveBoxIcon className="size-4" />,
+                roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN],
+            },
+            {
+                title: "Peta",
+                url: PELAPORAN_DASHBOARD_PATH,
+                icon: <ArchiveBoxIcon className="size-4" />,
+                roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN],
+            },
+            {
+                title: "Pencarian",
+                url: PELAPORAN_PENGANGKUTAN_PENCARIAN,
+                icon: <ArchiveBoxIcon className="size-4" />,
+                roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN],
+            }
+            ] 
+        },
+        {
+            key: "11",
+            title: "Dashboard Penggunaan",
+            icon: <ChartBarIcon className="size-5" />,
+            roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN, RolesAccess.DIREKTUR],
+            children:[                        {
+                title: "Grafik",
+                url: PELAPORAN_PENGGUNAAN_GRAFIK,
+                icon: <ArchiveBoxIcon className="size-4" />,
+                roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN],
+            },
+            {
+                title: "Peta",
+                url: PELAPORAN_DASHBOARD_PATH,
+                icon: <ArchiveBoxIcon className="size-4" />,
+                roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN],
+            },
+            {
+                title: "Pencarian",
+                url: PELAPORAN_PENGGUNAAN_PENCARIAN,
+                icon: <ArchiveBoxIcon className="size-4" />,
+                roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN],
+            }
+            ] 
+        },
+        {
+            key: "12",
+            title: "Dashboard Produsen",
+            icon: <ChartBarIcon className="size-5" />,
+            roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN, RolesAccess.DIREKTUR],
+            children:[                        {
+                title: "Grafik",
+                url: PELAPORAN_PRODUSEN_GRAFIK,
+                icon: <ArchiveBoxIcon className="size-4" />,
+                roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN],
+            },
+            {
+                title: "Peta",
+                url: PELAPORAN_DASHBOARD_PATH,
+                icon: <ArchiveBoxIcon className="size-4" />,
+                roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN],
+            },
+            {
+                title: "Pencarian",
+                url: PELAPORAN_PRODUSEN_PENCARIAN,
+                icon: <ArchiveBoxIcon className="size-4" />,
+                roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN],
+            }
+            ] 
+        },
+        {
+            key: "13",
+            title: "Dashboard Penyimpanan",
+            icon: <ChartBarIcon className="size-5" />,
+            roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN, RolesAccess.DIREKTUR],
+            children:[                        {
+                title: "Grafik",
+                url: PELAPORAN_PENYIMPANAN_GRAFIK_PATH,
+                icon: <ArchiveBoxIcon className="size-4" />,
+                roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN],
+            },
+            {
+                title: "Peta",
+                url: PELAPORAN_DASHBOARD_PATH,
+                icon: <ArchiveBoxIcon className="size-4" />,
+                roles: [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_PELAPORAN],
+            }
+            ]
+        }
+    ];
+
     const itemClasses = {
-        base: 'w-full',
-        startContent: 'text-primary',
-        title: 'text-small text-primary',
-        indicator: 'text-primary',
-        content: 'py-0',
-        trigger: 'px-4 py-3 data-[hover=true]:bg-primary/20 flex items-center data-[open=true]:bg-primary/20 ',
-    }
+        base: "w-full",
+        startContent: "text-primary",
+        title: "text-small text-primary",
+        indicator: "text-primary",
+        content: "py-0",
+        trigger: "px-4 py-3 data-[hover=true]:bg-primary/20 flex items-center data-[open=true]:bg-primary/20",
+    };
 
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-                setIsOpenSidebar(false)
+                setIsOpenSidebar(false);
             }
-        }
+        };
 
         if (isOpenSidebar) {
-            document.addEventListener('mousedown', handleClickOutside)
+            document.addEventListener("mousedown", handleClickOutside);
         } else {
-            document.removeEventListener('mousedown', handleClickOutside)
+            document.removeEventListener("mousedown", handleClickOutside);
         }
 
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside)
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isOpenSidebar, setIsOpenSidebar, sidebarRef]);
+
+    const filteredMenu = menuData
+    .filter((menu) => menu?.roles?.some((role) => roles.includes(role))) // Filter menu utama
+    .map((menu) => {
+        if (menu.children) {
+            return {
+                ...menu,
+                children: menu.children.filter((child) =>
+                    child.roles?.some((role) => roles.includes(role))
+                ),
+            };
         }
-    }, [isOpenSidebar, setIsOpenSidebar, sidebarRef])
+        return menu;
+    })
+    .filter((menu) => !menu.children || menu.children.length > 0);
 
     return (
         <aside
             id="logo-sidebar"
             ref={sidebarRef}
-            className={`fixed top-0 left-0 z-50 w-72 h-screen transition-transform shadow-md ${isOpenSidebar ? 'lg:translate-x-0' : '-translate-x-full lg:translate-x-0'} bg-white`}
+            className={`fixed top-0 left-0 z-50 w-72 h-screen transition-transform shadow-md ${
+                isOpenSidebar ? "lg:translate-x-0" : "-translate-x-full lg:translate-x-0"
+            } bg-white`}
             aria-label="Sidebar"
         >
             <div className="h-full overflow-y-auto bg-white">
@@ -123,186 +473,41 @@ export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
                     </div>
                 </div>
                 <ul className="py-4">
-                    <ListItem url={DASHBOARD_PATH} title="Dasbor" icon={<CubeTransparentIcon className="size-5" />} />
-                    <Accordion
-                        defaultSelectedKeys={getCurrentRouteGroup()}
-                        showDivider={false}
-                        className="px-0"
-                        itemClasses={itemClasses}
-                    >
-                        <AccordionItem
-                            key="1"
-                            title="Registrasi B3"
-                            className=""
-                            startContent={<ClipboardDocumentIcon className="size-5" />}
-                        >
-                            <ListItem
-                                url={REGISTRATION_DASHBOARD_PATH}
-                                variant="subitem"
-                                title="Dasbor"
-                                icon={<ChartBarIcon className="size-4" />}
-                            />
-                            <ListItem
-                                url={REGISTRATION_INDEX_PATH}
-                                variant="subitem"
-                                title="Daftar"
-                                icon={<ListBulletIcon className="size-4" />}
-                            />
-                        </AccordionItem>
-                        <AccordionItem
-                            key="2"
-                            title="Rekomendasi B3"
-                            className=""
-                            startContent={<CursorArrowRaysIcon className="size-5" />}
-                        >
-                            <ListItem
-                                url={RECOMENDATION_DASHBOARD_PATH}
-                                variant="subitem"
-                                title="Dasbor"
-                                icon={<ChartBarIcon className="size-4" />}
-                            />
-                            <ListItem
-                                url={RECOMENDATION_INDEX_PATH}
-                                variant="subitem"
-                                title="Daftar"
-                                icon={<ListBulletIcon className="size-4" />}
-                            />
-                        </AccordionItem>
-                        <AccordionItem
-                            key="3"
-                            title="Notifikasi"
-                            className=""
-                            startContent={<BellAlertIcon className="size-5" />}
-                        >
-                            <ListItem
-                                url={NOTIFICATION_DASHBOARD_PATH}
-                                variant="subitem"
-                                title="Dasbor"
-                                icon={<ChartBarIcon className="size-4" />}
-                            />
-                            <ListItem
-                                url={NOTIFICATION_INDEX_PATH}
-                                variant="subitem"
-                                title="Daftar"
-                                icon={<ListBulletIcon className="size-4" />}
-                            />
-                        </AccordionItem>
-                        <AccordionItem key="4" title="Pelaporan" className="" startContent={<PresentationChartBarIcon className="size-5" />}>
-                            <ListItem url={PELAPORAN_DASHBOARD_PATH} variant="subitem" title="Dashboard" icon={<TableCellsIcon className="size-4" />} />
-                            <ListItem url={COMPANY_REPORT_STORAGE} variant="subitem" title="Penyimpanan B3 (Perusahaan)" icon={<ArchiveBoxIcon className="size-4" />} />
-                            <ListItem url={ADMIN_REPORT_STORAGE} variant="subitem" title="Penyimpanan B3 (Admin)" icon={<ArchiveBoxIcon className="size-4" />} />
-                            <ListItem url={REPORT_TRANSPORT_RECOMENDATION_INDEX} variant="subitem" title="Pengangkutan B3 (Perusahaan)" icon={<TruckIcon className="size-4" />} />
-                            <ListItem url={ADMIN_REPORT_TRANSPORT_INDEX} variant="subitem" title="Pengangkutan B3 (Admin)" icon={<TruckIcon className="size-4" />} />
-                            <ListItem url={REPORT_PRODUCTION_MATERIAL} variant="subitem" title="Produksi Jenis B3 (Perusahaan)" icon={<ExclamationTriangleIcon className="size-4" />} />
-                            <ListItem url={ADMIN_REPORT_PRODUCTION_MATERIAL} variant="subitem" title="Produksi Jenis B3 (Admin)" icon={<ExclamationTriangleIcon className="size-4" />} />
-                            <ListItem url={REPORT_DISTRIBUTION_MATERIAL_INDEX} variant="subitem" title="Distribusi Jenis B3 (Perusahaan)" icon={<ArrowsPointingOutIcon className="size-4" />} />
-                            <ListItem url={ADMIN_REPORT_DISTRIBUTION_MATERIAL_INDEX} variant="subitem" title="Distribusi Jenis B3 (Admin)" icon={<ArrowsPointingOutIcon className="size-4" />} />
-                            <ListItem url={REPORT_CONSUMPTION_MATERIAL_INDEX} variant="subitem" title="Konsumsi B3 (Perusahaan)" icon={<ScaleIcon className="size-4" />} />
-                            <ListItem url={ADMIN_REPORT_CONSUMPTION_MATERIAL_INDEX} variant="subitem" title="Konsumsi B3 (Admin)" icon={<ScaleIcon className="size-4" />} />
-                        </AccordionItem>
-                        <AccordionItem
-                            key="4"
-                            title="CMS"
-                            className=""
-                            startContent={<NewspaperIcon className="size-4" />}
-                        >
-                            <ListItem
-                                url={CMS_NEWS_PATH}
-                                variant="subitem"
-                                title="Berita"
-                                icon={<NewspaperIcon className="size-4" />}
-                            />
-                            <ListItem
-                                url={CMS_ARTICLE_PATH}
-                                variant="subitem"
-                                title="Artikel"
-                                icon={<PaperClipIcon className="size-4" />}
-                            />
-                            <ListItem
-                                url={CMS_DOCUMENT_PATH}
-                                variant="subitem"
-                                title="Dokumen"
-                                icon={<DocumentIcon className="size-4" />}
-                            />
-                            <ListItem
-                                url={CMS_EVENT_PATH}
-                                variant="subitem"
-                                title="Event"
-                                icon={<TicketIcon className="size-4" />}
-                            />
-                        </AccordionItem>
-                        <AccordionItem key="5" title="Pelaporan" className="" startContent={<PresentationChartBarIcon className="size-5" />}>
-                            <Accordion showDivider={false} className="pl-[1.5rem]" itemClasses={itemClasses}>
-                                <AccordionItem key="52" className="text-small text-primary sub-accord-item"  title="Pengangkutan" startContent={<PresentationChartBarIcon className="size-5" />}>
-                                    <ListItem url={PELAPORAN_PENGANGKUTAN_GRAFIK} variant="subitem" title="Grafik" icon={<ArchiveBoxIcon className="size-4" />} />
-                                    <ListItem url={PELAPORAN_DASHBOARD_PATH} variant="subitem" title="Peta" icon={<ArchiveBoxIcon className="size-4" />} />
-                                    <ListItem url={PELAPORAN_PENGANGKUTAN_PENCARIAN} variant="subitem" title="Pencarian" icon={<ArchiveBoxIcon className="size-4" />} />
-                                </AccordionItem>
-                            </Accordion>
-                            <Accordion showDivider={false}
-                                       className="pl-[1.5rem]" itemClasses={itemClasses}>
-                                <AccordionItem key="10" title="Produsen" className="text-small text-primary sub-accord-item" startContent={<PresentationChartBarIcon className="size-5" />}>
-                                    <ListItem url={PELAPORAN_PRODUSEN_GRAFIK} variant="subitem" title="Grafik" icon={<ArchiveBoxIcon className="size-4" />} />
-                                    {/*<ListItem url={""} variant="subitem" title="Peta" icon={<ArchiveBoxIcon className="size-4" />} />*/}
-                                    <ListItem url={PELAPORAN_PRODUSEN_PENCARIAN} variant="subitem" title="Pencarian" icon={<TableCellsIcon className="size-4" />} />
-                                </AccordionItem>
-                            </Accordion>
+                    {filteredMenu.map((menu, index) =>
+                        menu.children ? (
                             <Accordion
+                                key={index}
                                 showDivider={false}
-                                className="pl-[1.5rem]" itemClasses={itemClasses}>
-                                <AccordionItem key="51" title="Penggunaan" className="text-small text-primary sub-accord-item"  startContent={<PresentationChartBarIcon className="size-5" />}>
-                                    <ListItem
-                                    url={PELAPORAN_PENGGUNAAN_GRAFIK}
-                                    variant="subitem"
-                                    title="Grafik"
-                                    icon={<ArchiveBoxIcon className="size-4" />}
-                                    />
-                                    <ListItem
-                                    url={PELAPORAN_PENGGUNAAN_PENCARIAN}
-                                    variant="subitem"
-                                    title="Pencarian"
-                                    icon={<TableCellsIcon className="size-4" />}
-                                    />
+                                className="px-0"
+                                itemClasses={itemClasses}
+                            >
+                                <AccordionItem
+                                    key={menu.key}
+                                    title={menu.title}
+                                    startContent={menu.icon}
+                                >
+                                    {menu.children.map((submenu, subIndex) => (
+                                        <ListItem
+                                            key={subIndex}
+                                            url={submenu.url}
+                                            variant="subitem"
+                                            title={submenu.title}
+                                            icon={submenu.icon}
+                                        />
+                                    ))}
                                 </AccordionItem>
                             </Accordion>
-                            <Accordion showDivider={false} className="pl-[1.5rem]" itemClasses={itemClasses}>
-                                <AccordionItem  key="10" title="Penimpanan" className="text-small text-primary sub-accord-item" startContent={<PresentationChartBarIcon className="size-5" />}>
-                                    <ListItem url={PELAPORAN_PENYIMPANAN_GRAFIK_PATH} variant="subitem" title="Grafik" icon={<ArchiveBoxIcon className="size-4" />} />
-                                    {/* <ListItem url={PELAPORAN_DASHBOARD_PATH} variant="subitem" title="Peta" icon={<ArchiveBoxIcon className="size-4" />} />
-                                    <ListItem url={PELAPORAN_DASHBOARD_PATH} variant="subitem" title="Pencarian" icon={<ArchiveBoxIcon className="size-4" />} /> */}
-                                </AccordionItem>
-                            </Accordion>
-                            <ListItem url={COMPANY_REPORT_STORAGE} variant="subitem" title="Penyimpanan B3 (Perusahaan)" icon={<ArchiveBoxIcon className="size-4" />} />
-                            <ListItem url={ADMIN_REPORT_STORAGE} variant="subitem" title="Penyimpanan B3 (Admin)" icon={<ArchiveBoxIcon className="size-4" />} />
-                            <ListItem url={ADMIN_REPORT_TRANSPORT_INDEX} variant="subitem" title="Pengangkutan B3" icon={<TruckIcon className="size-4" />} />
-                        </AccordionItem>
-
-                        <AccordionItem key="6" title="Mater Data" className="" startContent={<FolderIcon className="size-5" />}>
-                            <ListItem url={CARBON_COPY_INDEX_PATH} variant="subitem" title="Tembusan" icon={<AtSymbolIcon className="size-4" />} />
-                            <ListItem url={OFFICIAL_INDEX_PATH} variant="subitem" title="Pejabat" icon={<UserGroupIcon className="size-4" />} />
-                            <ListItem url={MATERIAL_INDEX_PATH} variant="subitem" title="Bahan B3" icon={<ExclamationTriangleIcon className="size-4" />} />
-                            <ListItem url={COMPANY_INDEX_PATH} variant="subitem" title="Perusahaan" icon={<BuildingOfficeIcon className="size-4" />} />
-                            <ListItem url={PERIOD_INDEX_PATH} variant="subitem" title="Periode" icon={<ClockIcon className="size-4" />} />
-                            <ListItem url={ASAL_MUAT_INDEX_PATH} variant="subitem" title="Asal Muat" icon={<ArrowDownOnSquareIcon className="size-4" />} />
-                            <ListItem url={TUJUAN_BONGKAR_INDEX_PATH} variant="subitem" title="Tujuan Bongkar" icon={<ArrowUpOnSquareIcon className="size-4" />} />
-                        </AccordionItem>
-                        <AccordionItem key="7" title="Stok B3" className="" startContent={<BellAlertIcon className="size-5" />}>
-                            <ListItem url={STOK_B3_INDEX_ADMIN_PATH} variant="subitem" title="Stok B3 Admin" icon={<ChartBarIcon className="size-4" />} />
-                            <ListItem url={STOK_B3_INDEX_USER_PATH} variant="subitem" title="Stok B3 User" icon={<ListBulletIcon className="size-4" />} />
-                        </AccordionItem>
-                        <AccordionItem key="8" title="Merkuri" className="" startContent={<PowerIcon className="size-5" />}>
-                            <ListItem url={WPR_INDEX_PATH} variant="subitem" title="Wilayah Pertambangan Rakyat" icon={<CogIcon className="size-4" />} />
-                            <ListItem url={MERKURI_MONITORING_INDEX_PATH} variant="subitem" title="MerKuri Monitoring Lingkungan" icon={<ArchiveBoxIcon className="size-4" />} />
-                        </AccordionItem>
-                        <AccordionItem key="9" title="User Management" className="" startContent={<UserGroupIcon className="size-5" />}>
-                            <ListItem url={USERS_MANAGEMENT_INDEX_PATH} variant="subitem" title="Users" icon={<UserIcon className="size-4" />} />
-                        </AccordionItem>
-                        <AccordionItem key="10" title="DashboardPelaporan Produsen" className="" startContent={<PresentationChartBarIcon className="size-5" />}>
-                            <ListItem url={PELAPORAN_PRODUSEN_PENCARIAN} variant="subitem" title="Pencarian" icon={<TableCellsIcon className="size-4" />} />
-                        </AccordionItem>
-                    </Accordion>
+                        ) : (
+                            <ListItem
+                                key={index}
+                                url={menu.url}
+                                title={menu.title}
+                                icon={menu.icon}
+                            />
+                        )
+                    )}
                 </ul>
             </div>
         </aside>
-    )
+    );
 }

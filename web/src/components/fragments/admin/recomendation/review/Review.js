@@ -11,6 +11,7 @@ import { ArrowPathIcon } from '@heroicons/react/24/outline'
 import toast from 'react-hot-toast'
 import FollowUp from './FollowUp'
 import { useForm } from 'react-hook-form';
+import StatusRekomendasi from '../../../../../enums/statusRekomendasi'
 
 export default function Review({ data, isLoading, mutate }) {
     const {isOpen: isOpenModalAlert, onOpenChange: onOpenChangeModalAlert} = useDisclosure();
@@ -28,7 +29,7 @@ export default function Review({ data, isLoading, mutate }) {
     return (
         <div className='flex flex-col gap-3'>
             <div className=''>
-                <Button onPress={onOpenChangeModalAlert} color='warning' size='sm' startContent={<ArrowPathIcon className="size-4"/>}>Submit Telaah</Button>
+                <Button onPress={onOpenChangeModalAlert}  isDisabled={( data?.status === StatusRekomendasi.PEMBUATAN_DRAFT_SK) || data?.status !== StatusRekomendasi.PEMBUATAN_DRAFT_SK } color='warning' size='sm' startContent={<ArrowPathIcon className="size-4"/>}>Submit Telaah</Button>
             </div>
             <ChronologySection existingData={data}/>
             <DocumentReview data={data} isLoading={isLoading} mutate={mutate}/>

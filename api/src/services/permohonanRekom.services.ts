@@ -14,6 +14,9 @@ import { UpdateApplicationStatusDto } from 'src/models/updateApplicationStatusDt
 import { JenisPermohonan } from 'src/models/enums/jenisPermohonan';
 import { TelaahTeknisUpsertDto } from 'src/models/telaahTeknisDto';
 import { TipeDokumenTelaah } from 'src/models/enums/tipeDokumenTelaah';
+import { SearchRecommendationPelaporanStatusDto } from 'src/models/searchRecommendationPelaporanStatusDto';
+import { eachMonthOfInterval, getYear, getMonth } from 'date-fns';
+import { v4 as uuidv4 } from 'uuid'; // Import UUID library
 
 @Injectable()
 export class PermohonanRekomendasiB3Service {
@@ -114,7 +117,7 @@ export class PermohonanRekomendasiB3Service {
       // Check if the application exists
       const application = await prisma.application.findUnique({
         where: { id: data.applicationId },
-        include :{ documents: true }
+        include :{ documents: true, draftSurat: {include:{pejabat:true, tembusan:true }} }
       });
       let updatedApplication;
       // Check if the new status is 'ValidasiPemohonanSelesai' and create DraftSurat if true
@@ -203,6 +206,73 @@ export class PermohonanRekomendasiB3Service {
           throw new BadRequestException('Failed to update status to ValidasiPemohonanSelesai, not all documents are valid');
         }
          
+      }
+      else if (data?.status === StatusPermohonan.DRAFT_SK_TANDA_TANGAN_DIREKTUR) {
+        if (application.draftSurat.tembusan.length === 0) {
+          throw new BadRequestException(
+            'Gagal memperbarui status menjadi Draft SK, tembusan belum ditambahkan',
+          );
+        }
+        if (application.draftSurat.pejabat === null) {
+          throw new BadRequestException(
+            'Gagal memperbarui status menjadi Draft SK, pejabat belum ditambahkan',
+          );
+        }
+        // Log the old status and the new status in ApplicationStatusHistory
+        await prisma.applicationStatusHistory.create({
+          data: {
+            applicationId: application.id,
+            oldStatus: application.status,
+            newStatus: data.status,
+            changedAt: new Date(),
+            changedBy: data.userId ?? undefined, // Optionally track the user who updated the status
+          },
+        });
+    
+        // Update the status of the application
+        updatedApplication = await prisma.application.update({
+          where: { id: data.applicationId },
+          data: {
+            status: data.status,
+            updatedAt: new Date(),
+          },
+        });
+      } else if (data?.status === StatusPermohonan.SELESAI) {
+        if (
+          application.draftSurat.nomorSurat === null ||
+          application.draftSurat.nomorSurat.trim() === ''
+        ) {
+          throw new BadRequestException(
+            'Gagal memperbarui status menjadi Selesai, nomor surat belum diisi',
+          );
+        }
+        if (
+          application.draftSurat.tanggalSurat === null ||
+          application.draftSurat.tanggalSurat.toString().trim() === ''
+        ) {
+          throw new BadRequestException(
+            'Gagal memperbarui status menjadi Selesai, tanggal surat belum diisi',
+          );
+        }
+        // Log the old status and the new status in ApplicationStatusHistory
+        await prisma.applicationStatusHistory.create({
+          data: {
+            applicationId: application.id,
+            oldStatus: application.status,
+            newStatus: data.status,
+            changedAt: new Date(),
+            changedBy: data.userId ?? undefined, // Optionally track the user who updated the status
+          },
+        });
+    
+        // Update the status of the application
+        updatedApplication = await prisma.application.update({
+          where: { id: data.applicationId },
+          data: {
+            status: data.status,
+            updatedAt: new Date(),
+          },
+        });
       }
       else if (application.status !== data.status){
         // Log the old status and the new status in ApplicationStatusHistory
@@ -331,6 +401,7 @@ export class PermohonanRekomendasiB3Service {
                 period:true
               }
             },
+            statusHistory: true,
           },
       });
 
@@ -356,7 +427,7 @@ export class PermohonanRekomendasiB3Service {
           vehicles: true, // Optionally include vehicles relation
           documents: true, // Optionally include documents relation
           b3Substances:true,
-          
+          statusHistory: true,
         },
     });
 
@@ -570,6 +641,97 @@ export class PermohonanRekomendasiB3Service {
         },
       });
     }
+  }
+
+  async getRecommendationStatus(dto: SearchRecommendationPelaporanStatusDto) {
+    const { periodId, companyIds, page, limit, sortBy, sortOrder, returnAll } = dto;
+
+    // Ambil periode berdasarkan periodId
+    const period = await this.prisma.period.findUnique({
+      where: { id: periodId ?? '' },
+    });
+
+    if (!period) {
+      throw  new BadRequestException('Periode tidak ditemukan');
+    }
+
+    // Buat daftar bulan berdasarkan periode
+    const monthsInPeriod = eachMonthOfInterval({
+      start: period.startPeriodDate,
+      end: period.endPeriodDate,
+    }).map((date) => ({
+      bulan: getMonth(date) + 1, // Bulan berbasis 1
+      tahun: getYear(date),
+    }));
+
+    // Ambil semua aplikasi dengan filter companyIds jika ada
+    const applicationFilters: any = {
+      ...(companyIds && { companyId: { in: companyIds } }),
+      ...({status: StatusPermohonan.SELESAI}),
+    };
+
+    const totalCount = await this.prisma.application.count({
+      where: applicationFilters,
+    });
+
+    const applications = await this.prisma.application.findMany({
+      where: applicationFilters,
+      ...(returnAll
+        ? {} // Abaikan pagination jika returnAll = true
+        : {
+            take: limit,
+            skip: (page - 1) * limit,
+          }),
+      include: {
+        company: true, // Termasuk data perusahaan
+      },
+      orderBy: { [sortBy]: sortOrder.toLowerCase() },
+    });
+
+    // Ambil kewajiban surat rekomendasi berdasarkan periode
+    const kewajibanFilters: any = {
+      periodId,
+      ...(companyIds && { companyId: { in: companyIds } }),
+    };
+
+    const kewajiban = await this.prisma.kewajibanPelaporanAplikasi.findMany({
+      where: kewajibanFilters,
+    });
+
+    // Proses data aplikasi dan kewajiban
+    const result = applications.map((application) => {
+      const kewajibanAplikasi = kewajiban.filter(
+        (k) => k.applicationId === application.id,
+      );
+
+      // Buat respons untuk setiap bulan dalam periode
+      return monthsInPeriod.flatMap(({ bulan, tahun }) => {
+        const laporan = kewajibanAplikasi.find(
+          (k) => k.bulan === bulan && k.tahun === tahun,
+        );
+
+        return {
+          id: laporan ? laporan.id : uuidv4(), // ID dari kewajiban jika ada, jika tidak, generate UUID
+          applicationId: application.id,
+          applicationName: application.kodePermohonan,
+          companyId: application.company.id,
+          companyName: application.company.name,
+          bulan,
+          tahun,
+          sudahDilaporkan: laporan ? laporan.sudahDilaporkan : false,
+          periodId: period.id,
+          periodName: period.name,
+        };
+      });
+    });
+
+    // Flatten hasil menjadi satu array
+    return {
+      total: totalCount,
+      page: returnAll ? 1 : page,
+      limit: returnAll ? totalCount : limit,
+      data: result.flat(),
+    };
   }
 
   // async createPejabatAndConnectToDraftSurat(applicationId: string, pejabatData: { nip: string; nama: string; jabatan: string; status: string }) {

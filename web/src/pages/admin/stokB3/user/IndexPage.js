@@ -38,14 +38,14 @@ export default function IndexUserStokB3() {
     const { data: allCompanies } = useSWR(
         isSuperAdmin
             ? `/api/company/search-company` // Jika Super Admin, fetch semua perusahaan
-            : `/api/company/search-company?companyIds=${user.companies.map((company) => company.id).join(",")}`, // Jika bukan Super Admin, fetch perusahaan sesuai IDs
+            : `/api/company/search-company?companyIds=${user.companies.map((company) => company.companyId).join(",")}`, // Jika bukan Super Admin, fetch perusahaan sesuai IDs
         getSelectFetcher
     );
 
     const { data: historyRequestData, isLoading: isLoadingHistoryRequest } = useSWR(
         isSuperAdmin
             ? `/api/data-bahan-b3-company/search-pending-requests` // Jika Super Admin, fetch semua perusahaan
-            : `/api/data-bahan-b3-company/search-pending-requests?companyId=${user.companies.map((company) => company.id).join(",")}`, // Jika bukan Super Admin, fetch perusahaan sesuai IDs
+            : `/api/data-bahan-b3-company/search-pending-requests?companyId=${user.companies.map((company) => company.companyId).join(",")}`, // Jika bukan Super Admin, fetch perusahaan sesuai IDs
         getFetcher
     );
 

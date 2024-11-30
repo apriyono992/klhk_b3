@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from './prisma.services';
 import { SearchRegistrasiDto } from '../models/searchRegistrasiDto';
 import { Prisma } from '@prisma/client';
@@ -14,6 +14,9 @@ import {InswServices} from "./insw.services";
 import {CreateSubmitDraftSKDto} from "../models/createSubmitDraftSKDto";
 import {CreateUpdateValidasiTeknis} from "../models/createUpdateValidasiTeknis";
 import { StatusPermohonanRegistrasi } from 'src/models/enums/statusPermohonanRegistrasi';
+import { SearchRegistrasiPelaporanStatus } from 'src/models/searchRegistrasiPelaporanStatus';
+import { eachMonthOfInterval, getYear, getMonth } from 'date-fns';
+import { v4 as uuidv4 } from 'uuid'; // Import UUID library
 
 @Injectable()
 export class RegistrasiServices {
@@ -106,6 +109,12 @@ export class RegistrasiServices {
       where: { id },
       data: {
         status,
+        historyStatusRegistrasi: {
+          create: {
+            status,
+            createdAt: new Date(),
+          }
+        }
       },
     });
   }
@@ -208,7 +217,13 @@ export class RegistrasiServices {
       where: { id },
       data: {
         approval_status: 'approve direksi',
-        status: StatusPermohonanRegistrasi.KIRIM_INSW
+        status: StatusPermohonanRegistrasi.KIRIM_INSW,
+        historyStatusRegistrasi: {
+          create: {
+            status: StatusPermohonanRegistrasi.KIRIM_INSW,
+            createdAt: new Date(),
+          }
+        }
       }
     });
 
@@ -280,6 +295,7 @@ export class RegistrasiServices {
     if (returnAll) {
       const registrasi = await this.prisma.registrasi.findMany({
         where,
+        include:{historyStatusRegistrasi:true},
         orderBy: { [sortBy]: sortOrder },
       });
   
@@ -294,6 +310,7 @@ export class RegistrasiServices {
     const [registrasi, total] = await Promise.all([
       this.prisma.registrasi.findMany({
         where,
+        include:{historyStatusRegistrasi:true},
         orderBy: { [sortBy]: sortOrder },
         skip: (page - 1) * limit,
         take: limit,
@@ -549,5 +566,96 @@ export class RegistrasiServices {
         },
       },
     });
+  }
+
+  async getRegistrasiStatus(dto: SearchRegistrasiPelaporanStatus) {
+    const { periodId, companyIds, page, limit, sortBy, sortOrder, returnAll, status } = dto;
+
+    // Ambil periode berdasarkan periodId
+    const period = await this.prisma.period.findUnique({
+      where: { id: periodId ?? '' },
+    });
+
+    if (!period) {
+      throw  new BadRequestException('Periode tidak ditemukan');
+    }
+
+    // Buat daftar bulan berdasarkan periode
+    const monthsInPeriod = eachMonthOfInterval({
+      start: period.startPeriodDate,
+      end: period.endPeriodDate,
+    }).map((date) => ({
+      bulan: getMonth(date) + 1, // Bulan berbasis 1
+      tahun: getYear(date),
+    }));
+
+    // Ambil semua aplikasi dengan filter companyIds jika ada
+    const applicationFilters: any = {
+      ...(companyIds && { companyId: { in: companyIds } }),
+      ...({status: StatusPermohonanRegistrasi.SELESAI}),
+    };
+
+    const totalCount = await this.prisma.application.count({
+      where: applicationFilters,
+    });
+
+    const applications = await this.prisma.registrasi.findMany({
+      where: applicationFilters,
+      ...(returnAll
+        ? {} // Abaikan pagination jika returnAll = true
+        : {
+            take: limit,
+            skip: (page - 1) * limit,
+          }),
+      include: {
+        company: true, // Termasuk data perusahaan
+      },
+      orderBy: { [sortBy]: sortOrder.toLowerCase() },
+    });
+
+    // Ambil kewajiban surat rekomendasi berdasarkan periode
+    const kewajibanFilters: any = {
+      periodId,
+      ...(companyIds && { companyId: { in: companyIds } }),
+    };
+
+    const kewajiban = await this.prisma.kewajibanPelaporanRegistrasi.findMany({
+      where: kewajibanFilters,
+    });
+
+    // Proses data aplikasi dan kewajiban
+    const result = applications.map((application) => {
+      const kewajibanAplikasi = kewajiban.filter(
+        (k) => k.id === application.id,
+      );
+
+      // Buat respons untuk setiap bulan dalam periode
+      return monthsInPeriod.flatMap(({ bulan, tahun }) => {
+        const laporan = kewajibanAplikasi.find(
+          (k) => k.bulan === bulan && k.tahun === tahun,
+        );
+
+        return {
+          id: laporan ? laporan.id : uuidv4(), // ID dari kewajiban jika ada, jika tidak, generate UUID
+          applicationId: application.id,
+          applicationName: application.no_reg,
+          companyId: application.company.id,
+          companyName: application.company.name,
+          bulan,
+          tahun,
+          sudahDilaporkan: laporan ? laporan.sudahDilaporkan : false,
+          periodId: period.id,
+          periodName: period.name,
+        };
+      });
+    });
+
+    // Flatten hasil menjadi satu array
+    return {
+      total: totalCount,
+      page: returnAll ? 1 : page,
+      limit: returnAll ? totalCount : limit,
+      data: result.flat(),
+    };
   }
 }

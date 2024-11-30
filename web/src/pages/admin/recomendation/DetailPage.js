@@ -26,7 +26,7 @@ export default function DetailPage() {
         },
         {
             id: "validasi",
-            label: "Validasi Teknis",
+            label: "Verifikasi Teknis",
             content: <Validation data={data} isLoading={isLoading} mutate={mutate} />,
             disabled: false // Disabled as per example
         },

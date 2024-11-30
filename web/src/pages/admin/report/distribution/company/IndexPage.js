@@ -39,7 +39,7 @@ export default function IndexPage() {
     const { data: dataCompany, isLoading: isLoadingCompany } = useSWR(
         isSuperAdmin
             ? `/api/company/search-company` // Jika Super Admin, fetch semua perusahaan
-            : `/api/company/search-company?companyIds=${user.companies?.map((company) => company.id).join(",")}`, // Jika bukan Super Admin, fetch perusahaan sesuai IDs
+            : `/api/company/search-company?companyIds=${user.companies?.map((company) => company.companyId).join(",")}`, // Jika bukan Super Admin, fetch perusahaan sesuai IDs
         getSelectFetcher
     );
     const periodOptions = dataPeriod?.data?.map((item) => ({ value: item.id, label: item.name }));

@@ -100,7 +100,7 @@ export default function DetailPage() {
         },
         {
             id: "validasi",
-            label: "Validasi Teknis",
+            label: "Verifikasi Teknis",
             content: <Validation registrasi={dataDetail}/>
         },
         {

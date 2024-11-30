@@ -13,7 +13,7 @@ export class PelaporanPenggunaanBahanB3Service {
   
     // Method untuk membuat draft laporan penggunaan B3
     async createReport(data: CreatePelaporanPenggunaanBahanB3Dto) {
-        const { companyId, dataBahanB3Id, bulan, tahun, periodId, tipePembelian, jumlahPembelianB3, jumlahB3Digunakan, dataSuppliers } = data;
+        const { companyId, dataBahanB3Id, bulan, tahun, periodId, tipePembelian, jumlahPembelianB3, jumlahB3Digunakan, dataSuppliers, registrasiId } = data;
       
         // Cek apakah periode valid
         const period = await this.prisma.period.findUnique({ where: { id: periodId } });
@@ -51,6 +51,7 @@ export class PelaporanPenggunaanBahanB3Service {
             jumlahPembelianB3,
             jumlahB3Digunakan,
             isDraft: true,
+            registrasiId : registrasiId,
             DataSupplierOnPelaporanPenggunaanB3: {
               create: dataSuppliers.map((supplierId) => ({
                 dataSupplierId: supplierId,
@@ -302,6 +303,10 @@ export class PelaporanPenggunaanBahanB3Service {
             data: {
               companyId: report.companyId,
               bulan: report.bulan,
+              no_surat_registrasi: report.no_surat_registrasi,
+              no_surat_notifikasi: report.no_surat_notifikasi,
+              tujuan_import: report.tujuan_import,
+              registrasiId: report.registrasiId,
               tahun: report.tahun,
               dataBahanB3Id: report.dataBahanB3Id,
               periodId: report.periodId,

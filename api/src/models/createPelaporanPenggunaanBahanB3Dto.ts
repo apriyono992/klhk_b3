@@ -1,4 +1,4 @@
-import { IsString, IsInt, IsNumber, IsArray, ValidateNested } from 'class-validator';
+import { IsString, IsInt, IsNumber, IsArray, ValidateNested, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreatePelaporanPenggunaanBahanB3Dto {
@@ -19,6 +19,10 @@ export class CreatePelaporanPenggunaanBahanB3Dto {
 
   @IsString()
   tipePembelian: string; // Misal: 'Import', 'Lokal'
+
+  @IsOptional() 
+  @IsString()
+  registrasiId: string; // ID Registrasi
 
   @IsNumber({ maxDecimalPlaces: 5 })
   jumlahPembelianB3: number; // Menggunakan float dengan maksimal 5 angka desimal

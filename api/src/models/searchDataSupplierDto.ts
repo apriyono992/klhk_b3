@@ -19,6 +19,7 @@ export class SearchDataSupplierDto extends PaginationDto {
   })
   @IsArray()
   @IsString()
+  @IsOptional()
   companyId?: string[];
 
   @ApiPropertyOptional({ description: 'Nama supplier', example: 'PT. Supplier Bahan Kimia' })

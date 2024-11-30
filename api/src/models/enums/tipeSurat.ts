@@ -1,8 +1,8 @@
 export enum TipeSurat {
-    PERPANJANGAN = 'PERPANJANGAN',
-    PENAMBAHAN_KENDARAAN = 'PENAMBAHAN KENDARAAN',
-    PENAMBAHAN_JENIS_B3 = 'PENAMBAHAN JENIS B3',
-    BARU = 'BARU',
+    PERPANJANGAN = 'Perpanjangan',
+    PENAMBAHAN_KENDARAAN = 'Penambahan Unit Kendaraan',
+    PENAMBAHAN_JENIS_B3 = 'Penambahan Jenis B3',
+    BARU = 'Permohonan Baru',
     BARU_IMPORTIR = 'BARU IMPORTIR',
     PRODUSEN = 'PRODUSEN'
 }
