@@ -2,2571 +2,3599 @@
     {
         "id": "1101",
         "provinceId": "11",
-        "name": "KAB. ACEH SELATAN"
+        "name": "KAB. ACEH SELATAN",
+        "latitude": 2.070276,
+        "longitude": 105.122313
     },
     {
         "id": "1102",
         "provinceId": "11",
-        "name": "KAB. ACEH TENGGARA"
+        "name": "KAB. ACEH TENGGARA",
+        "latitude": 0.549022,
+        "longitude": 109.316527
     },
     {
         "id": "1103",
         "provinceId": "11",
-        "name": "KAB. ACEH TIMUR"
+        "name": "KAB. ACEH TIMUR",
+        "latitude": -0.121883,
+        "longitude": 136.271254
     },
     {
         "id": "1104",
         "provinceId": "11",
-        "name": "KAB. ACEH TENGAH"
+        "name": "KAB. ACEH TENGAH",
+        "latitude": 2.945031,
+        "longitude": 113.673757
     },
     {
         "id": "1105",
         "provinceId": "11",
-        "name": "KAB. ACEH BARAT"
+        "name": "KAB. ACEH BARAT",
+        "latitude": -6.704563,
+        "longitude": 100.677879
     },
     {
         "id": "1106",
         "provinceId": "11",
-        "name": "KAB. ACEH BESAR"
+        "name": "KAB. ACEH BESAR",
+        "latitude": -0.636492,
+        "longitude": 127.707662
     },
     {
         "id": "1107",
         "provinceId": "11",
-        "name": "KAB. PIDIE"
+        "name": "KAB. PIDIE",
+        "latitude": -0.41712,
+        "longitude": 124.4345
     },
     {
         "id": "1108",
         "provinceId": "11",
-        "name": "KAB. ACEH UTARA"
+        "name": "KAB. ACEH UTARA",
+        "latitude": -0.598085,
+        "longitude": 106.713549
     },
     {
         "id": "1109",
         "provinceId": "11",
-        "name": "KAB. SIMEULUE"
+        "name": "KAB. SIMEULUE",
+        "latitude": -2.203818,
+        "longitude": 103.465094
     },
     {
         "id": "1110",
         "provinceId": "11",
-        "name": "KAB. ACEH SINGKIL"
+        "name": "KAB. ACEH SINGKIL",
+        "latitude": -8.210262,
+        "longitude": 133.595675
     },
     {
         "id": "1111",
         "provinceId": "11",
-        "name": "KAB. BIREUEN"
+        "name": "KAB. BIREUEN",
+        "latitude": 5.777584,
+        "longitude": 137.59533
     },
     {
         "id": "1112",
         "provinceId": "11",
-        "name": "KAB. ACEH BARAT DAYA"
+        "name": "KAB. ACEH BARAT DAYA",
+        "latitude": -4.512177,
+        "longitude": 139.798843
     },
     {
         "id": "1113",
         "provinceId": "11",
-        "name": "KAB. GAYO LUES"
+        "name": "KAB. GAYO LUES",
+        "latitude": 5.775347,
+        "longitude": 103.989776
     },
     {
         "id": "1114",
         "provinceId": "11",
-        "name": "KAB. ACEH JAYA"
+        "name": "KAB. ACEH JAYA",
+        "latitude": 3.767531,
+        "longitude": 124.826329
     },
     {
         "id": "1115",
         "provinceId": "11",
-        "name": "KAB. NAGAN RAYA"
+        "name": "KAB. NAGAN RAYA",
+        "latitude": -1.604678,
+        "longitude": 129.200318
     },
     {
         "id": "1116",
         "provinceId": "11",
-        "name": "KAB. ACEH TAMIANG"
+        "name": "KAB. ACEH TAMIANG",
+        "latitude": -2.183339,
+        "longitude": 107.158221
     },
     {
         "id": "1117",
         "provinceId": "11",
-        "name": "KAB. BENER MERIAH"
+        "name": "KAB. BENER MERIAH",
+        "latitude": -0.108674,
+        "longitude": 119.644991
     },
     {
         "id": "1118",
         "provinceId": "11",
-        "name": "KAB. PIDIE JAYA"
+        "name": "KAB. PIDIE JAYA",
+        "latitude": -3.982265,
+        "longitude": 114.550662
     },
     {
         "id": "1171",
         "provinceId": "11",
-        "name": "KOTA BANDA ACEH"
+        "name": "KOTA BANDA ACEH",
+        "latitude": -0.896413,
+        "longitude": 106.515988
     },
     {
         "id": "1172",
         "provinceId": "11",
-        "name": "KOTA SABANG"
+        "name": "KOTA SABANG",
+        "latitude": -5.88365,
+        "longitude": 137.992118
     },
     {
         "id": "1173",
         "provinceId": "11",
-        "name": "KOTA LHOKSEUMAWE"
+        "name": "KOTA LHOKSEUMAWE",
+        "latitude": -6.134044,
+        "longitude": 108.625599
     },
     {
         "id": "1174",
         "provinceId": "11",
-        "name": "KOTA LANGSA"
+        "name": "KOTA LANGSA",
+        "latitude": -9.960571,
+        "longitude": 136.671628
     },
     {
         "id": "1175",
         "provinceId": "11",
-        "name": "KOTA SUBULUSSALAM"
+        "name": "KOTA SUBULUSSALAM",
+        "latitude": 3.689825,
+        "longitude": 121.323362
     },
     {
         "id": "1201",
         "provinceId": "12",
-        "name": "KAB. TAPANULI TENGAH"
+        "name": "KAB. TAPANULI TENGAH",
+        "latitude": -1.067356,
+        "longitude": 108.603341
     },
     {
         "id": "1202",
         "provinceId": "12",
-        "name": "KAB. TAPANULI UTARA"
+        "name": "KAB. TAPANULI UTARA",
+        "latitude": -8.189548,
+        "longitude": 126.012703
     },
     {
         "id": "1203",
         "provinceId": "12",
-        "name": "KAB. TAPANULI SELATAN"
+        "name": "KAB. TAPANULI SELATAN",
+        "latitude": -8.975316,
+        "longitude": 106.723561
     },
     {
         "id": "1204",
         "provinceId": "12",
-        "name": "KAB. NIAS"
+        "name": "KAB. NIAS",
+        "latitude": -5.282981,
+        "longitude": 136.654025
     },
     {
         "id": "1205",
         "provinceId": "12",
-        "name": "KAB. LANGKAT"
+        "name": "KAB. LANGKAT",
+        "latitude": -2.44951,
+        "longitude": 102.00981
     },
     {
         "id": "1206",
         "provinceId": "12",
-        "name": "KAB. KARO"
+        "name": "KAB. KARO",
+        "latitude": -8.68147,
+        "longitude": 138.097007
     },
     {
         "id": "1207",
         "provinceId": "12",
-        "name": "KAB. DELI SERDANG"
+        "name": "KAB. DELI SERDANG",
+        "latitude": 0.722914,
+        "longitude": 132.261287
     },
     {
         "id": "1208",
         "provinceId": "12",
-        "name": "KAB. SIMALUNGUN"
+        "name": "KAB. SIMALUNGUN",
+        "latitude": -6.900336,
+        "longitude": 132.068118
     },
     {
         "id": "1209",
         "provinceId": "12",
-        "name": "KAB. ASAHAN"
+        "name": "KAB. ASAHAN",
+        "latitude": -4.467112,
+        "longitude": 113.81518
     },
     {
         "id": "1210",
         "provinceId": "12",
-        "name": "KAB. LABUHANBATU"
+        "name": "KAB. LABUHANBATU",
+        "latitude": -5.610462,
+        "longitude": 109.630354
     },
     {
         "id": "1211",
         "provinceId": "12",
-        "name": "KAB. DAIRI"
+        "name": "KAB. DAIRI",
+        "latitude": -4.847897,
+        "longitude": 130.676906
     },
     {
         "id": "1212",
         "provinceId": "12",
-        "name": "KAB. TOBA"
+        "name": "KAB. TOBA",
+        "latitude": -8.169767,
+        "longitude": 96.491492
     },
     {
         "id": "1213",
         "provinceId": "12",
-        "name": "KAB. MANDAILING NATAL"
+        "name": "KAB. MANDAILING NATAL",
+        "latitude": 2.497087,
+        "longitude": 118.857963
     },
     {
         "id": "1214",
         "provinceId": "12",
-        "name": "KAB. NIAS SELATAN"
+        "name": "KAB. NIAS SELATAN",
+        "latitude": 1.235003,
+        "longitude": 124.145639
     },
     {
         "id": "1215",
         "provinceId": "12",
-        "name": "KAB. PAKPAK BHARAT"
+        "name": "KAB. PAKPAK BHARAT",
+        "latitude": -5.055747,
+        "longitude": 133.064548
     },
     {
         "id": "1216",
         "provinceId": "12",
-        "name": "KAB. HUMBANG HASUNDUTAN"
+        "name": "KAB. HUMBANG HASUNDUTAN",
+        "latitude": -0.19683,
+        "longitude": 123.568054
     },
     {
         "id": "1217",
         "provinceId": "12",
-        "name": "KAB. SAMOSIR"
+        "name": "KAB. SAMOSIR",
+        "latitude": -7.365237,
+        "longitude": 105.548096
     },
     {
         "id": "1218",
         "provinceId": "12",
-        "name": "KAB. SERDANG BEDAGAI"
+        "name": "KAB. SERDANG BEDAGAI",
+        "latitude": 5.471979,
+        "longitude": 96.952484
     },
     {
         "id": "1219",
         "provinceId": "12",
-        "name": "KAB. BATU BARA"
+        "name": "KAB. BATU BARA",
+        "latitude": -4.247242,
+        "longitude": 97.497613
     },
     {
         "id": "1220",
         "provinceId": "12",
-        "name": "KAB. PADANG LAWAS UTARA"
+        "name": "KAB. PADANG LAWAS UTARA",
+        "latitude": -8.744504,
+        "longitude": 101.645162
     },
     {
         "id": "1221",
         "provinceId": "12",
-        "name": "KAB. PADANG LAWAS"
+        "name": "KAB. PADANG LAWAS",
+        "latitude": -3.772567,
+        "longitude": 123.761593
     },
     {
         "id": "1222",
         "provinceId": "12",
-        "name": "KAB. LABUHANBATU SELATAN"
+        "name": "KAB. LABUHANBATU SELATAN",
+        "latitude": 5.110752,
+        "longitude": 126.173911
     },
     {
         "id": "1223",
         "provinceId": "12",
-        "name": "KAB. LABUHANBATU UTARA"
+        "name": "KAB. LABUHANBATU UTARA",
+        "latitude": -6.611822,
+        "longitude": 101.30028
     },
     {
         "id": "1224",
         "provinceId": "12",
-        "name": "KAB. NIAS UTARA"
+        "name": "KAB. NIAS UTARA",
+        "latitude": 0.823783,
+        "longitude": 101.714337
     },
     {
         "id": "1225",
         "provinceId": "12",
-        "name": "KAB. NIAS BARAT"
+        "name": "KAB. NIAS BARAT",
+        "latitude": -8.073842,
+        "longitude": 122.431845
     },
     {
         "id": "1271",
         "provinceId": "12",
-        "name": "KOTA MEDAN"
+        "name": "KOTA MEDAN",
+        "latitude": -6.838721,
+        "longitude": 133.13595
     },
     {
         "id": "1272",
         "provinceId": "12",
-        "name": "KOTA PEMATANGSIANTAR"
+        "name": "KOTA PEMATANGSIANTAR",
+        "latitude": -7.850878,
+        "longitude": 129.064734
     },
     {
         "id": "1273",
         "provinceId": "12",
-        "name": "KOTA SIBOLGA"
+        "name": "KOTA SIBOLGA",
+        "latitude": -3.294941,
+        "longitude": 102.686284
     },
     {
         "id": "1274",
         "provinceId": "12",
-        "name": "KOTA TANJUNG BALAI"
+        "name": "KOTA TANJUNG BALAI",
+        "latitude": 4.665239,
+        "longitude": 98.168655
     },
     {
         "id": "1275",
         "provinceId": "12",
-        "name": "KOTA BINJAI"
+        "name": "KOTA BINJAI",
+        "latitude": 2.540124,
+        "longitude": 102.918831
     },
     {
         "id": "1276",
         "provinceId": "12",
-        "name": "KOTA TEBING TINGGI"
+        "name": "KOTA TEBING TINGGI",
+        "latitude": -3.176355,
+        "longitude": 129.772634
     },
     {
         "id": "1277",
         "provinceId": "12",
-        "name": "KOTA PADANGSIDIMPUAN"
+        "name": "KOTA PADANGSIDIMPUAN",
+        "latitude": 1.261006,
+        "longitude": 129.647476
     },
     {
         "id": "1278",
         "provinceId": "12",
-        "name": "KOTA GUNUNGSITOLI"
+        "name": "KOTA GUNUNGSITOLI",
+        "latitude": -2.819709,
+        "longitude": 125.404995
     },
     {
         "id": "1301",
         "provinceId": "13",
-        "name": "KAB. PESISIR SELATAN"
+        "name": "KAB. PESISIR SELATAN",
+        "latitude": -0.650644,
+        "longitude": 117.722652
     },
     {
         "id": "1302",
         "provinceId": "13",
-        "name": "KAB. SOLOK"
+        "name": "KAB. SOLOK",
+        "latitude": -6.986359,
+        "longitude": 105.559938
     },
     {
         "id": "1303",
         "provinceId": "13",
-        "name": "KAB. SIJUNJUNG"
+        "name": "KAB. SIJUNJUNG",
+        "latitude": 0.894679,
+        "longitude": 124.887753
     },
     {
         "id": "1304",
         "provinceId": "13",
-        "name": "KAB. TANAH DATAR"
+        "name": "KAB. TANAH DATAR",
+        "latitude": -2.339699,
+        "longitude": 99.478093
     },
     {
         "id": "1305",
         "provinceId": "13",
-        "name": "KAB. PADANG PARIAMAN"
+        "name": "KAB. PADANG PARIAMAN",
+        "latitude": -2.831187,
+        "longitude": 105.695754
     },
     {
         "id": "1306",
         "provinceId": "13",
-        "name": "KAB. AGAM"
+        "name": "KAB. AGAM",
+        "latitude": 2.27158,
+        "longitude": 106.064149
     },
     {
         "id": "1307",
         "provinceId": "13",
-        "name": "KAB. LIMA PULUH KOTA"
+        "name": "KAB. LIMA PULUH KOTA",
+        "latitude": 2.968075,
+        "longitude": 137.560923
     },
     {
         "id": "1308",
         "provinceId": "13",
-        "name": "KAB. PASAMAN"
+        "name": "KAB. PASAMAN",
+        "latitude": 3.101172,
+        "longitude": 132.131989
     },
     {
         "id": "1309",
         "provinceId": "13",
-        "name": "KAB. KEPULAUAN MENTAWAI"
+        "name": "KAB. KEPULAUAN MENTAWAI",
+        "latitude": 1.413291,
+        "longitude": 131.907297
     },
     {
         "id": "1310",
         "provinceId": "13",
-        "name": "KAB. DHARMASRAYA"
+        "name": "KAB. DHARMASRAYA",
+        "latitude": 3.450664,
+        "longitude": 106.938216
     },
     {
         "id": "1311",
         "provinceId": "13",
-        "name": "KAB. SOLOK SELATAN"
+        "name": "KAB. SOLOK SELATAN",
+        "latitude": 5.381903,
+        "longitude": 115.348212
     },
     {
         "id": "1312",
         "provinceId": "13",
-        "name": "KAB. PASAMAN BARAT"
+        "name": "KAB. PASAMAN BARAT",
+        "latitude": -9.329307,
+        "longitude": 137.248787
     },
     {
         "id": "1371",
         "provinceId": "13",
-        "name": "KOTA PADANG"
+        "name": "KOTA PADANG",
+        "latitude": -4.313993,
+        "longitude": 138.166633
     },
     {
         "id": "1372",
         "provinceId": "13",
-        "name": "KOTA SOLOK"
+        "name": "KOTA SOLOK",
+        "latitude": 5.324025,
+        "longitude": 105.712909
     },
     {
         "id": "1373",
         "provinceId": "13",
-        "name": "KOTA SAWAHLUNTO"
+        "name": "KOTA SAWAHLUNTO",
+        "latitude": -1.205819,
+        "longitude": 111.137205
     },
     {
         "id": "1374",
         "provinceId": "13",
-        "name": "KOTA PADANG PANJANG"
+        "name": "KOTA PADANG PANJANG",
+        "latitude": -6.100169,
+        "longitude": 122.761392
     },
     {
         "id": "1375",
         "provinceId": "13",
-        "name": "KOTA BUKITTINGGI"
+        "name": "KOTA BUKITTINGGI",
+        "latitude": 1.390738,
+        "longitude": 119.5214
     },
     {
         "id": "1376",
         "provinceId": "13",
-        "name": "KOTA PAYAKUMBUH"
+        "name": "KOTA PAYAKUMBUH",
+        "latitude": 2.000374,
+        "longitude": 110.483381
     },
     {
         "id": "1377",
         "provinceId": "13",
-        "name": "KOTA PARIAMAN"
+        "name": "KOTA PARIAMAN",
+        "latitude": -1.087326,
+        "longitude": 118.825259
     },
     {
         "id": "1401",
         "provinceId": "14",
-        "name": "KAB. KAMPAR"
+        "name": "KAB. KAMPAR",
+        "latitude": -6.234741,
+        "longitude": 104.393036
     },
     {
         "id": "1402",
         "provinceId": "14",
-        "name": "KAB. INDRAGIRI HULU"
+        "name": "KAB. INDRAGIRI HULU",
+        "latitude": 1.43038,
+        "longitude": 114.495994
     },
     {
         "id": "1403",
         "provinceId": "14",
-        "name": "KAB. BENGKALIS"
+        "name": "KAB. BENGKALIS",
+        "latitude": -5.071848,
+        "longitude": 124.070272
     },
     {
         "id": "1404",
         "provinceId": "14",
-        "name": "KAB. INDRAGIRI HILIR"
+        "name": "KAB. INDRAGIRI HILIR",
+        "latitude": 4.691623,
+        "longitude": 139.421227
     },
     {
         "id": "1405",
         "provinceId": "14",
-        "name": "KAB. PELALAWAN"
+        "name": "KAB. PELALAWAN",
+        "latitude": 3.256459,
+        "longitude": 138.161515
     },
     {
         "id": "1406",
         "provinceId": "14",
-        "name": "KAB. ROKAN HULU"
+        "name": "KAB. ROKAN HULU",
+        "latitude": 0.816309,
+        "longitude": 111.894159
     },
     {
         "id": "1407",
         "provinceId": "14",
-        "name": "KAB. ROKAN HILIR"
+        "name": "KAB. ROKAN HILIR",
+        "latitude": 3.548894,
+        "longitude": 104.477737
     },
     {
         "id": "1408",
         "provinceId": "14",
-        "name": "KAB. SIAK"
+        "name": "KAB. SIAK",
+        "latitude": 0.419697,
+        "longitude": 106.69353
     },
     {
         "id": "1409",
         "provinceId": "14",
-        "name": "KAB. KUANTAN SINGINGI"
+        "name": "KAB. KUANTAN SINGINGI",
+        "latitude": -6.343305,
+        "longitude": 109.637369
     },
     {
         "id": "1410",
         "provinceId": "14",
-        "name": "KAB. KEPULAUAN MERANTI"
+        "name": "KAB. KEPULAUAN MERANTI",
+        "latitude": -1.599002,
+        "longitude": 115.538218
     },
     {
         "id": "1471",
         "provinceId": "14",
-        "name": "KOTA PEKANBARU"
+        "name": "KOTA PEKANBARU",
+        "latitude": -8.219659,
+        "longitude": 107.046106
     },
     {
         "id": "1472",
         "provinceId": "14",
-        "name": "KOTA DUMAI"
+        "name": "KOTA DUMAI",
+        "latitude": 5.547206,
+        "longitude": 118.801353
     },
     {
         "id": "1501",
         "provinceId": "15",
-        "name": "KAB. KERINCI"
+        "name": "KAB. KERINCI",
+        "latitude": 5.327072,
+        "longitude": 110.218773
     },
     {
         "id": "1502",
         "provinceId": "15",
-        "name": "KAB. MERANGIN"
+        "name": "KAB. MERANGIN",
+        "latitude": 3.013166,
+        "longitude": 116.436094
     },
     {
         "id": "1503",
         "provinceId": "15",
-        "name": "KAB. SAROLANGUN"
+        "name": "KAB. SAROLANGUN",
+        "latitude": -4.043505,
+        "longitude": 110.868356
     },
     {
         "id": "1504",
         "provinceId": "15",
-        "name": "KAB. BATANGHARI"
+        "name": "KAB. BATANGHARI",
+        "latitude": 4.057946,
+        "longitude": 106.263114
     },
     {
         "id": "1505",
         "provinceId": "15",
-        "name": "KAB. MUARO JAMBI"
+        "name": "KAB. MUARO JAMBI",
+        "latitude": -4.958481,
+        "longitude": 104.389903
     },
     {
         "id": "1506",
         "provinceId": "15",
-        "name": "KAB. TANJUNG JABUNG BARAT"
+        "name": "KAB. TANJUNG JABUNG BARAT",
+        "latitude": -4.982373,
+        "longitude": 136.739467
     },
     {
         "id": "1507",
         "provinceId": "15",
-        "name": "KAB. TANJUNG JABUNG TIMUR"
+        "name": "KAB. TANJUNG JABUNG TIMUR",
+        "latitude": -9.014738,
+        "longitude": 109.882009
     },
     {
         "id": "1508",
         "provinceId": "15",
-        "name": "KAB. BUNGO"
+        "name": "KAB. BUNGO",
+        "latitude": -3.250937,
+        "longitude": 95.63402
     },
     {
         "id": "1509",
         "provinceId": "15",
-        "name": "KAB. TEBO"
+        "name": "KAB. TEBO",
+        "latitude": -8.648695,
+        "longitude": 116.038735
     },
     {
         "id": "1571",
         "provinceId": "15",
-        "name": "KOTA JAMBI"
+        "name": "KOTA JAMBI",
+        "latitude": 0.81986,
+        "longitude": 105.186631
     },
     {
         "id": "1572",
         "provinceId": "15",
-        "name": "KOTA SUNGAI PENUH"
+        "name": "KOTA SUNGAI PENUH",
+        "latitude": 2.772276,
+        "longitude": 97.1852
     },
     {
         "id": "1601",
         "provinceId": "16",
-        "name": "KAB. OGAN KOMERING ULU"
+        "name": "KAB. OGAN KOMERING ULU",
+        "latitude": -7.675303,
+        "longitude": 119.028289
     },
     {
         "id": "1602",
         "provinceId": "16",
-        "name": "KAB. OGAN KOMERING ILIR"
+        "name": "KAB. OGAN KOMERING ILIR",
+        "latitude": 0.983786,
+        "longitude": 127.248376
     },
     {
         "id": "1603",
         "provinceId": "16",
-        "name": "KAB. MUARA ENIM"
+        "name": "KAB. MUARA ENIM",
+        "latitude": -6.178796,
+        "longitude": 110.310483
     },
     {
         "id": "1604",
         "provinceId": "16",
-        "name": "KAB. LAHAT"
+        "name": "KAB. LAHAT",
+        "latitude": -5.04865,
+        "longitude": 103.256249
     },
     {
         "id": "1605",
         "provinceId": "16",
-        "name": "KAB. MUSI RAWAS"
+        "name": "KAB. MUSI RAWAS",
+        "latitude": 3.484771,
+        "longitude": 108.936136
     },
     {
         "id": "1606",
         "provinceId": "16",
-        "name": "KAB. MUSI BANYUASIN"
+        "name": "KAB. MUSI BANYUASIN",
+        "latitude": -5.718412,
+        "longitude": 139.105421
     },
     {
         "id": "1607",
         "provinceId": "16",
-        "name": "KAB. BANYUASIN"
+        "name": "KAB. BANYUASIN",
+        "latitude": -5.749191,
+        "longitude": 111.117387
     },
     {
         "id": "1608",
         "provinceId": "16",
-        "name": "KAB. OGAN KOMERING ULU TIMUR"
+        "name": "KAB. OGAN KOMERING ULU TIMUR",
+        "latitude": 4.138115,
+        "longitude": 105.521754
     },
     {
         "id": "1609",
         "provinceId": "16",
-        "name": "KAB. OGAN KOMERING ULU SELATAN"
+        "name": "KAB. OGAN KOMERING ULU SELATAN",
+        "latitude": 0.010147,
+        "longitude": 128.248928
     },
     {
         "id": "1610",
         "provinceId": "16",
-        "name": "KAB. OGAN ILIR"
+        "name": "KAB. OGAN ILIR",
+        "latitude": 4.389033,
+        "longitude": 134.946375
     },
     {
         "id": "1611",
         "provinceId": "16",
-        "name": "KAB. EMPAT LAWANG"
+        "name": "KAB. EMPAT LAWANG",
+        "latitude": 3.676434,
+        "longitude": 133.716404
     },
     {
         "id": "1612",
         "provinceId": "16",
-        "name": "KAB. PENUKAL ABAB LEMATANG ILIR"
+        "name": "KAB. PENUKAL ABAB LEMATANG ILIR",
+        "latitude": 1.279291,
+        "longitude": 95.331899
     },
     {
         "id": "1613",
         "provinceId": "16",
-        "name": "KAB. MUSI RAWAS UTARA"
+        "name": "KAB. MUSI RAWAS UTARA",
+        "latitude": 1.758236,
+        "longitude": 100.884254
     },
     {
         "id": "1671",
         "provinceId": "16",
-        "name": "KOTA PALEMBANG"
+        "name": "KOTA PALEMBANG",
+        "latitude": 1.087215,
+        "longitude": 113.90331
     },
     {
         "id": "1672",
         "provinceId": "16",
-        "name": "KOTA PAGAR ALAM"
+        "name": "KOTA PAGAR ALAM",
+        "latitude": -0.649377,
+        "longitude": 119.839836
     },
     {
         "id": "1673",
         "provinceId": "16",
-        "name": "KOTA LUBUK LINGGAU"
+        "name": "KOTA LUBUK LINGGAU",
+        "latitude": 4.847599,
+        "longitude": 129.816382
     },
     {
         "id": "1674",
         "provinceId": "16",
-        "name": "KOTA PRABUMULIH"
+        "name": "KOTA PRABUMULIH",
+        "latitude": 2.266363,
+        "longitude": 104.866901
     },
     {
         "id": "1701",
         "provinceId": "17",
-        "name": "KAB. BENGKULU SELATAN"
+        "name": "KAB. BENGKULU SELATAN",
+        "latitude": -5.353985,
+        "longitude": 113.832504
     },
     {
         "id": "1702",
         "provinceId": "17",
-        "name": "KAB. REJANG LEBONG"
+        "name": "KAB. REJANG LEBONG",
+        "latitude": 4.476379,
+        "longitude": 123.213675
     },
     {
         "id": "1703",
         "provinceId": "17",
-        "name": "KAB. BENGKULU UTARA"
+        "name": "KAB. BENGKULU UTARA",
+        "latitude": -2.329379,
+        "longitude": 125.504882
     },
     {
         "id": "1704",
         "provinceId": "17",
-        "name": "KAB. KAUR"
+        "name": "KAB. KAUR",
+        "latitude": -1.089967,
+        "longitude": 109.589088
     },
     {
         "id": "1705",
         "provinceId": "17",
-        "name": "KAB. SELUMA"
+        "name": "KAB. SELUMA",
+        "latitude": 0.60015,
+        "longitude": 124.308237
     },
     {
         "id": "1706",
         "provinceId": "17",
-        "name": "KAB. MUKO MUKO"
+        "name": "KAB. MUKO MUKO",
+        "latitude": -3.770096,
+        "longitude": 129.810402
     },
     {
         "id": "1707",
         "provinceId": "17",
-        "name": "KAB. LEBONG"
+        "name": "KAB. LEBONG",
+        "latitude": -8.556486,
+        "longitude": 107.184792
     },
     {
         "id": "1708",
         "provinceId": "17",
-        "name": "KAB. KEPAHIANG"
+        "name": "KAB. KEPAHIANG",
+        "latitude": 5.01474,
+        "longitude": 95.339775
     },
     {
         "id": "1709",
         "provinceId": "17",
-        "name": "KAB. BENGKULU TENGAH"
+        "name": "KAB. BENGKULU TENGAH",
+        "latitude": 5.733154,
+        "longitude": 95.484058
     },
     {
         "id": "1771",
         "provinceId": "17",
-        "name": "KOTA BENGKULU"
+        "name": "KOTA BENGKULU",
+        "latitude": -0.178508,
+        "longitude": 100.157562
     },
     {
         "id": "1801",
         "provinceId": "18",
-        "name": "KAB. LAMPUNG SELATAN"
+        "name": "KAB. LAMPUNG SELATAN",
+        "latitude": -9.182459,
+        "longitude": 131.278609
     },
     {
         "id": "1802",
         "provinceId": "18",
-        "name": "KAB. LAMPUNG TENGAH"
+        "name": "KAB. LAMPUNG TENGAH",
+        "latitude": 5.925088,
+        "longitude": 133.359934
     },
     {
         "id": "1803",
         "provinceId": "18",
-        "name": "KAB. LAMPUNG UTARA"
+        "name": "KAB. LAMPUNG UTARA",
+        "latitude": 5.495178,
+        "longitude": 128.828277
     },
     {
         "id": "1804",
         "provinceId": "18",
-        "name": "KAB. LAMPUNG BARAT"
+        "name": "KAB. LAMPUNG BARAT",
+        "latitude": -7.710454,
+        "longitude": 132.023343
     },
     {
         "id": "1805",
         "provinceId": "18",
-        "name": "KAB. TULANG BAWANG"
+        "name": "KAB. TULANG BAWANG",
+        "latitude": 4.473105,
+        "longitude": 119.503901
     },
     {
         "id": "1806",
         "provinceId": "18",
-        "name": "KAB. TANGGAMUS"
+        "name": "KAB. TANGGAMUS",
+        "latitude": -9.549626,
+        "longitude": 103.624205
     },
     {
         "id": "1807",
         "provinceId": "18",
-        "name": "KAB. LAMPUNG TIMUR"
+        "name": "KAB. LAMPUNG TIMUR",
+        "latitude": 0.515367,
+        "longitude": 128.657794
     },
     {
         "id": "1808",
         "provinceId": "18",
-        "name": "KAB. WAY KANAN"
+        "name": "KAB. WAY KANAN",
+        "latitude": -9.368129,
+        "longitude": 123.845118
     },
     {
         "id": "1809",
         "provinceId": "18",
-        "name": "KAB. PESAWARAN"
+        "name": "KAB. PESAWARAN",
+        "latitude": 2.647699,
+        "longitude": 117.720469
     },
     {
         "id": "1810",
         "provinceId": "18",
-        "name": "KAB. PRINGSEWU"
+        "name": "KAB. PRINGSEWU",
+        "latitude": -7.483351,
+        "longitude": 114.277778
     },
     {
         "id": "1811",
         "provinceId": "18",
-        "name": "KAB. MESUJI"
+        "name": "KAB. MESUJI",
+        "latitude": -4.051128,
+        "longitude": 138.725905
     },
     {
         "id": "1812",
         "provinceId": "18",
-        "name": "KAB. TULANG BAWANG BARAT"
+        "name": "KAB. TULANG BAWANG BARAT",
+        "latitude": -2.295423,
+        "longitude": 113.183463
     },
     {
         "id": "1813",
         "provinceId": "18",
-        "name": "KAB. PESISIR BARAT"
+        "name": "KAB. PESISIR BARAT",
+        "latitude": 4.859062,
+        "longitude": 119.857591
     },
     {
         "id": "1871",
         "provinceId": "18",
-        "name": "KOTA BANDAR LAMPUNG"
+        "name": "KOTA BANDAR LAMPUNG",
+        "latitude": -7.895744,
+        "longitude": 123.808031
     },
     {
         "id": "1872",
         "provinceId": "18",
-        "name": "KOTA METRO"
+        "name": "KOTA METRO",
+        "latitude": -1.76696,
+        "longitude": 120.686033
     },
     {
         "id": "1901",
         "provinceId": "19",
-        "name": "KAB. BANGKA"
+        "name": "KAB. BANGKA",
+        "latitude": -5.351237,
+        "longitude": 140.214294
     },
     {
         "id": "1902",
         "provinceId": "19",
-        "name": "KAB. BELITUNG"
+        "name": "KAB. BELITUNG",
+        "latitude": 5.56385,
+        "longitude": 126.444308
     },
     {
         "id": "1903",
         "provinceId": "19",
-        "name": "KAB. BANGKA SELATAN"
+        "name": "KAB. BANGKA SELATAN",
+        "latitude": -9.24199,
+        "longitude": 137.334911
     },
     {
         "id": "1904",
         "provinceId": "19",
-        "name": "KAB. BANGKA TENGAH"
+        "name": "KAB. BANGKA TENGAH",
+        "latitude": -3.392128,
+        "longitude": 130.167548
     },
     {
         "id": "1905",
         "provinceId": "19",
-        "name": "KAB. BANGKA BARAT"
+        "name": "KAB. BANGKA BARAT",
+        "latitude": -9.957164,
+        "longitude": 108.124313
     },
     {
         "id": "1906",
         "provinceId": "19",
-        "name": "KAB. BELITUNG TIMUR"
+        "name": "KAB. BELITUNG TIMUR",
+        "latitude": -8.311314,
+        "longitude": 103.992084
     },
     {
         "id": "1971",
         "provinceId": "19",
-        "name": "KOTA PANGKAL PINANG"
+        "name": "KOTA PANGKAL PINANG",
+        "latitude": -5.499407,
+        "longitude": 105.965219
     },
     {
         "id": "2101",
         "provinceId": "21",
-        "name": "KAB. BINTAN"
+        "name": "KAB. BINTAN",
+        "latitude": -7.818998,
+        "longitude": 99.841773
     },
     {
         "id": "2102",
         "provinceId": "21",
-        "name": "KAB. KARIMUN"
+        "name": "KAB. KARIMUN",
+        "latitude": 0.073813,
+        "longitude": 135.521836
     },
     {
         "id": "2103",
         "provinceId": "21",
-        "name": "KAB. NATUNA"
+        "name": "KAB. NATUNA",
+        "latitude": 0.81145,
+        "longitude": 111.375596
     },
     {
         "id": "2104",
         "provinceId": "21",
-        "name": "KAB. LINGGA"
+        "name": "KAB. LINGGA",
+        "latitude": 3.92268,
+        "longitude": 135.411581
     },
     {
         "id": "2105",
         "provinceId": "21",
-        "name": "KAB. KEPULAUAN ANAMBAS"
+        "name": "KAB. KEPULAUAN ANAMBAS",
+        "latitude": -8.322668,
+        "longitude": 106.710979
     },
     {
         "id": "2171",
         "provinceId": "21",
-        "name": "KOTA BATAM"
+        "name": "KOTA BATAM",
+        "latitude": 1.871532,
+        "longitude": 99.875704
     },
     {
         "id": "2172",
         "provinceId": "21",
-        "name": "KOTA TANJUNG PINANG"
+        "name": "KOTA TANJUNG PINANG",
+        "latitude": -2.445563,
+        "longitude": 133.663263
     },
     {
         "id": "3101",
         "provinceId": "31",
-        "name": "KAB. ADM. KEP. SERIBU"
+        "name": "KAB. ADM. KEP. SERIBU",
+        "latitude": 2.435495,
+        "longitude": 131.97745
     },
     {
         "id": "3171",
         "provinceId": "31",
-        "name": "KOTA ADM. JAKARTA PUSAT"
+        "name": "KOTA ADM. JAKARTA PUSAT",
+        "latitude": -8.47779,
+        "longitude": 127.669643
     },
     {
         "id": "3172",
         "provinceId": "31",
-        "name": "KOTA ADM. JAKARTA UTARA"
+        "name": "KOTA ADM. JAKARTA UTARA",
+        "latitude": 4.035286,
+        "longitude": 102.185591
     },
     {
         "id": "3173",
         "provinceId": "31",
-        "name": "KOTA ADM. JAKARTA BARAT"
+        "name": "KOTA ADM. JAKARTA BARAT",
+        "latitude": -9.784442,
+        "longitude": 125.235205
     },
     {
         "id": "3174",
         "provinceId": "31",
-        "name": "KOTA ADM. JAKARTA SELATAN"
+        "name": "KOTA ADM. JAKARTA SELATAN",
+        "latitude": -6.53889,
+        "longitude": 110.378077
     },
     {
         "id": "3175",
         "provinceId": "31",
-        "name": "KOTA ADM. JAKARTA TIMUR"
+        "name": "KOTA ADM. JAKARTA TIMUR",
+        "latitude": -6.770304,
+        "longitude": 139.670054
     },
     {
         "id": "3201",
         "provinceId": "32",
-        "name": "KAB. BOGOR"
+        "name": "KAB. BOGOR",
+        "latitude": 5.713404,
+        "longitude": 122.437229
     },
     {
         "id": "3202",
         "provinceId": "32",
-        "name": "KAB. SUKABUMI"
+        "name": "KAB. SUKABUMI",
+        "latitude": -6.100246,
+        "longitude": 102.879407
     },
     {
         "id": "3203",
         "provinceId": "32",
-        "name": "KAB. CIANJUR"
+        "name": "KAB. CIANJUR",
+        "latitude": -7.967368,
+        "longitude": 96.361886
     },
     {
         "id": "3204",
         "provinceId": "32",
-        "name": "KAB. BANDUNG"
+        "name": "KAB. BANDUNG",
+        "latitude": -4.371897,
+        "longitude": 100.385426
     },
     {
         "id": "3205",
         "provinceId": "32",
-        "name": "KAB. GARUT"
+        "name": "KAB. GARUT",
+        "latitude": -6.898193,
+        "longitude": 122.414628
     },
     {
         "id": "3206",
         "provinceId": "32",
-        "name": "KAB. TASIKMALAYA"
+        "name": "KAB. TASIKMALAYA",
+        "latitude": -7.22983,
+        "longitude": 100.034281
     },
     {
         "id": "3207",
         "provinceId": "32",
-        "name": "KAB. CIAMIS"
+        "name": "KAB. CIAMIS",
+        "latitude": 0.682025,
+        "longitude": 96.672859
     },
     {
         "id": "3208",
         "provinceId": "32",
-        "name": "KAB. KUNINGAN"
+        "name": "KAB. KUNINGAN",
+        "latitude": -5.141196,
+        "longitude": 122.377041
     },
     {
         "id": "3209",
         "provinceId": "32",
-        "name": "KAB. CIREBON"
+        "name": "KAB. CIREBON",
+        "latitude": -5.879956,
+        "longitude": 103.491457
     },
     {
         "id": "3210",
         "provinceId": "32",
-        "name": "KAB. MAJALENGKA"
+        "name": "KAB. MAJALENGKA",
+        "latitude": 1.87574,
+        "longitude": 102.57963
     },
     {
         "id": "3211",
         "provinceId": "32",
-        "name": "KAB. SUMEDANG"
+        "name": "KAB. SUMEDANG",
+        "latitude": -7.889089,
+        "longitude": 100.919821
     },
     {
         "id": "3212",
         "provinceId": "32",
-        "name": "KAB. INDRAMAYU"
+        "name": "KAB. INDRAMAYU",
+        "latitude": -2.955327,
+        "longitude": 127.855662
     },
     {
         "id": "3213",
         "provinceId": "32",
-        "name": "KAB. SUBANG"
+        "name": "KAB. SUBANG",
+        "latitude": -9.829778,
+        "longitude": 102.073159
     },
     {
         "id": "3214",
         "provinceId": "32",
-        "name": "KAB. PURWAKARTA"
+        "name": "KAB. PURWAKARTA",
+        "latitude": -3.292928,
+        "longitude": 132.980375
     },
     {
         "id": "3215",
         "provinceId": "32",
-        "name": "KAB. KARAWANG"
+        "name": "KAB. KARAWANG",
+        "latitude": -5.751794,
+        "longitude": 101.790311
     },
     {
         "id": "3216",
         "provinceId": "32",
-        "name": "KAB. BEKASI"
+        "name": "KAB. BEKASI",
+        "latitude": -2.406833,
+        "longitude": 138.264757
     },
     {
         "id": "3217",
         "provinceId": "32",
-        "name": "KAB. BANDUNG BARAT"
+        "name": "KAB. BANDUNG BARAT",
+        "latitude": -6.666446,
+        "longitude": 120.657939
     },
     {
         "id": "3218",
         "provinceId": "32",
-        "name": "KAB. PANGANDARAN"
+        "name": "KAB. PANGANDARAN",
+        "latitude": 4.13899,
+        "longitude": 115.437898
     },
     {
         "id": "3271",
         "provinceId": "32",
-        "name": "KOTA BOGOR"
+        "name": "KOTA BOGOR",
+        "latitude": 2.88717,
+        "longitude": 106.542518
     },
     {
         "id": "3272",
         "provinceId": "32",
-        "name": "KOTA SUKABUMI"
+        "name": "KOTA SUKABUMI",
+        "latitude": 2.260612,
+        "longitude": 115.91254
     },
     {
         "id": "3273",
         "provinceId": "32",
-        "name": "KOTA BANDUNG"
+        "name": "KOTA BANDUNG",
+        "latitude": -1.206142,
+        "longitude": 108.865377
     },
     {
         "id": "3274",
         "provinceId": "32",
-        "name": "KOTA CIREBON"
+        "name": "KOTA CIREBON",
+        "latitude": 5.080729,
+        "longitude": 138.634495
     },
     {
         "id": "3275",
         "provinceId": "32",
-        "name": "KOTA BEKASI"
+        "name": "KOTA BEKASI",
+        "latitude": -7.336009,
+        "longitude": 129.851283
     },
     {
         "id": "3276",
         "provinceId": "32",
-        "name": "KOTA DEPOK"
+        "name": "KOTA DEPOK",
+        "latitude": -0.757639,
+        "longitude": 116.494269
     },
     {
         "id": "3277",
         "provinceId": "32",
-        "name": "KOTA CIMAHI"
+        "name": "KOTA CIMAHI",
+        "latitude": -1.953001,
+        "longitude": 130.073662
     },
     {
         "id": "3278",
         "provinceId": "32",
-        "name": "KOTA TASIKMALAYA"
+        "name": "KOTA TASIKMALAYA",
+        "latitude": -2.631026,
+        "longitude": 140.599511
     },
     {
         "id": "3279",
         "provinceId": "32",
-        "name": "KOTA BANJAR"
+        "name": "KOTA BANJAR",
+        "latitude": -9.894872,
+        "longitude": 115.04185
     },
     {
         "id": "3301",
         "provinceId": "33",
-        "name": "KAB. CILACAP"
+        "name": "KAB. CILACAP",
+        "latitude": -2.592302,
+        "longitude": 98.140083
     },
     {
         "id": "3302",
         "provinceId": "33",
-        "name": "KAB. BANYUMAS"
+        "name": "KAB. BANYUMAS",
+        "latitude": -4.348615,
+        "longitude": 109.155495
     },
     {
         "id": "3303",
         "provinceId": "33",
-        "name": "KAB. PURBALINGGA"
+        "name": "KAB. PURBALINGGA",
+        "latitude": -1.806676,
+        "longitude": 98.72477
     },
     {
         "id": "3304",
         "provinceId": "33",
-        "name": "KAB. BANJARNEGARA"
+        "name": "KAB. BANJARNEGARA",
+        "latitude": -0.288156,
+        "longitude": 129.786868
     },
     {
         "id": "3305",
         "provinceId": "33",
-        "name": "KAB. KEBUMEN"
+        "name": "KAB. KEBUMEN",
+        "latitude": -0.367625,
+        "longitude": 109.456929
     },
     {
         "id": "3306",
         "provinceId": "33",
-        "name": "KAB. PURWOREJO"
+        "name": "KAB. PURWOREJO",
+        "latitude": 3.08487,
+        "longitude": 125.325293
     },
     {
         "id": "3307",
         "provinceId": "33",
-        "name": "KAB. WONOSOBO"
+        "name": "KAB. WONOSOBO",
+        "latitude": -1.460176,
+        "longitude": 128.429776
     },
     {
         "id": "3308",
         "provinceId": "33",
-        "name": "KAB. MAGELANG"
+        "name": "KAB. MAGELANG",
+        "latitude": 0.602966,
+        "longitude": 134.90964
     },
     {
         "id": "3309",
         "provinceId": "33",
-        "name": "KAB. BOYOLALI"
+        "name": "KAB. BOYOLALI",
+        "latitude": -9.060507,
+        "longitude": 101.370085
     },
     {
         "id": "3310",
         "provinceId": "33",
-        "name": "KAB. KLATEN"
+        "name": "KAB. KLATEN",
+        "latitude": -0.906594,
+        "longitude": 115.091615
     },
     {
         "id": "3311",
         "provinceId": "33",
-        "name": "KAB. SUKOHARJO"
+        "name": "KAB. SUKOHARJO",
+        "latitude": -4.004649,
+        "longitude": 115.308438
     },
     {
         "id": "3312",
         "provinceId": "33",
-        "name": "KAB. WONOGIRI"
+        "name": "KAB. WONOGIRI",
+        "latitude": 5.207636,
+        "longitude": 106.787299
     },
     {
         "id": "3313",
         "provinceId": "33",
-        "name": "KAB. KARANGANYAR"
+        "name": "KAB. KARANGANYAR",
+        "latitude": -1.980755,
+        "longitude": 122.776731
     },
     {
         "id": "3314",
         "provinceId": "33",
-        "name": "KAB. SRAGEN"
+        "name": "KAB. SRAGEN",
+        "latitude": -6.53953,
+        "longitude": 130.474885
     },
     {
         "id": "3315",
         "provinceId": "33",
-        "name": "KAB. GROBOGAN"
+        "name": "KAB. GROBOGAN",
+        "latitude": 0.213636,
+        "longitude": 101.447474
     },
     {
         "id": "3316",
         "provinceId": "33",
-        "name": "KAB. BLORA"
+        "name": "KAB. BLORA",
+        "latitude": -5.626901,
+        "longitude": 106.173711
     },
     {
         "id": "3317",
         "provinceId": "33",
-        "name": "KAB. REMBANG"
+        "name": "KAB. REMBANG",
+        "latitude": -2.382782,
+        "longitude": 120.580073
     },
     {
         "id": "3318",
         "provinceId": "33",
-        "name": "KAB. PATI"
+        "name": "KAB. PATI",
+        "latitude": -7.274413,
+        "longitude": 125.367262
     },
     {
         "id": "3319",
         "provinceId": "33",
-        "name": "KAB. KUDUS"
+        "name": "KAB. KUDUS",
+        "latitude": -7.102728,
+        "longitude": 122.848699
     },
     {
         "id": "3320",
         "provinceId": "33",
-        "name": "KAB. JEPARA"
+        "name": "KAB. JEPARA",
+        "latitude": -5.807712,
+        "longitude": 140.952254
     },
     {
         "id": "3321",
         "provinceId": "33",
-        "name": "KAB. DEMAK"
+        "name": "KAB. DEMAK",
+        "latitude": 1.369205,
+        "longitude": 108.426858
     },
     {
         "id": "3322",
         "provinceId": "33",
-        "name": "KAB. SEMARANG"
+        "name": "KAB. SEMARANG",
+        "latitude": -9.64289,
+        "longitude": 114.169345
     },
     {
         "id": "3323",
         "provinceId": "33",
-        "name": "KAB. TEMANGGUNG"
+        "name": "KAB. TEMANGGUNG",
+        "latitude": -3.039178,
+        "longitude": 121.902755
     },
     {
         "id": "3324",
         "provinceId": "33",
-        "name": "KAB. KENDAL"
+        "name": "KAB. KENDAL",
+        "latitude": -3.281308,
+        "longitude": 119.671118
     },
     {
         "id": "3325",
         "provinceId": "33",
-        "name": "KAB. BATANG"
+        "name": "KAB. BATANG",
+        "latitude": 4.87299,
+        "longitude": 104.960751
     },
     {
         "id": "3326",
         "provinceId": "33",
-        "name": "KAB. PEKALONGAN"
+        "name": "KAB. PEKALONGAN",
+        "latitude": -3.408057,
+        "longitude": 131.31372
     },
     {
         "id": "3327",
         "provinceId": "33",
-        "name": "KAB. PEMALANG"
+        "name": "KAB. PEMALANG",
+        "latitude": 1.070311,
+        "longitude": 100.887955
     },
     {
         "id": "3328",
         "provinceId": "33",
-        "name": "KAB. TEGAL"
+        "name": "KAB. TEGAL",
+        "latitude": 4.772901,
+        "longitude": 138.075282
     },
     {
         "id": "3329",
         "provinceId": "33",
-        "name": "KAB. BREBES"
+        "name": "KAB. BREBES",
+        "latitude": 0.692809,
+        "longitude": 139.271252
     },
     {
         "id": "3371",
         "provinceId": "33",
-        "name": "KOTA MAGELANG"
+        "name": "KOTA MAGELANG",
+        "latitude": 5.492717,
+        "longitude": 116.017394
     },
     {
         "id": "3372",
         "provinceId": "33",
-        "name": "KOTA SURAKARTA"
+        "name": "KOTA SURAKARTA",
+        "latitude": -5.318312,
+        "longitude": 124.605339
     },
     {
         "id": "3373",
         "provinceId": "33",
-        "name": "KOTA SALATIGA"
+        "name": "KOTA SALATIGA",
+        "latitude": -1.207226,
+        "longitude": 111.183361
     },
     {
         "id": "3374",
         "provinceId": "33",
-        "name": "KOTA SEMARANG"
+        "name": "KOTA SEMARANG",
+        "latitude": -3.486317,
+        "longitude": 113.21717
     },
     {
         "id": "3375",
         "provinceId": "33",
-        "name": "KOTA PEKALONGAN"
+        "name": "KOTA PEKALONGAN",
+        "latitude": -0.5144,
+        "longitude": 130.517752
     },
     {
         "id": "3376",
         "provinceId": "33",
-        "name": "KOTA TEGAL"
+        "name": "KOTA TEGAL",
+        "latitude": -3.612111,
+        "longitude": 139.287488
     },
     {
         "id": "3401",
         "provinceId": "34",
-        "name": "KAB. KULON PROGO"
+        "name": "KAB. KULON PROGO",
+        "latitude": -7.397779,
+        "longitude": 97.658771
     },
     {
         "id": "3402",
         "provinceId": "34",
-        "name": "KAB. BANTUL"
+        "name": "KAB. BANTUL",
+        "latitude": 3.318658,
+        "longitude": 116.466719
     },
     {
         "id": "3403",
         "provinceId": "34",
-        "name": "KAB. GUNUNGKIDUL"
+        "name": "KAB. GUNUNGKIDUL",
+        "latitude": 1.29343,
+        "longitude": 113.917049
     },
     {
         "id": "3404",
         "provinceId": "34",
-        "name": "KAB. SLEMAN"
+        "name": "KAB. SLEMAN",
+        "latitude": -7.106956,
+        "longitude": 96.616275
     },
     {
         "id": "3471",
         "provinceId": "34",
-        "name": "KOTA YOGYAKARTA"
+        "name": "KOTA YOGYAKARTA",
+        "latitude": -1.912833,
+        "longitude": 127.814648
     },
     {
         "id": "3501",
         "provinceId": "35",
-        "name": "KAB. PACITAN"
+        "name": "KAB. PACITAN",
+        "latitude": -9.07579,
+        "longitude": 101.282711
     },
     {
         "id": "3502",
         "provinceId": "35",
-        "name": "KAB. PONOROGO"
+        "name": "KAB. PONOROGO",
+        "latitude": -8.117447,
+        "longitude": 133.95129
     },
     {
         "id": "3503",
         "provinceId": "35",
-        "name": "KAB. TRENGGALEK"
+        "name": "KAB. TRENGGALEK",
+        "latitude": -9.883513,
+        "longitude": 134.460932
     },
     {
         "id": "3504",
         "provinceId": "35",
-        "name": "KAB. TULUNGAGUNG"
+        "name": "KAB. TULUNGAGUNG",
+        "latitude": -8.823298,
+        "longitude": 102.20415
     },
     {
         "id": "3505",
         "provinceId": "35",
-        "name": "KAB. BLITAR"
+        "name": "KAB. BLITAR",
+        "latitude": -3.460968,
+        "longitude": 124.381404
     },
     {
         "id": "3506",
         "provinceId": "35",
-        "name": "KAB. KEDIRI"
+        "name": "KAB. KEDIRI",
+        "latitude": -8.832232,
+        "longitude": 133.760718
     },
     {
         "id": "3507",
         "provinceId": "35",
-        "name": "KAB. MALANG"
+        "name": "KAB. MALANG",
+        "latitude": 4.346433,
+        "longitude": 122.130753
     },
     {
         "id": "3508",
         "provinceId": "35",
-        "name": "KAB. LUMAJANG"
+        "name": "KAB. LUMAJANG",
+        "latitude": 5.363683,
+        "longitude": 122.000697
     },
     {
         "id": "3509",
         "provinceId": "35",
-        "name": "KAB. JEMBER"
+        "name": "KAB. JEMBER",
+        "latitude": 2.753155,
+        "longitude": 140.404668
     },
     {
         "id": "3510",
         "provinceId": "35",
-        "name": "KAB. BANYUWANGI"
+        "name": "KAB. BANYUWANGI",
+        "latitude": 5.265598,
+        "longitude": 98.982608
     },
     {
         "id": "3511",
         "provinceId": "35",
-        "name": "KAB. BONDOWOSO"
+        "name": "KAB. BONDOWOSO",
+        "latitude": 2.416244,
+        "longitude": 101.914489
     },
     {
         "id": "3512",
         "provinceId": "35",
-        "name": "KAB. SITUBONDO"
+        "name": "KAB. SITUBONDO",
+        "latitude": -1.910629,
+        "longitude": 115.43388
     },
     {
         "id": "3513",
         "provinceId": "35",
-        "name": "KAB. PROBOLINGGO"
+        "name": "KAB. PROBOLINGGO",
+        "latitude": 4.189497,
+        "longitude": 95.420113
     },
     {
         "id": "3514",
         "provinceId": "35",
-        "name": "KAB. PASURUAN"
+        "name": "KAB. PASURUAN",
+        "latitude": -7.310341,
+        "longitude": 103.991067
     },
     {
         "id": "3515",
         "provinceId": "35",
-        "name": "KAB. SIDOARJO"
+        "name": "KAB. SIDOARJO",
+        "latitude": 3.272021,
+        "longitude": 100.417531
     },
     {
         "id": "3516",
         "provinceId": "35",
-        "name": "KAB. MOJOKERTO"
+        "name": "KAB. MOJOKERTO",
+        "latitude": -4.515089,
+        "longitude": 103.26436
     },
     {
         "id": "3517",
         "provinceId": "35",
-        "name": "KAB. JOMBANG"
+        "name": "KAB. JOMBANG",
+        "latitude": -7.595921,
+        "longitude": 110.452709
     },
     {
         "id": "3518",
         "provinceId": "35",
-        "name": "KAB. NGANJUK"
+        "name": "KAB. NGANJUK",
+        "latitude": 2.373064,
+        "longitude": 127.347564
     },
     {
         "id": "3519",
         "provinceId": "35",
-        "name": "KAB. MADIUN"
+        "name": "KAB. MADIUN",
+        "latitude": 1.697127,
+        "longitude": 108.124813
     },
     {
         "id": "3520",
         "provinceId": "35",
-        "name": "KAB. MAGETAN"
+        "name": "KAB. MAGETAN",
+        "latitude": -1.411802,
+        "longitude": 101.956484
     },
     {
         "id": "3521",
         "provinceId": "35",
-        "name": "KAB. NGAWI"
+        "name": "KAB. NGAWI",
+        "latitude": -6.859965,
+        "longitude": 119.974692
     },
     {
         "id": "3522",
         "provinceId": "35",
-        "name": "KAB. BOJONEGORO"
+        "name": "KAB. BOJONEGORO",
+        "latitude": -1.77604,
+        "longitude": 96.255934
     },
     {
         "id": "3523",
         "provinceId": "35",
-        "name": "KAB. TUBAN"
+        "name": "KAB. TUBAN",
+        "latitude": 4.250259,
+        "longitude": 111.877191
     },
     {
         "id": "3524",
         "provinceId": "35",
-        "name": "KAB. LAMONGAN"
+        "name": "KAB. LAMONGAN",
+        "latitude": -1.28691,
+        "longitude": 117.0582
     },
     {
         "id": "3525",
         "provinceId": "35",
-        "name": "KAB. GRESIK"
+        "name": "KAB. GRESIK",
+        "latitude": -4.949054,
+        "longitude": 99.942149
     },
     {
         "id": "3526",
         "provinceId": "35",
-        "name": "KAB. BANGKALAN"
+        "name": "KAB. BANGKALAN",
+        "latitude": -4.656468,
+        "longitude": 139.078245
     },
     {
         "id": "3527",
         "provinceId": "35",
-        "name": "KAB. SAMPANG"
+        "name": "KAB. SAMPANG",
+        "latitude": -2.424562,
+        "longitude": 126.581738
     },
     {
         "id": "3528",
         "provinceId": "35",
-        "name": "KAB. PAMEKASAN"
+        "name": "KAB. PAMEKASAN",
+        "latitude": -1.542133,
+        "longitude": 137.681412
     },
     {
         "id": "3529",
         "provinceId": "35",
-        "name": "KAB. SUMENEP"
+        "name": "KAB. SUMENEP",
+        "latitude": 3.787239,
+        "longitude": 127.100193
     },
     {
         "id": "3571",
         "provinceId": "35",
-        "name": "KOTA KEDIRI"
+        "name": "KOTA KEDIRI",
+        "latitude": -4.165462,
+        "longitude": 113.709223
     },
     {
         "id": "3572",
         "provinceId": "35",
-        "name": "KOTA BLITAR"
+        "name": "KOTA BLITAR",
+        "latitude": -6.745898,
+        "longitude": 134.329056
     },
     {
         "id": "3573",
         "provinceId": "35",
-        "name": "KOTA MALANG"
+        "name": "KOTA MALANG",
+        "latitude": 3.146854,
+        "longitude": 121.909137
     },
     {
         "id": "3574",
         "provinceId": "35",
-        "name": "KOTA PROBOLINGGO"
+        "name": "KOTA PROBOLINGGO",
+        "latitude": -7.207136,
+        "longitude": 113.541073
     },
     {
         "id": "3575",
         "provinceId": "35",
-        "name": "KOTA PASURUAN"
+        "name": "KOTA PASURUAN",
+        "latitude": -6.318803,
+        "longitude": 108.10247
     },
     {
         "id": "3576",
         "provinceId": "35",
-        "name": "KOTA MOJOKERTO"
+        "name": "KOTA MOJOKERTO",
+        "latitude": 5.84465,
+        "longitude": 97.956319
     },
     {
         "id": "3577",
         "provinceId": "35",
-        "name": "KOTA MADIUN"
+        "name": "KOTA MADIUN",
+        "latitude": 5.654498,
+        "longitude": 95.843674
     },
     {
         "id": "3578",
         "provinceId": "35",
-        "name": "KOTA SURABAYA"
+        "name": "KOTA SURABAYA",
+        "latitude": 3.08931,
+        "longitude": 96.670412
     },
     {
         "id": "3579",
         "provinceId": "35",
-        "name": "KOTA BATU"
+        "name": "KOTA BATU",
+        "latitude": -3.896528,
+        "longitude": 117.462397
     },
     {
         "id": "3601",
         "provinceId": "36",
-        "name": "KAB. PANDEGLANG"
+        "name": "KAB. PANDEGLANG",
+        "latitude": 2.144961,
+        "longitude": 130.755413
     },
     {
         "id": "3602",
         "provinceId": "36",
-        "name": "KAB. LEBAK"
+        "name": "KAB. LEBAK",
+        "latitude": 4.122843,
+        "longitude": 137.783411
     },
     {
         "id": "3603",
         "provinceId": "36",
-        "name": "KAB. TANGERANG"
+        "name": "KAB. TANGERANG",
+        "latitude": 5.695373,
+        "longitude": 98.03064
     },
     {
         "id": "3604",
         "provinceId": "36",
-        "name": "KAB. SERANG"
+        "name": "KAB. SERANG",
+        "latitude": 5.45729,
+        "longitude": 110.664934
     },
     {
         "id": "3671",
         "provinceId": "36",
-        "name": "KOTA TANGERANG"
+        "name": "KOTA TANGERANG",
+        "latitude": -2.125337,
+        "longitude": 100.738348
     },
     {
         "id": "3672",
         "provinceId": "36",
-        "name": "KOTA CILEGON"
+        "name": "KOTA CILEGON",
+        "latitude": 5.462082,
+        "longitude": 99.937441
     },
     {
         "id": "3673",
         "provinceId": "36",
-        "name": "KOTA SERANG"
+        "name": "KOTA SERANG",
+        "latitude": -5.962262,
+        "longitude": 132.86654
     },
     {
         "id": "3674",
         "provinceId": "36",
-        "name": "KOTA TANGERANG SELATAN"
+        "name": "KOTA TANGERANG SELATAN",
+        "latitude": -2.161554,
+        "longitude": 129.211821
     },
     {
         "id": "5101",
         "provinceId": "51",
-        "name": "KAB. JEMBRANA"
+        "name": "KAB. JEMBRANA",
+        "latitude": -5.486187,
+        "longitude": 136.867603
     },
     {
         "id": "5102",
         "provinceId": "51",
-        "name": "KAB. TABANAN"
+        "name": "KAB. TABANAN",
+        "latitude": -8.794011,
+        "longitude": 134.208774
     },
     {
         "id": "5103",
         "provinceId": "51",
-        "name": "KAB. BADUNG"
+        "name": "KAB. BADUNG",
+        "latitude": -6.548304,
+        "longitude": 132.182225
     },
     {
         "id": "5104",
         "provinceId": "51",
-        "name": "KAB. GIANYAR"
+        "name": "KAB. GIANYAR",
+        "latitude": -9.134974,
+        "longitude": 133.748673
     },
     {
         "id": "5105",
         "provinceId": "51",
-        "name": "KAB. KLUNGKUNG"
+        "name": "KAB. KLUNGKUNG",
+        "latitude": -8.398493,
+        "longitude": 100.289495
     },
     {
         "id": "5106",
         "provinceId": "51",
-        "name": "KAB. BANGLI"
+        "name": "KAB. BANGLI",
+        "latitude": -0.973401,
+        "longitude": 106.186446
     },
     {
         "id": "5107",
         "provinceId": "51",
-        "name": "KAB. KARANGASEM"
+        "name": "KAB. KARANGASEM",
+        "latitude": 5.574802,
+        "longitude": 120.809855
     },
     {
         "id": "5108",
         "provinceId": "51",
-        "name": "KAB. BULELENG"
+        "name": "KAB. BULELENG",
+        "latitude": 4.174398,
+        "longitude": 95.385791
     },
     {
         "id": "5171",
         "provinceId": "51",
-        "name": "KOTA DENPASAR"
+        "name": "KOTA DENPASAR",
+        "latitude": -0.571826,
+        "longitude": 120.341242
     },
     {
         "id": "5201",
         "provinceId": "52",
-        "name": "KAB. LOMBOK BARAT"
+        "name": "KAB. LOMBOK BARAT",
+        "latitude": -9.29018,
+        "longitude": 101.077844
     },
     {
         "id": "5202",
         "provinceId": "52",
-        "name": "KAB. LOMBOK TENGAH"
+        "name": "KAB. LOMBOK TENGAH",
+        "latitude": -1.313927,
+        "longitude": 119.077285
     },
     {
         "id": "5203",
         "provinceId": "52",
-        "name": "KAB. LOMBOK TIMUR"
+        "name": "KAB. LOMBOK TIMUR",
+        "latitude": -9.529446,
+        "longitude": 103.479971
     },
     {
         "id": "5204",
         "provinceId": "52",
-        "name": "KAB. SUMBAWA"
+        "name": "KAB. SUMBAWA",
+        "latitude": -5.651419,
+        "longitude": 97.237261
     },
     {
         "id": "5205",
         "provinceId": "52",
-        "name": "KAB. DOMPU"
+        "name": "KAB. DOMPU",
+        "latitude": 3.556067,
+        "longitude": 115.771398
     },
     {
         "id": "5206",
         "provinceId": "52",
-        "name": "KAB. BIMA"
+        "name": "KAB. BIMA",
+        "latitude": -7.289177,
+        "longitude": 115.816113
     },
     {
         "id": "5207",
         "provinceId": "52",
-        "name": "KAB. SUMBAWA BARAT"
+        "name": "KAB. SUMBAWA BARAT",
+        "latitude": -8.708744,
+        "longitude": 106.557943
     },
     {
         "id": "5208",
         "provinceId": "52",
-        "name": "KAB. LOMBOK UTARA"
+        "name": "KAB. LOMBOK UTARA",
+        "latitude": -8.034831,
+        "longitude": 139.09443
     },
     {
         "id": "5271",
         "provinceId": "52",
-        "name": "KOTA MATARAM"
+        "name": "KOTA MATARAM",
+        "latitude": -8.019599,
+        "longitude": 97.20632
     },
     {
         "id": "5272",
         "provinceId": "52",
-        "name": "KOTA BIMA"
+        "name": "KOTA BIMA",
+        "latitude": 3.752117,
+        "longitude": 110.463773
     },
     {
         "id": "5301",
         "provinceId": "53",
-        "name": "KAB. KUPANG"
+        "name": "KAB. KUPANG",
+        "latitude": -7.459028,
+        "longitude": 136.67844
     },
     {
         "id": "5302",
         "provinceId": "53",
-        "name": "KAB TIMOR TENGAH SELATAN"
+        "name": "KAB TIMOR TENGAH SELATAN",
+        "latitude": 4.660691,
+        "longitude": 132.684239
     },
     {
         "id": "5303",
         "provinceId": "53",
-        "name": "KAB. TIMOR TENGAH UTARA"
+        "name": "KAB. TIMOR TENGAH UTARA",
+        "latitude": -3.187202,
+        "longitude": 99.602394
     },
     {
         "id": "5304",
         "provinceId": "53",
-        "name": "KAB. BELU"
+        "name": "KAB. BELU",
+        "latitude": -7.265579,
+        "longitude": 121.216019
     },
     {
         "id": "5305",
         "provinceId": "53",
-        "name": "KAB. ALOR"
+        "name": "KAB. ALOR",
+        "latitude": 3.020881,
+        "longitude": 136.643668
     },
     {
         "id": "5306",
         "provinceId": "53",
-        "name": "KAB. FLORES TIMUR"
+        "name": "KAB. FLORES TIMUR",
+        "latitude": -1.340257,
+        "longitude": 131.512907
     },
     {
         "id": "5307",
         "provinceId": "53",
-        "name": "KAB. SIKKA"
+        "name": "KAB. SIKKA",
+        "latitude": -2.813875,
+        "longitude": 108.663109
     },
     {
         "id": "5308",
         "provinceId": "53",
-        "name": "KAB. ENDE"
+        "name": "KAB. ENDE",
+        "latitude": -0.970912,
+        "longitude": 121.97768
     },
     {
         "id": "5309",
         "provinceId": "53",
-        "name": "KAB. NGADA"
+        "name": "KAB. NGADA",
+        "latitude": 4.807189,
+        "longitude": 130.017561
     },
     {
         "id": "5310",
         "provinceId": "53",
-        "name": "KAB. MANGGARAI"
+        "name": "KAB. MANGGARAI",
+        "latitude": 1.688549,
+        "longitude": 113.216673
     },
     {
         "id": "5311",
         "provinceId": "53",
-        "name": "KAB. SUMBA TIMUR"
+        "name": "KAB. SUMBA TIMUR",
+        "latitude": 1.13288,
+        "longitude": 122.584942
     },
     {
         "id": "5312",
         "provinceId": "53",
-        "name": "KAB. SUMBA BARAT"
+        "name": "KAB. SUMBA BARAT",
+        "latitude": -9.336461,
+        "longitude": 121.908044
     },
     {
         "id": "5313",
         "provinceId": "53",
-        "name": "KAB. LEMBATA"
+        "name": "KAB. LEMBATA",
+        "latitude": -4.002283,
+        "longitude": 96.288753
     },
     {
         "id": "5314",
         "provinceId": "53",
-        "name": "KAB. ROTE NDAO"
+        "name": "KAB. ROTE NDAO",
+        "latitude": -9.264607,
+        "longitude": 132.170363
     },
     {
         "id": "5315",
         "provinceId": "53",
-        "name": "KAB. MANGGARAI BARAT"
+        "name": "KAB. MANGGARAI BARAT",
+        "latitude": -4.997446,
+        "longitude": 123.715428
     },
     {
         "id": "5316",
         "provinceId": "53",
-        "name": "KAB. NAGEKEO"
+        "name": "KAB. NAGEKEO",
+        "latitude": 5.409202,
+        "longitude": 125.814902
     },
     {
         "id": "5317",
         "provinceId": "53",
-        "name": "KAB. SUMBA TENGAH"
+        "name": "KAB. SUMBA TENGAH",
+        "latitude": -3.484466,
+        "longitude": 95.389425
     },
     {
         "id": "5318",
         "provinceId": "53",
-        "name": "KAB. SUMBA BARAT DAYA"
+        "name": "KAB. SUMBA BARAT DAYA",
+        "latitude": -1.41561,
+        "longitude": 137.549652
     },
     {
         "id": "5319",
         "provinceId": "53",
-        "name": "KAB. MANGGARAI TIMUR"
+        "name": "KAB. MANGGARAI TIMUR",
+        "latitude": 4.081203,
+        "longitude": 113.416991
     },
     {
         "id": "5320",
         "provinceId": "53",
-        "name": "KAB. SABU RAIJUA"
+        "name": "KAB. SABU RAIJUA",
+        "latitude": -5.801264,
+        "longitude": 102.193434
     },
     {
         "id": "5321",
         "provinceId": "53",
-        "name": "KAB. MALAKA"
+        "name": "KAB. MALAKA",
+        "latitude": 5.266831,
+        "longitude": 116.967382
     },
     {
         "id": "5371",
         "provinceId": "53",
-        "name": "KOTA KUPANG"
+        "name": "KOTA KUPANG",
+        "latitude": -8.359804,
+        "longitude": 95.492355
     },
     {
         "id": "6101",
         "provinceId": "61",
-        "name": "KAB. SAMBAS"
+        "name": "KAB. SAMBAS",
+        "latitude": 2.712363,
+        "longitude": 127.526762
     },
     {
         "id": "6102",
         "provinceId": "61",
-        "name": "KAB. MEMPAWAH"
+        "name": "KAB. MEMPAWAH",
+        "latitude": 3.604825,
+        "longitude": 125.673592
     },
     {
         "id": "6103",
         "provinceId": "61",
-        "name": "KAB. SANGGAU"
+        "name": "KAB. SANGGAU",
+        "latitude": 5.355541,
+        "longitude": 135.968548
     },
     {
         "id": "6104",
         "provinceId": "61",
-        "name": "KAB. KETAPANG"
+        "name": "KAB. KETAPANG",
+        "latitude": 5.194398,
+        "longitude": 135.951302
     },
     {
         "id": "6105",
         "provinceId": "61",
-        "name": "KAB. SINTANG"
+        "name": "KAB. SINTANG",
+        "latitude": -5.033774,
+        "longitude": 118.745426
     },
     {
         "id": "6106",
         "provinceId": "61",
-        "name": "KAB. KAPUAS HULU"
+        "name": "KAB. KAPUAS HULU",
+        "latitude": -2.631286,
+        "longitude": 99.572755
     },
     {
         "id": "6107",
         "provinceId": "61",
-        "name": "KAB. BENGKAYANG"
+        "name": "KAB. BENGKAYANG",
+        "latitude": -2.452873,
+        "longitude": 132.078242
     },
     {
         "id": "6108",
         "provinceId": "61",
-        "name": "KAB. LANDAK"
+        "name": "KAB. LANDAK",
+        "latitude": 2.81202,
+        "longitude": 133.755237
     },
     {
         "id": "6109",
         "provinceId": "61",
-        "name": "KAB. SEKADAU"
+        "name": "KAB. SEKADAU",
+        "latitude": -6.390899,
+        "longitude": 123.140192
     },
     {
         "id": "6110",
         "provinceId": "61",
-        "name": "KAB. MELAWI"
+        "name": "KAB. MELAWI",
+        "latitude": 4.841393,
+        "longitude": 124.889384
     },
     {
         "id": "6111",
         "provinceId": "61",
-        "name": "KAB. KAYONG UTARA"
+        "name": "KAB. KAYONG UTARA",
+        "latitude": -6.015966,
+        "longitude": 133.705085
     },
     {
         "id": "6112",
         "provinceId": "61",
-        "name": "KAB. KUBU RAYA"
+        "name": "KAB. KUBU RAYA",
+        "latitude": 2.34073,
+        "longitude": 109.210985
     },
     {
         "id": "6171",
         "provinceId": "61",
-        "name": "KOTA PONTIANAK"
+        "name": "KOTA PONTIANAK",
+        "latitude": 3.574073,
+        "longitude": 114.040247
     },
     {
         "id": "6172",
         "provinceId": "61",
-        "name": "KOTA SINGKAWANG"
+        "name": "KOTA SINGKAWANG",
+        "latitude": 0.267097,
+        "longitude": 134.882496
     },
     {
         "id": "6201",
         "provinceId": "62",
-        "name": "KAB. KOTAWARINGIN BARAT"
+        "name": "KAB. KOTAWARINGIN BARAT",
+        "latitude": -8.897977,
+        "longitude": 116.834449
     },
     {
         "id": "6202",
         "provinceId": "62",
-        "name": "KAB. KOTAWARINGIN TIMUR"
+        "name": "KAB. KOTAWARINGIN TIMUR",
+        "latitude": -2.712031,
+        "longitude": 120.212492
     },
     {
         "id": "6203",
         "provinceId": "62",
-        "name": "KAB. KAPUAS"
+        "name": "KAB. KAPUAS",
+        "latitude": -9.549362,
+        "longitude": 116.103992
     },
     {
         "id": "6204",
         "provinceId": "62",
-        "name": "KAB. BARITO SELATAN"
+        "name": "KAB. BARITO SELATAN",
+        "latitude": 3.279464,
+        "longitude": 131.787174
     },
     {
         "id": "6205",
         "provinceId": "62",
-        "name": "KAB. BARITO UTARA"
+        "name": "KAB. BARITO UTARA",
+        "latitude": 3.408621,
+        "longitude": 121.307554
     },
     {
         "id": "6206",
         "provinceId": "62",
-        "name": "KAB. KATINGAN"
+        "name": "KAB. KATINGAN",
+        "latitude": -0.597211,
+        "longitude": 129.883004
     },
     {
         "id": "6207",
         "provinceId": "62",
-        "name": "KAB. SERUYAN"
+        "name": "KAB. SERUYAN",
+        "latitude": -5.34412,
+        "longitude": 118.264962
     },
     {
         "id": "6208",
         "provinceId": "62",
-        "name": "KAB. SUKAMARA"
+        "name": "KAB. SUKAMARA",
+        "latitude": -0.271474,
+        "longitude": 109.500342
     },
     {
         "id": "6209",
         "provinceId": "62",
-        "name": "KAB. LAMANDAU"
+        "name": "KAB. LAMANDAU",
+        "latitude": 1.360942,
+        "longitude": 98.225117
     },
     {
         "id": "6210",
         "provinceId": "62",
-        "name": "KAB. GUNUNG MAS"
+        "name": "KAB. GUNUNG MAS",
+        "latitude": -2.053129,
+        "longitude": 106.963205
     },
     {
         "id": "6211",
         "provinceId": "62",
-        "name": "KAB. PULANG PISAU"
+        "name": "KAB. PULANG PISAU",
+        "latitude": 0.299182,
+        "longitude": 133.342665
     },
     {
         "id": "6212",
         "provinceId": "62",
-        "name": "KAB. MURUNG RAYA"
+        "name": "KAB. MURUNG RAYA",
+        "latitude": -9.962457,
+        "longitude": 99.004958
     },
     {
         "id": "6213",
         "provinceId": "62",
-        "name": "KAB. BARITO TIMUR"
+        "name": "KAB. BARITO TIMUR",
+        "latitude": 4.694394,
+        "longitude": 95.794265
     },
     {
         "id": "6271",
         "provinceId": "62",
-        "name": "KOTA PALANGKARAYA"
+        "name": "KOTA PALANGKARAYA",
+        "latitude": 3.886411,
+        "longitude": 108.663574
     },
     {
         "id": "6301",
         "provinceId": "63",
-        "name": "KAB. TANAH LAUT"
+        "name": "KAB. TANAH LAUT",
+        "latitude": 4.374762,
+        "longitude": 125.88974
     },
     {
         "id": "6302",
         "provinceId": "63",
-        "name": "KAB. KOTABARU"
+        "name": "KAB. KOTABARU",
+        "latitude": -1.964547,
+        "longitude": 111.442737
     },
     {
         "id": "6303",
         "provinceId": "63",
-        "name": "KAB. BANJAR"
+        "name": "KAB. BANJAR",
+        "latitude": -4.921735,
+        "longitude": 136.26626
     },
     {
         "id": "6304",
         "provinceId": "63",
-        "name": "KAB. BARITO KUALA"
+        "name": "KAB. BARITO KUALA",
+        "latitude": 5.976228,
+        "longitude": 101.860608
     },
     {
         "id": "6305",
         "provinceId": "63",
-        "name": "KAB. TAPIN"
+        "name": "KAB. TAPIN",
+        "latitude": 1.186597,
+        "longitude": 103.512421
     },
     {
         "id": "6306",
         "provinceId": "63",
-        "name": "KAB. HULU SUNGAI SELATAN"
+        "name": "KAB. HULU SUNGAI SELATAN",
+        "latitude": 3.923406,
+        "longitude": 136.603982
     },
     {
         "id": "6307",
         "provinceId": "63",
-        "name": "KAB. HULU SUNGAI TENGAH"
+        "name": "KAB. HULU SUNGAI TENGAH",
+        "latitude": -9.986753,
+        "longitude": 117.306663
     },
     {
         "id": "6308",
         "provinceId": "63",
-        "name": "KAB. HULU SUNGAI UTARA"
+        "name": "KAB. HULU SUNGAI UTARA",
+        "latitude": -2.947465,
+        "longitude": 127.204961
     },
     {
         "id": "6309",
         "provinceId": "63",
-        "name": "KAB. TABALONG"
+        "name": "KAB. TABALONG",
+        "latitude": 3.512604,
+        "longitude": 102.042309
     },
     {
         "id": "6310",
         "provinceId": "63",
-        "name": "KAB. TANAH BUMBU"
+        "name": "KAB. TANAH BUMBU",
+        "latitude": -1.383606,
+        "longitude": 127.162157
     },
     {
         "id": "6311",
         "provinceId": "63",
-        "name": "KAB. BALANGAN"
+        "name": "KAB. BALANGAN",
+        "latitude": -4.649366,
+        "longitude": 117.25478
     },
     {
         "id": "6371",
         "provinceId": "63",
-        "name": "KOTA BANJARMASIN"
+        "name": "KOTA BANJARMASIN",
+        "latitude": -4.114435,
+        "longitude": 118.738085
     },
     {
         "id": "6372",
         "provinceId": "63",
-        "name": "KOTA BANJARBARU"
+        "name": "KOTA BANJARBARU",
+        "latitude": -1.924581,
+        "longitude": 138.198594
     },
     {
         "id": "6401",
         "provinceId": "64",
-        "name": "KAB. PASER"
+        "name": "KAB. PASER",
+        "latitude": -3.684269,
+        "longitude": 117.808284
     },
     {
         "id": "6402",
         "provinceId": "64",
-        "name": "KAB. KUTAI KARTANEGARA"
+        "name": "KAB. KUTAI KARTANEGARA",
+        "latitude": 2.020469,
+        "longitude": 118.392368
     },
     {
         "id": "6403",
         "provinceId": "64",
-        "name": "KAB. BERAU"
+        "name": "KAB. BERAU",
+        "latitude": -2.965508,
+        "longitude": 108.651137
     },
     {
         "id": "6407",
         "provinceId": "64",
-        "name": "KAB. KUTAI BARAT"
+        "name": "KAB. KUTAI BARAT",
+        "latitude": 0.11536,
+        "longitude": 112.231024
     },
     {
         "id": "6408",
         "provinceId": "64",
-        "name": "KAB. KUTAI TIMUR"
+        "name": "KAB. KUTAI TIMUR",
+        "latitude": 0.214895,
+        "longitude": 134.524549
     },
     {
         "id": "6409",
         "provinceId": "64",
-        "name": "KAB. PENAJAM PASER UTARA"
+        "name": "KAB. PENAJAM PASER UTARA",
+        "latitude": 5.105622,
+        "longitude": 129.202414
     },
     {
         "id": "6411",
         "provinceId": "64",
-        "name": "KAB. MAHAKAM ULU"
+        "name": "KAB. MAHAKAM ULU",
+        "latitude": -8.122803,
+        "longitude": 126.622139
     },
     {
         "id": "6471",
         "provinceId": "64",
-        "name": "KOTA BALIKPAPAN"
+        "name": "KOTA BALIKPAPAN",
+        "latitude": -5.258321,
+        "longitude": 98.705784
     },
     {
         "id": "6472",
         "provinceId": "64",
-        "name": "KOTA SAMARINDA"
+        "name": "KOTA SAMARINDA",
+        "latitude": -4.069941,
+        "longitude": 107.595647
     },
     {
         "id": "6474",
         "provinceId": "64",
-        "name": "KOTA BONTANG"
+        "name": "KOTA BONTANG",
+        "latitude": 3.399277,
+        "longitude": 124.222132
     },
     {
         "id": "6501",
         "provinceId": "65",
-        "name": "KAB. BULUNGAN"
+        "name": "KAB. BULUNGAN",
+        "latitude": -6.482293,
+        "longitude": 99.401729
     },
     {
         "id": "6502",
         "provinceId": "65",
-        "name": "KAB. MALINAU"
+        "name": "KAB. MALINAU",
+        "latitude": 0.228656,
+        "longitude": 129.987138
     },
     {
         "id": "6503",
         "provinceId": "65",
-        "name": "KAB. NUNUKAN"
+        "name": "KAB. NUNUKAN",
+        "latitude": 4.143723,
+        "longitude": 128.05479
     },
     {
         "id": "6504",
         "provinceId": "65",
-        "name": "KAB. TANA TIDUNG"
+        "name": "KAB. TANA TIDUNG",
+        "latitude": -4.226623,
+        "longitude": 113.317999
     },
     {
         "id": "6571",
         "provinceId": "65",
-        "name": "KOTA TARAKAN"
+        "name": "KOTA TARAKAN",
+        "latitude": -1.300858,
+        "longitude": 135.406017
     },
     {
         "id": "7101",
         "provinceId": "71",
-        "name": "KAB. BOLAANG MONGONDOW"
+        "name": "KAB. BOLAANG MONGONDOW",
+        "latitude": -9.980094,
+        "longitude": 100.84331
     },
     {
         "id": "7102",
         "provinceId": "71",
-        "name": "KAB. MINAHASA"
+        "name": "KAB. MINAHASA",
+        "latitude": -9.937141,
+        "longitude": 121.512872
     },
     {
         "id": "7103",
         "provinceId": "71",
-        "name": "KAB. KEPULAUAN SANGIHE"
+        "name": "KAB. KEPULAUAN SANGIHE",
+        "latitude": 5.953981,
+        "longitude": 118.506376
     },
     {
         "id": "7104",
         "provinceId": "71",
-        "name": "KAB. KEPULAUAN TALAUD"
+        "name": "KAB. KEPULAUAN TALAUD",
+        "latitude": -8.372584,
+        "longitude": 136.00862
     },
     {
         "id": "7105",
         "provinceId": "71",
-        "name": "KAB. MINAHASA SELATAN"
+        "name": "KAB. MINAHASA SELATAN",
+        "latitude": -5.011507,
+        "longitude": 113.006361
     },
     {
         "id": "7106",
         "provinceId": "71",
-        "name": "KAB. MINAHASA UTARA"
+        "name": "KAB. MINAHASA UTARA",
+        "latitude": -8.036927,
+        "longitude": 107.618697
     },
     {
         "id": "7107",
         "provinceId": "71",
-        "name": "KAB. MINAHASA TENGGARA"
+        "name": "KAB. MINAHASA TENGGARA",
+        "latitude": 3.64232,
+        "longitude": 108.944793
     },
     {
         "id": "7108",
         "provinceId": "71",
-        "name": "KAB. BOLAANG MONGONDOW UTARA"
+        "name": "KAB. BOLAANG MONGONDOW UTARA",
+        "latitude": -3.426071,
+        "longitude": 124.936735
     },
     {
         "id": "7109",
         "provinceId": "71",
-        "name": "KAB. KEP. SIAU TAGULANDANG BIARO"
+        "name": "KAB. KEP. SIAU TAGULANDANG BIARO",
+        "latitude": -2.149164,
+        "longitude": 135.124743
     },
     {
         "id": "7110",
         "provinceId": "71",
-        "name": "KAB. BOLAANG MONGONDOW TIMUR"
+        "name": "KAB. BOLAANG MONGONDOW TIMUR",
+        "latitude": -2.292171,
+        "longitude": 134.532488
     },
     {
         "id": "7111",
         "provinceId": "71",
-        "name": "KAB. BOLAANG MONGONDOW SELATAN"
+        "name": "KAB. BOLAANG MONGONDOW SELATAN",
+        "latitude": -6.961637,
+        "longitude": 108.071576
     },
     {
         "id": "7171",
         "provinceId": "71",
-        "name": "KOTA MANADO"
+        "name": "KOTA MANADO",
+        "latitude": -3.284211,
+        "longitude": 98.974609
     },
     {
         "id": "7172",
         "provinceId": "71",
-        "name": "KOTA BITUNG"
+        "name": "KOTA BITUNG",
+        "latitude": -3.850713,
+        "longitude": 137.32577
     },
     {
         "id": "7173",
         "provinceId": "71",
-        "name": "KOTA TOMOHON"
+        "name": "KOTA TOMOHON",
+        "latitude": -6.199506,
+        "longitude": 105.341761
     },
     {
         "id": "7174",
         "provinceId": "71",
-        "name": "KOTA KOTAMOBAGU"
+        "name": "KOTA KOTAMOBAGU",
+        "latitude": -4.180123,
+        "longitude": 128.723051
     },
     {
         "id": "7201",
         "provinceId": "72",
-        "name": "KAB. BANGGAI"
+        "name": "KAB. BANGGAI",
+        "latitude": -2.939836,
+        "longitude": 133.652554
     },
     {
         "id": "7202",
         "provinceId": "72",
-        "name": "KAB. POSO"
+        "name": "KAB. POSO",
+        "latitude": -7.403094,
+        "longitude": 125.915844
     },
     {
         "id": "7203",
         "provinceId": "72",
-        "name": "KAB. DONGGALA"
+        "name": "KAB. DONGGALA",
+        "latitude": 2.30836,
+        "longitude": 108.593106
     },
     {
         "id": "7204",
         "provinceId": "72",
-        "name": "KAB. TOLI TOLI"
+        "name": "KAB. TOLI TOLI",
+        "latitude": 4.280733,
+        "longitude": 114.415769
     },
     {
         "id": "7205",
         "provinceId": "72",
-        "name": "KAB. BUOL"
+        "name": "KAB. BUOL",
+        "latitude": 2.267599,
+        "longitude": 133.424865
     },
     {
         "id": "7206",
         "provinceId": "72",
-        "name": "KAB. MOROWALI"
+        "name": "KAB. MOROWALI",
+        "latitude": 3.97147,
+        "longitude": 139.546663
     },
     {
         "id": "7207",
         "provinceId": "72",
-        "name": "KAB. BANGGAI KEPULAUAN"
+        "name": "KAB. BANGGAI KEPULAUAN",
+        "latitude": 3.943136,
+        "longitude": 124.346143
     },
     {
         "id": "7208",
         "provinceId": "72",
-        "name": "KAB. PARIGI MOUTONG"
+        "name": "KAB. PARIGI MOUTONG",
+        "latitude": -5.774587,
+        "longitude": 140.339118
     },
     {
         "id": "7209",
         "provinceId": "72",
-        "name": "KAB. TOJO UNA UNA"
+        "name": "KAB. TOJO UNA UNA",
+        "latitude": 5.453127,
+        "longitude": 118.265501
     },
     {
         "id": "7210",
         "provinceId": "72",
-        "name": "KAB. SIGI"
+        "name": "KAB. SIGI",
+        "latitude": -4.850081,
+        "longitude": 124.92754
     },
     {
         "id": "7211",
         "provinceId": "72",
-        "name": "KAB. BANGGAI LAUT"
+        "name": "KAB. BANGGAI LAUT",
+        "latitude": -1.940867,
+        "longitude": 103.576332
     },
     {
         "id": "7212",
         "provinceId": "72",
-        "name": "KAB. MOROWALI UTARA"
+        "name": "KAB. MOROWALI UTARA",
+        "latitude": -0.98308,
+        "longitude": 123.844876
     },
     {
         "id": "7271",
         "provinceId": "72",
-        "name": "KOTA PALU"
+        "name": "KOTA PALU",
+        "latitude": 0.883628,
+        "longitude": 133.697465
     },
     {
         "id": "7301",
         "provinceId": "73",
-        "name": "KAB. KEPULAUAN SELAYAR"
+        "name": "KAB. KEPULAUAN SELAYAR",
+        "latitude": -5.266887,
+        "longitude": 111.261514
     },
     {
         "id": "7302",
         "provinceId": "73",
-        "name": "KAB. BULUKUMBA"
+        "name": "KAB. BULUKUMBA",
+        "latitude": -3.393215,
+        "longitude": 118.415961
     },
     {
         "id": "7303",
         "provinceId": "73",
-        "name": "KAB. BANTAENG"
+        "name": "KAB. BANTAENG",
+        "latitude": -1.731835,
+        "longitude": 109.942467
     },
     {
         "id": "7304",
         "provinceId": "73",
-        "name": "KAB. JENEPONTO"
+        "name": "KAB. JENEPONTO",
+        "latitude": -3.995538,
+        "longitude": 130.351975
     },
     {
         "id": "7305",
         "provinceId": "73",
-        "name": "KAB. TAKALAR"
+        "name": "KAB. TAKALAR",
+        "latitude": 2.506801,
+        "longitude": 112.616984
     },
     {
         "id": "7306",
         "provinceId": "73",
-        "name": "KAB. GOWA"
+        "name": "KAB. GOWA",
+        "latitude": 4.264354,
+        "longitude": 104.992297
     },
     {
         "id": "7307",
         "provinceId": "73",
-        "name": "KAB. SINJAI"
+        "name": "KAB. SINJAI",
+        "latitude": -1.117706,
+        "longitude": 114.683491
     },
     {
         "id": "7308",
         "provinceId": "73",
-        "name": "KAB. BONE"
+        "name": "KAB. BONE",
+        "latitude": -4.812334,
+        "longitude": 119.237731
     },
     {
         "id": "7309",
         "provinceId": "73",
-        "name": "KAB. MAROS"
+        "name": "KAB. MAROS",
+        "latitude": -4.556778,
+        "longitude": 99.779438
     },
     {
         "id": "7310",
         "provinceId": "73",
-        "name": "KAB. PANGKAJENE KEPULAUAN"
+        "name": "KAB. PANGKAJENE KEPULAUAN",
+        "latitude": -2.308031,
+        "longitude": 132.918982
     },
     {
         "id": "7311",
         "provinceId": "73",
-        "name": "KAB. BARRU"
+        "name": "KAB. BARRU",
+        "latitude": 4.36512,
+        "longitude": 117.42019
     },
     {
         "id": "7312",
         "provinceId": "73",
-        "name": "KAB. SOPPENG"
+        "name": "KAB. SOPPENG",
+        "latitude": -3.110496,
+        "longitude": 99.513441
     },
     {
         "id": "7313",
         "provinceId": "73",
-        "name": "KAB. WAJO"
+        "name": "KAB. WAJO",
+        "latitude": 1.485017,
+        "longitude": 108.768113
     },
     {
         "id": "7314",
         "provinceId": "73",
-        "name": "KAB. SIDENRENG RAPPANG"
+        "name": "KAB. SIDENRENG RAPPANG",
+        "latitude": 5.294219,
+        "longitude": 120.641697
     },
     {
         "id": "7315",
         "provinceId": "73",
-        "name": "KAB. PINRANG"
+        "name": "KAB. PINRANG",
+        "latitude": 4.734766,
+        "longitude": 98.478097
     },
     {
         "id": "7316",
         "provinceId": "73",
-        "name": "KAB. ENREKANG"
+        "name": "KAB. ENREKANG",
+        "latitude": 0.44949,
+        "longitude": 128.83432
     },
     {
         "id": "7317",
         "provinceId": "73",
-        "name": "KAB. LUWU"
+        "name": "KAB. LUWU",
+        "latitude": 0.056324,
+        "longitude": 140.449235
     },
     {
         "id": "7318",
         "provinceId": "73",
-        "name": "KAB. TANA TORAJA"
+        "name": "KAB. TANA TORAJA",
+        "latitude": 3.589405,
+        "longitude": 114.60203
     },
     {
         "id": "7322",
         "provinceId": "73",
-        "name": "KAB. LUWU UTARA"
+        "name": "KAB. LUWU UTARA",
+        "latitude": -9.101436,
+        "longitude": 113.845699
     },
     {
         "id": "7324",
         "provinceId": "73",
-        "name": "KAB. LUWU TIMUR"
+        "name": "KAB. LUWU TIMUR",
+        "latitude": 0.128625,
+        "longitude": 99.280751
     },
     {
         "id": "7326",
         "provinceId": "73",
-        "name": "KAB. TORAJA UTARA"
+        "name": "KAB. TORAJA UTARA",
+        "latitude": -7.541346,
+        "longitude": 137.465216
     },
     {
         "id": "7371",
         "provinceId": "73",
-        "name": "KOTA MAKASSAR"
+        "name": "KOTA MAKASSAR",
+        "latitude": -3.591486,
+        "longitude": 96.655282
     },
     {
         "id": "7372",
         "provinceId": "73",
-        "name": "KOTA PARE PARE"
+        "name": "KOTA PARE PARE",
+        "latitude": 0.781405,
+        "longitude": 116.529729
     },
     {
         "id": "7373",
         "provinceId": "73",
-        "name": "KOTA PALOPO"
+        "name": "KOTA PALOPO",
+        "latitude": 5.149647,
+        "longitude": 114.76834
     },
     {
         "id": "7401",
         "provinceId": "74",
-        "name": "KAB. KOLAKA"
+        "name": "KAB. KOLAKA",
+        "latitude": -4.813106,
+        "longitude": 114.047058
     },
     {
         "id": "7402",
         "provinceId": "74",
-        "name": "KAB. KONAWE"
+        "name": "KAB. KONAWE",
+        "latitude": -8.211133,
+        "longitude": 138.181009
     },
     {
         "id": "7403",
         "provinceId": "74",
-        "name": "KAB. MUNA"
+        "name": "KAB. MUNA",
+        "latitude": 0.41973,
+        "longitude": 131.055245
     },
     {
         "id": "7404",
         "provinceId": "74",
-        "name": "KAB. BUTON"
+        "name": "KAB. BUTON",
+        "latitude": -0.854083,
+        "longitude": 103.150916
     },
     {
         "id": "7405",
         "provinceId": "74",
-        "name": "KAB. KONAWE SELATAN"
+        "name": "KAB. KONAWE SELATAN",
+        "latitude": -7.647094,
+        "longitude": 98.353102
     },
     {
         "id": "7406",
         "provinceId": "74",
-        "name": "KAB. BOMBANA"
+        "name": "KAB. BOMBANA",
+        "latitude": 3.34549,
+        "longitude": 118.565967
     },
     {
         "id": "7407",
         "provinceId": "74",
-        "name": "KAB. WAKATOBI"
+        "name": "KAB. WAKATOBI",
+        "latitude": -7.375209,
+        "longitude": 128.618147
     },
     {
         "id": "7408",
         "provinceId": "74",
-        "name": "KAB. KOLAKA UTARA"
+        "name": "KAB. KOLAKA UTARA",
+        "latitude": 1.516797,
+        "longitude": 125.82558
     },
     {
         "id": "7409",
         "provinceId": "74",
-        "name": "KAB. KONAWE UTARA"
+        "name": "KAB. KONAWE UTARA",
+        "latitude": -1.776001,
+        "longitude": 101.387799
     },
     {
         "id": "7410",
         "provinceId": "74",
-        "name": "KAB. BUTON UTARA"
+        "name": "KAB. BUTON UTARA",
+        "latitude": 2.742955,
+        "longitude": 111.608324
     },
     {
         "id": "7411",
         "provinceId": "74",
-        "name": "KAB. KOLAKA TIMUR"
+        "name": "KAB. KOLAKA TIMUR",
+        "latitude": 3.088769,
+        "longitude": 123.471021
     },
     {
         "id": "7412",
         "provinceId": "74",
-        "name": "KAB. KONAWE KEPULAUAN"
+        "name": "KAB. KONAWE KEPULAUAN",
+        "latitude": -7.724267,
+        "longitude": 128.732594
     },
     {
         "id": "7413",
         "provinceId": "74",
-        "name": "KAB. MUNA BARAT"
+        "name": "KAB. MUNA BARAT",
+        "latitude": 0.663431,
+        "longitude": 129.51273
     },
     {
         "id": "7414",
         "provinceId": "74",
-        "name": "KAB. BUTON TENGAH"
+        "name": "KAB. BUTON TENGAH",
+        "latitude": -3.329168,
+        "longitude": 104.731223
     },
     {
         "id": "7415",
         "provinceId": "74",
-        "name": "KAB. BUTON SELATAN"
+        "name": "KAB. BUTON SELATAN",
+        "latitude": 0.251004,
+        "longitude": 132.185607
     },
     {
         "id": "7471",
         "provinceId": "74",
-        "name": "KOTA KENDARI"
+        "name": "KOTA KENDARI",
+        "latitude": 2.488826,
+        "longitude": 136.550978
     },
     {
         "id": "7472",
         "provinceId": "74",
-        "name": "KOTA BAU BAU"
+        "name": "KOTA BAU BAU",
+        "latitude": 1.38553,
+        "longitude": 98.464433
     },
     {
         "id": "7501",
         "provinceId": "75",
-        "name": "KAB. GORONTALO"
+        "name": "KAB. GORONTALO",
+        "latitude": 0.97695,
+        "longitude": 132.057417
     },
     {
         "id": "7502",
         "provinceId": "75",
-        "name": "KAB. BOALEMO"
+        "name": "KAB. BOALEMO",
+        "latitude": -6.102074,
+        "longitude": 119.797176
     },
     {
         "id": "7503",
         "provinceId": "75",
-        "name": "KAB. BONE BOLANGO"
+        "name": "KAB. BONE BOLANGO",
+        "latitude": -4.409366,
+        "longitude": 125.582944
     },
     {
         "id": "7504",
         "provinceId": "75",
-        "name": "KAB. POHUWATO"
+        "name": "KAB. POHUWATO",
+        "latitude": -0.039815,
+        "longitude": 117.749699
     },
     {
         "id": "7505",
         "provinceId": "75",
-        "name": "KAB. GORONTALO UTARA"
+        "name": "KAB. GORONTALO UTARA",
+        "latitude": -6.556254,
+        "longitude": 107.43425
     },
     {
         "id": "7571",
         "provinceId": "75",
-        "name": "KOTA GORONTALO"
+        "name": "KOTA GORONTALO",
+        "latitude": 0.094081,
+        "longitude": 127.161456
     },
     {
         "id": "7601",
         "provinceId": "76",
-        "name": "KAB. PASANGKAYU"
+        "name": "KAB. PASANGKAYU",
+        "latitude": 4.131154,
+        "longitude": 103.022608
     },
     {
         "id": "7602",
         "provinceId": "76",
-        "name": "KAB. MAMUJU"
+        "name": "KAB. MAMUJU",
+        "latitude": 5.43437,
+        "longitude": 109.816882
     },
     {
         "id": "7603",
         "provinceId": "76",
-        "name": "KAB. MAMASA"
+        "name": "KAB. MAMASA",
+        "latitude": 2.619075,
+        "longitude": 123.838191
     },
     {
         "id": "7604",
         "provinceId": "76",
-        "name": "KAB. POLEWALI MANDAR"
+        "name": "KAB. POLEWALI MANDAR",
+        "latitude": -0.855744,
+        "longitude": 124.924043
     },
     {
         "id": "7605",
         "provinceId": "76",
-        "name": "KAB. MAJENE"
+        "name": "KAB. MAJENE",
+        "latitude": -5.744652,
+        "longitude": 109.173558
     },
     {
         "id": "7606",
         "provinceId": "76",
-        "name": "KAB. MAMUJU TENGAH"
+        "name": "KAB. MAMUJU TENGAH",
+        "latitude": -3.198632,
+        "longitude": 122.289336
     },
     {
         "id": "8101",
         "provinceId": "81",
-        "name": "KAB. MALUKU TENGAH"
+        "name": "KAB. MALUKU TENGAH",
+        "latitude": -5.257242,
+        "longitude": 133.37059
     },
     {
         "id": "8102",
         "provinceId": "81",
-        "name": "KAB. MALUKU TENGGARA"
+        "name": "KAB. MALUKU TENGGARA",
+        "latitude": -8.067756,
+        "longitude": 139.272475
     },
     {
         "id": "8103",
         "provinceId": "81",
-        "name": "KAB. KEPULAUAN TANIMBAR"
+        "name": "KAB. KEPULAUAN TANIMBAR",
+        "latitude": -5.466387,
+        "longitude": 95.502653
     },
     {
         "id": "8104",
         "provinceId": "81",
-        "name": "KAB. BURU"
+        "name": "KAB. BURU",
+        "latitude": 0.719036,
+        "longitude": 105.393258
     },
     {
         "id": "8105",
         "provinceId": "81",
-        "name": "KAB. SERAM BAGIAN TIMUR"
+        "name": "KAB. SERAM BAGIAN TIMUR",
+        "latitude": -1.720818,
+        "longitude": 140.494532
     },
     {
         "id": "8106",
         "provinceId": "81",
-        "name": "KAB. SERAM BAGIAN BARAT"
+        "name": "KAB. SERAM BAGIAN BARAT",
+        "latitude": -6.949087,
+        "longitude": 123.965501
     },
     {
         "id": "8107",
         "provinceId": "81",
-        "name": "KAB. KEPULAUAN ARU"
+        "name": "KAB. KEPULAUAN ARU",
+        "latitude": -5.461347,
+        "longitude": 124.680474
     },
     {
         "id": "8108",
         "provinceId": "81",
-        "name": "KAB. MALUKU BARAT DAYA"
+        "name": "KAB. MALUKU BARAT DAYA",
+        "latitude": -3.516057,
+        "longitude": 109.504935
     },
     {
         "id": "8109",
         "provinceId": "81",
-        "name": "KAB. BURU SELATAN"
+        "name": "KAB. BURU SELATAN",
+        "latitude": -3.82622,
+        "longitude": 127.304996
     },
     {
         "id": "8171",
         "provinceId": "81",
-        "name": "KOTA AMBON"
+        "name": "KOTA AMBON",
+        "latitude": 3.114421,
+        "longitude": 123.983494
     },
     {
         "id": "8172",
         "provinceId": "81",
-        "name": "KOTA TUAL"
+        "name": "KOTA TUAL",
+        "latitude": -5.422147,
+        "longitude": 137.861955
     },
     {
         "id": "8201",
         "provinceId": "82",
-        "name": "KAB. HALMAHERA BARAT"
+        "name": "KAB. HALMAHERA BARAT",
+        "latitude": 0.198441,
+        "longitude": 99.991191
     },
     {
         "id": "8202",
         "provinceId": "82",
-        "name": "KAB. HALMAHERA TENGAH"
+        "name": "KAB. HALMAHERA TENGAH",
+        "latitude": -7.907817,
+        "longitude": 99.311163
     },
     {
         "id": "8203",
         "provinceId": "82",
-        "name": "KAB. HALMAHERA UTARA"
+        "name": "KAB. HALMAHERA UTARA",
+        "latitude": -4.061417,
+        "longitude": 99.24497
     },
     {
         "id": "8204",
         "provinceId": "82",
-        "name": "KAB. HALMAHERA SELATAN"
+        "name": "KAB. HALMAHERA SELATAN",
+        "latitude": 5.869632,
+        "longitude": 137.226654
     },
     {
         "id": "8205",
         "provinceId": "82",
-        "name": "KAB. KEPULAUAN SULA"
+        "name": "KAB. KEPULAUAN SULA",
+        "latitude": 3.590463,
+        "longitude": 138.632872
     },
     {
         "id": "8206",
         "provinceId": "82",
-        "name": "KAB. HALMAHERA TIMUR"
+        "name": "KAB. HALMAHERA TIMUR",
+        "latitude": 3.593515,
+        "longitude": 105.509228
     },
     {
         "id": "8207",
         "provinceId": "82",
-        "name": "KAB. PULAU MOROTAI"
+        "name": "KAB. PULAU MOROTAI",
+        "latitude": -2.396426,
+        "longitude": 124.222173
     },
     {
         "id": "8208",
         "provinceId": "82",
-        "name": "KAB. PULAU TALIABU"
+        "name": "KAB. PULAU TALIABU",
+        "latitude": -5.601027,
+        "longitude": 111.45567
     },
     {
         "id": "8271",
         "provinceId": "82",
-        "name": "KOTA TERNATE"
+        "name": "KOTA TERNATE",
+        "latitude": 0.965034,
+        "longitude": 97.046734
     },
     {
         "id": "8272",
         "provinceId": "82",
-        "name": "KOTA TIDORE KEPULAUAN"
+        "name": "KOTA TIDORE KEPULAUAN",
+        "latitude": 5.16901,
+        "longitude": 105.528501
     },
     {
         "id": "9103",
         "provinceId": "91",
-        "name": "KAB. JAYAPURA"
+        "name": "KAB. JAYAPURA",
+        "latitude": 3.027648,
+        "longitude": 138.913392
     },
     {
         "id": "9105",
         "provinceId": "91",
-        "name": "KAB. KEPULAUAN YAPEN"
+        "name": "KAB. KEPULAUAN YAPEN",
+        "latitude": -7.296451,
+        "longitude": 109.892786
     },
     {
         "id": "9106",
         "provinceId": "91",
-        "name": "KAB. BIAK NUMFOR"
+        "name": "KAB. BIAK NUMFOR",
+        "latitude": -3.392789,
+        "longitude": 111.38082
     },
     {
         "id": "9110",
         "provinceId": "91",
-        "name": "KAB. SARMI"
+        "name": "KAB. SARMI",
+        "latitude": -5.355422,
+        "longitude": 118.89762
     },
     {
         "id": "9111",
         "provinceId": "91",
-        "name": "KAB. KEEROM"
+        "name": "KAB. KEEROM",
+        "latitude": -9.317872,
+        "longitude": 117.899409
     },
     {
         "id": "9115",
         "provinceId": "91",
-        "name": "KAB. WAROPEN"
+        "name": "KAB. WAROPEN",
+        "latitude": -4.067646,
+        "longitude": 114.009112
     },
     {
         "id": "9119",
         "provinceId": "91",
-        "name": "KAB. SUPIORI"
+        "name": "KAB. SUPIORI",
+        "latitude": -0.321981,
+        "longitude": 111.289266
     },
     {
         "id": "9120",
         "provinceId": "91",
-        "name": "KAB. MAMBERAMO RAYA"
+        "name": "KAB. MAMBERAMO RAYA",
+        "latitude": -7.600112,
+        "longitude": 137.451169
     },
     {
         "id": "9171",
         "provinceId": "91",
-        "name": "KOTA JAYAPURA"
+        "name": "KOTA JAYAPURA",
+        "latitude": -2.772626,
+        "longitude": 136.940693
     },
     {
         "id": "9201",
         "provinceId": "92",
-        "name": "KAB. SORONG"
+        "name": "KAB. SORONG",
+        "latitude": -3.160067,
+        "longitude": 135.603223
     },
     {
         "id": "9202",
         "provinceId": "92",
-        "name": "KAB. MANOKWARI"
+        "name": "KAB. MANOKWARI",
+        "latitude": -7.904562,
+        "longitude": 118.882531
     },
     {
         "id": "9203",
         "provinceId": "92",
-        "name": "KAB. FAK FAK"
+        "name": "KAB. FAK FAK",
+        "latitude": 0.369268,
+        "longitude": 99.127795
     },
     {
         "id": "9204",
         "provinceId": "92",
-        "name": "KAB. SORONG SELATAN"
+        "name": "KAB. SORONG SELATAN",
+        "latitude": 4.625272,
+        "longitude": 102.570872
     },
     {
         "id": "9205",
         "provinceId": "92",
-        "name": "KAB. RAJA AMPAT"
+        "name": "KAB. RAJA AMPAT",
+        "latitude": -8.487681,
+        "longitude": 99.741194
     },
     {
         "id": "9206",
         "provinceId": "92",
-        "name": "KAB. TELUK BINTUNI"
+        "name": "KAB. TELUK BINTUNI",
+        "latitude": 1.079893,
+        "longitude": 104.578253
     },
     {
         "id": "9207",
         "provinceId": "92",
-        "name": "KAB. TELUK WONDAMA"
+        "name": "KAB. TELUK WONDAMA",
+        "latitude": -2.026751,
+        "longitude": 120.771619
     },
     {
         "id": "9208",
         "provinceId": "92",
-        "name": "KAB. KAIMANA"
+        "name": "KAB. KAIMANA",
+        "latitude": -2.132348,
+        "longitude": 105.388672
     },
     {
         "id": "9209",
         "provinceId": "92",
-        "name": "KAB. TAMBRAUW"
+        "name": "KAB. TAMBRAUW",
+        "latitude": -1.097078,
+        "longitude": 108.150162
     },
     {
         "id": "9210",
         "provinceId": "92",
-        "name": "KAB. MAYBRAT"
+        "name": "KAB. MAYBRAT",
+        "latitude": 2.024722,
+        "longitude": 116.833102
     },
     {
         "id": "9211",
         "provinceId": "92",
-        "name": "KAB. MANOKWARI SELATAN"
+        "name": "KAB. MANOKWARI SELATAN",
+        "latitude": -5.205247,
+        "longitude": 106.735101
     },
     {
         "id": "9212",
         "provinceId": "92",
-        "name": "KAB. PEGUNUNGAN ARFAK"
+        "name": "KAB. PEGUNUNGAN ARFAK",
+        "latitude": -7.759089,
+        "longitude": 105.541318
     },
     {
         "id": "9271",
         "provinceId": "92",
-        "name": "KOTA SORONG"
+        "name": "KOTA SORONG",
+        "latitude": -1.765288,
+        "longitude": 116.779401
     },
     {
         "id": "9301",
         "provinceId": "93",
-        "name": "KAB. MERAUKE"
+        "name": "KAB. MERAUKE",
+        "latitude": -6.989193,
+        "longitude": 133.662875
     },
     {
         "id": "9302",
         "provinceId": "93",
-        "name": "KAB. BOVEN DIGOEL"
+        "name": "KAB. BOVEN DIGOEL",
+        "latitude": -2.197824,
+        "longitude": 131.245238
     },
     {
         "id": "9303",
         "provinceId": "93",
-        "name": "KAB. MAPPI"
+        "name": "KAB. MAPPI",
+        "latitude": -5.993987,
+        "longitude": 135.866081
     },
     {
         "id": "9304",
         "provinceId": "93",
-        "name": "KAB. ASMAT"
+        "name": "KAB. ASMAT",
+        "latitude": -5.590746,
+        "longitude": 130.980093
     },
     {
         "id": "9401",
         "provinceId": "94",
-        "name": "KAB. NABIRE"
+        "name": "KAB. NABIRE",
+        "latitude": -8.528728,
+        "longitude": 136.329096
     },
     {
         "id": "9402",
         "provinceId": "94",
-        "name": "KAB. PUNCAK JAYA"
+        "name": "KAB. PUNCAK JAYA",
+        "latitude": -1.051009,
+        "longitude": 105.764714
     },
     {
         "id": "9403",
         "provinceId": "94",
-        "name": "KAB. PANIAI"
+        "name": "KAB. PANIAI",
+        "latitude": -6.481006,
+        "longitude": 116.341119
     },
     {
         "id": "9404",
         "provinceId": "94",
-        "name": "KAB. MIMIKA"
+        "name": "KAB. MIMIKA",
+        "latitude": 2.03888,
+        "longitude": 113.029774
     },
     {
         "id": "9405",
         "provinceId": "94",
-        "name": "KAB. PUNCAK"
+        "name": "KAB. PUNCAK",
+        "latitude": -8.915735,
+        "longitude": 128.102375
     },
     {
         "id": "9406",
         "provinceId": "94",
-        "name": "KAB. DOGIYAI"
+        "name": "KAB. DOGIYAI",
+        "latitude": -2.628561,
+        "longitude": 116.819512
     },
     {
         "id": "9407",
         "provinceId": "94",
-        "name": "KAB. INTAN JAYA"
+        "name": "KAB. INTAN JAYA",
+        "latitude": -0.27997,
+        "longitude": 139.957399
     },
     {
         "id": "9408",
         "provinceId": "94",
-        "name": "KAB. DEIYAI"
+        "name": "KAB. DEIYAI",
+        "latitude": -3.576433,
+        "longitude": 139.032988
     },
     {
         "id": "9501",
         "provinceId": "95",
-        "name": "KAB. JAYAWIJAYA"
+        "name": "KAB. JAYAWIJAYA",
+        "latitude": -6.284274,
+        "longitude": 137.493854
     },
     {
         "id": "9502",
         "provinceId": "95",
-        "name": "KAB. PEGUNUNGAN BINTANG"
+        "name": "KAB. PEGUNUNGAN BINTANG",
+        "latitude": 2.158212,
+        "longitude": 109.348451
     },
     {
         "id": "9503",
         "provinceId": "95",
-        "name": "KAB. YAHUKIMO"
+        "name": "KAB. YAHUKIMO",
+        "latitude": -1.751778,
+        "longitude": 104.942918
     },
     {
         "id": "9504",
         "provinceId": "95",
-        "name": "KAB. TOLIKARA"
+        "name": "KAB. TOLIKARA",
+        "latitude": -0.908384,
+        "longitude": 100.219831
     },
     {
         "id": "9505",
         "provinceId": "95",
-        "name": "KAB. MAMBERAMO TENGAH"
+        "name": "KAB. MAMBERAMO TENGAH",
+        "latitude": 4.393657,
+        "longitude": 108.366218
     },
     {
         "id": "9506",
         "provinceId": "95",
-        "name": "KAB. YALIMO"
+        "name": "KAB. YALIMO",
+        "latitude": 0.098905,
+        "longitude": 124.099315
     },
     {
         "id": "9507",
         "provinceId": "95",
-        "name": "KAB. LANNY JAYA"
+        "name": "KAB. LANNY JAYA",
+        "latitude": 5.841713,
+        "longitude": 132.387527
     },
     {
         "id": "9508",
         "provinceId": "95",
-        "name": "KAB. NDUGA"
+        "name": "KAB. NDUGA",
+        "latitude": -8.686521,
+        "longitude": 109.127423
     }
 ]

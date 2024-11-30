@@ -31,8 +31,50 @@ import { Accordion, AccordionItem, Avatar } from "@nextui-org/react";
 import logo from '../../../assets/images/logo.png'
 import ListItem from "../../elements/ListItem";
 import { useEffect, useRef } from "react";
-import { ADMIN_REPORT_CONSUMPTION_MATERIAL_INDEX, ADMIN_REPORT_DISTRIBUTION_MATERIAL_INDEX, ADMIN_REPORT_PRODUCTION_MATERIAL, ADMIN_REPORT_STORAGE, ADMIN_REPORT_TRANSPORT_INDEX, ASAL_MUAT_INDEX_PATH, CARBON_COPY_INDEX_PATH, CMS_ARTICLE_PATH, CMS_DOCUMENT_PATH, CMS_EVENT_PATH, CMS_NEWS_PATH, COMPANY_INDEX_PATH, COMPANY_REPORT_STORAGE, DASHBOARD_PATH, MATERIAL_INDEX_PATH, MERKURI_MONITORING_INDEX_PATH, NOTIFICATION_DASHBOARD_PATH, NOTIFICATION_INDEX_PATH, OFFICIAL_INDEX_PATH, PELAPORAN_DASHBOARD_PATH, PERIOD_INDEX_PATH, RECOMENDATION_DASHBOARD_PATH, RECOMENDATION_INDEX_PATH, REGISTRATION_DASHBOARD_PATH, REGISTRATION_INDEX_PATH, REPORT_CONSUMPTION_MATERIAL_INDEX, REPORT_DISTRIBUTION_MATERIAL, REPORT_DISTRIBUTION_MATERIAL_INDEX, REPORT_PRODUCTION_MATERIAL, REPORT_TRANSPORT_INDEX, REPORT_TRANSPORT_RECOMENDATION_INDEX, STOK_B3_INDEX_ADMIN_PATH, STOK_B3_INDEX_USER_PATH, TUJUAN_BONGKAR_INDEX_PATH, USERS_MANAGEMENT_INDEX_PATH, WPR_INDEX_PATH, PELAPORAN_PRODUSEN_PENCARIAN } from "../../../services/routes";
+import {
+    ADMIN_REPORT_STORAGE,
+    CARBON_COPY_INDEX_PATH,
+    COMPANY_INDEX_PATH,
+    COMPANY_REPORT_STORAGE,
+    DASHBOARD_PATH,
+    MATERIAL_INDEX_PATH,
+    NOTIFICATION_DASHBOARD_PATH,
+    NOTIFICATION_INDEX_PATH,
+    OFFICIAL_INDEX_PATH,
+    PELAPORAN_DASHBOARD_PATH,
+    PERIOD_INDEX_PATH,
+    RECOMENDATION_DASHBOARD_PATH,
+    RECOMENDATION_INDEX_PATH,
+    REGISTRATION_DASHBOARD_PATH,
+    REGISTRATION_INDEX_PATH,
+    STOK_B3_INDEX_ADMIN_PATH,
+    STOK_B3_INDEX_USER_PATH,
+    CMS_ARTICLE_PATH,
+    CMS_DOCUMENT_PATH,
+    CMS_EVENT_PATH,
+    CMS_NEWS_PATH,
+    MERKURI_MONITORING_INDEX_PATH,
+    WPR_INDEX_PATH,
+    USERS_MANAGEMENT_INDEX_PATH,
+    PELAPORAN_PRODUSEN_PENCARIAN,
+    PELAPORAN_PENGGUNAAN_GRAFIK,
+    PELAPORAN_PENGGUNAAN_PENCARIAN,
+    PELAPORAN_PRODUSEN_GRAFIK,
+    PELAPORAN_PENGANGKUTAN_GRAFIK,
+    PELAPORAN_PENGANGKUTAN_PENCARIAN,
+    PELAPORAN_PENYIMPANAN_GRAFIK_PATH, ADMIN_REPORT_TRANSPORT_INDEX,
+    REPORT_TRANSPORT_RECOMENDATION_INDEX,
+    REPORT_PRODUCTION_MATERIAL,
+    ADMIN_REPORT_PRODUCTION_MATERIAL,
+    REPORT_DISTRIBUTION_MATERIAL_INDEX,
+    ADMIN_REPORT_DISTRIBUTION_MATERIAL_INDEX,
+    REPORT_CONSUMPTION_MATERIAL_INDEX,
+    ASAL_MUAT_INDEX_PATH,
+    TUJUAN_BONGKAR_INDEX_PATH,
+    ADMIN_REPORT_CONSUMPTION_MATERIAL_INDEX
+} from "../../../services/routes";
 import useCustomNavigate from "../../../hooks/useCustomNavigate";
+// import { PowerIcon } from "@heroicons/react/16/solid";
 
 export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
     const sidebarRef = useRef(null)
@@ -159,7 +201,7 @@ export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
                             <ListItem url={ADMIN_REPORT_CONSUMPTION_MATERIAL_INDEX} variant="subitem" title="Konsumsi B3 (Admin)" icon={<ScaleIcon className="size-4" />} />
                         </AccordionItem>
                         <AccordionItem
-                            key="7"
+                            key="4"
                             title="CMS"
                             className=""
                             startContent={<NewspaperIcon className="size-4" />}
@@ -189,7 +231,53 @@ export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
                                 icon={<TicketIcon className="size-4" />}
                             />
                         </AccordionItem>
-                        <AccordionItem key="5" title="Mater Data" className="" startContent={<FolderIcon className="size-5" />}>
+                        <AccordionItem key="5" title="Pelaporan" className="" startContent={<PresentationChartBarIcon className="size-5" />}>
+                            <Accordion showDivider={false} className="pl-[1.5rem]" itemClasses={itemClasses}>
+                                <AccordionItem key="52" className="text-small text-primary sub-accord-item"  title="Pengangkutan" startContent={<PresentationChartBarIcon className="size-5" />}>
+                                    <ListItem url={PELAPORAN_PENGANGKUTAN_GRAFIK} variant="subitem" title="Grafik" icon={<ArchiveBoxIcon className="size-4" />} />
+                                    <ListItem url={PELAPORAN_DASHBOARD_PATH} variant="subitem" title="Peta" icon={<ArchiveBoxIcon className="size-4" />} />
+                                    <ListItem url={PELAPORAN_PENGANGKUTAN_PENCARIAN} variant="subitem" title="Pencarian" icon={<ArchiveBoxIcon className="size-4" />} />
+                                </AccordionItem>
+                            </Accordion>
+                            <Accordion showDivider={false}
+                                       className="pl-[1.5rem]" itemClasses={itemClasses}>
+                                <AccordionItem key="10" title="Produsen" className="text-small text-primary sub-accord-item" startContent={<PresentationChartBarIcon className="size-5" />}>
+                                    <ListItem url={PELAPORAN_PRODUSEN_GRAFIK} variant="subitem" title="Grafik" icon={<ArchiveBoxIcon className="size-4" />} />
+                                    {/*<ListItem url={""} variant="subitem" title="Peta" icon={<ArchiveBoxIcon className="size-4" />} />*/}
+                                    <ListItem url={PELAPORAN_PRODUSEN_PENCARIAN} variant="subitem" title="Pencarian" icon={<TableCellsIcon className="size-4" />} />
+                                </AccordionItem>
+                            </Accordion>
+                            <Accordion
+                                showDivider={false}
+                                className="pl-[1.5rem]" itemClasses={itemClasses}>
+                                <AccordionItem key="51" title="Penggunaan" className="text-small text-primary sub-accord-item"  startContent={<PresentationChartBarIcon className="size-5" />}>
+                                    <ListItem
+                                    url={PELAPORAN_PENGGUNAAN_GRAFIK}
+                                    variant="subitem"
+                                    title="Grafik"
+                                    icon={<ArchiveBoxIcon className="size-4" />}
+                                    />
+                                    <ListItem
+                                    url={PELAPORAN_PENGGUNAAN_PENCARIAN}
+                                    variant="subitem"
+                                    title="Pencarian"
+                                    icon={<TableCellsIcon className="size-4" />}
+                                    />
+                                </AccordionItem>
+                            </Accordion>
+                            <Accordion showDivider={false} className="pl-[1.5rem]" itemClasses={itemClasses}>
+                                <AccordionItem  key="10" title="Penimpanan" className="text-small text-primary sub-accord-item" startContent={<PresentationChartBarIcon className="size-5" />}>
+                                    <ListItem url={PELAPORAN_PENYIMPANAN_GRAFIK_PATH} variant="subitem" title="Grafik" icon={<ArchiveBoxIcon className="size-4" />} />
+                                    {/* <ListItem url={PELAPORAN_DASHBOARD_PATH} variant="subitem" title="Peta" icon={<ArchiveBoxIcon className="size-4" />} />
+                                    <ListItem url={PELAPORAN_DASHBOARD_PATH} variant="subitem" title="Pencarian" icon={<ArchiveBoxIcon className="size-4" />} /> */}
+                                </AccordionItem>
+                            </Accordion>
+                            <ListItem url={COMPANY_REPORT_STORAGE} variant="subitem" title="Penyimpanan B3 (Perusahaan)" icon={<ArchiveBoxIcon className="size-4" />} />
+                            <ListItem url={ADMIN_REPORT_STORAGE} variant="subitem" title="Penyimpanan B3 (Admin)" icon={<ArchiveBoxIcon className="size-4" />} />
+                            <ListItem url={ADMIN_REPORT_TRANSPORT_INDEX} variant="subitem" title="Pengangkutan B3" icon={<TruckIcon className="size-4" />} />
+                        </AccordionItem>
+
+                        <AccordionItem key="6" title="Mater Data" className="" startContent={<FolderIcon className="size-5" />}>
                             <ListItem url={CARBON_COPY_INDEX_PATH} variant="subitem" title="Tembusan" icon={<AtSymbolIcon className="size-4" />} />
                             <ListItem url={OFFICIAL_INDEX_PATH} variant="subitem" title="Pejabat" icon={<UserGroupIcon className="size-4" />} />
                             <ListItem url={MATERIAL_INDEX_PATH} variant="subitem" title="Bahan B3" icon={<ExclamationTriangleIcon className="size-4" />} />
@@ -198,7 +286,7 @@ export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
                             <ListItem url={ASAL_MUAT_INDEX_PATH} variant="subitem" title="Asal Muat" icon={<ArrowDownOnSquareIcon className="size-4" />} />
                             <ListItem url={TUJUAN_BONGKAR_INDEX_PATH} variant="subitem" title="Tujuan Bongkar" icon={<ArrowUpOnSquareIcon className="size-4" />} />
                         </AccordionItem>
-                        <AccordionItem key="6" title="Stok B3" className="" startContent={<BellAlertIcon className="size-5" />}>
+                        <AccordionItem key="7" title="Stok B3" className="" startContent={<BellAlertIcon className="size-5" />}>
                             <ListItem url={STOK_B3_INDEX_ADMIN_PATH} variant="subitem" title="Stok B3 Admin" icon={<ChartBarIcon className="size-4" />} />
                             <ListItem url={STOK_B3_INDEX_USER_PATH} variant="subitem" title="Stok B3 User" icon={<ListBulletIcon className="size-4" />} />
                         </AccordionItem>

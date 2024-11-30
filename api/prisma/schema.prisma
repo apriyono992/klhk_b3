@@ -290,6 +290,8 @@ model Province {
   name      String       @db.VarChar(255) // Province name
   regencies Regencies[]  // Relation to regencies
   cities City[]
+  longitude       Float?
+  latitude        Float?
 
   @@map("reg_provinces") // Maps to the existing table "reg_provinces"
   Location  Location[]
@@ -312,6 +314,8 @@ model Regencies {
   provinceId String      @db.Char(250) // Foreign key to Province
   province   Province    @relation(fields: [provinceId], references: [id]) // Relation to Province
   districts  Districts[] // Relation to villages
+  longitude       Float?
+  latitude        Float?
 
   @@map("reg_regencies") // Maps to the existing table "reg_regencies"
   Location Location[]
@@ -336,6 +340,8 @@ model Districts {
   regency   Regencies  @relation(fields: [regencyId], references: [id]) // Relation to Regencies
   villages  Village[] // Relation to villages
   Location  Location[]
+  longitude       Float?
+  latitude        Float?
 
   @@map("reg_districts") // Maps to the existing table "req_districts"
   LocationDetails LocationDetails[]
@@ -357,6 +363,8 @@ model Village {
   districtId String     @db.Char(250) // Foreign key to Regencies
   district   Districts  @relation(fields: [districtId], references: [id]) // Relation to Regencies
   Location   Location[]
+  longitude       Float?
+  latitude        Float?
 
   @@map("reg_village") // Maps to the existing table "reg_villages"
   LocationDetails LocationDetails[]
@@ -459,7 +467,7 @@ model Company {
 
   KewajibanPelaporanRegistrasi KewajibanPelaporanRegistrasi[]
 
-  UserCompanies UserCompanies[] @relation("UserCompanies") // Relasi ke 
+  UserCompanies UserCompanies[] @relation("UserCompanies") // Relasi ke
 
   DataPICFinal DataPICFinal[]
 
@@ -1943,6 +1951,7 @@ model DataPerusahaanAsalMuatOnPengakutanDetailFinal{
   district Districts @relation(fields: [districtId], references: [id])
   villageId String
   village Village @relation(fields: [villageId], references: [id])
+
 
   DataPerusahaanTujuanBongkarOnPengakutanDetailFinal DataPerusahaanTujuanBongkarOnPengakutanDetailFinal[]
 }
