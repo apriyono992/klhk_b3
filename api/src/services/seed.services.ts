@@ -118,13 +118,31 @@ export class SeedService {
     try {
       await this.validasiTeknisRegistrasi();
     } catch (error) {
-      this.logger.error('Error while seeding pelabuhan data', error);
+      this.logger.error('Error while seeding validasi teknis data', error);
     }
 
     try {
       await this.seedPeriod();
     } catch (error) {
-      this.logger.error('Error while seeding pelabuhan data', error);
+      this.logger.error('Error while seeding period data', error);
+    }
+
+    try {
+      await this.seedPenggunaanFinal();
+    } catch (error) {
+      this.logger.error('Error while seeding penggunaan data', error);
+    }
+
+    try {
+      await this.seedDistribusiFinal()
+    } catch (error) {
+      this.logger.error('Error while seeding distribusi data', error);
+    }
+
+    try {
+      await this.seedDihasilkanFinal()
+    } catch (error) {
+      this.logger.error('Error while seeding dihasilkan data', error);
     }
 
     this.logger.log('Seeding process completed');
@@ -326,7 +344,40 @@ export class SeedService {
       data,
       skipDuplicates: true, // This ensures that existing records are skipped
     });
-    this.logger.log('Data bahanb3reg seeded');
+    this.logger.log('Data period seeded');
+  }
+
+  private async seedPenggunaanFinal() {
+    const filePath = path.join(process.cwd(), 'src/seed/penggunaan_final.json');
+    const data = this.readJsonFile(filePath);
+
+    await this.prisma.pelaporanPenggunaanBahanB3Final.createMany({
+      data,
+      skipDuplicates: true, // This ensures that existing records are skipped
+    });
+    this.logger.log('Data penggunaan final seeded');
+  }
+
+  private async seedDihasilkanFinal() {
+    const filePath = path.join(process.cwd(), 'src/seed/dihasilkan_final.json');
+    const data = this.readJsonFile(filePath);
+
+    await this.prisma.pelaporanB3DihasilkanFinal.createMany({
+      data,
+      skipDuplicates: true, // This ensures that existing records are skipped
+    });
+    this.logger.log('Data dihasilkan final seeded');
+  }
+
+  private async seedDistribusiFinal() {
+    const filePath = path.join(process.cwd(), 'src/seed/distribusi_final.json');
+    const data = this.readJsonFile(filePath);
+
+    await this.prisma.pelaporanBahanB3DistribusiFinal.createMany({
+      data,
+      skipDuplicates: true, // This ensures that existing records are skipped
+    });
+    this.logger.log('Data distribusi final seeded');
   }
 
   private async seedVillages() {
