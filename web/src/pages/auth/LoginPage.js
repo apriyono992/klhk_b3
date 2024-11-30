@@ -40,7 +40,6 @@ export default function LoginPage() {
             const base64 = base64Url.replace('-', '+').replace('_', '/');
             const userdata = JSON.parse(window.atob(base64));
             Cookies.set('roles', userdata.rolesId);
-
             navigate(DASHBOARD_PATH, { replace: true });
         } catch (error) {
             if (isResponseErrorObject(error?.response?.data?.message)) {

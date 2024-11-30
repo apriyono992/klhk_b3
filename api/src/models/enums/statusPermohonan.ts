@@ -2,7 +2,7 @@ export enum StatusPermohonan {
   DRAFT_PERMOHONAN = 'Draft Permohonan',
   MENUNGGU_DI_PROSES = 'Menunggu Di Proses',
   PEMOHONAN_DI_PROSES = 'Pemohonan Di Proses',
-  VALIDASI_PEMOHONAN = 'Validasi Pemohonan',
+  VALIDASI_PEMOHONAN = 'Verifikasi Teknis',
   VALIDASI_PEMOHONAN_SELESAI = 'Validasi Pemohonan Selesai',
   VALIDASI_PEMOHONAN_DITOLAK = 'Validasi Pemohonan Ditolak',
   TELAAH_TEKNIS_SELESAI = 'Telaah Teknis Selesai',

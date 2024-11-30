@@ -269,11 +269,9 @@ export class AuthService {
       fullName: user.fullName
     };
 
-    console.log('user', user);
-    console.log('Secret in JwtService:', this.jwtService['options']);
     const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
-    console.log(accessToken, refreshToken);
+    
     await this.prisma.user.update({
       where: { id: user.id },
       data: { refreshToken },

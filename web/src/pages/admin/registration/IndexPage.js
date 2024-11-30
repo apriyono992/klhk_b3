@@ -7,7 +7,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import useSWR from "swr";
 import useCustomNavigate from "../../../hooks/useCustomNavigate";
 import { useMemo } from "react";
-import { formattedDate } from "../../../services/helpers";
+import { calculateRegistrasiRekomendasiProcessingDays, formattedDate } from "../../../services/helpers";
 import { differenceInDays } from 'date-fns'
 import {TrashIcon} from "@heroicons/react/16/solid";
 import toast from "react-hot-toast";
@@ -33,9 +33,9 @@ export default function IndexPage() {
         }
     }
 
-    const { data: pending, isLoading: loadingPending } = useSWR(`/api/registrasi/search?status=pending,${StatusPermohonanRegistrasi.VERIFIKASI_TEKNIS}&returnAll=true`, fetcher);
-    const { data: draft, isLoading: loadingDraft } = useSWR(`/api/registrasi/search?status=draft,${StatusPermohonanRegistrasi.DRAFT_SK_TANDA_TANGAN_DIREKTUR},${StatusPermohonanRegistrasi.PEMBUATAN_DRAFT_SK},${StatusPermohonanRegistrasi.KIRIM_INSW}&returnAll=true`, fetcher);
-    const { data: riwayat, isLoading: loadingRiwayat } = useSWR(`/api/registrasi/search?status=riwayat,${StatusPermohonanRegistrasi.SELESAI},${StatusPermohonanRegistrasi.DITOLAK}&returnAll=true`, fetcher);
+    const { data: pending, isLoading: loadingPending } = useSWR(`/api/registrasi/find-all/search?status=pending,${StatusPermohonanRegistrasi.VERIFIKASI_TEKNIS}&returnAll=true`, fetcher);
+    const { data: draft, isLoading: loadingDraft } = useSWR(`/api/registrasi/find-all/search?status=draft,${StatusPermohonanRegistrasi.DRAFT_SK_TANDA_TANGAN_DIREKTUR},${StatusPermohonanRegistrasi.PEMBUATAN_DRAFT_SK},${StatusPermohonanRegistrasi.KIRIM_INSW}&returnAll=true`, fetcher);
+    const { data: riwayat, isLoading: loadingRiwayat } = useSWR(`/api/registrasi/find-all/search?status=riwayat,${StatusPermohonanRegistrasi.SELESAI},${StatusPermohonanRegistrasi.DITOLAK}&returnAll=true`, fetcher);
 
     const columns = useMemo(() =>  [
         {
@@ -72,13 +72,31 @@ export default function IndexPage() {
             headerName: 'Lama Proses',
             width: 150,
             valueGetter: (value, row) => {
-                let startDate = row.createdAt
-                let endDate = row.updatedAt
-                return `${differenceInDays(endDate, startDate)} Hari`
-            }
+                const lamaProses = calculateRegistrasiRekomendasiProcessingDays(row.statusHistory);
+
+                return lamaProses;
+            },
+            renderCell: (params) => {
+                const lamaProses = calculateRegistrasiRekomendasiProcessingDays(params.row.statusHistory);
+            
+                // Gunakan if-else untuk perbandingan logika
+                if (lamaProses < 2) {
+                  return (
+                    <Chip color="success" variant="flat" size="sm">
+                      {lamaProses} Hari
+                    </Chip>
+                  );
+                } else {
+                  return (
+                    <Chip color="danger" variant="flat" size="sm">
+                      {lamaProses} Hari
+                    </Chip>
+                  );
+                }
+            },
         },
         {
-            field: 'approval_status',
+            field: 'status',
             headerName: 'Status',
             width: 150,
             renderCell: (params) => (<Chip size='sm' color='primary' variant='faded' className="capitalize">{params.value}</Chip>)

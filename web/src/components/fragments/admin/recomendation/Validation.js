@@ -34,7 +34,7 @@ export default function Validation({ data, isLoading, mutate }) {
             <Card>
                 <CardBody>
                     <div className='mb-6'>
-                        <Button isDisabled={!areAllDocumentValid || data?.status === StatusRekomendasi.VALIDASI_PEMOHONAN} onPress={onOpenChangeModalAlert} color='warning' size='sm' startContent={<ArrowPathIcon className="size-4"/>}>Submit Validasi</Button>
+                        <Button isDisabled={(!areAllDocumentValid  && data?.status === StatusRekomendasi.VALIDASI_PEMOHONAN) || data?.status !== StatusRekomendasi.VALIDASI_PEMOHONAN } onPress={onOpenChangeModalAlert} color='warning' size='sm' startContent={<ArrowPathIcon className="size-4"/>}>Submit Validasi</Button>
                     </div>
                     <Table removeWrapper aria-label="validation-table" radius='sm'>
                         <TableHeader>

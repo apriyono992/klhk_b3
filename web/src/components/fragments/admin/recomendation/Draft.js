@@ -43,6 +43,7 @@ export default function Draft({ data, mutate }) {
                 userId: user.userId
             }
             await patchFetcherWithoutId('/api/rekom/permohonan/status', data);
+            setIsOpenModalAlert(false);
             mutate()
             toast.success('Draf SK Rekomendasi selesai!');
         } catch (error) {
@@ -51,6 +52,7 @@ export default function Draft({ data, mutate }) {
                     toast.error(value);
                 })
                 : toast.error(error.response.data.message);
+                setIsOpenModalAlert(false);
         }
     }
 
@@ -63,6 +65,7 @@ export default function Draft({ data, mutate }) {
                 userId: user.userId
             }
             await patchFetcherWithoutId('/api/rekom/permohonan/status', data);
+            setIsOpenModalAlert(false);
             mutate()
             toast.success('Draf SK Rekomendasi selesai!');
         } catch (error) {
@@ -71,6 +74,7 @@ export default function Draft({ data, mutate }) {
                     toast.error(value);
                 })
                 : toast.error(error.response.data.message);
+            setIsOpenModalAlert(false);
         }
     }
 

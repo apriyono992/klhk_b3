@@ -591,87 +591,87 @@ export class PeriodService {
     return { total: totalCount, data };
   }
 
-    // Utility untuk membuat query options
-    private buildQueryOptions(
-      filter: any,
-      pagination: PaginationDto,
-      isReported?: boolean
-    ) {
-      const { periodId, companyIds, jenisLaporan, vehicleIds } = filter;
-      const { sortOrder, sortBy } = pagination;
+  // Utility untuk membuat query options
+  private buildQueryOptions(
+    filter: any,
+    pagination: PaginationDto,
+    isReported?: boolean
+  ) {
+    const { periodId, companyIds, jenisLaporan, vehicleIds } = filter;
+    const { sortOrder, sortBy } = pagination;
+
+    return {
+      where: {
+        periodId: periodId || undefined,
+        companyId: companyIds?.length ? { in: companyIds } : undefined,
+        jenisLaporan: jenisLaporan || undefined,
+        vehicleId: vehicleIds?.length ? { in: vehicleIds } : undefined,
+        sudahDilaporkan: isReported !== undefined ? isReported : undefined,
+      },
+      orderBy: { [sortBy]: sortOrder },
+    };
+  }
+
+  // Method untuk mencari kewajiban pelaporan perusahaan
+  async searchCompanies(
+    query: SearchCompaniesReportWithPaginationDto
+  ) {
+    const {
+      periodId,
+      companyIds,
+      jenisLaporan,
+      isReported,
+      page,
+      limit,
+      returnAll = true,
+      sortBy = 'createdAt', // Default sorting
+      sortOrder = 'asc', // Default sorting order
+    } = query;
   
-      return {
-        where: {
-          periodId: periodId || undefined,
-          companyId: companyIds?.length ? { in: companyIds } : undefined,
-          jenisLaporan: jenisLaporan || undefined,
-          vehicleId: vehicleIds?.length ? { in: vehicleIds } : undefined,
-          sudahDilaporkan: isReported !== undefined ? isReported : undefined,
-        },
-        orderBy: { [sortBy]: sortOrder },
-      };
-    }
+    const today = new Date();
   
-    // Method untuk mencari kewajiban pelaporan perusahaan
-    async searchCompanies(
-      query: SearchCompaniesReportWithPaginationDto
-    ) {
-      const {
-        periodId,
-        companyIds,
-        jenisLaporan,
-        isReported,
-        page,
-        limit,
-        returnAll = true,
-        sortBy = 'createdAt', // Default sorting
-        sortOrder = 'asc', // Default sorting order
-      } = query;
-    
-      const today = new Date();
-    
-      const queryOptions = {
-        where: {
-          periodId: periodId || undefined,
-          companyId: companyIds?.length ? { in: companyIds } : undefined,
-          jenisLaporan: jenisLaporan || undefined,
-          sudahDilaporkan: isReported !== undefined ? isReported : undefined,
-          // Tambahkan logika untuk reported = false
-          ...(isReported === false && {
-            period: {
-              endPeriodDate: {
-                lt: today, // Cari perusahaan dengan endPeriodDate yang sudah lewat
-              },
+    const queryOptions = {
+      where: {
+        periodId: periodId || undefined,
+        companyId: companyIds?.length ? { in: companyIds } : undefined,
+        jenisLaporan: jenisLaporan || undefined,
+        sudahDilaporkan: isReported !== undefined ? isReported : undefined,
+        // Tambahkan logika untuk reported = false
+        ...(isReported === false && {
+          period: {
+            endPeriodDate: {
+              lt: today, // Cari perusahaan dengan endPeriodDate yang sudah lewat
             },
-          }),
-        },
-        orderBy: { [sortBy]: sortOrder },
-      };
-      if (returnAll) {
-        const data = await this.prisma.kewajibanPelaporanPerusahaan.findMany({
-          ...queryOptions,
-          include: { company: true },
-        });
-        return { total: data.length, data };
-      }
-  
-      const total = await this.prisma.kewajibanPelaporanPerusahaan.count({
-        where: queryOptions.where,
-      });
-  
-      if (total === 0) {
-        return { total: 0, data: [] };
-      }
-  
+          },
+        }),
+      },
+      orderBy: { [sortBy]: sortOrder },
+    };
+    if (returnAll) {
       const data = await this.prisma.kewajibanPelaporanPerusahaan.findMany({
         ...queryOptions,
         include: { company: true },
-        skip: (page - 1) * limit,
-        take: limit,
       });
-  
-      return { total, data };
+      return { total: data.length, data };
     }
+
+    const total = await this.prisma.kewajibanPelaporanPerusahaan.count({
+      where: queryOptions.where,
+    });
+
+    if (total === 0) {
+      return { total: 0, data: [] };
+    }
+
+    const data = await this.prisma.kewajibanPelaporanPerusahaan.findMany({
+      ...queryOptions,
+      include: { company: true },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    return { total, data };
+  }
   
     // Method untuk mencari kewajiban pelaporan registrasi
   async searchRegistrations(dto: SearchRegistrationsWithPaginationDto) {

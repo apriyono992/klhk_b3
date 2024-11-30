@@ -19,7 +19,7 @@ export default function IndexPage() {
     const { data: dataCompany, isLoading: isLoadingCompany } = useSWR(
         isSuperAdmin
             ? `/api/company/search-company`
-            : `/api/company/search-company?companyIds=${user.companies.map((company) => company.id).join(",")}`,
+            : `/api/company/search-company?companyIds=${user.companies.map((company) => company.companyId).join(",")}`,
         getSelectFetcher
     );
     

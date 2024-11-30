@@ -19,7 +19,7 @@ export class SearchDataCustomerDto extends PaginationDto {
     return [value];
   })
   @IsArray()
-  @IsString()
+  @IsString({ each: true })
   companyId?: string[];
 
   @ApiPropertyOptional({ description: 'Nama customer', example: 'PT. Pelanggan Kimia' })

@@ -20,6 +20,11 @@ import { SearchPerusahaanTujuanBongkarDto } from 'src/models/searchPerusahaanTuj
 import { UpdateDataPICDto } from 'src/models/updateDataPICDto';
 import { CreateDataPICDto } from 'src/models/createDataPICDto';
 import { SearchDataPICDto } from 'src/models/searchDataPICDto';
+import { SearchReportedAndUnreportedCompaniesDto } from 'src/models/searchReportedAndUnreportedCompaniesDto';
+import { eachMonthOfInterval, getYear, getMonth } from 'date-fns';
+import { JenisPelaporan } from 'src/models/enums/jenisPelaporan';
+import { v4 as uuidv4 } from 'uuid'; // Import UUID library
+import { TipePerusahaan } from 'src/models/enums/tipePerusahaan';
 
 @Injectable()
 export class CompanyService {
@@ -94,7 +99,7 @@ export class CompanyService {
       ...(companyIds && companyIds.length > 0 && { id: { in: companyIds } }),
       ...(tipePerusahaan && tipePerusahaan.length > 0 && { tipePerusahaan: { hasSome: tipePerusahaan } }),
     };
-  
+  console.log(where);
     // Handle the returnAll flag
     if (returnAll) {
       const companies = await this.prisma.company.findMany({
@@ -1342,5 +1347,127 @@ export class CompanyService {
   
     return perusahaan;
   }
-  
+
+  async getReportedAndUnreportedCompanies(dto: SearchReportedAndUnreportedCompaniesDto) {
+    const { periodId, companyIds, jenisPelaporan, tipePerusahaan, page, limit, sortBy, sortOrder, returnAll } = dto;
+
+    // Ambil periode
+    const period = await this.prisma.period.findUnique({
+      where: { id: periodId ?? '' },
+    });
+
+    if (!period) {
+      throw  new BadRequestException('Periode tidak ditemukan');
+    }
+
+    // Buat daftar bulan berdasarkan periode
+    const monthsInPeriod = eachMonthOfInterval({
+    start: period.startPeriodDate,
+    end: period.endPeriodDate,
+    }).map((date) => ({
+      bulan: getMonth(date) + 1, // Bulan berbasis 1
+      tahun: getYear(date),
+    }));
+
+    // Map jenis pelaporan ke tipe perusahaan
+    const reportTypeMapping = {
+      PERUSAHAAN_PRODUSEN: [JenisPelaporan.PENGGUNAAN_BAHAN_B3, JenisPelaporan.PENGGUNAAN_BAHAN_B3],
+      PERUSAHAAN_IMPOR: [JenisPelaporan.PENGGUNAAN_BAHAN_B3],
+      PERUSAHAAN_PENGGUNA: [JenisPelaporan.PENGGUNAAN_BAHAN_B3],
+      PERUSAHAAN_DISTRIBUTOR: [JenisPelaporan.DISTRIBUSI_B3],
+      PERUSAHAN_PENGAKUTAN: [JenisPelaporan.PENGANGKUTAN_BAHAN_B3],
+    };
+
+    // Semua jenis pelaporan yang mungkin
+    const allReportTypes = Object.values(reportTypeMapping).flat();
+        // Filter perusahaan berdasarkan parameter
+    const companyFilters: any = {
+      ...(companyIds && { id: { in: companyIds } }),
+      ...(tipePerusahaan && {
+        tipePerusahaan: {
+          hasSome: tipePerusahaan, // Filter berdasarkan tipe perusahaan
+        },
+      }),
+    };
+
+    // Ambil data perusahaan yang sesuai filter
+    const totalCount = await this.prisma.company.count({
+      where: companyFilters,
+    });
+
+    const companies = await this.prisma.company.findMany({
+      where: companyFilters,
+      ...(returnAll
+        ? {} // Abaikan pagination jika returnAll = true
+        : {
+            take: limit,
+            skip: (page - 1) * limit,
+          }),
+    });
+
+    // Ambil kewajiban pelaporan perusahaan berdasarkan periodId
+    const kewajibanFilters: any = {
+      periodId,
+      ...(companyIds && { companyId: { in: companyIds } }),
+      ...(jenisPelaporan && { jenisLaporan: { in: jenisPelaporan } }),
+    };
+
+    const kewajiban = await this.prisma.kewajibanPelaporanPerusahaan.findMany({
+      where: kewajibanFilters,
+    });
+
+    // Jika `jenisPelaporan` kosong, gunakan semua jenis laporan dari kewajiban
+    const allJenisLaporan = jenisPelaporan || [
+      ...new Set(kewajiban.map((k) => k.jenisLaporan)),
+    ];
+
+    // Proses perusahaan dan kewajiban menjadi respons yang diinginkan
+    // Proses perusahaan dan kewajiban
+    const result = companies.map((company) => {
+      const kewajibanPerusahaan = kewajiban.filter(
+        (k) => k.companyId === company.id,
+      );
+
+      // Ambil jenis pelaporan berdasarkan tipe perusahaan
+      const jenisLaporanUntukPerusahaan = company.tipePerusahaan.length
+        ? company.tipePerusahaan.flatMap((tipe) => reportTypeMapping[tipe] || [])
+        : allReportTypes; // Jika tidak ada tipe, gunakan semua jenis pelaporan
+
+      // Jika `jenisPelaporan` diberikan, gunakan sebagai filter
+      const jenisLaporanFinal =
+        jenisPelaporan?.length > 0 ? jenisPelaporan : [...new Set(jenisLaporanUntukPerusahaan)];
+
+      // Buat respons untuk setiap bulan dalam periode
+      return monthsInPeriod.flatMap(({ bulan, tahun }) => {
+        return jenisLaporanFinal.map((jenis) => {
+          const laporan = kewajibanPerusahaan.find(
+            (k) => k.jenisLaporan === jenis && k.bulan === bulan && k.tahun === tahun,
+          );
+
+          return {
+            id: laporan ? laporan.id : uuidv4(), // ID dari kewajiban jika ada, jika tidak, generate UUID
+            companyId: company.id,
+            companyName: company.name,
+            tipePerusahaan: company.tipePerusahaan.length
+              ? company.tipePerusahaan
+              : [TipePerusahaan.PERUSAHAAN_DISTRIBUTOR, TipePerusahaan.PERUSAHAAN_IMPOR, TipePerusahaan.PERUSAHAAN_PENGGUNA, TipePerusahaan.PERUSAHAAN_PRODUSEN, 'Perusahaan Pengakutan'], // Indikasikan perusahaan ini memiliki semua jenis laporan
+            jenisLaporan: jenis,
+            bulan,
+            tahun,
+            sudahDilaporkan: laporan ? laporan.sudahDilaporkan : false,
+            periodId: period.id,
+            periodName: period.name,
+          };
+        });
+      });
+    });
+    
+    // Flatten hasil menjadi satu array
+    return {
+      total: result.length,
+      page: returnAll ? 1 : page,
+      limit: returnAll ? result.length : limit,
+      data: result.flat(), // Flatten array dari semua laporan
+    };
+  } 
 }

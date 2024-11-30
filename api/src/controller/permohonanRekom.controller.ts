@@ -12,6 +12,7 @@ import { RolesGuard } from 'src/utils/roles.guard';
 import { JwtAuthGuard } from 'src/utils/auth.guard';
 import { RolesAccess } from 'src/models/enums/roles';
 import { Roles } from 'src/utils/roles.decorator';
+import { SearchRecommendationPelaporanStatusDto } from 'src/models/searchRecommendationPelaporanStatusDto';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('Permohonan')
@@ -409,5 +410,61 @@ export class PermohonanRekomendasiB3Controller {
     } catch (error) {
       throw new BadRequestException('Error upserting Telaah Teknis: ' + error.message);
     }
+  }
+
+  @ApiOperation({
+    summary: 'Get recommendation status',
+    description: 'Retrieve recommendation status for applications, grouped by periods, months, and reporting status.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully retrieved recommendation status.',
+    schema: {
+      example: {
+        total: 2,
+        page: 1,
+        limit: 10,
+        data: [
+          {
+            id: 'existing-kewajiban-id-1',
+            applicationId: 'application-id-1',
+            applicationName: 'Aplikasi 1',
+            companyId: 'company-id-1',
+            companyName: 'Perusahaan 1',
+            bulan: 1,
+            tahun: 2024,
+            sudahDilaporkan: true,
+            periodId: 'period-id-1',
+            periodName: 'Q1 2024',
+          },
+          {
+            id: 'new-uuid-1',
+            applicationId: 'application-id-2',
+            applicationName: 'Aplikasi 2',
+            companyId: 'company-id-2',
+            companyName: 'Perusahaan 2',
+            bulan: 2,
+            tahun: 2024,
+            sudahDilaporkan: false,
+            periodId: 'period-id-1',
+            periodName: 'Q1 2024',
+          },
+        ],
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid parameters provided.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Period not found.',
+  })
+  @Get('pelaporan/report-status')
+  async getRecommendationStatus(
+    @Query() dto: SearchRecommendationPelaporanStatusDto,
+  ) {
+    return this.permohonanService.getRecommendationStatus(dto);
   }
 }

@@ -4,6 +4,7 @@ import enLocale from 'i18n-iso-countries/langs/en.json';
 import idLocale from 'i18n-iso-countries/langs/id.json'; // Indonesian locale
 import { jwtDecode } from 'jwt-decode';
 import RolesAccess from '../enums/roles';
+import StatusPermohonanRegistrasi from '../enums/statusRegistrasi';
 
 // Register English locale
 i18nIsoCountries.registerLocale(enLocale);
@@ -37,7 +38,6 @@ export function calculateNoticationProcessingDays(statusHistory) {
     const startDate = new Date(statusHistory[0].tanggalPerubahan);
   
     let endDate = null;
-    console.log(startDate)
   
     // Cari tanggal akhir (status Selesai atau Dibatalkan)
     for (let i = 0; i < statusHistory.length; i++) {
@@ -62,7 +62,93 @@ export function calculateNoticationProcessingDays(statusHistory) {
 
   
     return processingDays;
+}
+
+export function calculateRegistrasiRekomendasiProcessingDays(statusHistory) {
+  if (!statusHistory || statusHistory.length === 0) {
+    return 0; // Tidak ada data
   }
+
+  // Urutkan statusHistory berdasarkan tanggal perubahan (jika belum diurutkan)
+  statusHistory.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+  // Ambil tanggal awal
+  const startDate = new Date(statusHistory[0].createdAt);
+
+  let endDate = null;
+  // Cari tanggal akhir (status Selesai atau Dibatalkan)
+  for (let i = 0; i < statusHistory.length; i++) {
+    const status = statusHistory[i];
+    
+    if (status.newStatus === StatusPermohonanRegistrasi.VERIFIKASI_TEKNIS) {
+      startDate = new Date(status.createdAt);
+      break;
+    }
+
+    if (status.newStatus === StatusPermohonanRegistrasi.SELESAI || status.newStatus === StatusPermohonanRegistrasi.DITOLAK) {
+      endDate = new Date(status.createdAt);
+      break;
+    }
+  }
+
+  // Jika tidak ada status Selesai atau Dibatalkan, gunakan tanggal hari ini
+  if (!endDate) {
+    endDate = new Date(); // Menggunakan tanggal hari ini
+  }
+
+  // Normalisasi tanggal ke tengah malam (menghindari perhitungan waktu parsial)
+  const startDay = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+  const endDay = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+
+  // Hitung selisih hari
+  const processingDays = Math.floor((endDay - startDay) / (1000 * 60 * 60 * 24));
+
+
+  return processingDays;
+}
+
+export function calculateRekomendasiProcessingDays(statusHistory) {
+  if (!statusHistory || statusHistory.length === 0) {
+    return 0; // Tidak ada data
+  }
+
+  // Urutkan statusHistory berdasarkan tanggal perubahan (jika belum diurutkan)
+  statusHistory.sort((a, b) => new Date(a.changedAt) - new Date(b.changedAt));
+
+  // Ambil tanggal awal
+  const startDate = new Date(statusHistory[0].changedAt);
+
+  let endDate = null;
+  // Cari tanggal akhir (status Selesai atau Dibatalkan)
+  for (let i = 0; i < statusHistory.length; i++) {
+    const status = statusHistory[i];
+    
+    if (status.newStatus === StatusPermohonanRegistrasi.VERIFIKASI_TEKNIS) {
+      startDate = new Date(status.changedAt);
+      break;
+    }
+
+    if (status.newStatus === StatusPermohonanRegistrasi.SELESAI || status.newStatus === StatusPermohonanRegistrasi.DITOLAK) {
+      endDate = new Date(status.changedAt);
+      break;
+    }
+  }
+
+  // Jika tidak ada status Selesai atau Dibatalkan, gunakan tanggal hari ini
+  if (!endDate) {
+    endDate = new Date(); // Menggunakan tanggal hari ini
+  }
+
+  // Normalisasi tanggal ke tengah malam (menghindari perhitungan waktu parsial)
+  const startDay = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+  const endDay = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+
+  // Hitung selisih hari
+  const processingDays = Math.floor((endDay - startDay) / (1000 * 60 * 60 * 24));
+
+
+  return processingDays;
+}
 
 export function diffForHuman(datePast, dateCurrent) {
     const current = new Date(dateCurrent);

@@ -26,6 +26,7 @@ export default function DocumentReview({ data, isLoading, mutate }) {
         'Aksi',
     ]
 
+
     return (
         <>
             <Card>
@@ -35,14 +36,14 @@ export default function DocumentReview({ data, isLoading, mutate }) {
                             {columns.map((item, index) => <TableColumn key={index}>{item}</TableColumn>)}
                         </TableHeader>
                         <TableBody loadingContent={<Spinner/>} loadingState={isLoading ? 'loading' : 'idle'}>
-                            {data?.TelaahTeknisRekomendasiB3[0]?.TelaahTeknisDocumentNotesRekomendasiB3.map((item, index) => (
+                            {data?.documents?.map((item, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{index + 1}</TableCell>
-                                    <TableCell>{item.tipeDokumen}</TableCell>
+                                    <TableCell>{item.documentType}</TableCell>
                                     <TableCell>
                                         <IsValidIcon value={item.isValid} />
                                     </TableCell>
-                                    <TableCell>{item.notes}</TableCell>
+                                    <TableCell>{item.validationNotes}</TableCell>
                                     <TableCell className='flex items-center gap-1'>
                                         <a target='_blank' href={item.fileUrl} className=''>
                                             <Button isIconOnly size="sm" color='primary'><EyeIcon className='size-4'/></Button>

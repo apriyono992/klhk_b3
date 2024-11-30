@@ -21,6 +21,7 @@ import { JwtAuthGuard } from 'src/utils/auth.guard';
 import { RolesAccess } from 'src/models/enums/roles';
 import { Roles } from 'src/utils/roles.decorator';
 import { StatusPermohonanRegistrasi } from 'src/models/enums/statusPermohonanRegistrasi';
+import { SearchRegistrasiPelaporanStatus } from 'src/models/searchRegistrasiPelaporanStatus';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('Registrasi')
@@ -98,7 +99,7 @@ export class RegistrasiController {
     return this.registrasiService.updateStatus(id, updateStatusRegistrasi);
   }
 
-  @Get('search')
+  @Get('find-all/search')
   @ApiOperation({ summary: 'List Registrasi B3' })
   @ApiQuery({
     name: 'page',
@@ -232,5 +233,61 @@ export class RegistrasiController {
       @Param('id') id: string
   ) {
     return this.registrasiService.submitDraftSK(id);
+  }
+
+  @ApiOperation({
+    summary: 'Report Status Registrasi',
+    description: 'Retrieve the registration report status for companies, grouped by periods, months, and reporting status.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully retrieved the registration report status.',
+    schema: {
+      example: {
+        total: 3,
+        page: 1,
+        limit: 10,
+        data: [
+          {
+            id: 'existing-kewajiban-id-1',
+            applicationId: 'application-id-1',
+            applicationName: 'Aplikasi Registrasi 1',
+            companyId: 'company-id-1',
+            companyName: 'Perusahaan A',
+            bulan: 1,
+            tahun: 2024,
+            sudahDilaporkan: true,
+            periodId: 'period-id-1',
+            periodName: 'Q1 2024',
+          },
+          {
+            id: 'new-uuid-2',
+            applicationId: 'application-id-2',
+            applicationName: 'Aplikasi Registrasi 2',
+            companyId: 'company-id-2',
+            companyName: 'Perusahaan B',
+            bulan: 2,
+            tahun: 2024,
+            sudahDilaporkan: false,
+            periodId: 'period-id-1',
+            periodName: 'Q1 2024',
+          },
+        ],
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid parameters provided.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Period not found.',
+  })
+  @Get('pelaporan/report-status')
+  async reportStatusRegistrasi(
+    @Query() searchDto: SearchRegistrasiPelaporanStatus,
+  ) {
+    return this.registrasiService.getRegistrasiStatus(searchDto);
   }
 }
