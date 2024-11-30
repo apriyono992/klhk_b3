@@ -17,7 +17,8 @@
     "skalaPerusahaan" : "",
     "kdPos":  "40626",
     "kota":  "SOR",
-    "provinsi" : "IDJB"
+    "provinsi" : "IDJB",
+    "tipePerusahaan":  ["Perusahaan Produsen","Perusahaan Importir","Perusahaan Distributor","Perusahaan Pengguna"]
   },
   {
     "id": "f9b54d99-64e8-4974-9899-24d6e52ada39",
@@ -37,7 +38,8 @@
     "skalaPerusahaan" : "",
     "kdPos":  "40626",
     "kota":  "SOR",
-    "provinsi" : "IDJB"
+    "provinsi" : "IDJB",
+    "tipePerusahaan":  ["Perusahaan Produsen","Perusahaan Importir","Perusahaan Distributor","Perusahaan Pengguna"]
   },
   {
     "id": "89955d90-8f57-470c-b0cc-3b813460e9f2",
@@ -57,6 +59,7 @@
     "skalaPerusahaan" : "",
     "kdPos":  "40626",
     "kota":  "SOR",
-    "provinsi" : "IDJB"
+    "provinsi" : "IDJB",
+    "tipePerusahaan":  ["Perusahaan Produsen","Perusahaan Importir","Perusahaan Distributor","Perusahaan Pengguna"]
   }
 ]

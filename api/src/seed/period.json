@@ -1,0 +1,41 @@
+[
+  {
+    "id": "31c63ca9-4638-4fd7-ad12-3d610a796350",
+    "name": "Quarter 1 2024",
+    "finalizationDeadline": "2024-03-15T23:59:59.000Z",
+    "isActive": true,
+    "createdAt": "2024-11-27T07:30:40.819Z",
+    "updatedAt": "2024-11-27T07:30:40.819Z",
+    "endPeriodDate": "2024-03-31T23:59:59.000Z",
+    "endReportingDate": "2024-03-25T23:59:59.000Z",
+    "isReportingActive": true,
+    "startPeriodDate": "2024-01-01T00:00:00.000Z",
+    "startReportingDate": "2024-01-10T00:00:00.000Z"
+  },
+  {
+    "id": "9add44e7-32e5-4f45-98dd-4f4329af26ad",
+    "name": "Quarter 2 2024",
+    "finalizationDeadline": "2024-06-15T23:59:59.000Z",
+    "isActive": false,
+    "createdAt": "2024-11-27T07:30:40.819Z",
+    "updatedAt": "2024-11-27T07:30:40.819Z",
+    "endPeriodDate": "2024-06-30T23:59:59.000Z",
+    "endReportingDate": "2024-06-25T23:59:59.000Z",
+    "isReportingActive": false,
+    "startPeriodDate": "2024-04-01T00:00:00.000Z",
+    "startReportingDate": "2024-04-10T00:00:00.000Z"
+  },
+  {
+    "id": "fff12abf-4241-44f9-8a8c-0aae81e495a4",
+    "name": "Quarter 3 2024",
+    "finalizationDeadline": "2024-09-15T23:59:59.000Z",
+    "isActive": false,
+    "createdAt": "2024-11-27T07:30:40.819Z",
+    "updatedAt": "2024-11-27T07:30:40.819Z",
+    "endPeriodDate": "2024-09-30T23:59:59.000Z",
+    "endReportingDate": "2024-09-25T23:59:59.000Z",
+    "isReportingActive": false,
+    "startPeriodDate": "2024-07-01T00:00:00.000Z",
+    "startReportingDate": "2024-07-10T00:00:00.000Z"
+  }
+]

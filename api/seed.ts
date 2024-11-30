@@ -124,8 +124,10 @@ async function main() {
    await prisma.finalSurat.deleteMany()
    await prisma.draftSurat.deleteMany()
    await prisma.notifikasi.deleteMany()
-   await prisma.user.deleteMany()
+   await prisma.userRoles.deleteMany()
+   await prisma.userCompanies.deleteMany()
    await prisma.userRole.deleteMany()
+   await prisma.user.deleteMany()
    await prisma.location.deleteMany()
    await prisma.province.deleteMany();
    await prisma.regencies.deleteMany();
@@ -184,16 +186,16 @@ async function main() {
   // Seed Multiple DataBahanB3
   const dataBahanB3 = await prisma.dataBahanB3.createMany({
     data: [
-      { casNumber: '7439-97-6', namaBahanKimia: 'Mercury', namaDagang: 'Quicksilver', tipeBahan: 'Toxic Metal' },
-      { casNumber: '7440-02-0', namaBahanKimia: 'Nickel', namaDagang: 'Nickel Metal', tipeBahan: 'Metal' },
-      { casNumber: '7440-22-4', namaBahanKimia: 'Silver', namaDagang: 'Argentum', tipeBahan: 'Metal' },
-      { casNumber: '7440-66-6', namaBahanKimia: 'Zinc', namaDagang: 'Zinc Metal', tipeBahan: 'Metal' },
-      { casNumber: '7440-61-1', namaBahanKimia: 'Uranium', namaDagang: 'Uraninite', tipeBahan: 'Radioactive Metal' },
-      { casNumber: '7440-31-5', namaBahanKimia: 'Tin', namaDagang: 'Stannum', tipeBahan: 'Metal' },
-      { casNumber: '7782-49-2', namaBahanKimia: 'Selenium', namaDagang: 'Selenium', tipeBahan: 'Non-metal' },
-      { casNumber: '7440-36-0', namaBahanKimia: 'Antimony', namaDagang: 'Stibium', tipeBahan: 'Metalloid' },
-      { casNumber: '7440-38-2', namaBahanKimia: 'Arsenic', namaDagang: 'Arsenic', tipeBahan: 'Metalloid' },
-      { casNumber: '7440-50-8', namaBahanKimia: 'Copper', namaDagang: 'Cuprum', tipeBahan: 'Metal' },
+      { id:"7eda0609-17df-4084-8721-7e2d216f419b",casNumber: '7439-97-6', namaBahanKimia: 'Mercury', namaDagang: 'Quicksilver', tipeBahan: 'Toxic Metal' },
+      { id:"ffdc7ab6-5e43-4351-9c5f-46c0476d16f8", casNumber: '7440-02-0', namaBahanKimia: 'Nickel', namaDagang: 'Nickel Metal', tipeBahan: 'Metal' },
+      { id:"49116978-1c4f-406a-893c-e85d2231374e", casNumber: '7440-22-4', namaBahanKimia: 'Silver', namaDagang: 'Argentum', tipeBahan: 'Metal' },
+      { id:"ffc70ba1-51db-4b2b-8c3d-f4da648126e2", casNumber: '7440-66-6', namaBahanKimia: 'Zinc', namaDagang: 'Zinc Metal', tipeBahan: 'Metal' },
+      { id:"eb6551c5-1c99-46ab-b05c-5564d95747d4", casNumber: '7440-61-1', namaBahanKimia: 'Uranium', namaDagang: 'Uraninite', tipeBahan: 'Radioactive Metal' },
+      { id:"49065063-3759-4221-a653-0029447d8126", casNumber: '7440-31-5', namaBahanKimia: 'Tin', namaDagang: 'Stannum', tipeBahan: 'Metal' },
+      { id:"28c2a060-7de7-49e0-9da1-96c92b133756", casNumber: '7782-49-2', namaBahanKimia: 'Selenium', namaDagang: 'Selenium', tipeBahan: 'Non-metal' },
+      { id:"b1aa0616-a380-4f25-b9f9-e5554dc17e30", casNumber: '7440-36-0', namaBahanKimia: 'Antimony', namaDagang: 'Stibium', tipeBahan: 'Metalloid' },
+      { id:"7c0345c8-e1d5-4744-8957-91f4990fc7c3", casNumber: '7440-38-2', namaBahanKimia: 'Arsenic', namaDagang: 'Arsenic', tipeBahan: 'Metalloid' },
+      { id:"9afb1e2c-6a12-4fc9-9f03-1edb0da97a2d", casNumber: '7440-50-8', namaBahanKimia: 'Copper', namaDagang: 'Cuprum', tipeBahan: 'Metal' },
     ],
     skipDuplicates: true,
   });

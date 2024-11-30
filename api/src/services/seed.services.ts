@@ -121,6 +121,12 @@ export class SeedService {
       this.logger.error('Error while seeding pelabuhan data', error);
     }
 
+    try {
+      await this.seedPeriod();
+    } catch (error) {
+      this.logger.error('Error while seeding pelabuhan data', error);
+    }
+
     this.logger.log('Seeding process completed');
   }
 
@@ -306,6 +312,17 @@ export class SeedService {
     const data = this.readJsonFile(filePath);
 
     await this.prisma.bahanB3Registrasi.createMany({
+      data,
+      skipDuplicates: true, // This ensures that existing records are skipped
+    });
+    this.logger.log('Data bahanb3reg seeded');
+  }
+
+  private async seedPeriod() {
+    const filePath = path.join(process.cwd(), 'src/seed/period.json');
+    const data = this.readJsonFile(filePath);
+
+    await this.prisma.period.createMany({
       data,
       skipDuplicates: true, // This ensures that existing records are skipped
     });
