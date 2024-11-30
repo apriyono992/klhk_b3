@@ -5,12 +5,14 @@ import { getFetcher } from "../../../../services/api";
 import RootAdmin from "../../../../components/layouts/RootAdmin";
 import useCustomNavigate from "../../../../hooks/useCustomNavigate";
 import CustomDataGrid from "../../../../components/elements/CustomDataGrid";
-import { useMemo, useState } from "react";
+import {useEffect, useMemo, useState} from "react";
 
 export default function ProdusenPencarian() {
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
     const { getAdminStorageDetailPath } = useCustomNavigate();
+    const [b3Data, setB3Data] = useState({});
+    const [companyData, setCompanyData] = useState({});
 
     // Opsi SWR tanpa fetch otomatis
     const swrOptions = {
@@ -24,108 +26,162 @@ export default function ProdusenPencarian() {
     };
 
     // Fetch data perusahaan yang sudah dan belum melaporkan
-    const { data: reportedCompanies, mutate: mutateReportedCompanies } = useSWR(
-        '/api/period/search/companies?isReported=true',
+    const { data: produsenB3, mutate: mutateProdusenB3 } = useSWR(
+        `/api/dashboard/pelaporan/Produsen/pencarian/bahanb3?page=${page + 1}&limit=${pageSize}&keyword=&startDate=&endDate=`,
         getFetcher,
-        swrOptions
     );
 
-    const { data: unreportedCompanies, mutate: mutateUnreportedCompanies } = useSWR(
-        '/api/period/search/companies?isReported=false',
+    const { data: produsenPerusahaan, mutate: mutateProdusenPerusahaan } = useSWR(
+        `/api/dashboard/pelaporan/Produsen/pencarian/perusahaan?page=${page + 1}&limit=${pageSize}&keyword=&startDate=&endDate=`,
         getFetcher,
-        swrOptions
     );
 
-    // Fetch data aplikasi yang sudah dan belum melaporkan
-    const { data: reportedApplications, mutate: mutateReportedApplications } = useSWR(
-        '/api/period/search/applications?isReported=true',
-        getFetcher,
-        swrOptions
-    );
 
-    const { data: unreportedApplications, mutate: mutateUnreportedApplications } = useSWR(
-        '/api/period/search/applications?isReported=false',
-        getFetcher,
-        swrOptions
-    );
+    // masukkan ke data usestate setiap data baru ter-fetch
+    useEffect(() => {
+        console.log(produsenB3)
+        if (produsenB3) {
+            setB3Data(produsenB3.responseData);
+        }
 
-    // Fetch data registrasi yang sudah dan belum melaporkan
-    const { data: reportedRegistrations, mutate: mutateReportedRegistrations } = useSWR(
-        '/api/period/search/registrations?isReported=true',
-        getFetcher,
-        swrOptions
-    );
+        if (produsenPerusahaan) {
+            setCompanyData(produsenPerusahaan.responseData);
+        }
+    }, [produsenB3, produsenPerusahaan]);
 
-    const { data: unreportedRegistrations, mutate: mutateUnreportedRegistrations } = useSWR(
-        '/api/period/search/registrations?isReported=false',
-        getFetcher,
-        swrOptions
-    );
-
-    // Kolom untuk tabel
     const columnsPerusahaan = useMemo(() => [
         {
-            field: 'companyName',
+            field: 'name',
             headerName: 'Nama Perusahaan',
             flex: 1,
-            renderCell: (params) => <span>{params?.row?.company?.name || '-'}</span>,
+            renderCell: (params) => <span>{params?.row?.name || '-'}</span>,
         },
         {
-            field: 'jenisLaporan',
-            headerName: 'Jenis Laporan',
+            field: 'penanggungJawab',
+            headerName: 'Penanggung Jawab',
             flex: 1,
-            renderCell: (params) => <span>{params?.row?.jenisLaporan || '-'}</span>,
-
+            renderCell: (params) => <span>{params?.row?.penanggungJawab || '-'}</span>,
         },
         {
-            field: 'status',
-            headerName: 'Status',
+            field: 'alamatKantor',
+            headerName: 'Alamat Kantor',
+            flex: 1.5,
+            renderCell: (params) => <span>{params?.row?.alamatKantor || '-'}</span>,
+        },
+        {
+            field: 'telpKantor',
+            headerName: 'Telepon Kantor',
             flex: 1,
-            renderCell: (params) => {
-                const status = params.row.sudahDilaporkan ? 'Sudah' : 'Belum'; // Mengambil nilai dari params.value
-                return (
-                    <Chip
-                        color={status === 'Sudah' ? 'success' : 'danger'}
-                        variant="flat"
-                        size="sm"
-                    >
-                        {status}
-                    </Chip>
-                );
-            }
+            renderCell: (params) => <span>{params?.row?.telpKantor || '-'}</span>,
         },
         {
-            field: 'action',
-            headerName: 'Aksi',
+            field: 'faxKantor',
+            headerName: 'Fax Kantor',
+            flex: 1,
+            renderCell: (params) => <span>{params?.row?.faxKantor || '-'}</span>,
+        },
+        {
+            field: 'emailKantor',
+            headerName: 'Email Kantor',
+            flex: 1.5,
+            renderCell: (params) => <span>{params?.row?.emailKantor || '-'}</span>,
+        },
+        {
+            field: 'npwp',
+            headerName: 'NPWP',
+            flex: 1,
+            renderCell: (params) => <span>{params?.row?.npwp || '-'}</span>,
+        },
+        {
+            field: 'nomorInduk',
+            headerName: 'Nomor Induk',
+            flex: 1,
+            renderCell: (params) => <span>{params?.row?.nomorInduk || '-'}</span>,
+        },
+        {
+            field: 'kodeDBKlh',
+            headerName: 'Kode DBKLH',
+            flex: 1,
+            renderCell: (params) => <span>{params?.row?.kodeDBKlh || '-'}</span>,
+        },
+        {
+            field: 'alamatPool',
+            headerName: 'Alamat Pool',
+            flex: 2,
             renderCell: (params) => (
-                <Button size='sm' onPress={() => getAdminStorageDetailPath(params?.row?.id)} color='primary' isIconOnly>
-                    <EyeIcon className='size-4' />
-                </Button>
+                <span>
+                {params?.row?.alamatPool?.join(', ') || '-'}
+            </span>
             ),
-            sortable: false,
-            filterable: false,
+        },
+        {
+            field: 'bidangUsaha',
+            headerName: 'Bidang Usaha',
+            flex: 1,
+            renderCell: (params) => <span>{params?.row?.bidangUsaha || '-'}</span>,
+        },
+        {
+            field: 'tipePerusahaan',
+            headerName: 'Tipe Perusahaan',
+            flex: 1.5,
+            renderCell: (params) => (
+                <span>
+                {params?.row?.tipePerusahaan?.join(', ') || '-'}
+            </span>
+            ),
+        },
+        {
+            field: 'total',
+            headerName: 'Total Produksi',
+            flex: 1,
+            renderCell: (params) => <span>{params?.row?.total || '-'}</span>,
+        },
+    ], []);
+
+    const columnsB3 = useMemo(() => [
+        {
+            field: 'namaBahanKimia',
+            headerName: 'Nama Bahan Kimia',
+            flex: 1,
+            renderCell: (params) => <span>{params?.row?.namaBahanKimia || '-'}</span>,
+        },
+        {
+            field: 'casNumber',
+            headerName: 'CAS Number',
+            flex: 1,
+            renderCell: (params) => <span>{params?.row?.casNumber || '-'}</span>,
+        },
+        {
+            field: 'namaDagang',
+            headerName: 'Nama Dagang',
+            flex: 1,
+            renderCell: (params) => <span>{params?.row?.namaDagang || '-'}</span>,
+        },
+        {
+            field: 'tipeBahan',
+            headerName: 'Tipe Bahan',
+            flex: 1,
+            renderCell: (params) => <span>{params?.row?.tipeBahan || '-'}</span>,
+        },
+        {
+            field: 'sum',
+            headerName: 'Total Jumlah',
+            flex: 1,
+            renderCell: (params) => <span>{params?.row?.sum || '-'}</span>,
         },
     ], []);
 
 
     // Fungsi untuk refresh data
     const handleRefresh = () => {
-        mutateReportedCompanies();
-        mutateUnreportedCompanies();
-        mutateReportedApplications();
-        mutateUnreportedApplications();
-        mutateReportedRegistrations();
-        mutateUnreportedRegistrations();
+        mutateProdusenB3();
+        mutateProdusenPerusahaan();
     };
 
     // Fungsi untuk mendapatkan data pertama kali
     const handleGetData = () => {
-        mutateReportedCompanies();
-        mutateUnreportedCompanies();
-        mutateReportedApplications();
-        mutateUnreportedApplications();
-        mutateReportedRegistrations();
-        mutateUnreportedRegistrations();
+        mutateProdusenB3();
+        mutateProdusenPerusahaan();
     };
 
     return (
@@ -144,22 +200,27 @@ export default function ProdusenPencarian() {
                 </CardHeader>
                 <Divider />
                 <CardBody className="w-full h-[550px] p-5">
-                    <Tabs aria-label="Pelaporan Pencarian B3" defaultValue="reportedCompanies">
-                        <Tab title="Pelaporan Bedasarkan Jenis B3" value="reportedCompanies">
+                    <Tabs aria-label="Pelaporan Pencarian B3" defaultValue="produsenB3"
+                    onSelectionChange={() => {
+                        setPage(0)
+                        setPageSize(10)
+                    }}>
+                        <Tab title="Pelaporan Bedasarkan Jenis B3" value="produsenB3">
                             <CustomDataGrid
-                                data={reportedCompanies?.data || []}
-                                rowCount={reportedCompanies?.total || 0}
-                                columns={columnsPerusahaan}
+                                data={b3Data?.data || []}
+                                rowCount={b3Data?.total || 0}
+                                columns={columnsB3}
                                 pageSize={pageSize}
                                 setPageSize={setPageSize}
                                 page={page}
                                 setPage={setPage}
+                                getRowId={(row) => `${row?.casNumber}-${row?.namaBahanKimia}`}
                             />
                         </Tab>
-                        <Tab title="Pelaporan Bedasarkan Perusahaan" value="unreportedCompanies">
+                        <Tab title="Pelaporan Bedasarkan Perusahaan" value="produsenPerusahaan">
                             <CustomDataGrid
-                                data={unreportedCompanies?.data || []}
-                                rowCount={unreportedCompanies?.total || 0}
+                                data={companyData?.data || []}
+                                rowCount={companyData?.total || 0}
                                 columns={columnsPerusahaan}
                                 pageSize={pageSize}
                                 setPageSize={setPageSize}
