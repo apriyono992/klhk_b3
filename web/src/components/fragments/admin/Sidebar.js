@@ -47,7 +47,6 @@ import {
     RECOMENDATION_INDEX_PATH,
     REGISTRATION_DASHBOARD_PATH,
     REGISTRATION_INDEX_PATH,
-    REPORT_TRANSPORT_INDEX,
     STOK_B3_INDEX_ADMIN_PATH,
     STOK_B3_INDEX_USER_PATH,
     CMS_ARTICLE_PATH,
@@ -63,10 +62,19 @@ import {
     PELAPORAN_PRODUSEN_GRAFIK,
     PELAPORAN_PENGANGKUTAN_GRAFIK,
     PELAPORAN_PENGANGKUTAN_PENCARIAN,
-    PELAPORAN_PENYIMPANAN_GRAFIK_PATH,
+    PELAPORAN_PENYIMPANAN_GRAFIK_PATH, ADMIN_REPORT_TRANSPORT_INDEX,
+    REPORT_TRANSPORT_RECOMENDATION_INDEX,
+    REPORT_PRODUCTION_MATERIAL,
+    ADMIN_REPORT_PRODUCTION_MATERIAL,
+    REPORT_DISTRIBUTION_MATERIAL_INDEX,
+    ADMIN_REPORT_DISTRIBUTION_MATERIAL_INDEX,
+    REPORT_CONSUMPTION_MATERIAL_INDEX,
+    ASAL_MUAT_INDEX_PATH,
+    TUJUAN_BONGKAR_INDEX_PATH,
+    ADMIN_REPORT_CONSUMPTION_MATERIAL_INDEX
 } from "../../../services/routes";
 import useCustomNavigate from "../../../hooks/useCustomNavigate";
-import { PowerIcon } from "@heroicons/react/16/solid";
+// import { PowerIcon } from "@heroicons/react/16/solid";
 
 export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
     const sidebarRef = useRef(null)
@@ -266,7 +274,7 @@ export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
                             </Accordion>
                             <ListItem url={COMPANY_REPORT_STORAGE} variant="subitem" title="Penyimpanan B3 (Perusahaan)" icon={<ArchiveBoxIcon className="size-4" />} />
                             <ListItem url={ADMIN_REPORT_STORAGE} variant="subitem" title="Penyimpanan B3 (Admin)" icon={<ArchiveBoxIcon className="size-4" />} />
-                            <ListItem url={REPORT_TRANSPORT_INDEX} variant="subitem" title="Pengangkutan B3" icon={<TruckIcon className="size-4" />} />
+                            <ListItem url={ADMIN_REPORT_TRANSPORT_INDEX} variant="subitem" title="Pengangkutan B3" icon={<TruckIcon className="size-4" />} />
                         </AccordionItem>
 
                         <AccordionItem key="6" title="Mater Data" className="" startContent={<FolderIcon className="size-5" />}>

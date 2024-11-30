@@ -55,7 +55,7 @@ import NewsIndexPage from '../pages/admin/cms/news/IndexPage'
 import ArticleIndexPage from '../pages/admin/cms/article/IndexPage'
 import DocumentIndexPage from '../pages/admin/cms/document/IndexPage'
 import EventIndexPage from '../pages/admin/cms/event/IndexPage'
-import PelaporanDashboard from "../pages/admin/report/PelaporanDashboard";
+// import PelaporanDashboard from "../pages/admin/report/PelaporanDashboard";
 import PelaporanPenyimpananGrafik from "../pages/admin/Pelaporan/DashboardPenyimpanan/GrafikPenyimpanan";
 import ReportDashboardPage from "../pages/admin/report/DashboardPage";
 import IndexAdminStokB3 from "../pages/admin/stokB3/admin/IndexPage";
@@ -74,7 +74,7 @@ import PengangkutanPencarian from "../pages/admin/report/pengangkutan/Pengangkut
 import PenggunaanGrafik from "../pages/admin/report/use/graph/IndexPage";
 import PenggunaanPencarian from "../pages/admin/report/use/filter/IndexPage";
 
-import ProdusenPencarian from "../pages/admin/report/produsen/ProdusenPencarian";
+// import ProdusenPencarian from "../pages/admin/report/produsen/ProdusenPencarian";
 import ProfilePage from "../pages/admin/profile/profile";
 
 export const ROOT_PATH = '/'
@@ -114,7 +114,7 @@ export const NOTIFICATION_IMPORT_VERIFICATION_PATH = '/admin/notifikasi/draft-su
 export const NOTIFICATION_IMPORT_APPROVAL_PATH = '/admin/notifikasi/draft-surat-persetujuan-impor/:notificationId'
 export const NOTIFICATION_IMPORT_EC_PATH = '/admin/notifikasi/draft-surat-explicit-consent/:notificationId'
 
-export const PELAPORAN_DASHBOARD_PATH = '/admin/pelaporan/dasbor'
+// export const PELAPORAN_DASHBOARD_PATH = '/admin/pelaporan/dasbor'
 
 export const ADMIN_REPORT_STORAGE = '/admin/pelaporan/penyimpanan-b3/daftar'
 export const ADMIN_REPORT_STORAGE_DETAIL = '/admin/pelaporan/penyimpanan-b3/daftar/:id'
@@ -144,8 +144,8 @@ export const REPORT_CONSUMPTION_MATERIAL_INDEX = '/pelaporan/bahan-b3/konsumsi/d
 export const REPORT_CONSUMPTION_MATERIAL_CREATE = '/pelaporan/bahan-b3/konsumsi/buat'
 export const REPORT_CONSUMPTION_MATERIAL_EDIT = '/pelaporan/bahan-b3/konsumsi/ubah/:id'
 
-export const REPORT_PRODUCER_INDEX = '/admin/pelaporan/produsen-b3'
-export const PELAPORAN_PRODUSEN_PENCARIAN = '/admin/pelaporan/produsen-b3/pencarian'
+// export const REPORT_PRODUCER_INDEX = '/admin/pelaporan/produsen-b3'
+// export const PELAPORAN_PRODUSEN_PENCARIAN = '/admin/pelaporan/produsen-b3/pencarian'
 
 export const REPORT_PRODUCER_INDEX = '/admin/pelaporan/produsen-b3'
 export const PELAPORAN_PRODUSEN_PENCARIAN = '/admin/pelaporan/produsen-b3/pencarian'
@@ -257,7 +257,7 @@ const router = createBrowserRouter([
             { path: CMS_DOCUMENT_PATH, element: <DocumentIndexPage /> },
             { path: CMS_EVENT_PATH, element: <EventIndexPage /> },
 
-            { path: PELAPORAN_DASHBOARD_PATH, element: <PelaporanDashboard />, },
+            { path: PELAPORAN_DASHBOARD_PATH, element: <ReportDashboardPage />, },
             { path: PELAPORAN_PENYIMPANAN_GRAFIK_PATH, element: <PelaporanPenyimpananGrafik />},
 
             { path: PELAPORAN_PRODUSEN_PENCARIAN, element: <ProdusenPencarian />, },
