@@ -8,52 +8,85 @@ import {SearchPengakutanAsalMuat} from "../models/searchPengakutanAsalMuat";
 import {SearchPengakutanTujuanBongkar} from "../models/searchPengakutanTujuanBongkar";
 import {DashboardPelaporanDistribusiDto} from "../models/dashboard/dashboardPelaporanDistribusi.dto";
 import {PelaporanFilterSearchDto} from "../models/dashboard/pelaporanFilterSearch.dto";
+import {PelaporanFilterDateDto} from "../models/dashboard/pelaporanFilterDate.dto";
+import {DashboardPelaporanPengangkutanDto} from "../models/dashboard/dashboardPelaporanPengangkutan.dto";
 
 @Controller("dashboard/pelaporan-pengangkutan")
 @ApiTags('Dashboard Pelaporan')
 export class DashboardPelaporanPengangkutanController {
     constructor(private readonly dashboardPengangkutan: DashboardPelaporanPengangkutanService) {}
 
-
-    @Get('peta/asal-muat')
+    @Get('grafik')
     @ApiResponse({
         status: 200,
-        description: 'peta sebaran asal muat'
+        description: 'List Grafik Data Pengangkutan'
     })
-    public async getMapTransportationAsalMuat(@Query() searchPengakutanAsalMuat: SearchPengakutanAsalMuat) {
-        const data = await this.dashboardPengangkutan.findMapTransportationAsalMuat(searchPengakutanAsalMuat);
+    public async realisasiDanPerencanaan(@Query() query: DashboardPelaporanPengangkutanDto) {
+        const data = await this.dashboardPengangkutan.getPelaporanPengangkutanBahanB3(query);
         return data;
     }
 
-    @Get('peta/tujuan-bongkar')
+    @Get("peta/perusahaan")
     @ApiResponse({
         status: 200,
-        description: 'peta sebaran tujuan bongkar'
+        description: 'List Data Pengangkutan',
     })
-    public async getMapTransportationTujuanBongkar(@Query() searchPengakutanTujuanBongkar: SearchPengakutanTujuanBongkar) {
-        const data = await this.dashboardPengangkutan.findMapTransportationTujuanBongkar(searchPengakutanTujuanBongkar);
-        return data;
+    async petaSebaranPerusahaanPengangkutan() {
+        const data = await this.dashboardPengangkutan.petaSebaranPerusahaanPengangkutan();
+        return new SuccessRes("List Data Pengangkutan", data);
     }
 
-    // @Get('grafik/pengangkutan-terbanyak')
+    @Get("peta/perusahaan-pelaporan")
+    @ApiResponse({
+        status: 200,
+        description: 'List Data Pengangkutan'
+    })
+    async petaPerusahaanTerbanyakMelakukanPengangkutan(@Query() query:PelaporanFilterDateDto) {
+        const data = await this.dashboardPengangkutan.petaPerusahaanTerbanyakMelakukanPelaporan(query);
+        return new SuccessRes("List Data Distribusi", data);
+    }
+
+    @Get("/peta/perusahaan-terbanyak")
+    @ApiResponse({
+        status: 200,
+        description: 'list data Distribusi',
+    })
+    async petaPerusahaanTerbanyakPengangkutan(@Query()query:PelaporanFilterDateDto){
+        const res = await this.dashboardPengangkutan.petaPerusahaanTerbanyakPengangkutan(query)
+        return new SuccessRes("list data Distribusi",res)
+    }
+
+    @Get("peta/bahanb3-terbanyak")
+    @ApiResponse({
+        status: 200,
+        description: 'List Data Pengangkutan'
+    })
+    async petaBahanB3TerbanyakPengangkutan(@Query() query:PelaporanFilterDateDto) {
+        const data = await this.dashboardPengangkutan.petaBahanB3TerbanyakPengangkutan(query);
+        return new SuccessRes("List Data Distribusi", data);
+    }
+
+
+    // @Get('peta/asal-muat')
     // @ApiResponse({
     //     status: 200,
-    //     description: 'Besaran B3 Pengangkutan Terbanyak'
+    //     description: 'peta sebaran asal muat'
     // })
-    // public async getBesaranB3PengangkutanTerbanyak(@Query() query: PelaporanFilterSearchDto) {
-    //     const data = await this.dashboardPengangkutan.findB3PengangkutanTerbanyak(query);
+    // public async getMapTransportationAsalMuat(@Query() searchPengakutanAsalMuat: SearchPengakutanAsalMuat) {
+    //     const data = await this.dashboardPengangkutan.findMapTransportationAsalMuat(searchPengakutanAsalMuat);
+    //     return data;
+    // }
+    //
+    // @Get('peta/tujuan-bongkar')
+    // @ApiResponse({
+    //     status: 200,
+    //     description: 'peta sebaran tujuan bongkar'
+    // })
+    // public async getMapTransportationTujuanBongkar(@Query() searchPengakutanTujuanBongkar: SearchPengakutanTujuanBongkar) {
+    //     const data = await this.dashboardPengangkutan.findMapTransportationTujuanBongkar(searchPengakutanTujuanBongkar);
     //     return data;
     // }
 
-    @Get('grafik/b3-berdasarkan-perusahaan')
-    @ApiResponse({
-        status: 200,
-        description: 'Besaran B3 Pengangkutan Terbanyak'
-    })
-    public async getBesaranB3BerdasarkanPerusahaan() {
-        const data = await this.dashboardPengangkutan.findB3BerdasarkanPerusahaan();
-        return data;
-    }
 
     @Get('pencarian/bahanb3')
     @ApiResponse({
