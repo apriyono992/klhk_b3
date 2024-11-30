@@ -1,150 +1,224 @@
 [
     {
         "id": "11",
-        "name": "ACEH"
+        "name": "ACEH",
+        "latitude": 4.6951,
+        "longitude": 96.7494
     },
     {
         "id": "12",
-        "name": "SUMATERA UTARA"
+        "name": "SUMATERA UTARA",
+        "latitude": 2.1154,
+        "longitude": 99.5451
     },
     {
         "id": "13",
-        "name": "SUMATERA BARAT"
+        "name": "SUMATERA BARAT",
+        "latitude": -0.7893,
+        "longitude": 100.6634
     },
     {
         "id": "14",
-        "name": "RIAU"
+        "name": "RIAU",
+        "latitude": 0.2933,
+        "longitude": 101.7068
     },
     {
         "id": "15",
-        "name": "JAMBI"
+        "name": "JAMBI",
+        "latitude": -1.6106,
+        "longitude": 103.6123
     },
     {
         "id": "16",
-        "name": "SUMATERA SELATAN"
+        "name": "SUMATERA SELATAN",
+        "latitude": -3.3194,
+        "longitude": 104.9147
     },
     {
         "id": "17",
-        "name": "BENGKULU"
+        "name": "BENGKULU",
+        "latitude": -3.5778,
+        "longitude": 102.3464
     },
     {
         "id": "18",
-        "name": "LAMPUNG"
+        "name": "LAMPUNG",
+        "latitude": -4.5586,
+        "longitude": 105.4068
     },
     {
         "id": "19",
-        "name": "KEPULAUAN BANGKA BELITUNG"
+        "name": "KEPULAUAN BANGKA BELITUNG",
+        "latitude": -2.7411,
+        "longitude": 106.4406
     },
     {
         "id": "21",
-        "name": "KEPULAUAN RIAU"
+        "name": "KEPULAUAN RIAU",
+        "latitude": 3.9457,
+        "longitude": 108.1429
     },
     {
         "id": "31",
-        "name": "DKI JAKARTA"
+        "name": "DKI JAKARTA",
+        "latitude": -6.2088,
+        "longitude": 106.8456
     },
     {
         "id": "32",
-        "name": "JAWA BARAT"
+        "name": "JAWA BARAT",
+        "latitude": -6.9175,
+        "longitude": 107.6191
     },
     {
         "id": "33",
-        "name": "JAWA TENGAH"
+        "name": "JAWA TENGAH",
+        "latitude": -7.1506,
+        "longitude": 110.1403
     },
     {
         "id": "34",
-        "name": "DAERAH ISTIMEWA YOGYAKARTA"
+        "name": "DAERAH ISTIMEWA YOGYAKARTA",
+        "latitude": -7.7956,
+        "longitude": 110.3695
     },
     {
         "id": "35",
-        "name": "JAWA TIMUR"
+        "name": "JAWA TIMUR",
+        "latitude": -7.2504,
+        "longitude": 112.7688
     },
     {
         "id": "36",
-        "name": "BANTEN"
+        "name": "BANTEN",
+        "latitude": -6.1202,
+        "longitude": 106.1506
     },
     {
         "id": "51",
-        "name": "BALI"
+        "name": "BALI",
+        "latitude": -8.4095,
+        "longitude": 115.1889
     },
     {
         "id": "52",
-        "name": "NUSA TENGGARA BARAT"
+        "name": "NUSA TENGGARA BARAT",
+        "latitude": -8.6529,
+        "longitude": 117.3616
     },
     {
         "id": "53",
-        "name": "NUSA TENGGARA TIMUR"
+        "name": "NUSA TENGGARA TIMUR",
+        "latitude": -9.5018,
+        "longitude": 119.8996
     },
     {
         "id": "61",
-        "name": "KALIMANTAN BARAT"
+        "name": "KALIMANTAN BARAT",
+        "latitude": 0.1216,
+        "longitude": 109.2524
     },
     {
         "id": "62",
-        "name": "KALIMANTAN TENGAH"
+        "name": "KALIMANTAN TENGAH",
+        "latitude": -1.6815,
+        "longitude": 113.3824
     },
     {
         "id": "63",
-        "name": "KALIMANTAN SELATAN"
+        "name": "KALIMANTAN SELATAN",
+        "latitude": -3.0926,
+        "longitude": 115.2838
     },
     {
         "id": "64",
-        "name": "KALIMANTAN TIMUR"
+        "name": "KALIMANTAN TIMUR",
+        "latitude": 0.5386,
+        "longitude": 116.4194
     },
     {
         "id": "65",
-        "name": "KALIMANTAN UTARA"
+        "name": "KALIMANTAN UTARA",
+        "latitude": 3.3138,
+        "longitude": 117.6326
     },
     {
         "id": "71",
-        "name": "SULAWESI UTARA"
+        "name": "SULAWESI UTARA",
+        "latitude": 1.4942,
+        "longitude": 124.8915
     },
     {
         "id": "72",
-        "name": "SULAWESI TENGAH"
+        "name": "SULAWESI TENGAH",
+        "latitude": -1.4307,
+        "longitude": 121.4456
     },
     {
         "id": "73",
-        "name": "SULAWESI SELATAN"
+        "name": "SULAWESI SELATAN",
+        "latitude": -5.1477,
+        "longitude": 119.4327
     },
     {
         "id": "74",
-        "name": "SULAWESI TENGGARA"
+        "name": "SULAWESI TENGGARA",
+        "latitude": -4.1296,
+        "longitude": 122.085
     },
     {
         "id": "75",
-        "name": "GORONTALO"
+        "name": "GORONTALO",
+        "latitude": 0.699,
+        "longitude": 122.4467
     },
     {
         "id": "76",
-        "name": "SULAWESI BARAT"
+        "name": "SULAWESI BARAT",
+        "latitude": -2.9525,
+        "longitude": 119.2321
     },
     {
         "id": "81",
-        "name": "MALUKU"
+        "name": "MALUKU",
+        "latitude": -3.2385,
+        "longitude": 128.1972
     },
     {
         "id": "82",
-        "name": "MALUKU UTARA"
+        "name": "MALUKU UTARA",
+        "latitude": 1.8646,
+        "longitude": 127.4782
     },
     {
         "id": "91",
-        "name": "PAPUA"
+        "name": "PAPUA",
+        "latitude": -4.2699,
+        "longitude": 138.0804
     },
     {
         "id": "92",
-        "name": "PAPUA BARAT"
+        "name": "PAPUA BARAT",
+        "latitude": -1.3361,
+        "longitude": 132.3114
     },
     {
         "id": "93",
-        "name": "PAPUA SELATAN"
+        "name": "PAPUA SELATAN",
+        "latitude": -7.9883,
+        "longitude": 139.7332
     },
     {
         "id": "94",
-        "name": "PAPUA TENGAH"
+        "name": "PAPUA TENGAH",
+        "latitude": -3.9757,
+        "longitude": 137.0357
     },
     {
         "id": "95",
-        "name": "PAPUA PEGUNUNGAN"
+        "name": "PAPUA PEGUNUNGAN",
+        "latitude": -4.1286,
+        "longitude": 138.4805
     }
 ]
