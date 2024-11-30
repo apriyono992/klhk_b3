@@ -19,6 +19,11 @@ import { JwtAuthGuard } from 'src/utils/auth.guard';
 import { RolesGuard } from 'src/utils/roles.guard';
 import { RolesAccess } from 'src/models/enums/roles';
 import { Roles } from 'src/utils/roles.decorator';
+import { CreateDataPICDto } from 'src/models/createDataPICDto';
+import { UpdateDataPICDto } from 'src/models/updateDataPICDto';
+import { SearchDataPICDto } from 'src/models/searchDataPICDto';
+import { CreateDataCustomerDto } from 'src/models/createDataCustomerDto';
+import { UpdateDataCustomerDto } from 'src/models/updateDataCustomerDto';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('Company')
@@ -261,6 +266,78 @@ export class CompanyController {
     return this.companyService.addDataSupplier(companyId, data);
   }
 
+   // Endpoint untuk menambah DataSupplier
+   @Post('create-data-customer/:companyId')
+   @Roles(RolesAccess.SUPER_ADMIN, RolesAccess.PIC_REGISTRASI, RolesAccess.PIC_REKOMENDASI, RolesAccess.PENGELOLA)   
+   @ApiOperation({ summary: 'Add new DataSupplier' })
+   @ApiParam({ name: 'companyId', description: 'ID of the company' })
+   @ApiBody({
+     type: CreateDataSupplierDto,
+     examples: {
+       example1: {
+         summary: 'Example Request',
+         value: {
+           namaSupplier: 'PT. Supplier XYZ',
+           alamat: 'Jl. Sudirman No. 1',
+           email: 'contact@supplierxyz.com',
+           telepon: '081234567890',
+           fax: '021-12345678',
+           longitude: 106.84513,
+           latitude: -6.20876,
+           provinceId: '123',
+           regencyId: '456',
+           districtId: '789',
+           villageId: '101',
+           dataPICs: [
+             {
+               namaPIC: 'John Doe',
+               jabatan: 'Manager',
+               email: 'john.doe@supplierxyz.com',
+               telepon: '081234567891',
+               fax: '021-12345679',
+             },
+           ],
+         },
+       },
+     },
+   })
+   @ApiResponse({
+     status: 201,
+     description: 'DataSupplier created successfully.',
+     schema: {
+       example: {
+         id: 'supplier-id-123',
+         companyId: 'company-id-456',
+         namaSupplier: 'PT. Supplier XYZ',
+         alamat: 'Jl. Sudirman No. 1',
+         email: 'contact@supplierxyz.com',
+         telepon: '081234567890',
+         fax: '021-12345678',
+         longitude: 106.84513,
+         latitude: -6.20876,
+         provinceId: '123',
+         regencyId: '456',
+         districtId: '789',
+         villageId: '101',
+         createdAt: '2024-11-11T10:00:00Z',
+         updatedAt: '2024-11-11T10:00:00Z',
+         dataPICs: [
+           {
+             id: 'pic-id-789',
+             namaPIC: 'John Doe',
+             jabatan: 'Manager',
+             email: 'john.doe@supplierxyz.com',
+             telepon: '081234567891',
+             fax: '021-12345679',
+           },
+         ],
+       },
+     },
+   })
+   async addDataCustomer(@Param('companyId') companyId: string, @Body() data: CreateDataCustomerDto) {
+     return this.companyService.addDataCustomer(companyId, data);
+   }
+
   // Endpoint untuk mengupdate DataSupplier
   @Put('supplier/:supplierId')
   @Roles(RolesAccess.SUPER_ADMIN, RolesAccess.PIC_REGISTRASI, RolesAccess.PIC_REKOMENDASI, RolesAccess.PENGELOLA)   
@@ -331,6 +408,76 @@ export class CompanyController {
     return this.companyService.updateDataSupplier(supplierId, data);
   }
 
+    // Endpoint untuk mengupdate DataCustomer
+    @Put('data-customer/:customerId')
+    @Roles(RolesAccess.SUPER_ADMIN, RolesAccess.PIC_REGISTRASI, RolesAccess.PIC_REKOMENDASI, RolesAccess.PENGELOLA)   
+    @ApiOperation({ summary: 'Update DataSupplier' })
+    @ApiParam({ name: 'supplierId', description: 'ID of the supplier' })
+    @ApiBody({
+      type: UpdateDataSupplierDto,
+      examples: {
+        example1: {
+          summary: 'Example Request',
+          value: {
+            namaSupplier: 'PT. Supplier Baru',
+            alamat: 'Jl. Gatot Subroto No. 2',
+            email: 'newcontact@supplierxyz.com',
+            telepon: '081234567892',
+            fax: '021-12345680',
+            longitude: 106.84514,
+            latitude: -6.20877,
+            provinceId: '124',
+            regencyId: '457',
+            districtId: '790',
+            villageId: '102',
+            dataPICs: [
+              {
+                id: 'pic-id-789',
+                namaPIC: 'Jane Doe',
+                jabatan: 'Supervisor',
+                email: 'jane.doe@supplierxyz.com',
+                telepon: '081234567893',
+              },
+            ],
+          },
+        },
+      },
+    })
+    @ApiResponse({
+      status: 200,
+      description: 'DataSupplier updated successfully.',
+      schema: {
+        example: {
+          id: 'supplier-id-123',
+          companyId: 'company-id-456',
+          namaSupplier: 'PT. Supplier Baru',
+          alamat: 'Jl. Gatot Subroto No. 2',
+          email: 'newcontact@supplierxyz.com',
+          telepon: '081234567892',
+          fax: '021-12345680',
+          longitude: 106.84514,
+          latitude: -6.20877,
+          provinceId: '124',
+          regencyId: '457',
+          districtId: '790',
+          villageId: '102',
+          updatedAt: '2024-11-11T12:00:00Z',
+          dataPICs: [
+            {
+              id: 'pic-id-789',
+              namaPIC: 'Jane Doe',
+              jabatan: 'Supervisor',
+              email: 'jane.doe@supplierxyz.com',
+              telepon: '081234567893',
+            },
+          ],
+        },
+      },
+    })
+    async updateDataCustomer(@Param('customerId') customerId: string, @Body() data: UpdateDataCustomerDto) {
+      return this.companyService.updateDataCustomer(customerId, data);
+    }
+
   // Endpoint untuk menghapus DataSupplier
   @Delete('supplier/:supplierId')
   @Roles(RolesAccess.SUPER_ADMIN, RolesAccess.PIC_REGISTRASI, RolesAccess.PIC_REKOMENDASI, RolesAccess.PENGELOLA)   
@@ -348,6 +495,26 @@ export class CompanyController {
   @ApiResponse({ status: 404, description: 'Supplier not found.' })
   async deleteDataSupplier(@Param('supplierId') supplierId: string) {
     await this.companyService.deleteDataSupplier(supplierId);
+    return { message: 'DataSupplier deleted successfully.' };
+  }
+
+  // Endpoint untuk menghapus DataSupplier
+  @Delete('data-customer/:customerId')
+  @Roles(RolesAccess.SUPER_ADMIN, RolesAccess.PIC_REGISTRASI, RolesAccess.PIC_REKOMENDASI, RolesAccess.PENGELOLA)   
+  @ApiOperation({ summary: 'Delete DataSupplier' })
+  @ApiParam({ name: 'supplierId', description: 'ID of the supplier' })
+  @ApiResponse({
+    status: 200,
+    description: 'DataSupplier deleted successfully.',
+    schema: {
+      example: {
+        message: 'DataSupplier deleted successfully.',
+      },
+    },
+  })
+  @ApiResponse({ status: 404, description: 'Supplier not found.' })
+  async deleteDataCustomer(@Param('customerId') customerId: string) {
+    await this.companyService.deleteDataCustomer(customerId);
     return { message: 'DataSupplier deleted successfully.' };
   }
 
@@ -1087,5 +1254,154 @@ export class CompanyController {
     @ApiResponse({ status: 404, description: 'Data perusahaan tujuan bongkar tidak ditemukan.' })
     async searchPerusahaanTujuanBongkar(@Query() dto: SearchPerusahaanTujuanBongkarDto) {
       return await this.companyService.searchPerusahaanTujuanBongkar(dto);
-    }
+  }
+
+  @Get('data-pic/find/:id')
+  @ApiOperation({ summary: 'Get PIC data by ID' })
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    description: 'ID of the PIC data to be retrieved',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'DataPIC retrieved successfully',
+    schema: {
+      example: {
+        id: '123e4567-e89b-12d3-a456-426614174000',
+        namaPIC: 'John Doe',
+        jabatan: 'Manager',
+        email: 'johndoe@example.com',
+        telepon: '+62123456789',
+        fax: '+62123456789',
+        createdAt: '2024-11-25T14:48:00.000Z',
+        updatedAt: '2024-11-26T14:48:00.000Z',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'DataPIC not found',
+  })
+  async getPicById(@Param('id') id: string) {
+    return await this.companyService.getPicByid(id);
+  }
+  
+  @Post('create-data-pic')
+  @ApiOperation({ summary: 'Create a new DataPIC' })
+  @ApiBody({
+    description: 'DataPIC details',
+    type: CreateDataPICDto,
+    examples: {
+      default: {
+        summary: 'Example request body',
+        value: {
+          namaPIC: 'Jane Doe',
+          jabatan: 'Director',
+          email: 'janedoe@example.com',
+          telepon: '+62123456789',
+          fax: '+62123456789',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'DataPIC created successfully',
+    schema: {
+      example: {
+        id: '123e4567-e89b-12d3-a456-426614174001',
+        namaPIC: 'Jane Doe',
+        jabatan: 'Director',
+        email: 'janedoe@example.com',
+        telepon: '+62123456789',
+        fax: '+62123456789',
+        createdAt: '2024-11-26T14:48:00.000Z',
+        updatedAt: '2024-11-26T14:48:00.000Z',
+      },
+    },
+  })
+  async createPic(@Body() data: CreateDataPICDto) {
+    return await this.companyService.createDataPIC(data);
+  }
+  
+  @Put('update-data-pic/:id')
+  @ApiOperation({ summary: 'Update a DataPIC by ID' })
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    description: 'ID of the PIC data to be updated',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @ApiBody({
+    description: 'Updated DataPIC details',
+    type: UpdateDataPICDto,
+    examples: {
+      default: {
+        summary: 'Example request body',
+        value: {
+          namaPIC: 'Jane Doe Updated',
+          jabatan: 'Director',
+          email: 'updatedjanedoe@example.com',
+          telepon: '+62123456789',
+          fax: '+62123456789',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'DataPIC updated successfully',
+    schema: {
+      example: {
+        id: '123e4567-e89b-12d3-a456-426614174000',
+        namaPIC: 'Jane Doe Updated',
+        jabatan: 'Director',
+        email: 'updatedjanedoe@example.com',
+        telepon: '+62123456789',
+        fax: '+62123456789',
+        createdAt: '2024-11-25T14:48:00.000Z',
+        updatedAt: '2024-11-26T14:48:00.000Z',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'DataPIC not found',
+  })
+  async updatePic(@Param('id') id: string, @Body() data: UpdateDataPICDto) {
+    return await this.companyService.updateDataPIC(id, data);
+  }
+  
+  @Delete('delete-data-pic/:id')
+  @ApiOperation({ summary: 'Delete a DataPIC by ID' })
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    description: 'ID of the PIC data to be deleted',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'DataPIC deleted successfully',
+    schema: {
+      example: {
+        message: 'DataPIC deleted successfully',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'DataPIC not found',
+  })
+  async deletePic(@Param('id') id: string) {
+    return await this.companyService.deleteDataPIC(id);
+  } 
+
+  @Get('search-data-pic')
+  async getAllPIC(@Query() dto: SearchDataPICDto) {
+    return await this.companyService.listAllDataPIC(dto);
+
+  }
 }

@@ -468,6 +468,10 @@ model Company {
   KewajibanPelaporanRegistrasi KewajibanPelaporanRegistrasi[]
 
   UserCompanies UserCompanies[] @relation("UserCompanies") // Relasi ke
+
+  DataPICFinal DataPICFinal[]
+
+  DataPIC DataPIC[]
 }
 
 model Vehicle {
@@ -798,19 +802,20 @@ model Registrasi {
   jabatan_pengurus        String?
   tanggal_pengajuan       DateTime                  @default(now())
   tanggal_surat           DateTime                  @default(now())
+  nomor_surat             String?
   nomor                   String
   tahun                   Int?                      @default(2021)
-  status_izin             String
-  keterangan_sk           String
-  tanggal_terbit          DateTime
-  berlaku_dari            DateTime
-  berlaku_sampai          DateTime
-  nomor_notifikasi_impor  String
-  kode_db_klh_perusahaan  String
-  nama_perusahaan         String
-  alamat_perusahaan       String
-  status                  String
-  bulan                   String
+  status_izin             String?
+  keterangan_sk           String?
+  tanggal_terbit          DateTime?
+  berlaku_dari            DateTime?
+  berlaku_sampai          DateTime?
+  nomor_notifikasi_impor  String?
+  kode_db_klh_perusahaan  String?
+  nama_perusahaan         String?
+  alamat_perusahaan       String?
+  status                  String?
+  bulan                   String?
   pejabatId               String? // Nullable, foreign key for Pejabat
   pejabat                 DataPejabat?   @relation(fields: [pejabatId], references: [id]) // Nullable relation
   is_draft                Boolean                   @default(true)
@@ -1133,8 +1138,6 @@ model City {
   name       String
   provinceId String
   province   Province @relation(fields: [provinceId], references: [id])
-  longitude       Float?
-  latitude        Float?
 }
 
 model User {
@@ -1194,16 +1197,16 @@ model BahanB3Registrasi {
   cas_number                 String
   hs_code                    String
   klasifikasi_b3             String
-  negara_muat                String
+  negara_muat                String[]
   penghasil_bahan_kimia      String
   penggunaan                 String
   kategori_b3                String
   karakteristik_b3           String
   tujuan_penggunaan          String
-  jumlah_impor               Decimal              @db.Decimal(15, 2)
-  jumlah_impor_per_tahun     Decimal              @db.Decimal(15, 2)
+  jumlah_impor               Decimal              @db.Decimal(15, 4)
+  jumlah_impor_per_tahun     Decimal              @db.Decimal(15, 4)
   pelaksanaan_rencana_impor  Int
-  asal_negara                String
+  asal_negara                String[]
   alamat_penghasil_b3        String
   pelabuhan_asal             String[]
   pelabuhan_muat             String[]
@@ -1641,6 +1644,9 @@ model DataPIC {
   email String?
   telepon String?
   fax String?
+  companyId String?
+  company Company? @relation(fields: [companyId], references: [id])
+  type String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -1660,8 +1666,8 @@ model PelaporanPenggunaanBahanB3 {
   no_surat_notifikasi String?
   bulan               Int // Month of the report (1 for January, 2 for February, etc.)
   tahun               Int // Year of the report
-  dataBahanB3Id       String // Foreign key to DataBahanB3
-  dataBahanB3         DataBahanB3          @relation(fields: [dataBahanB3Id], references: [id]) // Relation to track reports per B3 substance
+  dataBahanB3Id       String? // Foreign key to DataBahanB3
+  dataBahanB3         DataBahanB3?          @relation(fields: [dataBahanB3Id], references: [id]) // Relation to track reports per B3 substance
   periodId            String // Foreign key to Period
   period              Period               @relation(fields: [periodId], references: [id])
   tipePembelian       String // Type of purchase (e.g., 'Import', 'Local')
@@ -1989,6 +1995,8 @@ model DataPICFinal {
   email String?
   telepon String?
   fax String?
+  companyId String
+  Company Company @relation(fields: [companyId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -2112,7 +2120,7 @@ model KewajibanPelaporanPerusahaan {
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
-  @@unique([companyId, periodId, jenisLaporan]) // Menghindari duplikasi
+  @@unique([companyId, periodId,bulan,tahun, jenisLaporan]) // Menghindari duplikasi
 }
 
 model KewajibanPelaporanAplikasi {
@@ -2133,7 +2141,7 @@ model KewajibanPelaporanAplikasi {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
-  @@unique([companyId, applicationId, periodId, vehicleId])
+  @@unique([companyId, applicationId,bulan,tahun, periodId, vehicleId])
 }
 
 model KewajibanPelaporanRegistrasi {
@@ -2151,5 +2159,5 @@ model KewajibanPelaporanRegistrasi {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
-  @@unique([registrasiId, companyId, periodId])
+  @@unique([registrasiId, companyId,bulan,tahun, periodId])
 }

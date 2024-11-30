@@ -13,6 +13,7 @@ import { BahanB3RegistrasiDto } from '../models/createUpdateBahanB3regDTO';
 import {InswServices} from "./insw.services";
 import {CreateSubmitDraftSKDto} from "../models/createSubmitDraftSKDto";
 import {CreateUpdateValidasiTeknis} from "../models/createUpdateValidasiTeknis";
+import { StatusPermohonanRegistrasi } from 'src/models/enums/statusPermohonanRegistrasi';
 
 @Injectable()
 export class RegistrasiServices {
@@ -90,6 +91,23 @@ export class RegistrasiServices {
     });
 
     return registrasi;
+  }
+
+  async updateStatus(id:string, status: StatusPermohonanRegistrasi) {
+    const registrasi = await this.prisma.registrasi.findUnique({
+      where: { id },
+    })
+    
+    if (!registrasi) {
+      throw new NotFoundException(`Registrasi not found`);
+    }
+
+    return await this.prisma.registrasi.update({
+      where: { id },
+      data: {
+        status,
+      },
+    });
   }
 
   async create(saveRegistrasiDto: CreateRegistrasiDto) {
@@ -174,10 +192,6 @@ export class RegistrasiServices {
       throw new Error("Berlaku Sampai Kosong atau Invalid")
     }
 
-    if(!dataRegistrasi.nomor_notifikasi_impor) {
-      throw new Error("Nomor Notifikasi Impor Kosong atau Invalid")
-    }
-
     if(!dataRegistrasi.pejabatId) {
       throw new Error("Pejabat id Kosong atau Invalid")
     }
@@ -193,7 +207,8 @@ export class RegistrasiServices {
     const registrasi = await this.prisma.registrasi.update({
       where: { id },
       data: {
-        approval_status: 'approve direksi'
+        approval_status: 'approve direksi',
+        status: StatusPermohonanRegistrasi.KIRIM_INSW
       }
     });
 
@@ -237,8 +252,17 @@ export class RegistrasiServices {
   }
 
   async listRegistrasiB3(searchRegistrasiDto: SearchRegistrasiDto) {
-    const { page, limit, sortBy, sortOrder, search, status } = searchRegistrasiDto;
-
+    const {
+      page = 1, // Default page
+      limit = 10, // Default limit
+      sortBy = 'id', // Default sort field
+      sortOrder = 'asc', // Default sort order
+      search,
+      status,
+      companyId,
+      returnAll = true,
+    } = searchRegistrasiDto;
+  
     const where: Prisma.RegistrasiWhereInput = {
       ...(search && {
         OR: [
@@ -247,9 +271,26 @@ export class RegistrasiServices {
           { kode_db_klh_perusahaan: { contains: search, mode: 'insensitive' } },
         ],
       }),
-      ...(status && { status }),
+      ...(status && { status: {in: status, mode:'insensitive'} }),
+      ...(companyId && { companyId: { in: companyId } }),
     };
 
+    console.log(where)
+  
+    if (returnAll) {
+      const registrasi = await this.prisma.registrasi.findMany({
+        where,
+        orderBy: { [sortBy]: sortOrder },
+      });
+  
+      return {
+        total: registrasi.length,
+        page: 1,
+        limit: registrasi.length,
+        registrasi: registrasi.map((item, index) => ({ ...item, index: index + 1 })),
+      };
+    }
+  
     const [registrasi, total] = await Promise.all([
       this.prisma.registrasi.findMany({
         where,
@@ -259,12 +300,12 @@ export class RegistrasiServices {
       }),
       this.prisma.registrasi.count({ where }),
     ]);
-
+  
     const registrasiWithIndex = registrasi.map((item, index) => ({
       ...item,
       index: (page - 1) * limit + index + 1,
     }));
-
+  
     return {
       total,
       page,
@@ -272,6 +313,7 @@ export class RegistrasiServices {
       registrasi: registrasiWithIndex,
     };
   }
+  
 
   async getRegistrasiById(id: string) {
     const dataPenjabat = await this.prisma
@@ -490,6 +532,8 @@ export class RegistrasiServices {
         status_izin: updatePayload.status_izin ?? undefined,
         keterangan_sk: updatePayload.keterangan_sk ?? undefined,
         tanggal_terbit: updatePayload.tanggal_terbit ?? undefined,
+        nomor_surat: saveData.nomor_surat ?? undefined,
+        tanggal_surat: saveData.tanggal_surat ?? undefined,
         berlaku_dari: saveData.berlaku_dari,
         berlaku_sampai: saveData.berlaku_sampai,
         nomor_notifikasi_impor: saveData.nomor_notifikasi_impor,

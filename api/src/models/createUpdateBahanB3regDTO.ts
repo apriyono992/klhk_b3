@@ -7,7 +7,7 @@ import {
   IsArray,
   IsUUID,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 
 export class BahanB3RegistrasiDto {
   @ApiProperty({ description: 'Primary key ID' })
@@ -72,8 +72,21 @@ export class BahanB3RegistrasiDto {
   karakteristik_b3: string;
 
   @ApiProperty({ description: 'Negara Muat', example: 'Australia'})
-  @IsString()
-  negara_muat: string;
+  @Transform(({ value }) => {
+    // Jika sudah berupa array, trim setiap elemen
+    if (Array.isArray(value)) {
+      return value.map((item) => item.trim());
+    }
+    // Jika berupa string dengan koma, pecah menjadi array dan trim setiap elemen
+    if (typeof value === 'string') {
+      return value.split(',').map((item) => item.trim());
+    }
+    // Jika bukan array atau string, kembalikan seperti apa adanya
+    return [value];
+  })
+  @IsArray()
+  @IsString({ each: true })
+  negara_muat: string[];
 
   @ApiProperty({ description: 'Penghasil Bahan Kimia', example: 'HANWHA SOLUTIONS CO., LTD'})
   @IsString()
@@ -105,8 +118,22 @@ export class BahanB3RegistrasiDto {
   pelaksanaan_rencana_impor: number;
 
   @ApiProperty({ description: 'Asal negara', example: 'Indonesia' })
-  @IsString()
-  asal_negara: string;
+  @IsOptional()
+  @Transform(({ value }) => {
+    // Jika sudah berupa array, trim setiap elemen
+    if (Array.isArray(value)) {
+      return value.map((item) => item.trim());
+    }
+    // Jika berupa string dengan koma, pecah menjadi array dan trim setiap elemen
+    if (typeof value === 'string') {
+      return value.split(',').map((item) => item.trim());
+    }
+    // Jika bukan array atau string, kembalikan seperti apa adanya
+    return [value];
+  })
+  @IsArray()
+  @IsString({ each: true })
+  asal_negara: string[];
 
   @ApiProperty({
     description: 'Alamat penghasil B3',
@@ -117,7 +144,7 @@ export class BahanB3RegistrasiDto {
 
   @ApiProperty({
     description: 'ID registrasi terkait',
-    example: 'reg-uuid-1234',
+    example: 'uuid-1234',
     required: false,
   })
   @IsUUID()
@@ -129,12 +156,39 @@ export class BahanB3RegistrasiDto {
     example: ['Pelabuhan Tanjung Priok', 'Pelabuhan Tanjung Perak'],
   })
   @IsArray()
+  @IsOptional()
+    @Transform(({ value }) => {
+    // Jika sudah berupa array, trim setiap elemen
+    if (Array.isArray(value)) {
+      return value.map((item) => item.trim());
+    }
+    // Jika berupa string dengan koma, pecah menjadi array dan trim setiap elemen
+    if (typeof value === 'string') {
+      return value.split(',').map((item) => item.trim());
+    }
+    // Jika bukan array atau string, kembalikan seperti apa adanya
+    return [value];
+  })
+  @IsArray()
   @IsString({ each: true })
   pelabuhan_asal: string[];
 
   @ApiProperty({
     description: 'Array pelabuhan muat',
     example: ['Pelabuhan Tanjung Emas', 'Pelabuhan Panjang'],
+  })
+  @IsArray()
+    @Transform(({ value }) => {
+    // Jika sudah berupa array, trim setiap elemen
+    if (Array.isArray(value)) {
+      return value.map((item) => item.trim());
+    }
+    // Jika berupa string dengan koma, pecah menjadi array dan trim setiap elemen
+    if (typeof value === 'string') {
+      return value.split(',').map((item) => item.trim());
+    }
+    // Jika bukan array atau string, kembalikan seperti apa adanya
+    return [value];
   })
   @IsArray()
   @IsString({ each: true })
@@ -145,12 +199,38 @@ export class BahanB3RegistrasiDto {
     example: ['Pelabuhan Makassar', 'Pelabuhan Bitung'],
   })
   @IsArray()
+    @Transform(({ value }) => {
+    // Jika sudah berupa array, trim setiap elemen
+    if (Array.isArray(value)) {
+      return value.map((item) => item.trim());
+    }
+    // Jika berupa string dengan koma, pecah menjadi array dan trim setiap elemen
+    if (typeof value === 'string') {
+      return value.split(',').map((item) => item.trim());
+    }
+    // Jika bukan array atau string, kembalikan seperti apa adanya
+    return [value];
+  })
+  @IsArray()
   @IsString({ each: true })
   pelabuhan_bongkar: string[];
 
   @ApiProperty({
     description: 'Array provinsi pelabuhan bongkar',
     example: ['Sulawesi Selatan', 'Sulawesi Utara'],
+  })
+  @IsArray()
+    @Transform(({ value }) => {
+    // Jika sudah berupa array, trim setiap elemen
+    if (Array.isArray(value)) {
+      return value.map((item) => item.trim());
+    }
+    // Jika berupa string dengan koma, pecah menjadi array dan trim setiap elemen
+    if (typeof value === 'string') {
+      return value.split(',').map((item) => item.trim());
+    }
+    // Jika bukan array atau string, kembalikan seperti apa adanya
+    return [value];
   })
   @IsArray()
   @IsString({ each: true })

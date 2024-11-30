@@ -117,16 +117,17 @@ export class PdfService {
 
     // Read the template
     const template = fs.readFileSync(templatePath, 'utf-8');
-    const currentMonth = new Date().toLocaleDateString('en-US', {
-      month: '2-digit',
-    });
+    const currentMonth = new Date().toLocaleDateString('id-ID', { month: '2-digit' });
     const currentYear = new Date().getFullYear();
+  
+    const currentMonthYear = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long' });
+    const tanggalSurat = registrasi.tanggal_surat ? registrasi.tanggal_surat?.toLocaleDateString('id-ID', { year: 'numeric', month: 'long' }) : currentMonthYear;
 
-    const month = currentMonth;
-    const year = currentYear;
+    const month = registrasi.tanggal_surat ? registrasi.tanggal_surat.getMonth() : currentMonth;
+    const year = registrasi.tanggal_surat ? registrasi.tanggal_surat.getFullYear() : currentYear;
 
     const nomorSurat = `S.${registrasi.nomor || ''}/PBSLB3-PB3/PPI/PLB.4.4/B/${month}/${year}`;
-    const nomorSuratBahanB3 = `S.${registrasi.BahanB3Registrasi[0].no_reg_bahan || ''}/PBSLB3-PB3/PPI/PLB.4.4/B/${month}/${year}`;
+    // const nomorSuratBahanB3 = `S.${registrasi.BahanB3Registrasi[0].no_reg_bahan || ''}/PBSLB3-PB3/PPI/PLB.4.4/B/${month}/${year}`;
 
     // Render the EJS template and pass the base64 image to the template
     const renderedHtml = ejs.render(
@@ -147,11 +148,8 @@ export class PdfService {
         dataMap: dataB3Registrasi,
         director_name: 'Sugasri',
         director_nip: '19690827 199803 1 001',
-        nomor_surat_b3: nomorSuratBahanB3,
-        tanggal_surat_b3: new Intl.DateTimeFormat('id-ID', {
-          year: 'numeric',
-          month: 'long',
-        }).format(new Date()),
+        nomor_surat_b3: nomorSurat,
+        tanggal_surat_b3: tanggalSurat,
         tembusan: tembusanListHTML,
       },
       {

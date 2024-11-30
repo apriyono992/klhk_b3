@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { debounce } from 'lodash';
 import Select from 'react-select';
 
-export default function ReactSelect({ data, isLoading, error, value, onChange, defaultValue, label, isMulti }) {
+export default function ReactSelect({ data, isLoading, error, value, onChange, defaultValue, label, isMulti, isDisabled = false }) {
     const [selected, setSelected] = useState(value);
 
     const handleChange = (selectedOptions) => {
@@ -40,6 +40,7 @@ export default function ReactSelect({ data, isLoading, error, value, onChange, d
                     multiValue: (styles) => ({ ...styles, backgroundColor: '#d1d5db', borderRadius: 5 }),
                     indicatorSeparator: (styles) => ({ ...styles, alignSelf: 'stretch', marginBottom: 8, marginTop: 8, width: 2, backgroundColor: '#e5e7eb' }),
                 }}
+                isDisabled={isDisabled}
             />
             {error && <p className='text-danger text-xs'>{error}</p>} 
         </div>

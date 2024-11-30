@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import { getFetcher } from "../services/api";
 import { LOGIN_PATH } from "../services/routes";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { Spinner } from "@nextui-org/react";
 
 export const AuthContext = createContext();
 
@@ -48,7 +49,7 @@ export const AuthProvider = ({ children }) => { // Tambahkan 'children' dalam ar
     }
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><Spinner size="lg"/></div>;
 
   if (!user) return <Navigate to={LOGIN_PATH} state={{ from: location }} replace />;
 

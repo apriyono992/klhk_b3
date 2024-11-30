@@ -344,6 +344,7 @@ export class DataMasterService {
       );
     }
   }
+  
   async deleteDataTembusan(id: string) {
     try {
       return await this.prisma.$transaction(async (prisma) => {
@@ -377,6 +378,7 @@ export class DataMasterService {
       namaDagang,
       namaBahanKimia,
       tipeBahan,
+      returnAll = true,
     } = query;
 
     const whereClause: any = {}; // Construct a dynamic filter
@@ -399,6 +401,21 @@ export class DataMasterService {
     // Filter by multiple Tipe Bahan (if provided)
     if (tipeBahan && tipeBahan.length > 0) {
       whereClause.tipeBahan = { in: tipeBahan };
+    }
+
+    if(returnAll){
+      const data = await this.prisma.dataBahanB3.findMany({
+        where: whereClause,
+        orderBy: {
+          [sortBy]: sortOrder,
+        },
+      });
+      return {
+        data,
+        total: data.length,
+        page: 1,
+        limit: data.length
+      };
     }
 
     const data = await this.prisma.dataBahanB3.findMany({
@@ -428,7 +445,7 @@ export class DataMasterService {
   }
 
   async searchDataPejabat(query: SearchDataPejabatDto) {
-    const { page, limit, sortOrder, sortBy, nip, nama, jabatan, status } =
+    const { page, limit, sortOrder, sortBy, nip, nama, jabatan, status, returnAll= true } =
       query;
 
     const whereClause: any = {}; // Construct a dynamic filter
@@ -451,6 +468,21 @@ export class DataMasterService {
     // Filter by multiple Status (if provided)
     if (status && status.length > 0) {
       whereClause.status = { in: status };
+    }
+
+    if(returnAll){
+      const data = await this.prisma.dataPejabat.findMany({
+        where: whereClause,
+        orderBy: {
+          [sortBy]: sortOrder,
+        },
+      });
+      return {
+        data,
+        total: data.length,
+        page: 1,
+        limit: data.length
+      };
     }
 
     const data = await this.prisma.dataPejabat.findMany({
@@ -480,7 +512,7 @@ export class DataMasterService {
   }
 
   async searchDataTembusan(query: SearchDataTembusanDto) {
-    const { page, limit, sortOrder, sortBy, nama, tipe } = query;
+    const { page, limit, sortOrder, sortBy, nama, tipe, returnAll=true } = query;
 
     const whereClause: any = {}; // Construct a dynamic filter
 
@@ -492,6 +524,21 @@ export class DataMasterService {
     // Filter by multiple Tipe Tembusan (if provided)
     if (tipe && tipe.length > 0) {
       whereClause.tipe = { in: tipe };
+    }
+
+    if(returnAll){
+      const data = await this.prisma.dataTembusan.findMany({
+        where: whereClause,
+        orderBy: {
+          [sortBy]: sortOrder,
+        },
+      });
+      return {
+        data,
+        total: data.length,
+        page: 1,
+        limit: data.length
+      };
     }
 
     const data = await this.prisma.dataTembusan.findMany({

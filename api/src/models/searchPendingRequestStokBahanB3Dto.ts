@@ -11,7 +11,18 @@ export class SearchPendingRequestStokBahanB3Dto extends PaginationDto {
   @IsOptional()
   @IsArray()
   @IsUUID('4', { each: true, message: 'Each companyId must be a valid UUID' })
-  @Transform(({ value }) => (Array.isArray(value) ? value : [value])) // Ensure it is an array
+    @Transform(({ value }) => {
+    // Jika sudah berupa array, trim setiap elemen
+    if (Array.isArray(value)) {
+      return value.map((item) => item.trim());
+    }
+    // Jika berupa string dengan koma, pecah menjadi array dan trim setiap elemen
+    if (typeof value === 'string') {
+      return value.split(',').map((item) => item.trim());
+    }
+    // Jika bukan array atau string, kembalikan seperti apa adanya
+    return [value];
+  }) // Ensure it is an array
   companyIds?: string[];
 
   @ApiPropertyOptional({
@@ -30,6 +41,17 @@ export class SearchPendingRequestStokBahanB3Dto extends PaginationDto {
   @IsOptional()
   @IsArray()
   @IsUUID('4', { each: true, message: 'Each dataBahanB3Id must be a valid UUID' })
-  @Transform(({ value }) => (Array.isArray(value) ? value : [value])) // Ensure it is an array
+    @Transform(({ value }) => {
+    // Jika sudah berupa array, trim setiap elemen
+    if (Array.isArray(value)) {
+      return value.map((item) => item.trim());
+    }
+    // Jika berupa string dengan koma, pecah menjadi array dan trim setiap elemen
+    if (typeof value === 'string') {
+      return value.split(',').map((item) => item.trim());
+    }
+    // Jika bukan array atau string, kembalikan seperti apa adanya
+    return [value];
+  }) // Ensure it is an array
   dataBahanB3Ids?: string[];
 }

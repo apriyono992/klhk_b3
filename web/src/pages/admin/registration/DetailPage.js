@@ -9,24 +9,28 @@ import {
     exportJsonINSW,
     getDetailRegistrasi, getFetcher,
     getPdfUrl,
-    sendInsw, submitSK
+    sendInsw, submitSK,
+    putFetcherWithoutId
 } from "../../../services/api";
 import { useState, useEffect } from "react";
 import toast from 'react-hot-toast';
-import {getRoles} from "../../../services/helpers";
+import {getRoles, hasValidRole} from "../../../services/helpers";
 import {roleName} from "../../../services/enum";
 import DraftDireksi from "../../../components/fragments/admin/registration/DraftDireksi";
 import {saveAs} from 'file-saver'
 import Validation from "../../../components/fragments/admin/registration/information/Validation";
 import useSWR from "swr";
+import StatusPermohonanRegistrasi from "../../../enums/statusRegistrasi";
+import useAuth from "../../../hooks/useAuth";
+import RolesAccess from "../../../enums/roles";
 
 export default function DetailPage() {
+    const {user, roles} = useAuth();
     const { id } = useParams();
     const {data: dataDetail, isLoading, mutate} = useSWR(`/api/registrasi/${id}`, getFetcher)
     const [activeTab, setActiveTab] = useState("informasi");
 
     const onSubmit = async () => {
-        console.log('hit hit hit')
         const data = {
             id: id,
             status: 'riwayat',
@@ -35,7 +39,8 @@ export default function DetailPage() {
         }
         try {
             const response = await sendInsw(data);
-            console.log(response, 'success');
+            await putFetcherWithoutId(`/api/registrasi/update-status-registrasi/${id}/${StatusPermohonanRegistrasi.SELESAI}`); 
+            mutate();
             toast.success('Berhasil Kirim ke INSW')
         } catch (error) {
             console.log('error fetching:', error)
@@ -46,8 +51,8 @@ export default function DetailPage() {
     const onSubmitDraft = async () => {
         try {
             const response = await submitSK(id);
-            console.log(response, 'success');
             toast.success('Berhasil Submit Data Draft SK')
+            mutate();
         } catch (error) {
             console.log('error fetching:', error)
             toast.error(error.response.data.message);
@@ -112,22 +117,22 @@ export default function DetailPage() {
                 subtitle="No. Reg. Bahan B3"
                 action={
                     <div className="flex items-center gap-3">
-                        <Chip size="sm" variant="bordered" color="primary" className={'capitalize'}>{dataDetail?.approval_status}</Chip>
+                        <Chip size="sm" variant="bordered" color="primary" className={'capitalize'}>{dataDetail?.status}</Chip>
                         {
-                            dataDetail?.approval_status === 'approve direksi' || getRoles() === roleName.admin &&
+                            dataDetail?.status === StatusPermohonanRegistrasi.KIRIM_INSW && hasValidRole(roles, [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_REGISTRASI]) &&
                             <Button startContent={<PaperAirplaneIcon className="size-4"/>} size="sm" color="primary" onPress={onSubmit}>Kirim INSW</Button>
                         }
                         {
-                            dataDetail?.approval_status === 'approve direksi' || getRoles() === roleName.admin &&
-                            <Button startContent={<PaperAirplaneIcon className="size-4"/>} size="sm" color="primary" onPress={onPressExport}>Export</Button>
+                            dataDetail?.status === StatusPermohonanRegistrasi.KIRIM_INSW && hasValidRole(roles, [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_REGISTRASI]) 
+                            && <Button startContent={<PaperAirplaneIcon className="size-4"/>} size="sm" color="primary" onPress={onPressExport}>Export</Button>
                         }
                         {
-                            getRoles() === roleName.admin &&
+                            dataDetail?.status === StatusPermohonanRegistrasi.DRAFT_SK_TANDA_TANGAN_DIREKTUR && hasValidRole(roles, [RolesAccess.SUPER_ADMIN, RolesAccess.DIREKTUR]) && 
                             <Button startContent={<PaperAirplaneIcon className="size-4"/>} size="sm" color="primary" onPress={onSubmitDraft}>Submit Draft</Button>
                         }
                         {
-                            !dataDetail?.is_draft &&
-                            <Button
+                            dataDetail?.status != StatusPermohonanRegistrasi.VERIFIKASI_TEKNIS &&  hasValidRole(roles, [RolesAccess.SUPER_ADMIN, RolesAccess.PIC_REGISTRASI])
+                            && <Button
                                 startContent={<DocumentIcon className="size-4"/>}
                                 size="sm"
                                 color="primary"

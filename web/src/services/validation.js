@@ -141,7 +141,7 @@ export const draftImportEcLetter = yup.object().shape({
         }),
         dnaEmail: yup.array().when('jenisExplicitConsent', {
                 is: (val) => val === 'Echa',
-                then: (schema) => schema.of(yup.object().shape({value: yup.string().required("Harus diisi")})).min(1, "Minimal 1 email"),
+                then: (schema) => schema.of(yup.object().shape({value: yup.string().email('Email harus valid').required("Harus diisi")})).min(1, "Minimal 1 email"),
                 otherwise: (schema) => schema.notRequired(),
         }),
         pejabatId: yup.string().required('harus diisi'),
@@ -207,41 +207,160 @@ export const createTransportReportValidation = yup.object().shape({
 }).required()
 
 export const periodValidation = yup.object().shape({
-    name: yup.string().required('Harus diisi'),
-    startPeriodDate: yup
-        .date()
-        .typeError('Tanggal harus valid')
-        .required('Harus diisi')
-        .max(yup.ref('endPeriodDate'), 'Tanggal mulai tidak bisa lebih besar dari tanggal akhir'), // Ensure startPeriodDate is before endPeriodDate
-    endPeriodDate: yup
-        .date()
-        .typeError('Tanggal harus valid')
-        .required('Harus diisi')
-        .min(yup.ref('startPeriodDate'), 'Tanggal akhir harus lebih besar dari tanggal mulai'), // Ensure endPeriodDate is after startPeriodDate
-    startReportingDate: yup
-        .date()
-        .typeError('Tanggal harus valid')
-        .required('Harus diisi')
-        .min(yup.ref('startPeriodDate'), 'Tanggal mulai pelaporan harus setelah tanggal mulai periode'), // Ensure startReportingDate is after startPeriodDate
-    endReportingDate: yup
-        .date()
-        .typeError('Tanggal harus valid')
-        .required('Harus diisi')
-        .min(yup.ref('endPeriodDate'), 'Tanggal selesai pelaporan tidak bisa lebih besar dari tanggal akhir periode'), // Ensure endReportingDate is before endPeriodDate
-    finalizationDeadline: yup
-        .date()
-        .typeError('Tanggal harus valid')
-        .required('Harus diisi')
-        .min(yup.ref('endPeriodDate'), 'Batas waktu finalisasi harus setelah tanggal akhir periode'), // Ensure finalizationDeadline is after endPeriodDate
-    isActive: yup
-        .boolean()
-        .oneOf([true, false], 'Isi harus aktif atau tidak aktif')
-        .required('Harus diisi'),
-    isReportingActive: yup
-        .boolean()
-        .oneOf([true, false], 'Isi harus pelaporan aktif atau tidak aktif')
-        .required('Harus diisi'),
+        name: yup.string().required('Harus diisi'),
+        startPeriodDate: yup
+            .date()
+            .typeError('Tanggal harus valid')
+            .required('Harus diisi')
+            .max(yup.ref('endPeriodDate'), 'Tanggal mulai tidak bisa lebih besar dari tanggal akhir'), // Ensure startPeriodDate is before endPeriodDate
+        endPeriodDate: yup
+            .date()
+            .typeError('Tanggal harus valid')
+            .required('Harus diisi')
+            .min(yup.ref('startPeriodDate'), 'Tanggal akhir harus lebih besar dari tanggal mulai'), // Ensure endPeriodDate is after startPeriodDate
+        startReportingDate: yup
+            .date()
+            .typeError('Tanggal harus valid')
+            .required('Harus diisi')
+            .min(yup.ref('startPeriodDate'), 'Tanggal mulai pelaporan harus setelah tanggal mulai periode'), // Ensure startReportingDate is after startPeriodDate
+        endReportingDate: yup
+            .date()
+            .typeError('Tanggal harus valid')
+            .required('Harus diisi')
+            .min(yup.ref('endPeriodDate'), 'Tanggal selesai pelaporan tidak bisa lebih besar dari tanggal akhir periode'), // Ensure endReportingDate is before endPeriodDate
+        finalizationDeadline: yup
+            .date()
+            .typeError('Tanggal harus valid')
+            .required('Harus diisi')
+            .min(yup.ref('endPeriodDate'), 'Batas waktu finalisasi harus setelah tanggal akhir periode'), // Ensure finalizationDeadline is after endPeriodDate
+        isActive: yup
+            .boolean()
+            .oneOf([true, false], 'Isi harus aktif atau tidak aktif')
+            .required('Harus diisi'),
+        isReportingActive: yup
+            .boolean()
+            .oneOf([true, false], 'Isi harus pelaporan aktif atau tidak aktif')
+            .required('Harus diisi'),
 }).required();
 
+export const loadingCompanyValidation = yup.object().shape({
+        namaPerusahaan: yup.string().required('Harus diisi'),
+        alamat: yup.string().required('Harus diisi'),
+        longitude: yup.number().required('Harus diisi'),
+        latitude: yup.number().required('Harus diisi'),
+        provinceId: yup.number().required('Harus diisi'),
+        regencyId: yup.number().required('Harus diisi'),
+        districtId: yup.number().required('Harus diisi'),
+        villageId: yup.number().required('Harus diisi'),
+}).required()
 
+export const createReportVehicleValidation = yup.object().shape({
+        b3SubstanceId: yup.string().required('Harus diisi'),
+        jumlahB3: yup.number().required('Harus diisi'),
+        // perusahaanAsalMuatDanTujuanBongkar: yup.array()
+        //                                         .of(yup.object().shape({
+        //                                                 name: yup.string().required("Harus diisi"),
+        //                                                 alamat: yup.string().required("Harus diisi"),
+        //                                                 longitude: yup.string().required("Harus diisi"),
+        //                                                 latitude: yup.string().required("Harus diisi"),
+        //                                         }))
+        //                                         .min(1, "Minimal 1 tujuan bongkar"),
+        // perusahaanAsalMuat: yup.object().shape({
+        //         perusahaanAsalMuatId: yup.string().required('Harus ada'),
+        //         locationType: yup.string().required('Harus ada'),
+        //         longitudeAsalMuat: yup.number().required('Harus ada'),
+        //         latitudeAsalMuat: yup.number().required('Harus ada')
+        // }),
+        // perusahaanTujuanBongkar: yup.array()
+        //         .min(1, 'Minimal 1 tujuan bongkar')
+        //         .required('Harus diisi'),
+}).required()
+
+export const createReportProductionValidation = yup.object().shape({
+        companyId: yup.string().required('Harus diisi'),
+        periodId: yup.string().required('Harus diisi'),
+        bulan: yup.number().required('Harus diisi'),
+        tahun: yup.number().required('Harus diisi'),
+        tipeProduk: yup.string().required('Harus diisi'), 
+        dataBahanB3Id: yup.string().when('tipeProduk', {
+                is: (val) => val === 'Bahan Berbahaya dan Beracun',
+                then: (schema) => schema.required(),
+                otherwise: (schema) => schema.notRequired(),
+        }),
+        prosesProduksi: yup.string().required('Harus diisi'),
+        jumlahB3Dihasilkan: yup.number().required('Harus diisi')
+}).required()
+
+export const adminReportValidation = yup.object().shape({
+        status: yup.boolean().oneOf([true, false], 'Isi harus disetujui atau tidak disetujui'),
+        adminNote: yup.string().when('status', {
+                is: (val) => val === false,
+                then: (schema) => schema.required('Harus diisi'),
+                otherwise: (schema) => schema.notRequired(),
+        }),
+}).required()
+
+export const createReportDistributionValidation = yup.object().shape({
+        companyId: yup.string().required('Harus diisi'),
+        periodId: yup.string().required('Harus diisi'),
+        bulan: yup.number().required('Harus diisi'),
+        tahun: yup.number().required('Harus diisi'),
+        dataBahanB3Id: yup.string().required('Harus diisi'),
+        dataTransporters: yup.array()
+                .min(1, 'Minimal 1 transporter')
+                .required('Harus diisi'),
+        dataCustomers: yup.array()
+                .min(1, 'Minimal 1 customer')
+                .required('Harus diisi'),
+}).required()
+
+export const createReportConsumptionValidation = yup.object().shape({
+        companyId: yup.string().required('Harus diisi'),
+        periodId: yup.string().required('Harus diisi'),
+        bulan: yup.number().required('Harus diisi'),
+        tahun: yup.number().required('Harus diisi'),
+        dataBahanB3Id: yup.string().required('Harus diisi'),
+        jumlahPembelianB3: yup.number().required('Harus diisi'),
+        jumlahB3Digunakan: yup.number().required('Harus diisi'),
+        tipePembelian: yup.string().required('Harus diisi'),
+        noRegistrasi: yup.string().when('tipePembelian', {
+                is: (val) => val === 'Impor',
+                then: (schema) => schema.required('Harus diisi'),
+                otherwise: (schema) => schema.notRequired(),
+        }),
+        dataSuppliers: yup.array().when('tipePembelian', {
+                is: (val) => val === 'Lokal',
+                then: (schema) => schema.min(1, 'Minimal 1 supplier').required('Harus diisi'),
+                otherwise: (schema) => schema.notRequired(),
+        }),
+}).required()
+
+export const supplierValidation = yup.object().shape({
+        namaSupplier: yup.string().required('Harus diisi'),
+        alamat: yup.string().required('Harus diisi'),
+        email: yup.string().email('Email harus valid').required('Harus diisi'),
+        telepon: yup.string().matches(/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/, 'Nomor telepon harus valid').required('Harus diisi'),
+        fax: yup.string().matches(/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/, 'Nomor fax harus valid').required('Harus diisi'),
+        longitude: yup.number().required('Harus diisi'),
+        latitude: yup.number().required('Harus diisi'),
+        provinceId: yup.number().required('Harus diisi'),
+        regencyId: yup.number().required('Harus diisi'),
+        districtId: yup.number().required('Harus diisi'),
+        villageId: yup.number().required('Harus diisi'),
+        // dataPICs: yup.array()
+        //                 .min(1, 'Minimal 1 PIC')
+        //                 .required('Harus diisi'),
+}).required()
+
+export const asalMuatValidation = yup.object().shape({
+        namaPerusahaan: yup.string().required('Harus diisi'),
+        alamat: yup.string().required('Harus diisi'),   
+        locationType: yup.string().required('Harus diisi'),   
+        latitude: yup.number().required('Harus diisi'),   
+        longitude: yup.number().required('Harus diisi'),   
+        provinceId: yup.string().required('Harus diisi'),   
+        regencyId: yup.string().required('Harus diisi'),   
+        districtId: yup.string().required('Harus diisi'),   
+        villageId: yup.string().required('Harus diisi'),  
+}).required()
     

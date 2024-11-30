@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { SearchUsersDto } from 'src/models/searchUsersDto';
 import { PrismaService } from './prisma.services';
 import { createHash, createHmac } from 'crypto';
@@ -7,6 +7,7 @@ import { CreateUserDTO } from 'src/models/createUserDto';
 import { omit } from 'lodash';
 import { v4 as uuidV4 } from 'uuid';
 import { RolesAccess } from 'src/models/enums/roles';
+import { UpdateUserDto } from 'src/models/updateUserDto';
 
 @Injectable()
 export class UserService {
@@ -35,7 +36,11 @@ export class UserService {
         include: { roles: { include: { role: true } } },
         orderBy: { [sortBy]: sortOrder },
       });
-      return { total: data.length, data };
+      // Hilangkan data sensitif
+      const sanitizedData = data.map((user) =>
+        omit(user, ['password', 'salt']),
+      );
+      return { total: data.length, data:sanitizedData };
     }
 
     // Pagination
@@ -49,7 +54,12 @@ export class UserService {
       orderBy: { [sortBy]: sortOrder },
     });
 
-    return { total: totalUsers, data: users };
+    // Hilangkan data sensitif
+    const sanitizedData = users.map((user) =>
+      omit(user, ['password', 'salt']),
+    );
+
+    return { total: totalUsers, data: sanitizedData };
   }
 
   async updateUser(
@@ -256,6 +266,48 @@ export class UserService {
   
     // Kembalikan data tanpa password dan salt
     return omit(user, ['password', 'salt']);
+  }
+
+  async updateUserWithDto(userId: string, updateUserDto: UpdateUserDto): Promise<any> {
+    const { fullName, oldPassword, newPassword } = updateUserDto;
+
+    // Validasi pengguna
+    const existingUser = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!existingUser) {
+      throw new NotFoundException('Pengguna tidak ditemukan.');
+    }
+
+    // Validasi kata sandi lama
+    if (oldPassword) {
+      const hashedOldPassword = createHmac('sha256', existingUser.salt)
+        .update(oldPassword)
+        .digest('hex');
+
+      if (hashedOldPassword !== existingUser.password) {
+        throw new ForbiddenException('Password lama tidak cocok.');
+      }
+    }
+
+    // Validasi dan hash kata sandi baru
+    let hashedNewPassword = null;
+    if (newPassword) {
+      hashedNewPassword = createHmac('sha256', existingUser.salt)
+        .update(newPassword)
+        .digest('hex');
+    }
+
+    // Siapkan payload untuk update
+    const updatePayload: any = {};
+    if (fullName) updatePayload.fullName = fullName;
+    if (hashedNewPassword) updatePayload.password = hashedNewPassword;
+
+    // Update data di database
+    const updatedUser = await this.prisma.user.update({
+      where: { id: userId },
+      data: updatePayload,
+    });
+
+    return omit(updatedUser, ['password', 'salt']);
   }
 }
 

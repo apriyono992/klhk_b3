@@ -11,6 +11,7 @@ import { formattedDate } from "../../../services/helpers";
 import { differenceInDays } from 'date-fns'
 import {TrashIcon} from "@heroicons/react/16/solid";
 import toast from "react-hot-toast";
+import StatusPermohonanRegistrasi from "../../../enums/statusRegistrasi";
 
 export default function IndexPage() {
     const fetcher = (...args) => authStateFetcher(...args);
@@ -32,9 +33,9 @@ export default function IndexPage() {
         }
     }
 
-    const { data: pending, isLoading: loadingPending } = useSWR('/api/registrasi/search?page=1&limit=10&sortBy=createdAt&sortOrder=desc&status=pending', fetcher);
-    const { data: draft, isLoading: loadingDraft } = useSWR('/api/registrasi/search?page=1&limit=10&sortBy=createdAt&sortOrder=desc&status=draft', fetcher);
-    const { data: riwayat, isLoading: loadingRiwayat } = useSWR('/api/registrasi/search?page=1&limit=10&sortBy=createdAt&sortOrder=desc&status=riwayat', fetcher);
+    const { data: pending, isLoading: loadingPending } = useSWR(`/api/registrasi/search?status=pending,${StatusPermohonanRegistrasi.VERIFIKASI_TEKNIS}&returnAll=true`, fetcher);
+    const { data: draft, isLoading: loadingDraft } = useSWR(`/api/registrasi/search?status=draft,${StatusPermohonanRegistrasi.DRAFT_SK_TANDA_TANGAN_DIREKTUR},${StatusPermohonanRegistrasi.PEMBUATAN_DRAFT_SK},${StatusPermohonanRegistrasi.KIRIM_INSW}&returnAll=true`, fetcher);
+    const { data: riwayat, isLoading: loadingRiwayat } = useSWR(`/api/registrasi/search?status=riwayat,${StatusPermohonanRegistrasi.SELESAI},${StatusPermohonanRegistrasi.DITOLAK}&returnAll=true`, fetcher);
 
     const columns = useMemo(() =>  [
         {

@@ -1,7 +1,7 @@
 import { CheckCircleIcon, ExclamationCircleIcon, QuestionMarkCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 
-export default function ButtonModalAlert({ buttonTitle, buttonColor, buttonIsIconOnly, modalIcon, modalHeading, modalDescription, buttonSubmitText, buttonCancelText, onSubmit }) {
+export default function ButtonModalAlert({ buttonTitle, buttonColor, buttonIsIconOnly, modalIcon, modalHeading, modalDescription, buttonSubmitText, buttonCancelText, onSubmit, isDisabled =false }) {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
     async function handleClick() {
@@ -23,13 +23,13 @@ export default function ButtonModalAlert({ buttonTitle, buttonColor, buttonIsIco
 
     return (
         <>
-            <Button size="sm" color={buttonColor} isIconOnly={buttonIsIconOnly} onPress={onOpen}>{buttonTitle}</Button>
+            <Button isDisabled= {isDisabled} size="sm" color={buttonColor} isIconOnly={buttonIsIconOnly} onPress={onOpen}>{buttonTitle}</Button>
             <Modal hideCloseButton isOpen={isOpen} onOpenChange={onOpenChange}>
                 <ModalContent>
                     {(onClose) => (
                         <>
                             <ModalHeader className="flex flex-col gap-1"></ModalHeader>
-                            <ModalBody className='flex flex-col items-center'>
+                            <ModalBody className='flex flex-col items-center text-center'>
                                 {iconSwitch(modalIcon)}
                                 <span className='text-2xl font-semibold'>{modalHeading ?? 'Apakan anda yakin?'}</span>
                                 <span className='text-medium'>{modalDescription ?? 'Aksi ini tidak bisa dibatalkan'}</span>

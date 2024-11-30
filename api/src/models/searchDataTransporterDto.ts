@@ -1,13 +1,25 @@
-import { IsOptional, IsUUID, IsString, IsNumber, IsBoolean, IsLongitude, IsLatitude } from 'class-validator';
+import { IsOptional, IsUUID, IsString, IsNumber, IsBoolean, IsLongitude, IsLatitude, IsArray } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PaginationDto } from './paginationDto';
 import { Transform } from 'class-transformer';
 
 export class SearchDataTransporterDto extends PaginationDto {
   @ApiPropertyOptional({ description: 'ID perusahaan', example: '123e4567-e89b-12d3-a456-426614174000' })
-  @IsOptional()
-  @IsUUID()
-  companyId?: string;
+  @Transform(({ value }) => {
+    // Jika sudah berupa array, trim setiap elemen
+    if (Array.isArray(value)) {
+      return value.map((item) => item.trim());
+    }
+    // Jika berupa string dengan koma, pecah menjadi array dan trim setiap elemen
+    if (typeof value === 'string') {
+      return value.split(',').map((item) => item.trim());
+    }
+    // Jika bukan array atau string, kembalikan seperti apa adanya
+    return [value];
+  })
+  @IsArray()
+  @IsString()
+  companyId?: string[];
 
   @ApiPropertyOptional({ description: 'Nama transporter', example: 'PT. Transporter Kimia' })
   @IsOptional()
@@ -35,12 +47,14 @@ export class SearchDataTransporterDto extends PaginationDto {
   villageId?: string;
 
   @ApiPropertyOptional({ description: 'Longitude', example: 107.6191 })
+  @IsOptional()
   @Transform(({ value }) => parseFloat(value))
   @IsLongitude()
   longitude?: number;
 
   @ApiPropertyOptional({ description: 'Latitude', example: -6.9175 })
   @Transform(({ value }) => parseFloat(value))
+  @IsOptional()
   @IsLatitude()
   latitude?: number;
 

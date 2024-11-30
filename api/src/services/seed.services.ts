@@ -133,6 +133,14 @@ export class SeedService {
     }
   }
 
+  async seedRegistrasiEndp() {
+    try {
+      await this.seedRegistrasi();
+    } catch (error) {
+      this.logger.error('Error while seeding registrasi data', error);
+    }
+  }
+
   private async seedProvinces() {
     const filePath = path.join(process.cwd(), 'src/seed/provinces.json');
     const provincesData = this.readJsonFile(filePath);

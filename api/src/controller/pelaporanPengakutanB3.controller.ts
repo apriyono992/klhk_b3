@@ -551,7 +551,7 @@ export class PelaporanPengangkutanController {
   }
 
   @Roles(RolesAccess.PIC_PELAPORAN, RolesAccess.PENGELOLA, RolesAccess.SUPER_ADMIN)
-  @Post('finalize')
+  @Post('finalize/:companyId/:periodId/:applicationId')
   @ApiOperation({ summary: 'Finalisasi laporan untuk periode dan aplikasi tertentu' })
   @ApiParam({ name: 'companyId', description: 'ID perusahaan' })
   @ApiParam({ name: 'periodId', description: 'ID periode' })
@@ -640,12 +640,12 @@ export class PelaporanPengangkutanController {
       return await this.pelaporanService.reviewReport(reportId, data);
     } catch (error) {
       if (error instanceof NotFoundException) {
-        throw new NotFoundException('Laporan tidak ditemukan.');
+        throw new NotFoundException('Laporan tidak ditemukan.' + error);
       }
       if (error instanceof BadRequestException) {
-        throw new BadRequestException('Permintaan tidak valid atau laporan belum difinalisasi.');
+        throw new BadRequestException('Permintaan tidak valid atau laporan belum difinalisasi.'+ error);
       }
-      throw new BadRequestException('Terjadi kesalahan saat memproses permintaan.');
+      throw new BadRequestException('Terjadi kesalahan saat memproses permintaan.'+ error);
     }
   }
 }

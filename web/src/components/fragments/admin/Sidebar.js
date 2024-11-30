@@ -19,7 +19,13 @@ import {
     TicketIcon,
     ClockIcon,
     CogIcon,
-    UserIcon, TableCellsIcon
+    UserIcon,
+    ArrowsPointingOutIcon,
+    ScaleIcon,
+    ArrowDownOnSquareIcon,
+    ArrowUpOnSquareIcon,
+    TableCellsIcon,
+    PowerIcon
 } from "@heroicons/react/24/outline";
 import { Accordion, AccordionItem, Avatar } from "@nextui-org/react";
 import logo from '../../../assets/images/logo.png'
@@ -55,7 +61,7 @@ import {
     PELAPORAN_PENGGUNAAN_GRAFIK,
     PELAPORAN_PENGGUNAAN_PENCARIAN,
     PELAPORAN_PRODUSEN_GRAFIK,
-    PELAPORAN_PENGANGKUTAN_GRAFIK, 
+    PELAPORAN_PENGANGKUTAN_GRAFIK,
     PELAPORAN_PENGANGKUTAN_PENCARIAN,
     PELAPORAN_PENYIMPANAN_GRAFIK_PATH,
 } from "../../../services/routes";
@@ -173,6 +179,19 @@ export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
                                 icon={<ListBulletIcon className="size-4" />}
                             />
                         </AccordionItem>
+                        <AccordionItem key="4" title="Pelaporan" className="" startContent={<PresentationChartBarIcon className="size-5" />}>
+                            <ListItem url={PELAPORAN_DASHBOARD_PATH} variant="subitem" title="Dashboard" icon={<TableCellsIcon className="size-4" />} />
+                            <ListItem url={COMPANY_REPORT_STORAGE} variant="subitem" title="Penyimpanan B3 (Perusahaan)" icon={<ArchiveBoxIcon className="size-4" />} />
+                            <ListItem url={ADMIN_REPORT_STORAGE} variant="subitem" title="Penyimpanan B3 (Admin)" icon={<ArchiveBoxIcon className="size-4" />} />
+                            <ListItem url={REPORT_TRANSPORT_RECOMENDATION_INDEX} variant="subitem" title="Pengangkutan B3 (Perusahaan)" icon={<TruckIcon className="size-4" />} />
+                            <ListItem url={ADMIN_REPORT_TRANSPORT_INDEX} variant="subitem" title="Pengangkutan B3 (Admin)" icon={<TruckIcon className="size-4" />} />
+                            <ListItem url={REPORT_PRODUCTION_MATERIAL} variant="subitem" title="Produksi Jenis B3 (Perusahaan)" icon={<ExclamationTriangleIcon className="size-4" />} />
+                            <ListItem url={ADMIN_REPORT_PRODUCTION_MATERIAL} variant="subitem" title="Produksi Jenis B3 (Admin)" icon={<ExclamationTriangleIcon className="size-4" />} />
+                            <ListItem url={REPORT_DISTRIBUTION_MATERIAL_INDEX} variant="subitem" title="Distribusi Jenis B3 (Perusahaan)" icon={<ArrowsPointingOutIcon className="size-4" />} />
+                            <ListItem url={ADMIN_REPORT_DISTRIBUTION_MATERIAL_INDEX} variant="subitem" title="Distribusi Jenis B3 (Admin)" icon={<ArrowsPointingOutIcon className="size-4" />} />
+                            <ListItem url={REPORT_CONSUMPTION_MATERIAL_INDEX} variant="subitem" title="Konsumsi B3 (Perusahaan)" icon={<ScaleIcon className="size-4" />} />
+                            <ListItem url={ADMIN_REPORT_CONSUMPTION_MATERIAL_INDEX} variant="subitem" title="Konsumsi B3 (Admin)" icon={<ScaleIcon className="size-4" />} />
+                        </AccordionItem>
                         <AccordionItem
                             key="4"
                             title="CMS"
@@ -256,6 +275,8 @@ export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
                             <ListItem url={MATERIAL_INDEX_PATH} variant="subitem" title="Bahan B3" icon={<ExclamationTriangleIcon className="size-4" />} />
                             <ListItem url={COMPANY_INDEX_PATH} variant="subitem" title="Perusahaan" icon={<BuildingOfficeIcon className="size-4" />} />
                             <ListItem url={PERIOD_INDEX_PATH} variant="subitem" title="Periode" icon={<ClockIcon className="size-4" />} />
+                            <ListItem url={ASAL_MUAT_INDEX_PATH} variant="subitem" title="Asal Muat" icon={<ArrowDownOnSquareIcon className="size-4" />} />
+                            <ListItem url={TUJUAN_BONGKAR_INDEX_PATH} variant="subitem" title="Tujuan Bongkar" icon={<ArrowUpOnSquareIcon className="size-4" />} />
                         </AccordionItem>
                         <AccordionItem key="7" title="Stok B3" className="" startContent={<BellAlertIcon className="size-5" />}>
                             <ListItem url={STOK_B3_INDEX_ADMIN_PATH} variant="subitem" title="Stok B3 Admin" icon={<ChartBarIcon className="size-4" />} />
@@ -267,6 +288,9 @@ export default function Sidebar({ isOpenSidebar, setIsOpenSidebar }) {
                         </AccordionItem>
                         <AccordionItem key="9" title="User Management" className="" startContent={<UserGroupIcon className="size-5" />}>
                             <ListItem url={USERS_MANAGEMENT_INDEX_PATH} variant="subitem" title="Users" icon={<UserIcon className="size-4" />} />
+                        </AccordionItem>
+                        <AccordionItem key="10" title="DashboardPelaporan Produsen" className="" startContent={<PresentationChartBarIcon className="size-5" />}>
+                            <ListItem url={PELAPORAN_PRODUSEN_PENCARIAN} variant="subitem" title="Pencarian" icon={<TableCellsIcon className="size-4" />} />
                         </AccordionItem>
                     </Accordion>
                 </ul>

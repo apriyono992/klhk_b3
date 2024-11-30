@@ -128,6 +128,36 @@ import { Roles } from 'src/utils/roles.decorator';
     async getActivePeriod(): Promise<Period> {
       return this.periodService.getActivePeriod();
     }
+
+    @Get('report-active')
+    @ApiOperation({ summary: 'Get the currently active report period' })
+    @ApiResponse({
+      status: 200,
+      description: 'The reprot active period has been retrieved.',
+      schema: {
+        example: {
+          id: '1234-5678-9101',
+          name: 'Q1 2024',
+          startDate: '2024-01-01T00:00:00.000Z',
+          endDate: '2024-03-31T23:59:59.000Z',
+          finalizationDeadline: '2024-04-10T23:59:59.000Z',
+          isActive: true,
+        },
+      },
+    })
+    @ApiNotFoundResponse({
+      description: 'No active period found.',
+      schema: {
+        example: {
+          statusCode: 404,
+          message: 'No active period found.',
+          error: 'Not Found',
+        },
+      },
+    })
+    async getReportActive(): Promise<Period> {
+      return this.periodService.getReportActivePeriod();
+    }
   
     @Get('all')
     @ApiOperation({ summary: 'Get a list of all periods' })
@@ -373,5 +403,65 @@ import { Roles } from 'src/utils/roles.decorator';
       );
     }
 
+
+    @Get('find/:id')
+    @ApiOperation({ summary: 'Get the currently active period' })
+    @ApiResponse({
+      status: 200,
+      description: 'The active period has been retrieved.',
+      schema: {
+        example: {
+          id: '1234-5678-9101',
+          name: 'Q1 2024',
+          startDate: '2024-01-01T00:00:00.000Z',
+          endDate: '2024-03-31T23:59:59.000Z',
+          finalizationDeadline: '2024-04-10T23:59:59.000Z',
+          isActive: true,
+        },
+      },
+    })
+    @ApiNotFoundResponse({
+      description: 'No active period found.',
+      schema: {
+        example: {
+          statusCode: 404,
+          message: 'No active period found.',
+          error: 'Not Found',
+        },
+      },
+    })
+    async getPeriod(@Param('id') periodId: string,): Promise<Period> {
+      return this.periodService.getPeriod(periodId);
+    }
+
+    @Get('report-actives')
+    @ApiOperation({ summary: 'Get the currently active period' })
+    @ApiResponse({
+      status: 200,
+      description: 'The active period has been retrieved.',
+      schema: {
+        example: {
+          id: '1234-5678-9101',
+          name: 'Q1 2024',
+          startDate: '2024-01-01T00:00:00.000Z',
+          endDate: '2024-03-31T23:59:59.000Z',
+          finalizationDeadline: '2024-04-10T23:59:59.000Z',
+          isActive: true,
+        },
+      },
+    })
+    @ApiNotFoundResponse({
+      description: 'No active period found.',
+      schema: {
+        example: {
+          statusCode: 404,
+          message: 'No active period found.',
+          error: 'Not Found',
+        },
+      },
+    })
+    async getReportsActive() {
+      return this.periodService.getAllReportActivePeriod();
+    }
   }
   

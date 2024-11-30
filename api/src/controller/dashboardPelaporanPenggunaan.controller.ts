@@ -16,7 +16,7 @@ export class DashboardPelaporanPenggunaanController {
     })
     public async getSumByCompany(@Query() query) {
         const data = await this.dashboardPenggunaanService.getSumByCompany(query);
-        
+
         return new SuccessRes('Success', data);
     }
 
@@ -34,7 +34,7 @@ export class DashboardPelaporanPenggunaanController {
     @Get('company/map')
     public async getTopSpendingCompany(@Query() query) {
         const data = await this.dashboardPenggunaanService.getTopSpendingCompany(query);
-        
+
         return new SuccessRes('Success', data);
     }
 

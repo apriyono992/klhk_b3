@@ -5,6 +5,7 @@ import { UpdatePelaporanPenggunaanBahanB3Dto } from 'src/models/updatePelaporanP
 import { StatusPengajuan } from 'src/models/enums/statusPengajuanPelaporan';
 import { SearchPelaporanPenggunaanBahanB3Dto } from 'src/models/searchPelaporanPenggunaanBahanB3Dto';
 import { JenisPelaporan } from 'src/models/enums/jenisPelaporan';
+import { TipePerusahaan } from 'src/models/enums/tipePerusahaan';
 
 @Injectable()
 export class PelaporanPenggunaanBahanB3Service {
@@ -177,7 +178,8 @@ export class PelaporanPenggunaanBahanB3Service {
         // Cek apakah periode valid
         const period = await prisma.period.findUnique({ where: { id: periodId } });
         if (!period) throw new NotFoundException('Periode tidak ditemukan.');
-    
+        
+        const company = await prisma.company.findUnique({ where: { id: companyId } });
         // Ambil rentang tanggal periode
         const startDate = new Date(period.startPeriodDate);
         const endDate = new Date(period.endPeriodDate);
@@ -185,34 +187,70 @@ export class PelaporanPenggunaanBahanB3Service {
         // Dapatkan semua bulan dan tahun dalam rentang periode
         const monthsInPeriod = this.getMonthsBetweenDates(startDate, endDate);
     
-        // Ambil semua laporan dalam status draft yang sudah siap untuk difinalisasi
-        const draftReports = await prisma.pelaporanPenggunaanBahanB3.findMany({
-            where: {
-            periodId,
-            companyId,
-            isDraft: true,
-            isApproved: false
-            },
-        });
-    
-        if (draftReports.length === 0) {
-            throw new BadRequestException('Tidak ada laporan yang valid untuk difinalisasi dalam periode ini.');
-        }
-    
-        // Ambil semua kombinasi bulan dan tahun dari laporan yang sudah disetujui
-        const reportedMonths = draftReports.map((report) => `${report.bulan}-${report.tahun}`);
-        const missingMonths = monthsInPeriod.filter(
-            (month) => !reportedMonths.includes(`${month.bulan}-${month.tahun}`)
-        );
-    
-        // Jika ada bulan yang belum dilaporkan, kembalikan error
-        if (missingMonths.length > 0) {
-            const missingMonthString = missingMonths
-            .map((m) => `Bulan ${m.bulan} Tahun ${m.tahun}`)
-            .join(', ');
-            throw new BadRequestException(`Laporan belum lengkap. Bulan yang belum dilaporkan: ${missingMonthString}.`);
-        }
-    
+          // Ambil semua laporan dalam status draft yang sudah siap untuk difinalisasi
+          const draftReports = await prisma.pelaporanPenggunaanBahanB3.findMany({
+              where: {
+              periodId,
+              companyId,
+              isDraft: true,
+              isApproved: false
+              },
+          });
+      
+          if (draftReports.length === 0) {
+              throw new BadRequestException('Tidak ada laporan yang valid untuk difinalisasi dalam periode ini.');
+          }
+      
+          // Ambil semua kombinasi bulan dan tahun dari laporan yang sudah disetujui
+          const reportedMonths = draftReports.map((report) => `${report.bulan}-${report.tahun}`);
+          const missingMonths = monthsInPeriod.filter(
+              (month) => !reportedMonths.includes(`${month.bulan}-${month.tahun}`)
+          );
+      
+          // Jika ada bulan yang belum dilaporkan, kembalikan error
+          if (missingMonths.length > 0) {
+              const missingMonthString = missingMonths
+              .map((m) => `Bulan ${m.bulan} Tahun ${m.tahun}`)
+              .join(', ');
+              throw new BadRequestException(`Laporan belum lengkap. Bulan yang belum dilaporkan: ${missingMonthString}.`);
+          }
+
+          // Periksa jika perusahaan adalah importir
+          if (company.tipePerusahaan.includes(TipePerusahaan.PERUSAHAAN_IMPOR)) {
+            // Ambil semua registrasi dengan status selesai
+            const registrasis = await prisma.registrasi.findMany({
+                where: {
+                    companyId: companyId,
+                    status: {
+                        equals: 'Selesai',
+                        mode: 'insensitive',
+                    },
+                },
+            });
+
+            // Periksa apakah semua bulan dalam periode sudah dilaporkan untuk setiap registrasi
+            for (const registrasi of registrasis) {
+                const reportedForRegistrasi = draftReports
+                    .filter((report) => report.registrasiId === registrasi.id)
+                    .map((report) => `${report.bulan}-${report.tahun}`);
+
+                const missingForRegistrasi = monthsInPeriod.filter(
+                    (month) =>
+                        !reportedForRegistrasi.includes(
+                            `${month.bulan}-${month.tahun}`
+                        )
+                );
+
+                if (missingForRegistrasi.length > 0) {
+                    const missingString = missingForRegistrasi
+                        .map((m) => `Bulan ${m.bulan} Tahun ${m.tahun}`)
+                        .join(', ');
+                    throw new BadRequestException(
+                        `Perusahaan impor dengan registrasi ${registrasi.nomor} belum melaporkan untuk bulan: ${missingString}.`
+                    );
+                }
+            }
+          }
         // Ubah status laporan menjadi 'menunggu persetujuan admin'
         for (const report of draftReports) {
             await prisma.pelaporanPenggunaanBahanB3.update({
@@ -250,10 +288,11 @@ export class PelaporanPenggunaanBahanB3Service {
           where: { id: reportId },
           include: {
             DataSupplierOnPelaporanPenggunaanB3: { include: { dataSupplier: true } },
+            period: true,
           },
         });
     
-        if (!report || !report.isDraft) {
+        if (!report || !report.isFinalized) {
           throw new BadRequestException('Laporan tidak valid atau belum difinalisasi.');
         }
     
@@ -295,26 +334,32 @@ export class PelaporanPenggunaanBahanB3Service {
           }
     
           // Update stok perusahaan (`DataBahanB3Company`)
-          const bahanB3Company = await prisma.dataBahanB3Company.upsert({
-            where: {
-              companyId_dataBahanB3Id: {
+          let bahanB3Company = await prisma.dataBahanB3Company.findFirst({
+            where: { companyId: report.companyId, dataBahanB3Id: report.dataBahanB3Id },
+          });
+
+          if (!bahanB3Company) {
+            await prisma.dataBahanB3Company.create({
+              data: {
                 companyId: report.companyId,
                 dataBahanB3Id: report.dataBahanB3Id,
+                stokB3: report.jumlahPembelianB3 - report.jumlahB3Digunakan,
               },
-            },
-            update: {
-              stokB3: {
-                increment: report.jumlahPembelianB3,
-                decrement: report.jumlahB3Digunakan,
+            });
+          }
+          else{
+            await prisma.dataBahanB3Company.update({
+              where: { companyId_dataBahanB3Id: { companyId: report.companyId, dataBahanB3Id: report.dataBahanB3Id } },
+              data: {
+                stokB3: bahanB3Company.stokB3 + report.jumlahPembelianB3 - report.jumlahB3Digunakan,
               },
-            },
-            create: {
-              companyId: report.companyId,
-              dataBahanB3Id: report.dataBahanB3Id,
-              stokB3: report.jumlahPembelianB3 - report.jumlahB3Digunakan,
-            },
+            });
+          }
+          
+          bahanB3Company = await prisma.dataBahanB3Company.findFirst({
+            where: { companyId: report.companyId, dataBahanB3Id: report.dataBahanB3Id },
           });
-    
+
           // Validasi stok perusahaan tidak boleh negatif
           if (bahanB3Company.stokB3 < 0) {
             throw new BadRequestException('Stok perusahaan tidak mencukupi. Persetujuan laporan ditolak.');
@@ -331,34 +376,37 @@ export class PelaporanPenggunaanBahanB3Service {
           });
     
           // Update stok periode (`StokB3Periode`)
-          const stokPeriode = await prisma.stokB3Periode.upsert({
-            where: {
-              companyId_dataBahanB3Id_bulan_tahun: {
+          let stokPeriode = await prisma.stokB3Periode.findFirst({
+            where: { companyId:report.companyId,  dataBahanB3Id: report.dataBahanB3Id, bulan: report.bulan, tahun: report.tahun },
+          })
+
+          if(!stokPeriode){
+           await prisma.stokB3Periode.create({
+              data: {
                 companyId: report.companyId,
                 dataBahanB3Id: report.dataBahanB3Id,
                 bulan: report.bulan,
                 tahun: report.tahun,
+                stokB3: report.jumlahPembelianB3 - report.jumlahB3Digunakan,
               },
-            },
-            update: {
-              stokB3: {
-                increment: report.jumlahPembelianB3,
-                decrement: report.jumlahB3Digunakan,
-              },
-            },
-            create: {
-              companyId: report.companyId,
-              dataBahanB3Id: report.dataBahanB3Id,
-              bulan: report.bulan,
-              tahun: report.tahun,
-              stokB3: report.jumlahPembelianB3 - report.jumlahB3Digunakan,
-            },
-          });
-    
-          // Validasi stok periode tidak boleh negatif
-          if (stokPeriode.stokB3 < 0) {
-            throw new BadRequestException('Stok periode tidak mencukupi. Persetujuan laporan ditolak.');
+            });
           }
+          else{
+            await prisma.stokB3Periode.update({
+              where: { id: stokPeriode.id },
+              data: {
+                stokB3: stokPeriode.stokB3 + report.jumlahPembelianB3 - report.jumlahB3Digunakan,
+              },
+            });
+          }
+          stokPeriode = await prisma.stokB3Periode.findFirst({
+            where: { companyId:report.companyId,  dataBahanB3Id: report.dataBahanB3Id, bulan: report.bulan, tahun: report.tahun },
+          })
+
+          // // Validasi stok periode tidak boleh negatif
+          // if (stokPeriode.stokB3 < 0) {
+          //   throw new BadRequestException('Stok periode tidak mencukupi. Persetujuan laporan ditolak.');
+          // }
     
           // Simpan riwayat perubahan stok periode di `StokB3PeriodeHistory`
           await prisma.stokB3PeriodeHistory.create({
@@ -382,33 +430,66 @@ export class PelaporanPenggunaanBahanB3Service {
             data: { isDraft: true, isFinalized: false, status: status },
           });
         }
-
-        const kewajiban = await prisma.kewajibanPelaporanPerusahaan.findFirst(
-          {
-            where: { bulan: report.bulan, tahun: report.tahun, companyId: report.companyId, jenisLaporan: JenisPelaporan.PENGGUNAAN_BAHAN_B3 },
-          }
-        )
-        // Tandai laporan sebagai disetujui
-        await prisma.kewajibanPelaporanPerusahaan.update({
-          where: { id: kewajiban.id},
-          data: { sudahDilaporkan: true },
-        });
         
-        if(report.tipePembelian.toLowerCase() === 'import' || report.tipePembelian.toLowerCase() === 'impor'){
-          const registrasi = await prisma.kewajibanPelaporanRegistrasi.findFirst(
+        // Cek apakah laporan valid dan sudah difinalisasi
+        const reports = await prisma.pelaporanPenggunaanBahanB3.findMany({
+          where: { bulan: report.bulan, tahun: report.tahun, companyId: report.companyId, periodId: report.periodId },
+          include: {
+            DataSupplierOnPelaporanPenggunaanB3: { include: { dataSupplier: true } },
+            period: true,
+          },
+        });
+        if (reports.some((report) => !report.isFinalized)) {
+          throw new BadRequestException(`Laporan belum lengkap. Masih ada laporan yang belum difinalisasi pada bulan ${report.bulan} tahun ${report.tahun}.`);
+        }
+        if (reports.some((report) => !report.isApproved)) {
+        }
+        else{
+          const kewajiban = await prisma.kewajibanPelaporanPerusahaan.findFirst(
             {
-              where: { bulan: report.bulan, tahun: report.tahun, companyId: report.companyId, registrasiId: report.registrasiId },
+              where: { bulan: report.bulan, tahun: report.tahun, companyId: report.companyId, jenisLaporan: JenisPelaporan.PENGGUNAAN_BAHAN_B3 },
             }
           )
-          
           // Tandai laporan sebagai disetujui
-          await prisma.kewajibanPelaporanRegistrasi.update({
-            where: { id: registrasi.id},
-            data: { sudahDilaporkan: true },
-          });
-
+          if (kewajiban) {
+            // Jika data ditemukan, perbarui
+            await prisma.kewajibanPelaporanPerusahaan.update({
+                where: { id: kewajiban.id },
+                data: {
+                    sudahDilaporkan: true,
+                },
+            });
+          } else {
+              // Jika data tidak ditemukan, buat data baru
+              await prisma.kewajibanPelaporanPerusahaan.create({
+                  data: {
+                      bulan: report.bulan,
+                      tahun: report.tahun,
+                      companyId: report.companyId,
+                      jenisLaporan: JenisPelaporan.PENGGUNAAN_BAHAN_B3,
+                      sudahDilaporkan: true,
+                      periodId: report.periodId,
+                      tanggalBatas: report.period.endReportingDate,
+                  },
+              });
+          }
+          
+          if(report.tipePembelian.toLowerCase() === 'import' || report.tipePembelian.toLowerCase() === 'impor'){
+            const registrasi = await prisma.kewajibanPelaporanRegistrasi.findFirst(
+              {
+                where: { bulan: report.bulan, tahun: report.tahun, companyId: report.companyId, registrasiId: report.registrasiId },
+              }
+            )
+            
+            // Tandai laporan sebagai disetujui
+            await prisma.kewajibanPelaporanRegistrasi.update({
+              where: { id: registrasi.id},
+              data: { sudahDilaporkan: true },
+            });
+  
+          }
         }
-
+        
         // Simpan riwayat pengajuan
         await prisma.pelaporanPenggunaanBahanB3History.create({
           data: {
@@ -422,8 +503,7 @@ export class PelaporanPenggunaanBahanB3Service {
     
         return { message: `Laporan berhasil ${status === StatusPengajuan.DISETUJUI ? 'disetujui' : 'ditolak'} dan diperbarui.` };
       });
-    }
-    
+    }  
     
     async getCompaniesWithoutReports(periodId: string) {
       // Cek apakah periode valid

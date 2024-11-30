@@ -1,6 +1,8 @@
-import { IsString, IsInt, IsOptional, IsArray, ValidateNested } from 'class-validator';
+import { IsString, IsInt, IsOptional, IsArray, ValidateNested, IsEnum } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { TipePerusahaan } from './enums/tipePerusahaan';
+import { SkalaPerusahaan } from './enums/skalaPerusahaan';
 
 export class CreateCompanyDto {
   @ApiProperty({
@@ -86,4 +88,13 @@ export class CreateCompanyDto {
   @IsOptional()
   @IsString()
   bidangUsaha?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsEnum(TipePerusahaan, { each: true })
+  tipePerusahaan?: TipePerusahaan[];
+
+  @IsOptional()
+  @IsEnum(SkalaPerusahaan)
+  skalaPerusahaan: SkalaPerusahaan;
 }

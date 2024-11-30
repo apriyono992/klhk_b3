@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, IsDate, IsEnum, IsArray } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsOptional, IsString, IsDate, IsEnum, IsArray, ArrayNotEmpty } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
 import { PaginationDto } from 'src/models/paginationDto';
 
 export class SearchStokB3PeriodeDto extends PaginationDto {
@@ -10,6 +10,20 @@ export class SearchStokB3PeriodeDto extends PaginationDto {
   })
   @IsOptional()
   @IsArray()
+  @ArrayNotEmpty()
+  @IsString({ each: true })
+    @Transform(({ value }) => {
+    // Jika sudah berupa array, trim setiap elemen
+    if (Array.isArray(value)) {
+      return value.map((item) => item.trim());
+    }
+    // Jika berupa string dengan koma, pecah menjadi array dan trim setiap elemen
+    if (typeof value === 'string') {
+      return value.split(',').map((item) => item.trim());
+    }
+    // Jika bukan array atau string, kembalikan seperti apa adanya
+    return [value];
+  })
   companyId?: string[];
 
   @ApiPropertyOptional({

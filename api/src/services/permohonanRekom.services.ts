@@ -291,7 +291,7 @@ export class PermohonanRekomendasiB3Service {
 
    // Method to search applications based on multiple filters with pagination
   async searchApplications(searchDto: SearchApplicationDto) {
-    const { companyId, applicationId, status, kodePermohonan, page, limit, sortBy, sortOrder } = searchDto;
+    const { companyId, applicationId, status, kodePermohonan, periodId, page, limit, sortBy, sortOrder, returnAll } = searchDto;
 
     // Build the dynamic where condition based on the filters provided
     const whereCondition: Prisma.ApplicationWhereInput = {
@@ -299,8 +299,48 @@ export class PermohonanRekomendasiB3Service {
         ...(applicationId && { id: { in: applicationId } }), // Filter by multiple applicationIds
         ...(status && { status: { in: status } }), // Filter by multiple statuses
         ...(kodePermohonan && { kodePermohonan: { in: kodePermohonan, mode: 'insensitive' } }), // Filter by multiple kodePermohonan
+        ...(periodId && {
+          KewajibanPelaporanAplikasi: {
+            some: {
+              periodId: { in: periodId },
+            },
+          },
+        }),
     };
 
+    if (returnAll){
+      // Query all applications without pagination
+      const applications = await this.prisma.application.findMany({
+          where: whereCondition,
+          orderBy: { [sortBy]: sortOrder },
+          include: {
+            company: true, // Optionally include company relation
+            identitasPemohon: true, // Optionally include identitasPemohon relation
+            vehicles: {include:{
+              vehicle: {
+                include:{
+                  KewajibanPelaporanAplikasi:true,
+                  PelaporanPengangkutan:true
+                }
+              }
+            }}, // Optionally include vehicles relation
+            documents: true, // Optionally include documents relation
+            b3Substances:true,
+            KewajibanPelaporanAplikasi:{
+              include:{
+                period:true
+              }
+            },
+          },
+      });
+
+      return {
+          applications,
+          page: 1,
+          limit: applications.length,
+          total: applications.length,
+      };
+    }
     // Query the total count of applications for pagination
     const total = await this.prisma.application.count({ where: whereCondition });
 
@@ -316,6 +356,7 @@ export class PermohonanRekomendasiB3Service {
           vehicles: true, // Optionally include vehicles relation
           documents: true, // Optionally include documents relation
           b3Substances:true,
+          
         },
     });
 

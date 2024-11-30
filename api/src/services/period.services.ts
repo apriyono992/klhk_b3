@@ -96,7 +96,6 @@ export class PeriodService {
     });
   }
 
-
   // Set an existing period as active and deactivate others (using a transaction)
   async setActivePeriod(periodId: string) {
     const period = await this.prisma.period.findUnique({ where: { id: periodId } });
@@ -133,13 +132,32 @@ export class PeriodService {
     });
   }
 
-
   // Get the currently active period
   async getActivePeriod() {
     const activePeriod = await this.prisma.period.findFirst({ where: { isActive: true } });
     if (!activePeriod) throw new NotFoundException('No active period found.');
     return activePeriod;
   }
+
+  // Get the currently active period
+  async getReportActivePeriod() {
+    const activePeriod = await this.prisma.period.findFirst({ where: { isReportingActive: true } });
+    if (!activePeriod) throw new NotFoundException('No active period found.');
+    return activePeriod;
+  }
+
+  // Get the currently active period
+  async getAllReportActivePeriod() {
+    const activePeriod = await this.prisma.period.findMany({ where: { isReportingActive: true }, orderBy: { startPeriodDate: 'asc' } });
+    return { data:activePeriod};
+  }
+  
+    // Get the currently active period
+    async getPeriod(periodId : string) {
+      const activePeriod = await this.prisma.period.findFirst({ where: { id: periodId } });
+      if (!activePeriod) throw new NotFoundException('No active period found.');
+      return activePeriod;
+    }
 
   // Get a list of all periods, ordered by startDate
   async getAllPeriods() {
@@ -505,7 +523,6 @@ export class PeriodService {
     return { total: totalCount, data };
   }
   
-
   // Method untuk mendapatkan daftar registrasi (reported/unreported)
   async getRegistrations(periodId?: string, isReported?: boolean) {
     const today = new Date();

@@ -8,7 +8,7 @@ import { IsVillageValid } from 'src/validators/village.validator';
 export class CreateDataTransporterDto {
   @IsString()
   @IsNotEmpty()
-  namaCustomer: string;
+  namaTransporter: string;
 
   @IsString()
   @IsNotEmpty()

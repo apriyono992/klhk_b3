@@ -115,7 +115,7 @@ export class PelaporanBahanB3DihasilkanService {
     }
   
     return await this.prisma.$transaction(async (prisma) => {
-      const report = await prisma.pelaporanB3Dihasilkan.findUnique({ where: { id } });
+      const report = await prisma.pelaporanB3Dihasilkan.findUnique({ where: { id }, include: {period:true} });
   
       if (!report || !report.isFinalized) {
         throw new BadRequestException('Laporan tidak valid atau belum difinalisasi.');
@@ -212,17 +212,38 @@ export class PelaporanBahanB3DihasilkanService {
         await prisma.pelaporanB3Dihasilkan.update({ where: { id }, data: { isDraft: true, isFinalized: false , status: status} });
       }
 
-      const kewajiban = await prisma.kewajibanPelaporanPerusahaan.findFirst(
-        {
-          where: { bulan: report.bulan, tahun: report.tahun, companyId: report.companyId, jenisLaporan: JenisPelaporan.DISTRIBUSI_B3 },
-        }
-      )
-      
-      // Tandai laporan sebagai disetujui
-      await prisma.kewajibanPelaporanPerusahaan.update({
-        where: { id: kewajiban.id},
-        data: { sudahDilaporkan: true },
-      });
+      const kewajiban = await prisma.kewajibanPelaporanPerusahaan.findFirst({
+        where: {
+            bulan: report.bulan,
+            tahun: report.tahun,
+            companyId: report.companyId,
+            jenisLaporan: JenisPelaporan.PRODUKSI_B3,
+        },
+    });
+    
+    if (kewajiban) {
+        // Jika data ditemukan, perbarui
+        await prisma.kewajibanPelaporanPerusahaan.update({
+            where: { id: kewajiban.id },
+            data: {
+                sudahDilaporkan: true,
+            },
+        });
+    } else {
+        // Jika data tidak ditemukan, buat data baru
+        await prisma.kewajibanPelaporanPerusahaan.create({
+            data: {
+                bulan: report.bulan,
+                tahun: report.tahun,
+                companyId: report.companyId,
+                jenisLaporan: JenisPelaporan.PRODUKSI_B3,
+                sudahDilaporkan: true,
+                periodId: report.periodId,
+                tanggalBatas: report.period.endReportingDate,
+            },
+        });
+    }
+    
   
       await prisma.pelaporanB3DihasilkanHistory.create({
         data: {
@@ -407,76 +428,106 @@ export class PelaporanBahanB3DihasilkanService {
 
   async searchReports(dto: SearchPelaporanB3DihasilkanDto) {
     const {
-      companyId,
-      periodId,
-      dataBahanB3Id,
-      tipeProduk,
-      startDate,
-      endDate,
-      page = 1,
-      limit = 10,
-      sortBy = 'createdAt',
-      sortOrder = 'DESC',
-      returnAll = false,
+        companyId,
+        periodId,
+        dataBahanB3Id,
+        tipeProduk,
+        startDate,
+        endDate,
+        page = 1,
+        limit = 10,
+        sortBy = 'createdAt',
+        sortOrder = 'DESC',
+        returnAll = false,
+        isFinalize
     } = dto;
-  
+
     // Query conditions
     const whereConditions: any = {};
-  
-    if (companyId) whereConditions.companyId = companyId;
-    if (periodId) whereConditions.periodId = periodId;
-    if (dataBahanB3Id) whereConditions.dataBahanB3Id = dataBahanB3Id;
-    if (tipeProduk) whereConditions.tipeProduk = tipeProduk;
-  
-    // Filter berdasarkan bulan dan tahun jika `startDate` atau `endDate` diberikan
-    if (startDate || endDate) {
-      const startMonth = startDate ? startDate.getMonth() + 1 : undefined;
-      const startYear = startDate ? startDate.getFullYear() : undefined;
-      const endMonth = endDate ? endDate.getMonth() + 1 : undefined;
-      const endYear = endDate ? endDate.getFullYear() : undefined;
-  
-      whereConditions.bulan = {
-        ...(startMonth && { gte: startMonth }),
-        ...(endMonth && { lte: endMonth }),
-      };
-  
-      whereConditions.tahun = {
-        ...(startYear && { gte: startYear }),
-        ...(endYear && { lte: endYear }),
-      };
+
+    // Filter by companyId
+    if (companyId && companyId.length > 0) {
+        whereConditions.companyId = { in: companyId };
     }
-  
-    // Jika `returnAll` true, ambil semua data tanpa pagination
+
+    // Filter by periodId
+    if (periodId && periodId.length > 0) {
+        whereConditions.periodId = { in: periodId };
+    }
+
+    // Filter by dataBahanB3Id
+    if (dataBahanB3Id) {
+        whereConditions.dataBahanB3Id = dataBahanB3Id;
+    }
+
+    // Filter by tipeProduk
+    if (tipeProduk) {
+        whereConditions.tipeProduk = tipeProduk;
+    }
+
+    // Filter by startDate and endDate (bulan dan tahun)
+    if (startDate || endDate) {
+        const startMonth = startDate ? startDate.getMonth() + 1 : undefined;
+        const startYear = startDate ? startDate.getFullYear() : undefined;
+        const endMonth = endDate ? endDate.getMonth() + 1 : undefined;
+        const endYear = endDate ? endDate.getFullYear() : undefined;
+
+        if (startMonth || endMonth) {
+            whereConditions.bulan = {
+                ...(startMonth && { gte: startMonth }),
+                ...(endMonth && { lte: endMonth }),
+            };
+        }
+
+        if (startYear || endYear) {
+            whereConditions.tahun = {
+                ...(startYear && { gte: startYear }),
+                ...(endYear && { lte: endYear }),
+            };
+        }
+    }
+    if(isFinalize !== undefined){
+      whereConditions.isFinalized = isFinalize;
+    }
+
+    // Handle sorting dynamically
+    const orderBy = {};
+    if (sortBy) {
+        orderBy[sortBy] = sortOrder.toLowerCase();
+    }
+
+    // If `returnAll` is true, fetch all data without pagination
     const reports = await this.prisma.pelaporanB3Dihasilkan.findMany({
-      where: whereConditions,
-      orderBy: { [sortBy]: sortOrder.toLowerCase() },
-      ...(returnAll ? {} : { skip: (page - 1) * limit, take: limit }),
-      include: {
-        company: true,
-        period: true,
-        dataBahanB3: true,
-        PelaporanB3DihasilkanHistory:true
-      },
+        where: whereConditions,
+        orderBy,
+        ...(returnAll ? {} : { skip: (Math.max(page - 1, 0)) * Math.max(limit, 1), take: Math.max(limit, 1) }),
+        include: {
+            company: true,
+            period: true,
+            dataBahanB3: true,
+            PelaporanB3DihasilkanHistory: true,
+        },
     });
-  
-    // Hitung total records hanya jika `returnAll` adalah false
+
+    // Count total records only if `returnAll` is false
     const totalRecords = returnAll
-      ? reports.length
-      : await this.prisma.pelaporanB3Dihasilkan.count({ where: whereConditions });
-  
+        ? reports.length
+        : await this.prisma.pelaporanB3Dihasilkan.count({ where: whereConditions });
+
+    // Return response
     return {
-      message: 'Data laporan berhasil ditemukan.',
-      data: reports,
-      pagination: returnAll
-        ? null
-        : {
-            totalRecords,
-            currentPage: page,
-            totalPages: Math.ceil(totalRecords / limit),
-          },
+        message: 'Data laporan berhasil ditemukan.',
+        data: reports,
+        pagination: returnAll
+            ? null
+            : {
+                  totalRecords,
+                  currentPage: page,
+                  totalPages: Math.ceil(totalRecords / limit),
+              },
     };
   }
-  
+
   async getReportById(id: string) {
     const report = await this.prisma.pelaporanB3Dihasilkan.findUnique({
       where: { id },

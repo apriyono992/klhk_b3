@@ -5,8 +5,7 @@ import { TipeLokasiMuatDanBongkar } from './enums/tipeLokasiMuatDanBongkar';
 export class PerusahaanTujuanBongkarDetailDto {
   @IsUUID()
   perusahaanTujuanBongkarId: string;
-
-  @IsEnum(TipeLokasiMuatDanBongkar, { message: 'Tipe lokasi muat dan bongkar harus berupa enum GUDANG atau NON_B3.' })
+  @IsEnum(TipeLokasiMuatDanBongkar, { message: 'Tipe lokasi muat dan bongkar harus berupa enum Gudang atau Pelabuhan.' })
   locationType: TipeLokasiMuatDanBongkar;
 
   @IsOptional() 
@@ -26,7 +25,7 @@ export class PerusahaanTujuanBongkarDto {
   @IsUUID()
   perusahaanAsalMuatId: string;
 
-  @IsEnum(TipeLokasiMuatDanBongkar, { message: 'Tipe lokasi muat dan bongkar harus berupa enum GUDANG atau NON_B3.' })
+  @IsEnum(TipeLokasiMuatDanBongkar, { message: 'Tipe lokasi muat dan bongkar harus berupa enum Gudang atau Pelabuhan.' })
   locationType: TipeLokasiMuatDanBongkar;
 
   @IsOptional() 
