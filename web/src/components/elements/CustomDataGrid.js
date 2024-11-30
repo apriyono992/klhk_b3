@@ -4,7 +4,7 @@ import { DataGrid, GridToolbarColumnsButton, GridToolbarContainer, GridToolbarFi
 export default function CustomDataGrid({ data, isLoading, 
     columns, rowCount,
     initialState, page, setPage, pageSize, setPageSize, 
-    disableRowSelectionOnClick = true, onRowClick }) {
+    disableRowSelectionOnClick = true, onRowClick, getRowId}) {
     return (
 <DataGrid
     autosizeOnMount
@@ -46,6 +46,7 @@ export default function CustomDataGrid({ data, isLoading,
             overflowY: 'auto',
         },
     }}
+    getRowId={getRowId}
 />
     )
 }
